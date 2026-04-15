@@ -5,7 +5,7 @@ team: Equipe Identity
 version: v2
 endpoints:
   - POST /v2/users/register
-  - POST /v3/users/login
+  - POST /v5/users/login
   - GET /v2/users/{id}
   - PUT /v2/users/{id}
   - DELETE /v2/users/{id}
