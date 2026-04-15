@@ -9,6 +9,7 @@
     "GET /v2/orders/{id}",
     "PUT /v2/orders/{id}/cancel",
     "GET /v2/orders?customerId={id}",
-    "DELETE /v2/orders/{id}"
+    "DELETE /v2/orders/{id}",
+    "DELETE /v2/orders?customerId={id}"
   ]
 }
