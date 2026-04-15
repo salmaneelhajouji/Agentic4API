@@ -10,7 +10,7 @@ Equipe Logistique
 v1
 
 ## Endpoints
-- GET /v1/inventory
+- GET /v2/inventory
 - GET /v1/inventory/{productId}
 - PUT /v1/inventory/{productId}/stock
 - POST /v1/inventory/alerts

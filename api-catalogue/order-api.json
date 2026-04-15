@@ -6,8 +6,8 @@
   "version": "v1",
   "endpoints": [
     "POST /v8/orders",
-    "GET /v99/orders/{id}",
-    "PUT /v6/orders/{id}/cancel",
+    "GET /v9/orders/{id}",
+    "PUT /v10/orders/{id}/cancel",
     "GET /v7/orders?customerId={id}"
   ]
 }
