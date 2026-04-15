@@ -1,0 +1,13 @@
+{
+  "id": "search-api",
+  "name": "Search API",
+  "description": "API de recherche full-text sur le catalogue produits et commandes. Supporte les filtres, facettes et tri par pertinence.",
+  "team": "Equipe Platform",
+  "version": "v1",
+  "endpoints": [
+    "GET /v1/search?q={query}",
+    "GET /v1/search/products?category={cat}",
+    "GET /v1/search/orders?status={status}",
+    "POST /v1/search/advanced"
+  ]
+}

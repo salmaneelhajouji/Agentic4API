@@ -1,0 +1,14 @@
+{
+  "id": "auth-api",
+  "name": "Auth API",
+  "description": "API d'authentification et autorisation. Gestion des tokens JWT, OAuth2 et refresh tokens.",
+  "team": "Equipe Identity",
+  "version": "v1",
+  "endpoints": [
+    "POST /v1/auth/login",
+    "POST /v1/auth/logout",
+    "POST /v1/auth/refresh",
+    "GET /v1/auth/me",
+    "POST /v1/auth/forgot-password"
+  ]
+}

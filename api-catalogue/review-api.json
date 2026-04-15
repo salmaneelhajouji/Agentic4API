@@ -1,0 +1,14 @@
+{
+  "id": "review-api",
+  "name": "Review API",
+  "description": "API de gestion des avis et notations produits. Soumission, modération et agrégation des reviews clients.",
+  "team": "Equipe Catalog",
+  "version": "v1",
+  "endpoints": [
+    "POST /v1/reviews",
+    "GET /v1/reviews/product/{productId}",
+    "PUT /v1/reviews/{id}/moderate",
+    "DELETE /v1/reviews/{id}",
+    "GET /v1/reviews/stats/{productId}"
+  ]
+}

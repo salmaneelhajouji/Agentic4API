@@ -1,0 +1,14 @@
+{
+  "id": "cart-api",
+  "name": "Cart API",
+  "description": "API de gestion du panier d'achat. Ajout, suppression et mise à jour des articles avant commande.",
+  "team": "Equipe Commerce",
+  "version": "v1",
+  "endpoints": [
+    "GET /v1/cart/{userId}",
+    "POST /v1/cart/{userId}/items",
+    "PUT /v1/cart/{userId}/items/{itemId}",
+    "DELETE /v1/cart/{userId}/items/{itemId}",
+    "POST /v1/cart/{userId}/checkout"
+  ]
+}

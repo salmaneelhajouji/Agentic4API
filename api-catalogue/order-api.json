@@ -3,11 +3,12 @@
   "name": "Order API",
   "description": "API de gestion des commandes e-commerce. Création, suivi et annulation des commandes clients.",
   "team": "Equipe Commerce",
-  "version": "v1",
+  "version": "v2",
   "endpoints": [
-    "POST /v8/orders",
-    "GET /v9/orders/{id}",
-    "PUT /v10/orders/{id}/cancel",
-    "GET /v7/orders?customerId={id}"
+    "POST /v2/orders",
+    "GET /v2/orders/{id}",
+    "PUT /v2/orders/{id}/cancel",
+    "GET /v2/orders?customerId={id}",
+    "DELETE /v2/orders/{id}"
   ]
 }

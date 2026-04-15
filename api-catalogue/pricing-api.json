@@ -1,0 +1,14 @@
+{
+  "id": "pricing-api",
+  "name": "Pricing API",
+  "description": "API de gestion des prix et promotions. Calcul des remises, codes promo et règles tarifaires dynamiques.",
+  "team": "Equipe Commerce",
+  "version": "v1",
+  "endpoints": [
+    "GET /v1/pricing/product/{productId}",
+    "POST /v1/pricing/calculate",
+    "POST /v1/pricing/promo/validate",
+    "GET /v1/pricing/rules",
+    "PUT /v1/pricing/rules/{id}"
+  ]
+}
