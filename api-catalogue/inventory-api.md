@@ -7,11 +7,12 @@ API de gestion des stocks et inventaires produits. Suivi en temps réel des nive
 Equipe Logistique
 
 ## Version
-v2
+v3
 
 ## Endpoints
-- GET /v2/inventory
-- GET /v2/inventory/{productId}
-- PUT /v2/inventory/{productId}/stock
-- POST /v2/inventory/alerts
-- POST /v2/inventory/restock
+- GET /v3/inventory
+- GET /v3/inventory/{productId}
+- PUT /v3/inventory/{productId}/stock
+- POST /v3/inventory/alerts
+- POST /v3/inventory/restock
+- DELETE /v3/inventory/{productId}
