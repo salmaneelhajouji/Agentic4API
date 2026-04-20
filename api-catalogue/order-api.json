@@ -3,7 +3,7 @@
   "name": "Order API",
   "description": "API de gestion des commandes e-commerce. Création, suivi et annulation des commandes clients.",
   "team": "Equipe Commerce",
-  "version": "v4",
+  "version": "v4.5",
   "endpoints": [
     "POST /v4/orders",
     "GET /v4/orders/{id}",
