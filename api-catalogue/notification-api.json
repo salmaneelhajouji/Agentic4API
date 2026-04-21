@@ -1,0 +1,87 @@
+{
+  "id": "notification-api",
+  "name": "Notification API",
+  "version": "v1",
+  "description": "Gestion et envoi de notifications multicanal (email, SMS, push) pour les utilisateurs de la plateforme. Permet de créer, planifier et suivre les notifications en temps réel.",
+  "team": "Platform",
+  "base_url": "/v1/notifications",
+  "authentication": "Bearer Token",
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/v1/notifications/send",
+      "description": "Envoie une notification immédiate à un ou plusieurs utilisateurs",
+      "body": {
+        "user_ids": ["string"],
+        "channel": "email | sms | push",
+        "title": "string",
+        "message": "string",
+        "metadata": "object (optional)"
+      },
+      "responses": {
+        "201": "Notification envoyée avec succès",
+        "400": "Paramètres invalides",
+        "401": "Non autorisé"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/v1/notifications/schedule",
+      "description": "Planifie une notification pour une date/heure future",
+      "body": {
+        "user_ids": ["string"],
+        "channel": "email | sms | push",
+        "title": "string",
+        "message": "string",
+        "scheduled_at": "ISO 8601 datetime"
+      },
+      "responses": {
+        "201": "Notification planifiée",
+        "400": "Paramètres invalides"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/notifications/{notification_id}",
+      "description": "Récupère le statut et les détails d'une notification",
+      "responses": {
+        "200": "Détails de la notification",
+        "404": "Notification non trouvée"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/notifications",
+      "description": "Liste toutes les notifications avec filtres optionnels",
+      "query_params": {
+        "status": "pending | sent | failed",
+        "channel": "email | sms | push",
+        "user_id": "string",
+        "page": "integer",
+        "limit": "integer"
+      },
+      "responses": {
+        "200": "Liste paginée des notifications"
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/notifications/{notification_id}",
+      "description": "Annule une notification planifiée (uniquement si statut pending)",
+      "responses": {
+        "204": "Notification annulée",
+        "404": "Notification non trouvée",
+        "409": "Impossible d'annuler une notification déjà envoyée"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/v1/notifications/stats",
+      "description": "Retourne les statistiques d'envoi (taux de succès, échecs, canaux utilisés)",
+      "responses": {
+        "200": "Statistiques des notifications"
+      }
+    }
+  ],
+  "tags": ["notifications", "email", "sms", "push", "messaging", "platform"]
+}
