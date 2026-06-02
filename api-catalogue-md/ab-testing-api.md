@@ -13,4 +13,4 @@ Expérimentations et tests A/B. Variantes, assignation et analyse statistique de
 - POST /v1/experiments/{id}/convert : Enregistrer une conversion
 - GET /v1/experiments/{id}/results : Résultats statistiques de l'expérience
 
-Authentification : Clé API Kong Gateway !
+Authentification : Clé API Kong Gateway!
