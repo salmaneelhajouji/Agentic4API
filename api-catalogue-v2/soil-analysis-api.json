@@ -1,0 +1,49 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Soil Analysis API",
+    "version": "1.0.0",
+    "x-api-id": "soil-analysis-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Analyses physicochimiques de sol pour l'agriculture de précision. Commande d'analyses en laboratoire, consultation des résultats (pH, azote, phosphore, potassium, matière organique, oligoéléments) et obtention de recommandations personnalisées de fertilisation. DIFFÉRENCE vs field-api : Soil Analysis gère les analyses laboratoire ponctuelles d'échantillons de sol, Field API gère la parcelle agricole dans sa globalité (géométrie, cultures, interventions). DIFFÉRENCE vs crop-api : Soil Analysis se concentre sur le sol, Crop sur les cultures et rendements.",
+    "x-synonymes": "analyse sol, pH sol, fertilisation, agronomie, macronutriments sol, azote phosphore potassium, NPK, matière organique, analyse laboratoire sol, amendement, recommandation fertilisants, qualité sol, agriculture précision, échantillon sol, plan fertilisation",
+    "x-false-positive-warning": "Gestion complète de parcelle (cultures, interventions) → field-api-v2. Suivi des cultures et rendements → crop-api. Météo agricole → weather-api.",
+    "x-cas-usage": "je veux commander une analyse de sol pour ma parcelle | je veux voir les résultats de pH et nutriments d'une analyse | je veux obtenir des recommandations de fertilisation basées sur l'analyse | je veux suivre toutes les analyses en cours pour mon exploitation | je veux savoir quelle quantité d'engrais appliquer selon les résultats"
+  },
+  "paths": {
+    "/v1/soil/analyses": {
+      "get": {
+        "summary": "Lister les analyses de sol en cours ou terminées avec leur statut de traitement laboratoire",
+        "operationId": "listSoilAnalyses",
+        "tags": ["Analyses"],
+        "responses": { "200": { "description": "Analyses de sol" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Commander une nouvelle analyse de sol (sélection des paramètres : pH, NPK, matière organique, oligo-éléments)",
+        "operationId": "createSoilAnalysis",
+        "tags": ["Analyses"],
+        "responses": { "200": { "description": "Analyse commandée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/soil/analyses/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter les résultats d'une analyse et les recommandations personnalisées de fertilisation",
+        "operationId": "getFertilizationAdvice",
+        "tags": ["Analyses"],
+        "responses": { "200": { "description": "Résultats et recommandations" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

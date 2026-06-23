@@ -1,0 +1,79 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Transfer API",
+    "version": "2.0.0",
+    "x-api-id": "transfer-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Virements bancaires SEPA (classique et instantané), SWIFT international et validation d'IBAN. Création de virements, consultation de l'historique et du statut, annulation avant exécution, validation de la conformité d'un IBAN, et simulation des frais avant envoi. DIFFÉRENCE vs payout-api : Transfer gère les virements entre comptes bancaires (SEPA/SWIFT), Payout gère les reversements plateforme vers vendeurs/prestataires. DIFFÉRENCE vs payment-api : Transfer est un virement direct compte-à-compte, Payment gère les paiements e-commerce (carte, wallet).",
+    "x-synonymes": "virement bancaire, SEPA, SWIFT, virement instantané, IBAN validation, frais virement, historique virements, annulation virement, virement international, compte à compte, ordre de virement, virement Europe, RIB IBAN BIC, validation coordonnées bancaires, virement entreprise",
+    "x-false-positive-warning": "Reversements vendeurs/prestataires → payout-api. Paiements e-commerce (carte) → payment-api. Prélèvements SEPA → direct-debit-api.",
+    "x-cas-usage": "je veux effectuer un virement SEPA instantané vers un autre compte | je veux valider qu'un IBAN est correct avant d'envoyer un virement | je veux calculer les frais d'un virement SWIFT international | je veux voir l'historique de tous les virements effectués | je veux annuler un virement en attente d'exécution",
+    "x-breaking-changes-from-previous": [
+      "SEPA instantane",
+      "SWIFT",
+      "Validation IBAN"
+    ]
+  },
+  "paths": {
+    "/v2/transfers": {
+      "get": {
+        "summary": "Consulter l'historique des virements avec filtres sur statut, montant et période",
+        "operationId": "listTransfersV2",
+        "tags": ["Transfers"],
+        "responses": { "200": { "description": "Historique virements" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Créer un virement bancaire (SEPA classique, SEPA instantané ou SWIFT international)",
+        "operationId": "createTransferV2",
+        "tags": ["Transfers"],
+        "responses": { "200": { "description": "Virement créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/transfers/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le statut d'exécution d'un virement (en attente, exécuté, rejeté)",
+        "operationId": "getTransferV2",
+        "tags": ["Transfers"],
+        "responses": { "200": { "description": "Statut virement" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Annuler un virement avant son exécution",
+        "operationId": "cancelTransfer",
+        "tags": ["Transfers"],
+        "responses": { "200": { "description": "Virement annulé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/transfers/validate-iban": {
+      "post": {
+        "summary": "Valider la conformité et l'existence d'un IBAN avant envoi d'un virement",
+        "operationId": "validateIBAN",
+        "tags": ["Validation"],
+        "responses": { "200": { "description": "Résultat validation IBAN" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/transfers/fees": {
+      "post": {
+        "summary": "Calculer et simuler les frais d'un virement (SEPA / SWIFT) avant de le soumettre",
+        "operationId": "calculateFees",
+        "tags": ["Fees"],
+        "responses": { "200": { "description": "Frais estimés" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

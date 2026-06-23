@@ -1,0 +1,113 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Property Insurance API",
+    "version": "1.0.0",
+    "x-api-id": "property-insurance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Cette API orchestre l'ensemble du cycle de vie des contrats d'assurance habitation et des polices Multirisques Habitation (MRH). Conçue pour les courtiers, les portails clients et les plateformes de gestion des sinistres, elle permet d'enregistrer les souscriptions, de consulter le détail des risques couverts et d'administrer les avenants contractuels liés aux garanties immobilières des assurés.",
+    "x-synonymes": "Contrat d'assurance habitation, Assurance MRH, Garantie sinistre, Couverture habitation, Franchise assurance, Prime d'assurance, Sinistre immobilier, Attestation d'assurance, Tiers assuré, Police d'assurance, Risques couverts, Dommages aux biens, Indemnisation immobilière, Responsabilité civile habitation, Souscription contrat assurance, Avenant d'assurance",
+    "x-false-positive-warning": "Attention : Cette API régit exclusivement le cadre assurantiel (contrats, primes, garanties, sinistres). Pour toute consultation des attributs physiques, plans d'architecte ou fiches descriptives intrinsèques du bâtiment ou du logement, utilisez obligatoirement la Property API v3.",
+    "x-cas-usage": "Comment faire pour souscrire en ligne un nouveau contrat d'assurance multirisque habitation (MRH) pour un client ? | Comment faire pour l'ensemble des contrats d'assurance habitation actifs ou suspendus liés à un portefeuille ? | Comment faire pour extraire la liste des garanties incluses et le montant des franchises pour une police spécifique ?"
+  },
+  "paths": {
+    "/v1/property-insurance": {
+      "get": {
+        "summary": "Rechercher et lister l'ensemble des contrats d'assurance habitation et polices MRH d'un portefeuille client",
+        "operationId": "listPropertyInsurance",
+        "tags": [
+          "Insurance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Initier la souscription en ligne et l'enregistrement d'un nouveau contrat d'assurance Multirisque Habitation (MRH)",
+        "operationId": "subscribePropertyInsurance",
+        "tags": [
+          "Insurance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/property-insurance/{contractId}": {
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les conditions générales, les informations de prime et l'état d'un contrat d'assurance habitation spécifique",
+        "operationId": "getPropertyInsurance",
+        "tags": [
+          "Insurance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les clauses contractuelles, options ou avenants d'un contrat d'assurance immobilière existant",
+        "operationId": "updatePropertyInsurance",
+        "tags": [
+          "Insurance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/property-insurance/{contractId}/guarantees": {
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Extraire le tableau exhaustif des risques couverts, des plafonds d'indemnisation et des franchises associés au contrat",
+        "operationId": "getGuarantees",
+        "tags": [
+          "Guarantees"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

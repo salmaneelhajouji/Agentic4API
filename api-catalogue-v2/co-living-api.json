@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Co-living API",
+    "version": "1.0.0",
+    "x-api-id": "co-living-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "API de gestion des espaces de co-living et résidences partagées longue durée, couvrant la création et la consultation de résidences, la gestion des chambres privées et des espaces communs (cuisine, salon, salle de sport, bureaux partagés), ainsi que la réservation sous bail mobilité ou colocation étudiante. Permet aux opérateurs de co-living de publier leur catalogue d'espaces, de gérer la disponibilité des chambres et d'exposer les services inclus. Utilisée par les plateformes de colocation longue durée, les résidences étudiantes, les opérateurs de logements jeunes actifs et les agrégateurs d'offres d'habitat partagé. DIFFÉRENCE vs hotel-api-v3 : Co-living = résidence longue durée avec espaces partagés, communauté et services inclus. hotel-api-v3 = hébergement touristique court séjour sans engagement. DIFFÉRENCE vs lease-api-v2 : Co-living = chambres en résidence gérée avec services. lease-api-v2 = location d'appartement classique entre bailleur et locataire sans services communs.",
+    "x-synonymes": "co-living, colocation, résidence partagée, résidence étudiante, chambre partagée, espace commun, coliving urbain, résidence longue durée, location meublée coliving, chambre coliving, flatshare, roommate, résidence jeune actif, logement intergénérationnel, résidence services, bail mobilité coliving, habitat partagé, communauté résidence, immeuble partagé, logement communautaire",
+    "x-false-positive-warning": "Hébergement touristique court séjour → hotel-api-v3 (séjours de quelques nuits sans bail). Appartement location classique entre particuliers → lease-api-v2 (bail standard sans services communs). Réservation de chambre d'hôtel → room-booking-api-v3 (chambre hôtelière sans espace partagé). Colocation entre particuliers sans opérateur → tenant-api-v2 (gestion locative directe). Résidence de tourisme ou appart-hôtel → short-stay-api (durée courte, pas de communauté).",
+    "x-cas-usage": "Comment lister les espaces co-living disponibles avec chambres libres et services inclus ? | Comment réserver une chambre dans une résidence étudiante co-living sous bail mobilité ? | Quels services sont inclus dans un espace co-living — wifi, ménage, salle de sport, cuisine ? | Comment créer et publier un nouvel espace co-living dans le catalogue de résidences partagées ? | Comment récupérer les chambres disponibles et leurs prix dans une résidence partagée donnée ?"
+  },
+  "paths": {
+    "/v1/coliving/spaces": {
+      "get": {
+        "summary": "Lister les espaces co-living disponibles — résidences partagées avec chambres libres, services inclus et localisation",
+        "operationId": "listColivingSpaces",
+        "tags": ["Spaces"],
+        "responses": {
+          "200": {"description": "Espaces co-living"}
+        }
+      },
+      "post": {
+        "summary": "Créer un nouvel espace co-living dans le catalogue — résidence ou immeuble partagé avec chambres privées et espaces communs",
+        "operationId": "createColivingSpace",
+        "tags": ["Spaces"],
+        "responses": {
+          "200": {"description": "Espace co-living créé"}
+        }
+      }
+    },
+    "/v1/coliving/spaces/{id}/rooms": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Lister les chambres disponibles dans un espace co-living — détail des prix, superficie et caractéristiques de chaque chambre",
+        "operationId": "getRooms",
+        "tags": ["Rooms"],
+        "responses": {
+          "200": {"description": "Chambres disponibles"}
+        }
+      },
+      "post": {
+        "summary": "Réserver une chambre dans un espace co-living pour longue durée — création du dossier locataire avec bail mobilité ou contrat de colocation",
+        "operationId": "bookRoom",
+        "tags": ["Rooms"],
+        "responses": {
+          "200": {"description": "Chambre réservée"}
+        }
+      }
+    },
+    "/v1/coliving/spaces/{id}/amenities": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter les services inclus dans un espace co-living — wifi, ménage, salle de sport, cuisine équipée et espaces de travail partagés",
+        "operationId": "getAmenities",
+        "tags": ["Amenities"],
+        "responses": {
+          "200": {"description": "Services inclus"}
+        }
+      }
+    }
+  }
+}

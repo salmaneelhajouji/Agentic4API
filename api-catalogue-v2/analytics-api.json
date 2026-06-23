@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Analytics API",
+    "version": "1.0.0",
+    "x-api-id": "analytics-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "Version 1 — Agrégation et reporting des données métier couvrant les ventes, le trafic web et les taux de conversion. Permet la consultation des KPIs en temps réel, la génération de rapports analytiques personnalisés et l'accès à un tableau de bord consolidé des performances business. Utilisée principalement par les équipes marketing, product management et la direction pour piloter les décisions stratégiques. ATTENTION : préférer analytics-api-v2 ou analytics-api-v3 pour les nouveaux développements — cette version ne supporte pas le streaming SSE, les prédictions ML ni l'export BI. DIFFÉRENCE vs reporting-api : Analytics API = métriques temps réel et historiques interactives ; reporting-api = génération de documents PDF/Excel planifiés. DIFFÉRENCE vs metrics-api : Analytics API = orientée business (ventes, conversion, panier moyen) ; metrics-api = orientée ingénierie (latence, erreurs, disponibilité).",
+    "x-synonymes": "analytics business, KPI ventes, métriques ventes, taux de conversion, trafic web, tableau de bord, dashboard temps réel, rapport analytique, analyse comportement utilisateur, performance business, suivi ventes, analyse trafic, chiffre affaires analytics, panier moyen, sessions utilisateurs, pages vues, taux de rebond, entonnoir ventes, reporting temps réel, indicateurs de performance",
+    "x-false-positive-warning": "Documents PDF/Excel planifiés → reporting-api-v2. Métriques techniques ingénierie (latence, erreurs, disponibilité) → metrics-api. Version avec streaming SSE et entonnoirs custom → analytics-api-v2. Version avec ML prédictif et export Tableau/PowerBI → analytics-api-v3. Collecte brute d'événements clics/interactions → event-tracking-api. Suivi de campagnes marketing → campaign-analytics-api.",
+    "x-cas-usage": "Comment consulter mes métriques de ventes par jour, semaine ou mois avec filtrage par période ? | Comment récupérer le taux de conversion et analyser l'entonnoir d'achat de mon site ? | Comment générer un rapport analytique personnalisé avec des dimensions et filtres custom ? | Quels KPIs ventes, trafic et conversion sont disponibles en temps réel sur le dashboard ? | Comment analyser le trafic web de mon application — sessions, pages vues et taux de rebond ?"
+  },
+  "paths": {
+    "/v1/analytics/sales": {
+      "get": {
+        "summary": "Récupérer les métriques de ventes — chiffre d'affaires, nombre de commandes et panier moyen par période et granularité temporelle (heure, jour, semaine, mois)",
+        "operationId": "getSalesAnalytics",
+        "tags": ["Analytics"],
+        "parameters": [
+          {"name": "from", "in": "query", "schema": {"type": "string", "format": "date"}},
+          {"name": "to", "in": "query", "schema": {"type": "string", "format": "date"}},
+          {
+            "name": "granularity",
+            "in": "query",
+            "schema": {"type": "string", "enum": ["hour", "day", "week", "month"], "default": "day"}
+          }
+        ],
+        "responses": {"200": {"description": "Métriques ventes par période"}}
+      }
+    },
+    "/v1/analytics/traffic": {
+      "get": {
+        "summary": "Récupérer les métriques de trafic web — sessions actives, pages vues, taux de rebond et sources d'acquisition des visiteurs",
+        "operationId": "getTrafficAnalytics",
+        "tags": ["Analytics"],
+        "responses": {"200": {"description": "Métriques trafic"}}
+      }
+    },
+    "/v1/analytics/conversion": {
+      "get": {
+        "summary": "Consulter les taux de conversion — analyse du funnel de homepage vers achat, abandons de panier et micro-conversions par étape",
+        "operationId": "getConversionAnalytics",
+        "tags": ["Analytics"],
+        "responses": {"200": {"description": "Métriques conversion"}}
+      }
+    },
+    "/v1/analytics/reports": {
+      "post": {
+        "summary": "Générer un rapport analytique personnalisé — sélection de métriques, dimensions de segmentation et filtres custom sur une plage de dates définie",
+        "operationId": "generateReport",
+        "tags": ["Analytics"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "metrics": {"type": "array", "items": {"type": "string"}},
+                  "dimensions": {"type": "array", "items": {"type": "string"}},
+                  "filters": {"type": "object"},
+                  "date_range": {
+                    "type": "object",
+                    "properties": {
+                      "from": {"type": "string", "format": "date"},
+                      "to": {"type": "string", "format": "date"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Rapport analytique généré"}}
+      }
+    },
+    "/v1/analytics/dashboard": {
+      "get": {
+        "summary": "Accéder au tableau de bord temps réel — agrégation des KPIs ventes, trafic et conversion en un seul appel pour le pilotage business",
+        "operationId": "getDashboard",
+        "tags": ["Analytics"],
+        "responses": {"200": {"description": "Dashboard KPIs temps réel"}}
+      }
+    }
+  }
+}

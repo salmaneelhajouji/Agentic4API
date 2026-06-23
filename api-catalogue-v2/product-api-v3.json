@@ -1,0 +1,401 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Product API",
+    "version": "3.0.0",
+    "x-api-id": "product-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Catalog",
+    "x-domain": "E-Commerce",
+    "description": "Cette API régit l'indexation, la publication et l'enrichissement sémantique du catalogue d'articles de la plateforme e-commerce (v3). Recommandée pour les intégrations standards de fiches articles, elle intègre obligatoirement la devise ISO 4217, le chaînage sémantique des catégories de taxonomie (category_id), les métadonnées obligatoires d'optimisation pour les moteurs de recherche (SEO) et gère de manière découplée l'ensemble des variantes en sous-ressources.",
+    "x-breaking-changes-from-previous": [
+      "variants→sous-ressource /v3/products/{id}/variants",
+      "category string→category_id (référence product-catalog-api)",
+      "pricing.currency obligatoire (ISO 4217)",
+      "SEO metadata obligatoire pour status=active"
+    ],
+    "x-synonymes": "catalogue d'articles v3, fiche produit enrichie, métadonnées SEO produit, url slug de produit, devise obligatoire ISO 4217, sous-ressource variantes d'articles, taxonomie du catalogue, prix de vente barré, enregistrement de produit complet",
+    "x-false-positive-warning": "Attention : Cette API gère le cycle de vie, les variantes et le SEO de la fiche article commerciale (Product API). Ne pas la confondre avec la `product-catalog-api` (microservice chargé exclusivement de la taxonomie des arbres de catégories) ni avec la `inventory-api` qui dresse les bilans physiques des stocks."
+  },
+  "paths": {
+    "/v3/products": {
+      "get": {
+        "summary": "Rechercher et lister les fiches de produits du catalogue en appliquant des filtres de prix, de catégories et de métadonnées SEO",
+        "operationId": "listProductsV3",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "name": "category_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "draft",
+                "archived"
+              ]
+            }
+          },
+          {
+            "name": "min_price",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "max_price",
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "newest",
+                "price_asc",
+                "price_desc",
+                "name_asc"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée enrichie"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et indexer un nouveau produit complet en vérifiant l'exhaustivité des métadonnées SEO si le statut est actif",
+        "operationId": "createProductV3",
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductV3Create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          },
+          "422": {
+            "description": "SEO manquant pour status=active"
+          }
+        }
+      }
+    },
+    "/v3/products/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^PROD-[0-9]{3}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les détails commerciaux complets, la tarification et les attributs SEO d'un produit spécifique",
+        "operationId": "getProductV3",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Identifiant d'article inconnu"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour la description fonctionnelle, la tarification ou les informations SEO de la fiche article",
+        "operationId": "updateProductV3",
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductV3Create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Archiver et geler la visibilité commerciale de la fiche produit (soft delete)",
+        "operationId": "archiveProductV3",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "Archivé"
+          }
+        }
+      }
+    },
+    "/v3/products/{id}/variants": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister l'intégralité des variantes de déclinaisons (tailles, coloris, matières) rattachées au produit",
+        "operationId": "getProductVariants",
+        "tags": [
+          "Variants"
+        ],
+        "responses": {
+          "200": {
+            "description": "Variantes"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter et associer une nouvelle variante d'article (SKU dédié) avec surcharge d'attributs et de prix",
+        "operationId": "addProductVariant",
+        "tags": [
+          "Variants"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "sku",
+                  "attributes"
+                ],
+                "properties": {
+                  "sku": {
+                    "type": "string"
+                  },
+                  "attributes": {
+                    "type": "object",
+                    "example": {
+                      "color": "rouge",
+                      "size": "M"
+                    }
+                  },
+                  "stock": {
+                    "type": "integer"
+                  },
+                  "price_override": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Variante ajoutée"
+          }
+        }
+      }
+    },
+    "/v3/products/{id}/variants/{variantId}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "variantId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Modifier la configuration, les surcharges tarifaires ou les attributs d'une variante spécifique",
+        "operationId": "updateProductVariant",
+        "tags": [
+          "Variants"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mise à jour"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer définitivement une variante d'article du catalogue d'exploitation",
+        "operationId": "deleteProductVariant",
+        "tags": [
+          "Variants"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimée"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SEO": {
+        "type": "object",
+        "required": [
+          "slug",
+          "meta_title",
+          "meta_description"
+        ],
+        "properties": {
+          "slug": {
+            "type": "string",
+            "example": "t-shirt-blanc-coton"
+          },
+          "meta_title": {
+            "type": "string",
+            "maxLength": 60
+          },
+          "meta_description": {
+            "type": "string",
+            "maxLength": 160
+          },
+          "keywords": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ProductV3Create": {
+        "type": "object",
+        "required": [
+          "name",
+          "sku",
+          "category_id",
+          "pricing"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "category_id": {
+            "type": "string",
+            "description": "Référence product-catalog-api"
+          },
+          "description": {
+            "type": "string"
+          },
+          "pricing": {
+            "type": "object",
+            "required": [
+              "base_price",
+              "currency"
+            ],
+            "properties": {
+              "base_price": {
+                "type": "number"
+              },
+              "sale_price": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string",
+                "example": "EUR"
+              }
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "seo": {
+            "$ref": "#/components/schemas/SEO"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "draft",
+              "archived"
+            ],
+            "default": "draft"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Career Guidance API",
+    "version": "1.0.0",
+    "x-api-id": "career-guidance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "API d'orientation professionnelle pilotée par IA, couvrant l'exploration de métiers, le matching de profil étudiant avec des carrières adaptées et la consultation des compétences requises par secteur. Elle s'adresse aux conseillers d'orientation, plateformes d'emploi, établissements scolaires et portails de formation souhaitant proposer un accompagnement personnalisé dans les choix de carrière. Elle prend en charge les processus de bilan de compétences, de recommandation de parcours et de découverte des débouchés par domaine. DIFFÉRENCE vs alumni-api : Career Guidance API oriente vers des métiers par IA sur la base d'un profil ; alumni-api gère le réseau d'anciens élèves et le mentorat. DIFFÉRENCE vs job-posting-api : Career Guidance API explore des carrières et métiers ; job-posting-api publie des offres d'emploi réelles à pourvoir. DIFFÉRENCE vs training-api : Career Guidance API recommande des carrières ; training-api propose des formations pour acquérir des compétences spécifiques.",
+    "x-synonymes": "orientation professionnelle, conseil carrière, choix métier, débouchés formation, métiers d'avenir, compétences requises métier, matching carrière, bilan de compétences, orientation scolaire, conseiller d'orientation, parcours professionnel, reconversion professionnelle, secteur emploi, fiche métier, débouchés diplôme, carrière recommandée, profil étudiant carrière, job matching, orientation post-bac, débouchés master",
+    "x-false-positive-warning": "DIFFÉRENCE vs alumni-api : Career Guidance API = orientation vers des métiers par IA basée sur profil ; alumni-api = réseau d'anciens élèves mentors pour networking et mentorat. DIFFÉRENCE vs job-posting-api : Career Guidance API = exploration de carrières et métiers génériques ; job-posting-api = offres d'emploi réelles à pourvoir chez un employeur précis. DIFFÉRENCE vs training-api : Career Guidance API = recommande des carrières selon le profil ; training-api = propose des formations pour acquérir des compétences ciblées. DIFFÉRENCE vs assessment-api : Career Guidance API = recommandation de carrières ; assessment-api = évaluation des connaissances et compétences via tests.",
+    "x-cas-usage": "Comment proposer à mes étudiants des métiers correspondant à leur profil et leurs intérêts ? | Quelles compétences sont requises pour devenir data scientist ou ingénieur cloud ? | Comment explorer les métiers disponibles dans le secteur de la santé numérique ? | Comment matcher le profil d'un étudiant en informatique avec les carrières tech les mieux adaptées ? | Comment intégrer un outil d'orientation professionnelle IA dans notre plateforme scolaire ?"
+  },
+  "paths": {
+    "/v1/careers/explore": {
+      "get": {
+        "summary": "Explorer les métiers disponibles par secteur, niveau d'études et débouchés professionnels associés",
+        "operationId": "exploreCareerPaths",
+        "tags": ["Explore"],
+        "responses": {
+          "200": {"description": "Liste des métiers disponibles avec leurs caractéristiques et débouchés"}
+        }
+      },
+      "post": {
+        "summary": "Matcher un profil étudiant avec les carrières recommandées par IA selon compétences et intérêts",
+        "operationId": "matchCareersToProfile",
+        "tags": ["Explore"],
+        "responses": {
+          "200": {"description": "Liste des carrières recommandées classées par adéquation avec le profil"}
+        }
+      }
+    },
+    "/v1/careers/{careerId}": {
+      "parameters": [{"name": "careerId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Obtenir les compétences requises pour un métier donné : hard skills, soft skills et formations recommandées",
+        "operationId": "getRequiredSkills",
+        "tags": ["Careers"],
+        "responses": {
+          "200": {"description": "Détail des compétences, certifications et parcours de formation recommandés pour le métier"},
+          "404": {"description": "Métier introuvable pour l'identifiant fourni"}
+        }
+      }
+    }
+  }
+}

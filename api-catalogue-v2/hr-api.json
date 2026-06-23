@@ -1,0 +1,169 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HR API",
+    "version": "1.0.0",
+    "x-api-id": "hr-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe RH",
+    "x-domain": "Human Resources",
+    "description": "Cette API régit les structures macro, les référentiels de départements et l'organigramme officiel de l'entreprise. Elle permet d'administrer l'architecture hiérarchique des services, de déclarer la création de départements avec leurs managers attitrés, et d'assurer le suivi global du volume des effectifs (onboarding/offboarding de fiches collaborateurs). Elle sert de socle de gouvernance pour l'annuaire corporatif.",
+    "x-synonymes": "organigramme d'entreprise, référentiel des départements, structure hiérarchique, annuaire d'entreprise, onboarding de dossier, fiches de postes, mouvements de personnel, services de l'organisation, responsable hiérarchique, gouvernance RH, contrats types, arborescence d'entreprise",
+    "x-false-positive-warning": "Attention : Cette API centralise la structure organisationnelle macro, l'organigramme et les départements (HR API). Ne pas la confondre avec la `employee-api` (qui est le coffre-fort confidentiel contenant les données salariales individuelles nominatives, l'historique précis de paie et les soldes de congés fins de chaque personne physique).",
+    "x-cas-usage": "Comment extraire l'organigramme dynamique complet de l'entreprise pour mettre à jour l'intranet ? | Comment créer un nouveau département logique en désignant son manager de rattachement ? | Où consulter la liste des départements existants avec le volume d'effectifs rattaché ?"
+  },
+  "paths": {
+    "/v1/hr/employees": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des fiches du personnel rattachées aux départements logiques de l'entreprise",
+        "operationId": "listHREmployees",
+        "tags": [
+          "HR"
+        ],
+        "parameters": [
+          {
+            "name": "department",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "on_leave",
+                "terminated"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Employés"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et initialiser une nouvelle structure de dossier collaborateur lors de son entrée dans l'organisation",
+        "operationId": "createHREmployee",
+        "tags": [
+          "HR"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "full_name",
+                  "email",
+                  "department",
+                  "position"
+                ],
+                "properties": {
+                  "full_name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "department": {
+                    "type": "string"
+                  },
+                  "position": {
+                    "type": "string"
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "contract_type": {
+                    "type": "string",
+                    "enum": [
+                      "CDI",
+                      "CDD",
+                      "Stage",
+                      "Freelance"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        }
+      }
+    },
+    "/v1/hr/org-chart": {
+      "get": {
+        "summary": "Récupérer l'arborescence hiérarchique et l'organigramme consolidé des relations de l'entreprise",
+        "operationId": "getOrgChart",
+        "tags": [
+          "HR"
+        ],
+        "responses": {
+          "200": {
+            "description": "Organigramme"
+          }
+        }
+      }
+    },
+    "/v1/hr/departments": {
+      "get": {
+        "summary": "Lister l'ensemble des départements et des entités structurelles actives de l'organisation",
+        "operationId": "getDepartments",
+        "tags": [
+          "HR"
+        ],
+        "responses": {
+          "200": {
+            "description": "Départements"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et créer un nouveau département ou pôle d'activité au sein de la structure corporative",
+        "operationId": "createDepartment",
+        "tags": [
+          "HR"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "manager_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        }
+      }
+    }
+  }
+}

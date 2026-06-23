@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Energy Audit API",
+    "version": "1.0.0",
+    "x-api-id": "energy-audit-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Cette API pilote la gestion des diagnostics de performance énergétique (DPE) et les audits environnementaux pour le parc immobilier de l'entreprise. Elle permet de commander et de planifier des audits, de stocker et d'analyser les rapports énergétiques détaillés (consommation de chauffage, émission de gaz à effet de serre, classification de A à G), et de suivre la mise en œuvre des recommandations de travaux de rénovation énergétique visant à optimiser l'empreinte carbone des bâtiments.",
+    "x-synonymes": "audit énergétique, DPE, performance énergétique, parc immobilier, rénovation énergétique, consommation de bâtiment, classe énergétique, recommandation de travaux, diagnostic immobilier, empreinte carbone bâtiment, isolation thermique, audit environnemental, suivi de travaux, efficacité énergétique",
+    "x-false-positive-warning": "Attention : Cette API se concentre uniquement sur l'audit thermique, la conformité réglementaire et la performance énergétique des structures immobilières physiques (Energy Audit). Ne pas la confondre avec la `carbon-footprint-api` qui calcule le bilan carbone global des activités de l'entreprise (déplacements, serveurs Cloud, chaîne logistique).",
+    "x-cas-usage": "Comment commander un nouvel audit énergétique ou un DPE réglementaire pour un site de bureaux ? | Où consulter le rapport DPE détaillé et la classe de performance énergétique d'un entrepôt ? | Comment extraire la liste des recommandations de travaux d'isolation recommandées par l'expert suite à son diagnostic ? | Comment mettre à jour les métadonnées d'un audit immobilier après la réalisation de travaux de rénovation ?"
+  },
+  "paths": {
+    "/v1/audits": {
+      "get": {
+        "summary": "Lister et parcourir l'historique des audits environnementaux et diagnostics de performance énergétique (DPE) réalisés sur le parc",
+        "operationId": "listAudits",
+        "tags": [
+          "Audits"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Commander et planifier un nouvel audit thermique ou diagnostic de performance énergétique pour un bâtiment du parc immobilier",
+        "operationId": "createAudit",
+        "tags": [
+          "Audits"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/audits/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le rapport d'audit détaillé, les notes d'émissions de gaz à effet de serre et la classification énergétique DPE du site",
+        "operationId": "getAudit",
+        "tags": [
+          "Audits"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les données de diagnostic, les informations de structure ou l'état du dossier d'audit immobilier",
+        "operationId": "updateAudit",
+        "tags": [
+          "Audits"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/audits/{id}/recommendations": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la liste des recommandations d'isolation thermique et de travaux de rénovation énergétique préconisés par l'expert",
+        "operationId": "getRecommendations",
+        "tags": [
+          "Recs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

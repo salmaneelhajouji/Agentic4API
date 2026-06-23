@@ -1,0 +1,72 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Service Assurance API",
+    "version": "1.0.0",
+    "x-api-id": "service-assurance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Assurance qualité de service télécom. Suivi de la conformité aux SLA (Service Level Agreements), gestion des violations de SLA, déclaration et résolution des incidents affectant la qualité de service (dégradation réseau, coupures, latence). DIFFÉRENCE vs security-incident-api : Service Assurance gère les incidents de qualité de service télécom (réseau, performance, SLA), Security Incident gère les attaques et compromissions de cybersécurité. DIFFÉRENCE vs network-api : Service Assurance se concentre sur la conformité SLA et les remontées incidents clients, Network API gère la configuration et la topologie réseau.",
+    "x-synonymes": "SLA conformité, violation SLA, assurance service, qualité de service, QoS télécom, incident réseau, dégradation service, remontée incident, résolution incident, engagement service, taux disponibilité, uptime SLA, pénalité SLA, gestion incidents télécom, garantie service",
+    "x-false-positive-warning": "Incidents de cybersécurité → security-incident-api-v2. Configuration réseau → network-api. Supervision infrastructure → monitoring-api.",
+    "x-cas-usage": "je veux vérifier le taux de conformité SLA de mes services télécom | je veux ouvrir une violation de SLA suite à une coupure de service | je veux lister tous les incidents de qualité de service en cours | je veux créer un incident de dégradation réseau pour un client | je veux clôturer un incident après résolution et retour à la normale"
+  },
+  "paths": {
+    "/v1/assurance/sla": {
+      "get": {
+        "summary": "Consulter le tableau de conformité SLA — taux de disponibilité, respect des engagements par service",
+        "operationId": "getSLACompliance",
+        "tags": ["SLA"],
+        "responses": { "200": { "description": "Conformité SLA" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Ouvrir une violation de SLA suite au non-respect d'un engagement de niveau de service",
+        "operationId": "openSLAViolation",
+        "tags": ["SLA"],
+        "responses": { "200": { "description": "Violation SLA ouverte" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/assurance/incidents": {
+      "get": {
+        "summary": "Lister les incidents de qualité de service actifs (coupures, dégradations, latence anormale)",
+        "operationId": "listAssuranceIncidents",
+        "tags": ["Incidents"],
+        "responses": { "200": { "description": "Incidents en cours" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Déclarer un nouvel incident de qualité de service télécom avec impact client et urgence",
+        "operationId": "createAssuranceIncident",
+        "tags": ["Incidents"],
+        "responses": { "200": { "description": "Incident créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/assurance/incidents/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le détail d'un incident de service (cause, impact, actions en cours, ETA résolution)",
+        "operationId": "getAssuranceIncident",
+        "tags": ["Incidents"],
+        "responses": { "200": { "description": "Détail incident" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Résoudre et clôturer un incident de service après retour à la normale",
+        "operationId": "resolveIncident",
+        "tags": ["Incidents"],
+        "responses": { "200": { "description": "Incident résolu" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

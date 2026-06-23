@@ -1,0 +1,32 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Production Order API",
+    "version": "1.0.0",
+    "x-api-id": "production-order-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "x-successor": "production-order-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS production-order-api-v3] Cette API gérait la version initiale de l'enregistrement et du suivi linéaire des ordres de fabrication (OF) au sein de l'usine (v1). Structure obsolète figée sans prise en charge des gammes opératoires ni des terminaux de suivi d'avancement d'atelier. Toutes les applications de gestion industrielle (MES/ERP) doivent migrer vers la version 3 active (production-order-api-v3) pour piloter l'ordonnancement dynamique et les temps d'exécution des postes de charge.",
+    "x-synonymes": "ordre de fabrication v1, OF industriel ancien, lancement de production historique, suivi d'atelier déprécié, fiche de travail usine v1, registre d'ordres de fabrication",
+    "x-false-positive-warning": "Attention : Cette API historique est dépréciée et ses fonctionnalités de consultation linéaire sont gelées. Rediriger immédiatement vos flux applicatifs vers la version cible active `production-order-api-v3`."
+  },
+  "paths": {
+    "/v1/orders": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS production-order-api-v3 - Consulter l'index historique linéaire des ordres de fabrication de la v1",
+        "operationId": "listOrdersV1",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

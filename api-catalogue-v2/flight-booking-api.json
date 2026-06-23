@@ -1,0 +1,152 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Flight Booking API",
+    "version": "1.0.0",
+    "x-api-id": "flight-booking-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Cette API régit l'ensemble du cycle de recherche et de réservation de billets d'avion pour le domaine du tourisme. Elle permet aux plateformes de voyage d'interroger les disponibilités de vols, de créer et de gérer des dossiers de réservation, de mettre à disposition le plan de cabine interactif pour la sélection des sièges, et d'administrer les formalités de l'enregistrement en ligne (online check-in) jusqu'à l'émission de la carte d'embarquement.",
+    "x-synonymes": "réservation de vol, billet d'avion, recherche de vols, plan de cabine, sélection de siège, enregistrement en ligne, online check-in, carte d'embarquement, dossier passager, PNR, compagnie aérienne, annulation de vol, classe de voyage, itinéraire aérien, escale",
+    "x-false-positive-warning": "Attention : Cette API traite de manière exclusive le transport aérien, le choix des sièges à bord et l'enregistrement de vol (Flight Booking). Ne pas la confondre avec la `hotel-booking-api` (réservations de nuitées) ni avec la `car-rental-api` (locations de véhicules de tourisme).",
+    "x-cas-usage": "Comment rechercher les vols disponibles pour un itinéraire et des dates spécifiques ? | Comment créer un dossier de réservation ferme pour un passager sur un vol sélectionné ? | Où récupérer le plan de cabine d'un avion pour afficher l'arborescence des sièges libres ? | Quelle est la procédure pour effectuer l'enregistrement en ligne et générer le bon d'embarquement ? | Comment annuler une réservation de vol active conformément aux conditions tarifaires ?"
+  },
+  "paths": {
+    "/v1/flights/search": {
+      "post": {
+        "summary": "Rechercher et filtrer les vols et tarifs disponibles selon des critères d'itinéraire, de dates et de classe",
+        "operationId": "searchFlights",
+        "tags": [
+          "Search"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/flights/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les caractéristiques détaillées, les horaires, terminaux et franchises bagages d'un vol spécifique",
+        "operationId": "getFlightDetails",
+        "tags": [
+          "Flights"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et valider un nouveau dossier de réservation de vol (PNR) pour le compte de passagers",
+        "operationId": "bookFlight",
+        "tags": [
+          "Flights"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/flights/{bookingId}/seat": {
+      "parameters": [
+        {
+          "name": "bookingId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la cartographie et le plan de cabine interactif de l'appareil pour identifier les sièges disponibles",
+        "operationId": "getSeatMap",
+        "tags": [
+          "Seats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer le choix et affecter un numéro de siège spécifique à un passager du dossier",
+        "operationId": "selectSeat",
+        "tags": [
+          "Seats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/flights/{bookingId}/checkin": {
+      "parameters": [
+        {
+          "name": "bookingId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Exécuter les formalités d'enregistrement en ligne (check-in) des passagers pour valider l'embarquement",
+        "operationId": "onlineCheckin",
+        "tags": [
+          "Checkin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/flights/{bookingId}/cancel": {
+      "parameters": [
+        {
+          "name": "bookingId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Annuler un dossier de réservation de vol actif et déclencher le calcul des frais ou droits à remboursement",
+        "operationId": "cancelFlight",
+        "tags": [
+          "Cancel"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

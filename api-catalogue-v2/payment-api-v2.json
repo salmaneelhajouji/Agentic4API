@@ -1,0 +1,61 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Payment API",
+    "version": "2.0.0",
+    "x-api-id": "payment-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "DEPRECATED 2024 — NE PAS UTILISER. Version 2 avec PayPal, SEPA et capture manuelle. Migrer vers payment-api-v3 qui intègre BNPL, crypto et gestion des litiges.",
+    "x-breaking-changes-from-previous": ["ID integer→string PAY-XXXX", "PayPal et SEPA ajoutés", "capture_mode", "/refund dédié", "amount_refunded"],
+    "x-successor": "payment-api-v3",
+    "x-synonymes": "paiement v2 deprecated, paiement PayPal SEPA legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser payment-api-v3.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers payment-api-v3."
+  },
+  "paths": {
+    "/v2/payments": {
+      "post": {
+        "summary": "DEPRECATED — Initier un paiement carte/PayPal/SEPA",
+        "operationId": "createPaymentV2",
+        "tags": ["Payments"],
+        "responses": {"201": {"description": "Paiement initié"}}
+      },
+      "get": {
+        "summary": "DEPRECATED — Lister les paiements",
+        "operationId": "listPaymentsV2",
+        "tags": ["Payments"],
+        "responses": {"200": {"description": "Paiements"}}
+      }
+    },
+    "/v2/payments/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "DEPRECATED — Statut d un paiement PAY-XXXX",
+        "operationId": "getPaymentV2",
+        "tags": ["Payments"],
+        "responses": {"200": {"description": "Paiement"}}
+      }
+    },
+    "/v2/payments/{id}/capture": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "DEPRECATED — Capturer un paiement pré-autorisé",
+        "operationId": "capturePaymentV2",
+        "tags": ["Payments"],
+        "responses": {"200": {"description": "Capturé"}}
+      }
+    },
+    "/v2/payments/{id}/refund": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "DEPRECATED — Remboursement total ou partiel",
+        "operationId": "refundPaymentV2",
+        "tags": ["Payments"],
+        "responses": {"200": {"description": "Remboursé"}}
+      }
+    }
+  }
+}

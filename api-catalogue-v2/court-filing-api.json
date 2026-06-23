@@ -1,0 +1,146 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Court Filing API",
+    "version": "1.0.0",
+    "x-api-id": "court-filing-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Cette API permet de gérer la préparation, la soumission et le suivi des actes juridiques (dépôts de conclusions, requêtes, pièces) auprès des juridictions via les réseaux sécurisés (RPVA, e-barreau). Elle est conçue pour les éditeurs de logiciels pour cabinets d'avocats (LegalTech) et les directions juridiques souhaitant automatiser leurs téléprocédures, fiabiliser la transmission de leurs dossiers de plaidoirie, et assurer la traçabilité des échanges avec les greffes.",
+    "x-synonymes": "télérecours, dépôt de conclusions, RPVA, e-barreau, acte de procédure, requête au tribunal, communication électronique, téléprocédure, greffe, mise en état, pièces jointes juridiques, signification, enrôlement, assignation, dossier plaidant, communication de pièces, audience",
+    "x-false-positive-warning": "Ne pas confondre cette API avec l'API Signature Électronique (qui certifie la signature d'un contrat ou d'un acte avant son dépôt) ni avec l'API Jurisprudence / Case Law (qui permet de rechercher des décisions de justice passées, et non de soumettre de nouvelles procédures au tribunal).",
+    "x-cas-usage": "Comment vérifier si mon dépôt de conclusions a bien reçu un accusé de réception technique du greffe ? | Puis-je joindre un bordereau de pièces justificatives lourd (plus de 50 Mo) à ma requête via cette API ? | Comment initialiser un nouveau dossier numérique pour une assignation au tribunal de commerce ? | Quelles sont les erreurs renvoyées si le certificat e-barreau de l'avocat est expiré lors de la soumission de l'acte ?"
+  },
+  "paths": {
+    "/v1/filings": {
+      "get": {
+        "summary": "Récupérer la liste et l'état d'avancement des téléprocédures et dépôts de conclusions en cours auprès des juridictions",
+        "operationId": "listCourtFilings",
+        "tags": [
+          "Filings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer un nouveau brouillon de dépôt d'acte ou de requête (à compléter avec des pièces avant la soumission officielle)",
+        "operationId": "createFiling",
+        "tags": [
+          "Filings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/filings/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le statut détaillé d'une téléprocédure spécifique (brouillon, transmis, accusé de réception du greffe, rejeté)",
+        "operationId": "getFilingStatus",
+        "tags": [
+          "Filings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Transmettre définitivement l'acte et ses pièces jointes à la juridiction cible via le réseau sécurisé officiel",
+        "operationId": "submitFiling",
+        "tags": [
+          "Filings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/filings/{id}/documents": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister l'ensemble des pièces juridiques, conclusions et bordereaux attachés à un dossier de dépôt",
+        "operationId": "getFilingDocs",
+        "tags": [
+          "Docs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Téléverser et attacher une nouvelle pièce justificative (PDF) au dossier de procédure avant sa soumission au greffe",
+        "operationId": "addFilingDoc",
+        "tags": [
+          "Docs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

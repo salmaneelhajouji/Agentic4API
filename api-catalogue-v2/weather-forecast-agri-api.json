@@ -1,0 +1,106 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Weather Forecast Agri API",
+    "version": "1.0.0",
+    "x-api-id": "weather-forecast-agri-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Météo agricole hyperlocale. Prévisions météorologiques ciblées, alertes gelées au sol et calcul d'indices agrométéorologiques avancés (ETP, cumul thermique) pour la gestion des parcelles. DIFFERENCE vs energy-forecast-api : Weather Forecast Agri = météo d'une parcelle agricole pour la pousse des cultures, Energy Forecast = prévisions de consommation ou production énergétique. DIFFÉRENCE vs weather-api : Weather Forecast Agri fournit des indicateurs professionnels agronomiques, alors qu'une weather-api classique fournit la météo urbaine grand public.",
+    "x-synonymes": "météo, agricole, prévision, gelée, agrométéo, parcelle, pluviométrie, température, humidité, gel, évapotranspiration, climat, risque agricole, culture, météo hyperlocale, alerte météo, agronomie",
+    "x-false-positive-warning": "Pour les prévisions de charges de réseaux électriques ou de production d'énergies renouvelables (solaire, éolien), utilisez energy-forecast-api. Pour la météo grand public des villes, utilisez l'API météo classique.",
+    "x-cas-usage": "je veux obtenir les prévisions météo à 10 jours pour une parcelle agricole | je veux vérifier les alertes de gelée imminente sur mes cultures | je veux consulter les indices agrométéorologiques avancés d'un champ | je veux suivre les risques climatiques d'une exploitation agricole"
+  },
+  "paths": {
+    "/v1/weather/{fieldId}": {
+      "parameters": [
+        {
+          "name": "fieldId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer les prévisions météorologiques hyperlocales et glissantes à 10 jours pour une parcelle géographique",
+        "operationId": "getWeatherForecast",
+        "tags": [
+          "Weather"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/weather/{fieldId}/frost-alerts": {
+      "parameters": [
+        {
+          "name": "fieldId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le registre des alertes aux gelées printanières ou hivernales prévues au niveau du sol",
+        "operationId": "getFrostAlerts",
+        "tags": [
+          "Frost"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/weather/{fieldId}/agro-indices": {
+      "parameters": [
+        {
+          "name": "fieldId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Extraire les indicateurs agronomiques avancés comme le cumul de degrés-jours ou l'évapotranspiration potentielle (ETP)",
+        "operationId": "getAgroIndices",
+        "tags": [
+          "Indices"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

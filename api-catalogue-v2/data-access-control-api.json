@@ -1,0 +1,92 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Access Control API",
+    "version": "1.0.0",
+    "x-api-id": "data-access-control-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API gouverne la sécurité, le cloisonnement et le contrôle d'accès aux actifs de données de l'entreprise (jeux de données, tables, entrepôts de données). Elle permet de définir, appliquer et auditer des politiques d'accès basées sur les rôles (RBAC) ou les contextes afin d'assurer la conformité réglementaire (RGPD) et le respect des principes de moindre privilège. Ses utilisateurs cibles sont les ingénieurs de données (Data Engineers), les responsables de la gouvernance (Data Stewards) et les équipes de sécurité (SecOps) chargés d'orchestrer le partage sécurisé des ressources de données.",
+    "x-synonymes": "contrôle d'accès aux données, gouvernance des données, droit sur dataset, politique de sécurité data, RBAC data, habilitation de données, restriction d'accès, privilège de lecture, gouvernance de table, audit d'accès, conformité RGPD data, autorisation de jeu de données, révocation de droit data, grant de données, politique de gouvernance, sécurité des datalakes, propriété de données, accès entrepôt de données",
+    "x-false-positive-warning": "Attention : Cette API gère spécifiquement les droits d'accès, d'affichage et d'utilisation sur les infrastructures et structures de données (datasets, tables, data lakes). Ne pas la confondre avec la `permission-api` (qui administre les droits applicatifs et les fonctionnalités génériques au niveau de l'interface utilisateur, comme l'accès à un bouton, un écran ou un menu d'une application métier).",
+    "x-cas-usage": "Comment autoriser l'équipe Analytics à lire le dataset des transactions financières sans leur donner accès aux données brutes ? | Quelles sont les politiques d'accès et de masquage actuellement actives sur la table des profils clients ? | Comment révoquer immédiatement tous les privilèges d'accès d'un utilisateur tiers sur un jeu de données spécifique ? | Où puis-je consulter l'historique d'audit des habilitations accordées sur ce data lake pour la préparation de l'audit ?"
+  },
+  "paths": {
+    "/v1/data-access/policies": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des politiques de sécurité et règles de gouvernance d'accès aux données configurées",
+        "operationId": "listDataAccessPolicies",
+        "tags": [
+          "Policies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer ou mettre à jour une politique d'accès globale pour définir de nouvelles règles d'habilitation sur les données",
+        "operationId": "createDataAccessPolicy",
+        "tags": [
+          "Policies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/data-access/{datasetId}/grants": {
+      "parameters": [
+        {
+          "name": "datasetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la liste détaillée des permissions, privilèges et accès actuellement accordés à des rôles ou utilisateurs sur un jeu de données spécifique",
+        "operationId": "getDataGrants",
+        "tags": [
+          "Grants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Accorder un nouveau privilège d'accès (lecture, écriture, requêtage) à un groupe ou un utilisateur sur un dataset ciblé",
+        "operationId": "grantAccess",
+        "tags": [
+          "Grants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Révoquer immédiatement une habilitation ou un droit d'accès spécifique sur un jeu de données (fin de projet ou rotation de sécurité)",
+        "operationId": "revokeAccess",
+        "tags": [
+          "Grants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

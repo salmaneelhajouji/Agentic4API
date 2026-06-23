@@ -1,0 +1,86 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Campus API",
+    "version": "1.0.0",
+    "x-api-id": "campus-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "API dédiée aux services de vie du campus universitaire ou scolaire, couvrant la gestion des équipements physiques, la réservation d'espaces (salles de travail, amphithéâtres, salles informatiques), la publication et consultation d'événements étudiants, ainsi que l'accès aux menus de la restauration universitaire. Elle s'adresse aux applications de portail étudiant, aux systèmes de gestion de campus et aux outils mobiles destinés aux étudiants et personnels. DIFFÉRENCE vs student-api-v2 : Campus API couvre les services physiques et la vie collective du campus, tandis que student-api-v2 gère le dossier administratif et académique individuel de l'étudiant. DIFFÉRENCE vs meeting-room-api : Campus API concerne les espaces universitaires et étudiants, alors que meeting-room-api est orientée salles de réunion professionnelles en entreprise. DIFFÉRENCE vs parent-portal-api : Campus API sert les étudiants pour les services campus, tandis que parent-portal-api est un espace dédié aux parents pour le suivi scolaire de leurs enfants.",
+    "x-synonymes": "vie campus, salle campus, réservation salle université, amphi réservation, événement étudiant, cantine menu, restaurant universitaire, menu RU, équipements campus, bibliothèque campus, salle de travail, salle informatique, activités campus, association étudiant, BDE, animation campus, agenda campus, portail étudiant campus, espace coworking campus, gymnase campus",
+    "x-false-positive-warning": "DIFFÉRENCE vs student-api-v2 : Campus API = services physiques et vie du campus (réservation de salles, événements, cantine). student-api-v2 = dossier administratif et académique de l'étudiant (inscriptions, notes, relevés). DIFFÉRENCE vs parent-portal-api : Campus API = services campus pour étudiants. parent-portal-api = espace parents pour suivi scolaire enfants. DIFFÉRENCE vs meeting-room-api : Campus API = salles de travail et espaces universitaires pour étudiants. meeting-room-api = salles de réunion professionnelles en entreprise. DIFFÉRENCE vs amenity-booking-api : Campus API est spécifique à l'environnement universitaire/scolaire. amenity-booking-api couvre la réservation d'équipements dans un contexte résidentiel ou hôtelier.",
+    "x-cas-usage": "Comment réserver une salle de travail pour un groupe projet sur le campus ? | Comment consulter le menu du jour de la cantine et du restaurant universitaire ? | Comment créer et publier un événement étudiant sur le portail campus ? | Quels équipements et espaces sont disponibles sur le campus (gymnase, bibliothèque, salles informatiques) ? | Comment afficher l'agenda des événements campus dans une application étudiante mobile ?"
+  },
+  "paths": {
+    "/v1/campus/facilities": {
+      "get": {
+        "summary": "Lister les équipements du campus — salles, gymnase, bibliothèque, espaces coworking et communs disponibles",
+        "operationId": "listFacilities",
+        "tags": ["Facilities"],
+        "responses": {
+          "200": {
+            "description": "Liste des équipements et espaces disponibles sur le campus"
+          }
+        }
+      }
+    },
+    "/v1/campus/rooms": {
+      "get": {
+        "summary": "Consulter les salles disponibles sur le campus — amphithéâtres, salles informatiques, de travail et de réunion",
+        "operationId": "listCampusRooms",
+        "tags": ["Rooms"],
+        "responses": {
+          "200": {
+            "description": "Liste des salles disponibles avec leurs caractéristiques et créneaux de disponibilité"
+          }
+        }
+      },
+      "post": {
+        "summary": "Réserver une salle sur le campus pour un groupe de travail, une réunion ou un événement associatif",
+        "operationId": "bookCampusRoom",
+        "tags": ["Rooms"],
+        "responses": {
+          "200": {
+            "description": "Confirmation de réservation de la salle avec détail du créneau et des conditions"
+          }
+        }
+      }
+    },
+    "/v1/campus/events": {
+      "get": {
+        "summary": "Lister les événements campus — conférences, soirées BDE, ateliers et animations étudiantes à venir",
+        "operationId": "listCampusEvents",
+        "tags": ["Events"],
+        "responses": {
+          "200": {
+            "description": "Liste des événements campus avec dates, lieux et organisateurs"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et publier un événement étudiant sur le campus — soirée, conférence, atelier ou forum associatif",
+        "operationId": "createCampusEvent",
+        "tags": ["Events"],
+        "responses": {
+          "200": {
+            "description": "Événement créé et publié sur le portail campus avec ses informations complètes"
+          }
+        }
+      }
+    },
+    "/v1/campus/canteen": {
+      "get": {
+        "summary": "Consulter le menu du jour de la cantine et du restaurant universitaire avec entrées, plats et desserts",
+        "operationId": "getCanteenMenu",
+        "tags": ["Canteen"],
+        "responses": {
+          "200": {
+            "description": "Menu du jour avec composition des repas, allergènes et informations nutritionnelles"
+          }
+        }
+      }
+    }
+  }
+}

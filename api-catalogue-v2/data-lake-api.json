@@ -1,0 +1,92 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Lake API",
+    "version": "1.0.0",
+    "x-api-id": "data-lake-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API régit l'organisation, la structuration et l'accès physique aux données logées dans le lac de données (Data Lake) de l'entreprise. Elle permet d'administrer les zones logiques (Landing, Raw, Bronze, Silver, Gold), de gérer le partitionnement des dossiers et d'assurer le téléversement ou la suppression des objets et fichiers bruts (structurés, semi-structurés ou non structurés comme des logs, fichiers JSON, CSV ou Parquet). Elle est principalement exploitée par les Data Engineers pour orchestrer les pipelines d'ingestion et par les Data Scientists pour l'exploration de données massives.",
+    "x-synonymes": "lac de données, data lake, stockage d'objets, données brutes, raw data, zone d'atterrissage, landing zone, partitionnement de données, fichier non structuré, blob storage, bucket, objet de données, clé d'objet, pipeline d'ingestion, stockage de masse, zone d'archivage",
+    "x-false-positive-warning": "Attention : Cette API gère le stockage de fichiers physiques et de données brutes ou semi-structurées (Data Lake). Ne pas la confondre avec la `data-warehouse-api` (qui expose des données hautement structurées, modélisées en tables relationnelles et agrégées pour le requêtage décisionnel BI), ni avec la `data-catalog-api` (dédiée au dictionnaire de données et à l'indexation documentaire sans stockage physique).",
+    "x-cas-usage": "Comment téléverser un fichier de logs bruts dans la Landing Zone du lac de données ? | Quelles sont les partitions temporelles disponibles pour le répertoire des transactions clients ? | Comment provisionner une nouvelle zone logique (Silver) pour isoler nos données nettoyées ? | Comment purger ou supprimer un objet volumineux devenu obsolète pour libérer de l'espace de stockage ?"
+  },
+  "paths": {
+    "/v1/datalake/zones": {
+      "get": {
+        "summary": "Lister et cartographier les zones logiques actives (Landing, Raw, Cleaned) structurant le lac de données",
+        "operationId": "listLakeZones",
+        "tags": [
+          "Zones"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer ou provisionner une nouvelle zone logique ou un conteneur racine au sein du stockage de masse",
+        "operationId": "createZone",
+        "tags": [
+          "Zones"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/datalake/zones/{zone}/objects": {
+      "parameters": [
+        {
+          "name": "zone",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Parcourir et lister les fichiers, objets et structures de partitions contenus dans une zone spécifique du lac de données",
+        "operationId": "listLakeObjects",
+        "tags": [
+          "Objects"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Téléverser ou injecter un nouvel objet (fichier brut, journal d'événements, extraction semi-structurée) dans une zone ciblée",
+        "operationId": "uploadObject",
+        "tags": [
+          "Objects"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer définitivement un objet ou un fichier physique du stockage pour libérer de l'espace ou respecter les règles de rétention",
+        "operationId": "deleteObject",
+        "tags": [
+          "Objects"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

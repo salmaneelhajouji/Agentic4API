@@ -1,0 +1,56 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "IBAN Validation API",
+    "version": "1.0.0",
+    "x-api-id": "iban-validation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Cette API de sécurité financière opère la validation formelle et le décodage des coordonnées bancaires de type IBAN (International Bank Account Number) et codes BIC/SWIFT. Elle exécute des contrôles d'intégrité mathématiques (clé de contrôle), identifie la validité géographique du pays émetteur et extrait l'identifiant de la banque ou du guichet. Elle est indispensable pour valider la conformité des comptes de tiers (fournisseurs, clients) avant l'enregistrement d'un mandat de prélèvement ou l'émission d'un virement SEPA.",
+    "x-synonymes": "validation IBAN, vérification de compte bancaire, code BIC, code SWIFT, coordonnées bancaires, RIB, clé de contrôle bancaire, format SEPA, décodage IBAN, anti-fraude bancaire, validation de tiers payant, routage bancaire, identifiant d'établissement",
+    "x-false-positive-warning": "Attention : Cette API réalise exclusivement des vérifications préventives, structurelles et documentaires de validité de coordonnées bancaires (IBAN Validation). Ne pas la confondre avec la `transfer-api-v2` qui exécute et ordonnance physiquement l'ordre de virement et le mouvement de fonds interbancaire.",
+    "x-cas-usage": "Comment valider mathématiquement la structure d'un code IBAN saisi par un utilisateur avant de l'enregistrer ? | Comment décoder un IBAN pour extraire automatiquement le code BIC, le nom de la banque et le pays émetteur ? | Où intégrer ce contrôle pour intercepter les fautes de frappe de coordonnées sur les fiches de paie ou fournisseurs ?"
+  },
+  "paths": {
+    "/v1/iban/validate": {
+      "post": {
+        "summary": "Valider la conformité d'une chaîne IBAN en vérifiant la syntaxe par pays et la clé de contrôle mathématique",
+        "operationId": "validateIBAN",
+        "tags": [
+          "Validation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/iban/decode/{iban}": {
+      "parameters": [
+        {
+          "name": "iban",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Décoder une chaîne IBAN pour isoler et identifier le code établissement, le guichet et le code banque rattachés",
+        "operationId": "decodeIBAN",
+        "tags": [
+          "Decode"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

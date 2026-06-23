@@ -1,0 +1,193 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Insurance Claim API",
+    "version": "3.0.0",
+    "x-api-id": "insurance-claim-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Cette API pilote la gestion de bout en bout et l'automatisation des déclarations de sinistres d'assurance (v3). Elle permet aux assurés de déclarer un préjudice, de téléverser des documents et des photos de dommages (analysées en temps réel par vision par ordinateur), de déclencher un workflow d'expertise automatisé pour estimer le montant des réparations, et de suivre le statut du règlement jusqu'au versement de l'indemnisation. Elle est le coeur opérationnel de l'espace client et de l'outillage des gestionnaires.",
+    "x-synonymes": "déclaration de sinistre, gestion des sinistres, sinistre légitime, indemnisation des dommages, expertise automatique IA, analyse de photos sinistre, règlement de préjudice, liquidation de sinistre, ouverture de dossier sinistre, suivi de remboursement assurance, constat amiable numérique, rapport d'expertise d'assurance",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement du cycle de vie des sinistres légitimes déclarés par les assurés en vue de leur indemnisation (Claims). Ne pas la confondre avec la `fraud-claims-api` (dédiée au scoring, à l'analyse de signaux faibles et à l'investigation des dossiers suspects par les services anti-fraude).",
+    "x-cas-usage": "Comment initialiser une nouvelle déclaration de sinistre suite à un dégât des eaux ou un accident ? | Comment téléverser les photos des dommages pour lancer l'estimation automatique par l'intelligence artificielle ? | Où consulter le rapport d'expertise technique et le montant d'indemnisation proposé ? | Comment valider et accepter la proposition d'indemnisation pour déclencher le virement bancaire ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "Photos IA",
+    "Expertise automatique",
+    "Suivi temps reel"
+  ],
+  "paths": {
+    "/v3/claims": {
+      "get": {
+        "summary": "Lister, trier et filtrer l'ensemble des dossiers de sinistres en cours de traitement, d'expertise ou soldés",
+        "operationId": "listClaimsV3",
+        "tags": [
+          "Claims"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ouvrir et enregistrer une nouvelle déclaration de sinistre d'assurance avec ses données de cadrage initiales",
+        "operationId": "createClaimV3",
+        "tags": [
+          "Claims"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/claims/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le dossier d'indemnisation complet, la chronologie des événements et le statut d'un sinistre spécifique",
+        "operationId": "getClaimV3",
+        "tags": [
+          "Claims"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les informations, les circonstances ou modifier les caractéristiques de la déclaration de sinistre",
+        "operationId": "updateClaimV3",
+        "tags": [
+          "Claims"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/claims/{id}/documents": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Téléverser et indexer des photos de dommages, constats ou factures au sein du dossier de sinistre",
+        "operationId": "uploadClaimDoc",
+        "tags": [
+          "Docs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Lister et récupérer l'ensemble des justificatifs, photos et pièces contractuelles rattachés au dossier",
+        "operationId": "getClaimDocs",
+        "tags": [
+          "Docs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/claims/{id}/assessment": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les conclusions du rapport d'expertise, le chiffrage des dommages et les décisions du modèle d'évaluation",
+        "operationId": "getAssessment",
+        "tags": [
+          "Assessment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher ou solliciter manuellement une nouvelle évaluation ou expertise contradictoire sur le dossier",
+        "operationId": "requestAssessment",
+        "tags": [
+          "Assessment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/claims/{id}/settlement": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la proposition d'indemnisation financière finale, la franchise appliquée et le reste à charge",
+        "operationId": "getSettlement",
+        "tags": [
+          "Settlement"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer l'accord de l'assuré sur la proposition d'indemnisation pour ordonnancer le virement bancaire",
+        "operationId": "approveSettlement",
+        "tags": [
+          "Settlement"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

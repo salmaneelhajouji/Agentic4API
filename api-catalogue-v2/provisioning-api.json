@@ -1,0 +1,93 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Provisioning API",
+    "version": "1.0.0",
+    "x-api-id": "provisioning-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Cette API régit l'orchestration et le provisioning technique des services et lignes de télécommunication de l'entreprise. Dédiée aux équipes réseau, aux outils d'activation automatique et aux techniciens télécom, son rôle est d'assurer l'ouverture, le raccordement, la modification de profil et la coupure effective des accès et cartes SIM au niveau des infrastructures de l'opérateur.",
+    "x-synonymes": "Provisioning télécom, Activation de ligne, Désactivation de service, Ouverture de ligne, Raccordement réseau, Livraison d'accès, Configuration de carte SIM, Suspension d'abonnement, Allocation de ressources réseau, Provisionnement technique, Statut de raccordement, Commutation de ligne, Activation de carte SIM, Raccordement fibre, Provisionnement de routeur, Cycle de vie de ligne",
+    "x-false-positive-warning": "Attention : Cette API exécute uniquement les actions de configuration et d'activation réseau physiques et logiques (provisioning). Pour la facturation client, la souscription à des forfaits ou la gestion commerciale de l'offre, utilisez la Subscription API ou la Billing API.",
+    "x-cas-usage": "Comment faire pour déclencher l'activation technique immédiate d'une nouvelle ligne ou carte SIM utilisateur ? | Comment faire pour modifier le palier de débit technique ou les options de routage d'un accès réseau actif ? | Comment faire pour suspendre ou désactiver techniquement un accès réseau pour résiliation ou interruption ?"
+  },
+  "paths": {
+    "/v1/provisioning/activate": {
+      "post": {
+        "summary": "Initier la procédure de provisionnement et d'activation technique automatique d'une ligne ou d'un service réseau télécom",
+        "operationId": "activateService",
+        "tags": [
+          "Activate"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/provisioning/modify": {
+      "post": {
+        "summary": "Modifier la configuration d'infrastructure, les politiques de routage ou les paliers de débit d'un accès réseau actif",
+        "operationId": "modifyService",
+        "tags": [
+          "Modify"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/provisioning/deactivate": {
+      "post": {
+        "summary": "Orchestrer la résiliation technique ou la désactivation immédiate d'une ligne réseau pour interrompre le trafic de données",
+        "operationId": "deactivateService",
+        "tags": [
+          "Deactivate"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/provisioning/status/{requestId}": {
+      "parameters": [
+        {
+          "name": "requestId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Interroger le système pour obtenir l'état d'avancement ou le compte-rendu d'exécution d'une requête de provisioning réseau",
+        "operationId": "getProvisioningStatus",
+        "tags": [
+          "Status"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

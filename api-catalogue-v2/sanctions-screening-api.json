@@ -1,0 +1,55 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sanctions Screening API",
+    "version": "1.0.0",
+    "x-api-id": "sanctions-screening-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Criblage automatisé des personnes physiques et morales contre les listes de sanctions internationales (UE, OFAC/Trésor américain, ONU, gel des avoirs). Permet le criblage en masse d'une liste de clients ou contreparties, la consultation de la date de dernière mise à jour des listes, et la gestion des alertes générées (consultation et résolution). Utilisé dans les processus KYC, AML et conformité réglementaire. DIFFÉRENCE vs kyc-api : Sanctions Screening se concentre sur les listes noires internationales, KYC gère l'ensemble du processus de vérification d'identité client. DIFFÉRENCE vs aml-api : Sanctions = criblage listes statiques, AML = détection de comportements suspects en temps réel.",
+    "x-synonymes": "criblage sanctions, liste noire, OFAC, gel avoirs, sanctions UE, sanctions ONU, conformité réglementaire, KYC sanctions, AML criblage, screening contrepartie, embargo, PPE personne politiquement exposée, compliance sanctions, lutte blanchiment sanctions, filtrage réglementaire",
+    "x-false-positive-warning": "Vérification identité complète (KYC) → kyc-api. Détection de transactions suspectes → aml-api. Vérification réputation entreprise → due-diligence-api.",
+    "x-cas-usage": "je veux cribler une liste de clients contre les sanctions internationales | je veux savoir quand les listes de sanctions ont été mises à jour | je veux voir les alertes de criblage en attente de traitement | je veux résoudre une alerte sanctions après vérification manuelle | je veux vérifier si une contrepartie est sous embargo"
+  },
+  "paths": {
+    "/v1/sanctions/screen": {
+      "post": {
+        "summary": "Cribler en masse une liste de personnes ou entités contre toutes les listes de sanctions actives (UE, OFAC, ONU)",
+        "operationId": "screenBatch",
+        "tags": ["Screen"],
+        "responses": { "200": { "description": "Résultats de criblage avec scores de correspondance" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/sanctions/lists": {
+      "get": {
+        "summary": "Consulter la date de dernière mise à jour de chaque liste de sanctions (UE, OFAC, ONU, gel avoirs)",
+        "operationId": "getLastUpdate",
+        "tags": ["Lists"],
+        "responses": { "200": { "description": "Statut et dates de mise à jour des listes" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/sanctions/alerts": {
+      "get": {
+        "summary": "Lister les alertes de criblage générées en attente de revue ou de résolution",
+        "operationId": "getSanctionAlerts",
+        "tags": ["Alerts"],
+        "responses": { "200": { "description": "Alertes sanctions" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Résoudre une alerte sanctions après investigation manuelle (faux positif ou confirmation)",
+        "operationId": "resolveSanctionAlert",
+        "tags": ["Alerts"],
+        "responses": { "200": { "description": "Alerte résolue" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

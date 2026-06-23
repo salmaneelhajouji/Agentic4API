@@ -1,0 +1,44 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Loan API",
+    "version": "1.0.0",
+    "x-api-id": "loan-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "x-successor": "loan-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS loan-api-v3] Cette API gérait historiquement l'instruction basique et le dépôt des dossiers de prêts personnels et crédits à la consommation (v1). Elle est obsolète et gelée. Toutes les intégrations bancaires et applications clientes doivent obligatoirement migrer vers la version 3 active (loan-api-v3) pour s'appuyer sur le moteur d'analyse automatique de solvabilité, les grilles d'octroi dynamiques et le module de signature électronique de contrats.",
+    "x-synonymes": "prêt personnel v1, crédit à la consommation, instruction de prêt, dossier de financement ancien, demande de crédit v1, octroi de prêt obsolète, financement de dossier bancaire",
+    "x-false-positive-warning": "Attention : Cette API historique est dépréciée et restreinte à la consultation d'anciens dossiers de crédit. Veiller à rediriger l'ensemble des intégrations applicatives vers la version cible active `loan-api-v3`."
+  },
+  "paths": {
+    "/v1/loans": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS loan-api-v3 - Consulter l'index historique et le registre des demandes de prêts de la version v1",
+        "operationId": "listLoansV1",
+        "tags": [
+          "Loans"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS loan-api-v3 - Soumettre un dossier de demande de financement sur l'ancien canevas v1 (opération dépréciée)",
+        "operationId": "applyLoanV1",
+        "tags": [
+          "Loans"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

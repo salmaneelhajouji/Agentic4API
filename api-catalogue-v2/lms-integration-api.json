@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "LMS Integration API",
+    "version": "1.0.0",
+    "x-api-id": "lms-integration-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Cette API fait office de passerelle d'intégration d'entreprise pour synchroniser les données scolaires avec les plateformes de gestion de l'apprentissage (LMS - Learning Management Systems) de type Moodle ou Canvas. Elle automatise le provisioning et l'alignement des comptes d'utilisateurs (étudiants, enseignants), synchronise les espaces de cours académiques et assure la remontée automatisée des notes et évaluations obtenues en ligne vers le grand livre de scolarité central.",
+    "x-synonymes": "intégration LMS, connecteur Moodle, synchronisation Canvas, e-learning hub, synchronisation de notes, provisioning d'étudiants, espace de cours en ligne, évaluation numérique, plateforme d'apprentissage, alignement d'utilisateurs, notes d'examens LMS, scolarité connectée",
+    "x-false-positive-warning": "Attention : Cette API gère exclusivement la synchronisation de données logiques et l'interconnexion technique avec des environnements LMS tiers (LMS Integration). Ne pas la confondre avec la `grade-api-v2` (qui est le registre comptable décisionnel souverain des bulletins officiels de l'établissement).",
+    "x-cas-usage": "Comment provisionner et ouvrir automatiquement les accès d'une liste d'étudiants sur Canvas ? | Comment déclencher la remonter et la synchronisation en bloc des notes obtenues sur un test Moodle ? | Où interroger la liste des utilisateurs synchronisés entre le référentiel de scolarité et le LMS ?"
+  },
+  "paths": {
+    "/v1/lms/sync": {
+      "post": {
+        "summary": "Déclencher une tâche de synchronisation pour remonter les notes et évaluations depuis la plateforme LMS vers la scolarité",
+        "operationId": "syncGradesFromLMS",
+        "tags": [
+          "Sync"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/lms/users": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des comptes utilisateurs (étudiants, enseignants) synchronisés et associés au LMS",
+        "operationId": "getLMSUsers",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Provisionner, créer et configurer un profil d'étudiant ou de formateur au sein de l'environnement d'apprentissage en ligne",
+        "operationId": "provisionLMSUser",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

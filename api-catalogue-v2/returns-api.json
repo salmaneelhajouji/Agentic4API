@@ -1,0 +1,175 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Returns API",
+    "version": "1.0.0",
+    "x-api-id": "returns-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Retail",
+    "x-domain": "Retail",
+    "description": "Retours et remboursements. Outil omnicanal grand public gérant l'expérience client B2C, la génération de bordereaux postaux et la réintégration rapide en rayon. DIFFÉRENCE vs return-api : Returns API automatise les process du service après-vente (SAV) grand public, tandis que return-api est spécialisée dans les contrôles réglementaires en entrepôt et la supply chain industrielle.",
+    "x-synonymes": "retour, remboursement, retail, e-commerce, sav, étiquette, colis, magasin, boutique, article, avoir, bon de retour, réintégration stock, service client, acheteur, colissimo, remboursement bancaire",
+    "x-false-positive-warning": "Pour traiter des retours de palettes, de marchandises inter-entrepôts ou des flux logistiques industriels B2B, utilisez return-api.",
+    "x-cas-usage": "je veux consulter la liste des retours clients en cours | je veux initier un retour pour un article acheté en ligne | je veux générer l'étiquette de transport pour le renvoi du colis | je veux déclencher le remboursement automatique après réception du produit"
+  },
+  "paths": {
+    "/v1/returns": {
+      "get": {
+        "summary": "Lister et filtrer les dossiers de retours clients actifs sur le canal de vente Retail",
+        "operationId": "listReturns",
+        "tags": [
+          "Returns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Déclarer et pré-enregistrer un nouveau retour d'article par un acheteur e-commerce",
+        "operationId": "createReturn",
+        "tags": [
+          "Returns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/returns/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive, l'historique et le statut d'un colis de retour client",
+        "operationId": "getReturn",
+        "tags": [
+          "Returns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour l'étape d'avancement du colis de retour (ex: étiquette imprimée, colis reçu, inspecté)",
+        "operationId": "updateReturnStatus",
+        "tags": [
+          "Returns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/returns/{id}/label": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le lien ou le fichier binaire de l'étiquette de transport liée au retour",
+        "operationId": "getReturnLabel",
+        "tags": [
+          "Label"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Générer un bordereau d'affranchissement postal prépayé (Colissimo, Chronopost) pour le renvoi",
+        "operationId": "generateReturnLabel",
+        "tags": [
+          "Label"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/returns/{id}/refund": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Valider la réintégration en stock et déclencher l'ordre de remboursement financier sur le compte du client",
+        "operationId": "processRefund",
+        "tags": [
+          "Refund"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

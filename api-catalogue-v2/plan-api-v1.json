@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Plan API",
+    "version": "1.0.0",
+    "x-api-id": "plan-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "DEPRECATED — NE PAS UTILISER. Version 1 sans 5G ni quotas granulaires. Migrer vers plan-api-v2 qui intègre les forfaits 5G et les quotas data granulaires.",
+    "x-successor": "plan-api-v2",
+    "x-synonymes": "forfait télécom v1 deprecated, plan mobile legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser plan-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers plan-api-v2."
+  },
+  "paths": {
+    "/v1/plans": {
+      "get": {
+        "summary": "DEPRECATED — Lister les forfaits télécom",
+        "operationId": "listPlansV1",
+        "tags": ["Plans"],
+        "responses": {"200": {"description": "Forfaits"}}
+      }
+    }
+  }
+}

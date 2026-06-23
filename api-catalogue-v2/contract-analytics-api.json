@@ -1,0 +1,41 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Contract Analytics API",
+    "version": "1.0.0",
+    "x-api-id": "contract-analytics-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Analyse intelligente des contrats par IA. Permet d extraire automatiquement les clauses clés, d identifier les risques juridiques, de comparer deux versions d un contrat et de détecter les écarts par rapport aux standards de l entreprise. Utilisé par les équipes juridiques pour accélérer la revue des contrats et réduire les risques contractuels. DIFFÉRENCE vs contract-api : Contract Analytics = analyse IA des contrats existants. contract-api = gestion du cycle de vie des contrats (création, signature, suivi).",
+    "x-synonymes": "analyse contrat IA, extraction clauses, risque contractuel, revue contrat IA, NLP contrat, comparaison versions contrat, clause abusive, clause non standard, risque juridique contrat, due diligence contrat, analyse clausier, audit contrat automatique, lecture contrat IA, red flag contrat, benchmark contrat, écart contrat standard, contract intelligence, LegalTech contrat, analyse contrat automatisée, clause manquante",
+    "x-false-positive-warning": "Gestion cycle de vie contrats → contract-api-v3. Signature électronique → esignature-api. Génération de contrats → document-api. Conformité réglementaire légale → compliance-legal-api.",
+    "x-cas-usage": "je veux analyser ce contrat fournisseur pour identifier les clauses à risque | je veux comparer la version initiale et la version négociée d un contrat | je veux extraire automatiquement les clauses de confidentialité de 50 contrats | je veux détecter si un contrat contient des clauses non conformes à nos standards | je veux identifier les risques juridiques avant de signer ce contrat"
+  },
+  "paths": {
+    "/v1/contract-analytics/{contractId}": {
+      "parameters": [{"name": "contractId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Analyser un contrat par IA — extraction clauses, risques et points d attention",
+        "operationId": "analyzeContract",
+        "tags": ["Analytics"],
+        "responses": {"200": {"description": "Analyse IA du contrat"}}
+      },
+      "get": {
+        "summary": "Consulter les risques identifiés dans un contrat — clauses à risque et recommandations",
+        "operationId": "getContractRisks",
+        "tags": ["Analytics"],
+        "responses": {"200": {"description": "Risques contractuels identifiés"}}
+      }
+    },
+    "/v1/contract-analytics/compare": {
+      "post": {
+        "summary": "Comparer deux versions d un contrat — différences clause par clause",
+        "operationId": "compareContracts",
+        "tags": ["Compare"],
+        "responses": {"200": {"description": "Comparaison détaillée des versions"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Property Tax API",
+    "version": "1.0.0",
+    "x-api-id": "property-tax-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Cette API gère le calcul, le suivi et la télétransmission des taxes foncières et obligations d'impositions sur le patrimoine immobilier. Destinée aux services comptables, fiscaux et aux propriétaires institutionnels, elle centralise les formalités déclaratives réglementaires et assure le suivi des valeurs locatives cadastrales des biens de l'entreprise.",
+    "x-synonymes": "Taxe fonzière, Imposition immobilière, Fiscalité foncière, Déclaration fiscale immobilière, Calcul d'impôt foncier, Contribution foncière, Valeur locative cadastrale, Avis d'imposition immobilière, Prélèvements fiscaux fonciers, Contentieux fiscal immobilier, Dégrèvement de taxe, Télédéclaration foncière, Obligations fiscales foncières, Assujettissement taxe foncière, Calcul de fiscalité, Impôt sur le patrimoine",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement du calcul de la taxe foncière et des déclarations administratives auprès des services fiscaux. Pour le calcul des prix de vente, de la TVA commerciale ou de la facturation client, vous devez utiliser la Pricing API.",
+    "x-cas-usage": "Comment faire pour consulter le montant de la taxe foncière exigible associée à un actif immobilier particulier ? | Comment faire pour simuler et calculer la charge d'imposition foncière prévisionnelle d'un bien selon sa valeur cadastrale ? | Comment faire pour télétransmettre une déclaration fiscale réglementaire relative à une modification sur un bâtiment ?"
+  },
+  "paths": {
+    "/v1/property-tax/{propertyId}": {
+      "parameters": [
+        {
+          "name": "propertyId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique d'imposition foncière, les abattements et le montant de la taxe foncière due pour un actif immobilier",
+        "operationId": "getPropertyTax",
+        "tags": [
+          "Tax"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Simuler et calculer la charge fiscale prévisionnelle et la valeur locative cadastrale d'un bien immobilier",
+        "operationId": "calculateTax",
+        "tags": [
+          "Tax"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/property-tax/{propertyId}/declarations": {
+      "parameters": [
+        {
+          "name": "propertyId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique et les statuts d'instruction des déclarations fiscales foncières soumises pour un actif",
+        "operationId": "getDeclarations",
+        "tags": [
+          "Declarations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Télétransmettre une nouvelle déclaration réglementaire d'imposition ou de modification de consistance d'un bien aux services fiscaux",
+        "operationId": "submitDeclaration",
+        "tags": [
+          "Declarations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

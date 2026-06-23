@@ -1,0 +1,59 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "AML Legal API",
+    "version": "1.0.0",
+    "x-api-id": "aml-legal-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "API dédiée à la lutte contre le blanchiment de capitaux et le financement du terrorisme (LCB-FT) pour les professions juridiques et du chiffre assujetties : avocats, notaires, experts-comptables et huissiers de justice. Couvre l'ensemble du processus de vigilance réglementaire : criblage des transactions et opérations suspectes, soumission de déclarations de soupçon à TRACFIN, et évaluation du niveau de risque LCB-FT d'un client. Utilisée par les cabinets d'avocats, études notariales et cabinets d'expertise comptable pour satisfaire leurs obligations légales de vigilance anti-blanchiment issues de la directive européenne 6AMLD et du Code monétaire et financier. DIFFÉRENCE vs aml-api : AML Legal = obligations LCB-FT spécifiques aux professions juridiques et du chiffre assujetties. aml-api = monitoring continu des transactions bancaires pour établissements financiers réglementés.",
+    "x-synonymes": "LCB-FT juridique, blanchiment avocat, blanchiment notaire, TRACFIN avocat, TRACFIN notaire, déclaration soupçon avocat, obligation vigilance avocat, devoir vigilance notaire, professions assujetties, lutte blanchiment juridique, expert-comptable LCB-FT, risque client juridique, client à risque cabinet, due diligence client avocat, know your client juridique, KYC cabinet avocat, opération suspecte juridique, financement terrorisme juridique, CARPA, tiers-payant avocat",
+    "x-false-positive-warning": "Monitoring transactions bancaires établissement financier → aml-api. Vérification identité client onboarding bancaire → kyc-api-v2. Criblage listes sanctions internationales → sanctions-screening-api. Conformité réglementaire légale générale → compliance-legal-api. Ne pas confondre avec aml-api qui cible les banques et établissements financiers : aml-legal-api est exclusivement pour les professions juridiques et du chiffre assujetties.",
+    "x-cas-usage": "Comment mettre en place les obligations LCB-FT pour un cabinet d'avocats ? | Comment cribler une transaction immobilière suspecte reçue par une étude notariale ? | Comment soumettre une déclaration de soupçon à TRACFIN en tant qu'avocat ou notaire ? | Comment évaluer le niveau de risque blanchiment d'un nouveau client avant d'accepter un mandat ? | Quels sont les seuils et critères déclenchant une obligation de vigilance renforcée pour les professions juridiques ?"
+  },
+  "paths": {
+    "/v1/aml-legal/screening": {
+      "post": {
+        "summary": "Cribler une transaction ou opération suspecte afin d'évaluer le risque blanchiment selon les critères LCB-FT applicables aux professions juridiques assujetties",
+        "operationId": "screenTransaction",
+        "tags": ["Screening"],
+        "responses": {
+          "200": {"description": "Résultat criblage — niveau de risque et recommandation"}
+        }
+      }
+    },
+    "/v1/aml-legal/declarations": {
+      "get": {
+        "summary": "Consulter l'historique complet des déclarations de soupçon TRACFIN soumises par le cabinet, avec statut de traitement et référence officielle",
+        "operationId": "listDeclarations",
+        "tags": ["Declarations"],
+        "responses": {
+          "200": {"description": "Historique des déclarations TRACFIN"}
+        }
+      },
+      "post": {
+        "summary": "Soumettre une déclaration de soupçon à TRACFIN au titre de l'obligation LCB-FT des professions juridiques, avec description de l'opération et pièces justificatives",
+        "operationId": "submitDeclarationTRACFIN",
+        "tags": ["Declarations"],
+        "responses": {
+          "200": {"description": "Déclaration soumise à TRACFIN"}
+        }
+      }
+    },
+    "/v1/aml-legal/risk/{clientId}": {
+      "parameters": [
+        {"name": "clientId", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Évaluer et récupérer le niveau de risque LCB-FT d'un client (faible, moyen ou élevé) avec justification détaillée pour guider la vigilance renforcée ou simplifiée du cabinet",
+        "operationId": "getClientRiskLevel",
+        "tags": ["Risk"],
+        "responses": {
+          "200": {"description": "Niveau de risque client et justification"}
+        }
+      }
+    }
+  }
+}

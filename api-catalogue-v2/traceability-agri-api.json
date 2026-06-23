@@ -1,0 +1,45 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Traceability Agri API",
+    "version": "1.0.0",
+    "x-api-id": "traceability-agri-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Traçabilité agricole de la parcelle au consommateur. Reconstruction du parcours complet d'un produit agricole (parcelle d'origine, traitements phytosanitaires, récolte, transformation, distribution) et consultation des certifications et labels (AB, HVE, AOP, IGP). DIFFÉRENCE vs traceability-industry-api : Traceability Agri trace les produits agricoles et alimentaires (ferme-assiette), Traceability Industry trace les pièces et lots de fabrication industrielle. DIFFÉRENCE vs logistics-tracking-api : Traceability Agri retrace l'origine et la chaîne de valeur agricole, Logistics Tracking suit le colis en transport.",
+    "x-synonymes": "traçabilité agricole, ferme à table, origine produit agricole, parcelle origine, certification bio AB, HVE haute valeur environnementale, AOP IGP, traçabilité alimentaire, filière agricole, chaîne valeur agricole, label agriculture, traçabilité ferme, provenance produit, transparence alimentaire, traçabilité semence",
+    "x-false-positive-warning": "Traçabilité pièces industrielles → traceability-industry-api. Suivi colis et transport → logistics-tracking-api. Analyses de sol → soil-analysis-api.",
+    "x-cas-usage": "je veux retracer le parcours complet d'un produit de la ferme au consommateur | je veux voir les certifications bio et labels d'un produit agricole | je veux connaître la parcelle d'origine et les traitements d'un produit | je veux vérifier qu'un produit est bien certifié HVE ou Agriculture Biologique | je veux afficher la traçabilité complète d'un produit sur une étiquette"
+  },
+  "paths": {
+    "/v1/traceability/{productId}": {
+      "parameters": [
+        { "name": "productId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Retracer le parcours complet d'un produit agricole de la parcelle au consommateur (origine, traitements, transformation, distribution)",
+        "operationId": "getProductJourney",
+        "tags": ["Traceability"],
+        "responses": { "200": { "description": "Parcours ferme-consommateur" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/traceability/{productId}/certificates": {
+      "parameters": [
+        { "name": "productId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter les certifications et labels d'un produit agricole (AB, HVE, AOP, IGP, Demeter...)",
+        "operationId": "getCertificates",
+        "tags": ["Certs"],
+        "responses": { "200": { "description": "Certifications et labels" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

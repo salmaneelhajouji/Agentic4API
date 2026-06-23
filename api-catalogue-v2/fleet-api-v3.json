@@ -1,0 +1,72 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Fleet API",
+    "version": "3.0.0",
+    "x-api-id": "fleet-api-v3",
+    "x-api-version": "v3",
+    "x-status": "deprecated",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "x-successor": "fleet-api-v4",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS fleet-api-v4] Cette API gérait la version 3 du système de gestion de flotte, intégrant le suivi de la maintenance préventive élémentaire et les alertes de franchissement de kilométrage. Cette version est obsolète ; toutes les intégrations logistiques doivent impérativement migrer vers la version 4 (fleet-api-v4) pour unifier ces fonctions avec la télémétrie de consommation réelle et le module d'affectation des conducteurs.",
+    "x-synonymes": "gestion de flotte v3, suivi d'entretien mécanique v3, alertes odomètre obsolètes, parc automobile v3, maintenance préventive flotte",
+    "x-false-positive-warning": "Attention : Cette API intermédiaire est obsolète et son module de maintenance est gelé. Veiller à cibler directement la nouvelle version unifiée `fleet-api-v4`."
+  },
+  "x-breaking-changes-from-previous": [
+    "Maintenance préventive",
+    "Alertes kilométrage"
+  ],
+  "paths": {
+    "/v3/vehicles": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS fleet-api-v4 - Parcourir l'inventaire historique des véhicules enregistrés sur l'ancienne base v3",
+        "operationId": "listVehiclesV3",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS fleet-api-v4 - Référencer un nouveau véhicule dans l'ancien registre d'exploitation v3 (opération dépréciée)",
+        "operationId": "addVehicleV3",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/vehicles/{id}/maintenance": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS fleet-api-v4 - Récupérer l'historique d'entretien mécanique tel que consigné dans l'ancienne version v3",
+        "operationId": "getMaintenanceV3",
+        "tags": [
+          "Maintenance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

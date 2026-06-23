@@ -1,0 +1,170 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Room Booking API",
+    "version": "3.0.0",
+    "x-api-id": "room-booking-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Réservation chambres avec garanties et politiques annulation. Version moderne intégrant la gestion fine du planning hôtelier, le yield management et les workflows financiers liés aux arrhes. DIFFERENCE vs amenity-booking-api : Room Booking = hébergement et chambre d'hôtel, Amenity Booking = équipements résidentiels partagés et services annexes.",
+    "x-synonymes": "hôtel, chambre, réservation, nuitée, séjour, hôtellerie, disponibilité, annulation, remboursement, yield management, tarif, planning, check-in, check-out, garantie bancaire, hébergement, voyage, tourisme",
+    "x-false-positive-warning": "Équipements résidentiels partagés ou services annexes -> utiliser amenity-booking-api. Pour la réservation de bureaux d'entreprise ou salles de réunion, se référer à meeting-room-booking-api.",
+    "x-cas-usage": "je veux vérifier la disponibilité d'une chambre d'hôtel pour une date | je veux réserver une chambre avec ma carte de crédit en garantie | je veux modifier les dates de mon séjour à l'hôtel | je veux annuler ma réservation et demander un remboursement"
+  },
+  "x-breaking-changes-from-previous": [
+    "Garantie CB",
+    "Politiques annulation",
+    "Yield management"
+  ],
+  "paths": {
+    "/v3/bookings": {
+      "get": {
+        "summary": "Lister et filtrer le catalogue complet des réservations actives de chambres d'hôtel",
+        "operationId": "listBookingsV3",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer une nouvelle réservation de chambre avec intégration des politiques d'annulation et garanties bancaires",
+        "operationId": "bookRoomV3",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v3/bookings/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le détail complet et l'état d'un dossier de réservation de chambre",
+        "operationId": "getBookingV3",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Modifier les paramètres, occupants ou dates d'une réservation hôtelière active",
+        "operationId": "modifyBooking",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Annuler une réservation de chambre d'hôtel en appliquant les frais et règles de dédit",
+        "operationId": "cancelBookingV3",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v3/bookings/{id}/payment": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Traiter le remboursement financier ou la mainlevée sur la pré-autorisation bancaire de l'hébergement",
+        "operationId": "refundBooking",
+        "tags": [
+          "Payment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v3/bookings/check-availability": {
+      "post": {
+        "summary": "Vérifier la disponibilité en temps réel des catégories de chambres selon des critères de dates et capacités",
+        "operationId": "checkRoomAvailability",
+        "tags": [
+          "Availability"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Product Catalog API",
+    "version": "1.0.0",
+    "x-api-id": "product-catalog-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Retail",
+    "x-domain": "Retail",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS product-catalog-api-v3] Cette API gérait historiquement la version initiale d'indexation linéaire brute du catalogue produits du domaine de la distribution (v1). Structure obsolète figée sans gestion d'arborescences de catégories complexes ni de supports médias multiples. Toutes les applications doivent obligatoirement migrer vers la version 3 active (product-catalog-api-v3) pour s'appuyer sur la taxonomie omnicanale unifiée, les prix multiples et l'optimisation SEO intégrée.",
+    "x-synonymes": "catalogue produits v1, référentiel d'articles déprécié, index produits historique, classement de base articles v1, consultation catalogue obsolète, base de données produits retail",
+    "x-false-positive-warning": "Attention : Cette API historique est dépréciée et ses fonctions de consultation linéaire sont gelées. Rediriger immédiatement vos flux applicatifs vers la version cible active `product-catalog-api-v3`."
+  },
+  "paths": {
+    "/v1/products": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS product-catalog-api-v3 - Consulter la liste historique linéaire des articles enregistrés sur l'ancienne base v1",
+        "operationId": "listProductsV1",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

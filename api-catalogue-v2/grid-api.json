@@ -1,0 +1,120 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Grid API",
+    "version": "1.0.0",
+    "x-api-id": "grid-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Cette API gère l'inventaire physique, la cartographie topologique et la remontée opérationnelle des incidents sur le réseau électrique intelligent (Smart Grid). Elle permet de lister les nœuds d'infrastructure (centrales de production, sous-stations de transformation, transformateurs de distribution, compteurs), d'en mettre à jour le statut matériel, et d'enregistrer immédiatement les pannes de lignes ou incidents techniques de coupure pour guider les équipes d'intervention.",
+    "x-synonymes": "réseau électrique, smart grid, nœud de distribution électrique, sous-station de transformation, infrastructure électrique, incident réseau électrique, coupure de courant alerte, topologie du réseau, transformateur électrique, flux de puissance matériel, panne de ligne, pilotage de grille électrique, station électrique connecté",
+    "x-false-positive-warning": "Attention : Cette API administre l'inventaire des nœuds physiques matériels et la déclaration brute des coupures ou pannes d'infrastructure du réseau (Grid). Ne pas la confondre avec la `grid-stability-api` qui réalise des analyses mathématiques poussées de physique de réseau (fréquence en Hertz, fluctuations de tension et prédictions d'effondrement de grille).",
+    "x-cas-usage": "Comment référencer et ajouter un nouveau nœud de transformation ou une sous-station dans la topologie du réseau ? | Où consulter le statut matériel général d'un nœud d'infrastructure connecté ? | Comment signaler et ouvrir en urgence une alerte d'incident suite à la rupture physique d'une ligne moyenne tension ? | Quels sont les incidents et coupures actuellement en cours de traitement sur la zone ?"
+  },
+  "paths": {
+    "/v1/grid/status": {
+      "get": {
+        "summary": "Consulter le statut de fonctionnement opérationnel global et la charge globale du réseau électrique",
+        "operationId": "getGridStatus",
+        "tags": [
+          "Status"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/grid/nodes": {
+      "get": {
+        "summary": "Lister, trier et cartographier l'ensemble des nœuds physiques et des stations composant le réseau",
+        "operationId": "listNodes",
+        "tags": [
+          "Nodes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer, enregistrer et provisionner un nouveau nœud d'infrastructure ou transformateur sur la topologie active",
+        "operationId": "addNode",
+        "tags": [
+          "Nodes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/grid/nodes/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche technique descriptive, l'historique et la localisation d'un nœud du réseau spécifique",
+        "operationId": "getNode",
+        "tags": [
+          "Nodes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les variables de configuration technique, la capacité ou le statut opérationnel d'un nœud",
+        "operationId": "updateNode",
+        "tags": [
+          "Nodes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/grid/incidents": {
+      "get": {
+        "summary": "Consulter le registre centralisé des pannes de lignes, incidents techniques et coupures de courant actifs",
+        "operationId": "listIncidents",
+        "tags": [
+          "Incidents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Signaler et consigner immédiatement un nouvel incident ou une coupure de courant constatée sur le réseau",
+        "operationId": "reportIncident",
+        "tags": [
+          "Incidents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

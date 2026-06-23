@@ -1,0 +1,34 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Loyalty Points Hotel Bridge API",
+    "version": "1.0.0",
+    "x-api-id": "loyalty-points-hotel-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Passerelle de conversion entre programmes de fidélité hôtelier et retail. Permet de convertir des points du programme fidélité commerce vers des points hôtel, et de consulter les taux de conversion actuels. Utilisé pour les partenariats entre enseignes retail et chaînes hôtelières permettant aux clients de cumuler et transférer leurs points entre programmes. DIFFÉRENCE vs loyalty-hotel-api : Ce bridge = conversion entre deux programmes distincts. loyalty-hotel-api = programme hôtelier direct.",
+    "x-synonymes": "conversion points fidélité, transfert points hôtel, passerelle fidélité, bridge fidélité, points retail vers hôtel, taux conversion points, partenariat fidélité, cumul cross-programme, transfert miles, conversion programme, échange points programmes, fidélité multienseigne, interopérabilité fidélité, points crosscanal, consolidation points, transfert solde fidélité, portabilité points, programme partenaire fidélité",
+    "x-false-positive-warning": "Programme fidélité hôtelier direct → loyalty-hotel-api. Programme fidélité retail générique → loyalty-points-api. Miles aériens → airline-loyalty-api.",
+    "x-cas-usage": "je veux convertir mes points fidélité retail en points hôtel | je veux voir le taux de conversion entre notre programme retail et le programme hôtelier partenaire | je veux permettre à nos clients de transférer leurs points vers notre chaîne hôtelière | je veux calculer combien de points hôtel j obtiens avec 5000 points retail | je veux intégrer la conversion de points dans notre application de fidélité partenaires"
+  },
+  "paths": {
+    "/v1/loyalty-bridge/convert": {
+      "post": {
+        "summary": "Convertir des points retail en points hôtel selon le taux de change en vigueur",
+        "operationId": "convertRetailToHotelPoints",
+        "tags": ["Convert"],
+        "responses": {"200": {"description": "Points convertis"}}
+      }
+    },
+    "/v1/loyalty-bridge/rates": {
+      "get": {
+        "summary": "Taux de conversion actuels entre programmes fidélité retail et hôtelier",
+        "operationId": "getConversionRates",
+        "tags": ["Rates"],
+        "responses": {"200": {"description": "Taux de conversion"}}
+      }
+    }
+  }
+}

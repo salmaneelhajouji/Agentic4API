@@ -1,0 +1,50 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Claims Notification API",
+    "version": "1.0.0",
+    "x-api-id": "claims-notification-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "API spécialisée dans l'envoi de notifications liées aux sinistres assurance, couvrant l'ensemble du cycle de vie d'un dossier : déclaration, expertise planifiée, décision d'acceptation ou de refus, et règlement final. Elle permet de notifier les clients assurés via SMS, email ou push à chaque étape clé, et d'alerter les partenaires opérationnels (experts, réparateurs agréés, avocats) lors des assignations et mises à jour. Les utilisateurs typiques sont les équipes sinistres, les gestionnaires de dossiers et les intégrateurs de parcours client digital. DIFFÉRENCE vs notification-api-v2 : Claims Notification API = alertes spécifiques au domaine sinistre assurance avec contexte métier enrichi (claimId, statut sinistre). notification-api-v2 = notifications multicanal génériques tous domaines confondus.",
+    "x-synonymes": "notification sinistre, alerte sinistre, notification dommage, alerte client sinistre, changement statut sinistre, notification expertise, notification règlement, alerte assurance sinistre, notification réparateur, notification expert sinistre, SMS sinistre, email sinistre, notification dossier sinistre, alerte déclaration sinistre, notification indemnisation, alerte compagnie assurance, notification partenaire assurance, suivi sinistre notification, push sinistre, notification étape sinistre",
+    "x-false-positive-warning": "Notifications multicanal génériques tous sujets → notification-api-v2 (pas de contexte sinistre). Suivi du statut d'un sinistre côté client (lecture seule) → claims-tracking-api. Gestion du règlement et de l'indemnisation financière → claims-settlement-api. Gestion interne complète du dossier sinistre (création, instruction, clôture) → insurance-claim-api-v3. Ne pas confondre avec une API de messagerie transactionnelle générique.",
+    "x-cas-usage": "Comment notifier le client par SMS lorsque son expertise est planifiée ? | Comment envoyer un email automatique au client lorsque son sinistre est accepté ou refusé ? | Comment récupérer l'historique complet des notifications envoyées pour un dossier sinistre donné ? | Comment alerter un réparateur partenaire lorsqu'un sinistre lui est assigné ? | Quels canaux de notification sont disponibles pour informer le client à chaque étape de son dossier sinistre ?"
+  },
+  "paths": {
+    "/v1/claims-notifications/{claimId}": {
+      "parameters": [
+        {
+          "name": "claimId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique complet des notifications envoyées au client et aux partenaires pour un sinistre donné (SMS, email, push)",
+        "operationId": "getClaimNotifications",
+        "tags": ["Notifications"],
+        "responses": {
+          "200": {
+            "description": "Liste des notifications envoyées pour le sinistre identifié par claimId"
+          }
+        }
+      },
+      "post": {
+        "summary": "Envoyer une notification sinistre ciblée au client assuré ou à un partenaire (expert, réparateur) via SMS, email ou push selon l'étape du dossier",
+        "operationId": "sendClaimNotification",
+        "tags": ["Notifications"],
+        "responses": {
+          "200": {
+            "description": "Notification envoyée avec succès au destinataire via le canal choisi"
+          }
+        }
+      }
+    }
+  }
+}

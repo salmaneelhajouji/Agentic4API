@@ -1,0 +1,54 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Real Estate Search API",
+    "version": "1.0.0",
+    "x-api-id": "real-estate-search-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Recherche de biens immobiliers avec filtres avancés, affichage cartographique et alertes. Permet de rechercher des biens à l achat ou la location, d afficher les résultats sur une carte, de sauvegarder des recherches et de créer des alertes pour être notifié des nouvelles annonces. DIFFÉRENCE vs search-api-v3 : Real Estate Search = recherche de biens immobiliers spécifiquement. search-api-v3 = moteur de recherche générique multi-domaines.",
+    "x-synonymes": "recherche bien immobilier, recherche appartement maison, filtre prix surface, recherche achat vente location, bien disponible, annonce immobilière, portal immobilier, géolocalisation bien, bien sur carte, alerte immobilière, nouveau bien, sauvegarde recherche, recherche par zone, DPE filtre, nombre pièces filtre, budget immobilier, recherche terrain, recherche local commercial, recherche neuf ancien, portail annonces immo",
+    "x-false-positive-warning": "Estimation prix d un bien → real-estate-valuation-api. Données du bien lui-même → property-api-v3. Moteur recherche générique → search-api-v3. Disponibilités et taux d occupation → occupancy-api.",
+    "x-cas-usage": "je veux chercher des appartements 3 pièces à Paris entre 400 000 et 600 000 euros | je veux afficher les biens disponibles sur une carte géographique | je veux sauvegarder mes critères de recherche pour les réutiliser | je veux créer une alerte pour être notifié des nouveaux biens correspondant à ma recherche | je veux voir mes alertes immobilières actives"
+  },
+  "paths": {
+    "/v1/real-estate/search": {
+      "get": {
+        "summary": "Rechercher des biens immobiliers — filtre type, prix, surface, localisation et DPE",
+        "operationId": "searchProperties",
+        "tags": ["Search"],
+        "responses": {"200": {"description": "Biens correspondants"}}
+      },
+      "post": {
+        "summary": "Sauvegarder une recherche immobilière — critères pour réutilisation et alertes",
+        "operationId": "saveSearch",
+        "tags": ["Search"],
+        "responses": {"200": {"description": "Recherche sauvegardée"}}
+      }
+    },
+    "/v1/real-estate/alerts": {
+      "get": {
+        "summary": "Alertes immobilières actives — notifications de nouveaux biens correspondants",
+        "operationId": "listSearchAlerts",
+        "tags": ["Alerts"],
+        "responses": {"200": {"description": "Alertes actives"}}
+      },
+      "post": {
+        "summary": "Créer une alerte immobilière — notifié pour chaque nouveau bien correspondant",
+        "operationId": "createSearchAlert",
+        "tags": ["Alerts"],
+        "responses": {"200": {"description": "Alerte créée"}}
+      }
+    },
+    "/v1/real-estate/map": {
+      "get": {
+        "summary": "Biens disponibles sur carte — coordonnées géographiques et prix affichés",
+        "operationId": "getPropertiesOnMap",
+        "tags": ["Map"],
+        "responses": {"200": {"description": "Biens géolocalisés"}}
+      }
+    }
+  }
+}

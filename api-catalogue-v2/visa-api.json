@@ -1,0 +1,120 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Visa API",
+    "version": "1.0.0",
+    "x-api-id": "visa-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Formalités visa et entrée pays. Vérification des exigences administratives d'immigration, conditions consulaires et suivi complet des demandes. DIFFÉRENCE vs room-booking-api-v3 : Visa API traite de l'autorisation d'entrée légale et étatique sur un territoire étranger, tandis que room-booking-api-v3 gère l'hébergement commercial.",
+    "x-synonymes": "visa, ambassade, consulat, immigration, passeport, frontière, séjour, voyage, autorisation d'entrée, demande de visa, formalités, douane, expatriation, touriste, pièce d'identité, séjour à l'étranger, titre de séjour",
+    "x-false-positive-warning": "Cette API gère uniquement les visas consulaires gouvernementaux. Pour le protocole ou la passerelle de paiement par carte de crédit VISA, utilisez l'API de paiement correspondante.",
+    "x-cas-usage": "je veux vérifier si un visa est exigé pour voyager dans un pays | je veux soumettre un dossier complet de demande de visa | je veux suivre le statut d'approbation de ma demande de visa | je veux modifier les données ou documents d'une demande en cours"
+  },
+  "paths": {
+    "/v1/visa/requirements": {
+      "post": {
+        "summary": "Analyser les critères d'éligibilité et vérifier les exigences de visa selon la nationalité et le pays de destination",
+        "operationId": "checkVisaRequirements",
+        "tags": [
+          "Requirements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/visa/applications": {
+      "get": {
+        "summary": "Lister et rechercher les dossiers de demandes de visa en cours d'instruction administrative",
+        "operationId": "listVisaApplications",
+        "tags": [
+          "Applications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Déposer officiellement un formulaire et initier un nouveau dossier de demande de visa de voyage",
+        "operationId": "submitVisaApplication",
+        "tags": [
+          "Applications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/visa/applications/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le statut d'approbation consulaire (accordé, refusé, en cours) d'un dossier de visa spécifique",
+        "operationId": "getVisaApplication",
+        "tags": [
+          "Applications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour, compléter ou modifier les données d'une demande de visa en cours de traitement",
+        "operationId": "updateVisaApplication",
+        "tags": [
+          "Applications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

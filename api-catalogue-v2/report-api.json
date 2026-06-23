@@ -1,0 +1,65 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Report API",
+    "version": "1.0.0",
+    "x-api-id": "report-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "Rapport contextuel sur une ressource métier spécifique. Génère un rapport de synthèse instantané sur une entité (commande, client, projet, contrat, employé, produit) en JSON, PDF ou HTML. Supporte le batch et les rapports planifiés. DIFFÉRENCE vs reporting-api : reporting-api génère des rapports périodiques planifiés sur des populations (rapport mensuel des ventes). report-api génère un rapport contextuel instantané sur une ressource précise (rapport de la commande ORD-0042).",
+    "x-synonymes": "rapport commande, rapport client, rapport contrat, rapport employé, rapport projet, rapport produit, fiche synthèse ressource, document synthèse, rapport contextuel, rapport instantané, rapport PDF export, rapport HTML interactif, rapport batch, rapport planifié ressource, template rapport, rapport financier entité, rapport activité entité, KPI entité, rapport détaillé, export rapport ZIP",
+    "x-false-positive-warning": "Rapports planifiés sur populations de données (rapport mensuel ventes) → reporting-api. Rapports avec white-labeling et collaboration → reporting-api-v2. Exploration métriques temps réel → analytics-api-v3. Facture PDF légale → invoice-api-v3.",
+    "x-cas-usage": "je veux générer un rapport PDF sur la commande ORD-0042 | je veux générer des rapports batch pour 50 clients en ZIP | je veux planifier un rapport mensuel automatique sur un projet envoyé par email | je veux créer un template de rapport custom avec les sections KPIs et activité | je veux générer un rapport HTML interactif pour un contrat"
+  },
+  "paths": {
+    "/v1/report/{resourceType}/{resourceId}": {
+      "parameters": [
+        {"name": "resourceType", "in": "path", "required": true, "schema": {"type": "string", "enum": ["order", "customer", "project", "contract", "employee", "product"]}},
+        {"name": "resourceId", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Générer un rapport contextuel sur une ressource — JSON, PDF ou HTML",
+        "operationId": "generateReport",
+        "tags": ["Reports"],
+        "parameters": [
+          {"name": "format", "in": "query", "schema": {"type": "string", "enum": ["json", "pdf", "html"], "default": "json"}},
+          {"name": "include_history", "in": "query", "schema": {"type": "boolean", "default": true}},
+          {"name": "locale", "in": "query", "schema": {"type": "string", "default": "fr"}}
+        ],
+        "responses": {"200": {"description": "Rapport de la ressource"}}
+      }
+    },
+    "/v1/report/batch": {
+      "post": {
+        "summary": "Générer des rapports en batch — plusieurs ressources en un ZIP asynchrone",
+        "operationId": "batchReports",
+        "tags": ["Reports"],
+        "responses": {"202": {"description": "Génération asynchrone lancée"}}
+      }
+    },
+    "/v1/report/templates": {
+      "get": {
+        "summary": "Templates de rapport disponibles par type de ressource",
+        "operationId": "listReportTemplates",
+        "tags": ["Templates"],
+        "responses": {"200": {"description": "Templates disponibles"}}
+      },
+      "post": {
+        "summary": "Créer un template de rapport custom — sections summary, KPIs, financials",
+        "operationId": "createReportTemplate",
+        "tags": ["Templates"],
+        "responses": {"201": {"description": "Template créé"}}
+      }
+    },
+    "/v1/report/scheduled": {
+      "post": {
+        "summary": "Planifier un rapport récurrent sur une ressource — cron et destinataires email",
+        "operationId": "scheduleReport",
+        "tags": ["Reports"],
+        "responses": {"201": {"description": "Rapport planifié"}}
+      }
+    }
+  }
+}

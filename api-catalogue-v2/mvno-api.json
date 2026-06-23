@@ -1,0 +1,116 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MVNO API",
+    "version": "1.0.0",
+    "x-api-id": "mvno-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Cette API administre les relations commerciales, les accords contractuels et la comptabilisation des flux pour les Opérateurs de Réseau Mobile Virtuels (MVNO) louant les infrastructures de l'opérateur hôte. Elle permet de répertorier les partenaires MVNO, de gérer le paramétrage de leurs enveloppes de trafic réseau, de calculer les décomptes financiers de gros (wholesale settlements) et de piloter les marges commerciales générées par l'usage en marque blanche.",
+    "x-synonymes": "opérateur virtuel, MVNO, wholesale telecom, décompte de gros, accord de revente réseau, marque blanche télécom, partenaire MVNO, règlement d'interconnexion, marge de gros télécom, facturation wholesale, enveloppe de trafic de gros, consommation partenaire",
+    "x-false-positive-warning": "Attention : Cette API encadre la relation commerciale de gros et la facturation wholesale avec des opérateurs partenaires virtuels (MVNO). Ne pas la confondre avec les APIs de facturation ou de self-care à destination des clients abonnés de détail (type `billing-api` ou `customer-account-api`).",
+    "x-cas-usage": "Comment référencer et ajouter un nouveau partenaire opérateur virtuel (MVNO) dans notre système ? | Où éditer et générer le décompte financier mensuel des consommations réseau d'un MVNO ? | Comment consulter les termes contractuels, les tarifs de gros et le statut d'un accord de revente réseau ?"
+  },
+  "paths": {
+    "/v1/mvno/partners": {
+      "get": {
+        "summary": "Lister l'ensemble des partenaires opérateurs virtuels (MVNO) actifs et sous contrat sur nos infrastructures",
+        "operationId": "listMVNOPartners",
+        "tags": [
+          "Partners"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et ajouter un nouvel opérateur virtuel (MVNO) au catalogue des partenariats de gros",
+        "operationId": "addMVNOPartner",
+        "tags": [
+          "Partners"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/mvno/partners/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche technique, le statut d'activation, les grilles tarifaires et les détails d'un MVNO",
+        "operationId": "getMVNOPartner",
+        "tags": [
+          "Partners"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier la configuration commerciale, les limites de trafic ou les variables de contrat d'un opérateur virtuel",
+        "operationId": "updateMVNOPartner",
+        "tags": [
+          "Partners"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/mvno/partners/{id}/settlement": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique et l'état des décomptes de gros et factures de gros rattachés au MVNO",
+        "operationId": "getMVNOSettlement",
+        "tags": [
+          "Settlement"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Calculer la consommation de trafic et générer formellement le décompte financier périodique pour le partenaire",
+        "operationId": "generateSettlement",
+        "tags": [
+          "Settlement"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

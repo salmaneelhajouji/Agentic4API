@@ -1,0 +1,96 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Analytics API",
+    "version": "2.0.0",
+    "x-api-id": "analytics-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "Version 2 de l'API Analytics, dédiée à l'analyse des ventes, des comportements utilisateurs et des performances produit dans les domaines e-commerce, SaaS et retail. Couvre les processus de reporting de chiffre d'affaires, de modélisation d'entonnoirs de conversion personnalisés, de diffusion de métriques en temps réel et de partage de tableaux de bord avec des parties prenantes externes. Utilisateurs typiques : data analysts, product managers, équipes marketing et développeurs intégrant des widgets de KPI dans des interfaces tiers. DIFFÉRENCE vs analytics-api-v3 : v2 = version stable actuelle avec streaming SSE et entonnoirs custom ; v3 = version expérimentale avec fonctionnalités avancées d'IA prédictive et modèles de prévision. DIFFÉRENCE vs event-tracking-api : Analytics API = agrégation, calcul et visualisation de métriques consolidées ; event-tracking-api = collecte brute des événements clics et interactions utilisateur.",
+    "x-breaking-changes-from-previous": [
+      "Entonnoirs custom (nouveau)",
+      "Streaming export via SSE",
+      "Dashboards partagés avec tokens",
+      "Segments temps réel"
+    ],
+    "x-synonymes": "analytics ventes, métriques ventes, tableau de bord analytique, dashboard analytics, entonnoir de conversion, funnel conversion, taux de conversion, KPI ventes, métriques temps réel, streaming métriques, SSE analytics, partage dashboard, segment utilisateur, analyse comportement utilisateur, performance produit, reporting ventes, business intelligence, BI, data analytics, analyse données ventes",
+    "x-false-positive-warning": "Collecte brute d'événements clics et interactions utilisateur → event-tracking-api (ne pas confondre : Analytics API agrège et visualise, event-tracking-api collecte les raw events). Génération de rapports PDF planifiés → reporting-api-v2. Expérimentations et tests A/B → ab-testing-api. Fonctionnalités d'IA prédictive et forecasting → analytics-api-v3 (version supérieure). Suivi de sessions et heatmaps → session-api.",
+    "x-cas-usage": "Comment récupérer le chiffre d'affaires journalier et le panier moyen sur les 30 derniers jours ? | Comment créer et analyser un entonnoir de conversion personnalisé de la homepage jusqu'au paiement ? | Comment streamer des métriques de ventes en temps réel pour alimenter un dashboard live ? | Comment partager un dashboard analytics avec un client externe via un lien public temporaire ? | Quels sont les KPI ventes disponibles par semaine et par mois pour mon reporting direction ?"
+  },
+  "paths": {
+    "/v2/analytics/sales": {
+      "get": {
+        "summary": "Récupérer les métriques ventes v2 — chiffre d'affaires, nombre de commandes et panier moyen filtrés par période et granularité horaire, journalière ou mensuelle",
+        "operationId": "getSalesV2",
+        "tags": ["Analytics"],
+        "parameters": [
+          {"name": "from", "in": "query", "schema": {"type": "string", "format": "date"}},
+          {"name": "to", "in": "query", "schema": {"type": "string", "format": "date"}},
+          {
+            "name": "granularity",
+            "in": "query",
+            "schema": {"type": "string", "enum": ["hour", "day", "week", "month"], "default": "day"}
+          }
+        ],
+        "responses": {"200": {"description": "Métriques ventes agrégées par période et granularité demandée"}}
+      }
+    },
+    "/v2/analytics/funnels": {
+      "post": {
+        "summary": "Créer et analyser un entonnoir de conversion personnalisé avec calcul du taux de chute et du taux de transformation à chaque étape du parcours utilisateur",
+        "operationId": "analyzeFunnel",
+        "tags": ["Funnels"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["steps"],
+                "properties": {
+                  "steps": {"type": "array", "items": {"type": "string"}},
+                  "date_range": {"type": "object"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Analyse entonnoir avec taux de conversion et taux de chute par étape"}}
+      }
+    },
+    "/v2/analytics/dashboard/share": {
+      "post": {
+        "summary": "Générer un token d'accès public temporaire pour partager un dashboard analytics avec des utilisateurs externes sans compte",
+        "operationId": "shareDashboard",
+        "tags": ["Dashboard"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["dashboard_id"],
+                "properties": {
+                  "dashboard_id": {"type": "string"},
+                  "expires_in_days": {"type": "integer", "default": 7}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Lien partageable généré avec date d'expiration et token d'accès public"}}
+      }
+    },
+    "/v2/analytics/stream": {
+      "get": {
+        "summary": "Streamer en continu les métriques sélectionnées en temps réel via Server-Sent Events pour alimenter un dashboard live ou des alertes dynamiques",
+        "operationId": "streamAnalytics",
+        "tags": ["Stream"],
+        "parameters": [
+          {"name": "metrics", "in": "query", "schema": {"type": "string"}}
+        ],
+        "responses": {"200": {"description": "Flux SSE de métriques en temps réel avec mise à jour continue"}}
+      }
+    }
+  }
+}

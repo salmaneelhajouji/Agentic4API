@@ -1,0 +1,69 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Bank Account API",
+    "version": "3.0.0",
+    "x-api-id": "bank-account-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Version actuelle et recommandée — Gestion complète des comptes bancaires courants et d'épargne avec conformité open banking PSD2/DSP2. Couvre l'ouverture de compte avec génération d'IBAN et de RIB, la consultation des soldes en temps réel, l'accès aux relevés de transactions catégorisés et l'initiation de virements bancaires. Destinée aux fintechs, agrégateurs bancaires et applications de gestion de finance personnelle nécessitant un accès réglementé aux données bancaires. DIFFÉRENCE vs wallet-api : Bank Account API = compte bancaire réglementé avec IBAN et RIB soumis au droit bancaire. wallet-api = portefeuille électronique interne sans IBAN ni réglementation bancaire. DIFFÉRENCE vs payment-api-v3 : Bank Account API gère les comptes et leur cycle de vie. payment-api-v3 gère les transactions de paiement par carte et en ligne.",
+    "x-breaking-changes-from-previous": ["PSD2", "Solde temps réel"],
+    "x-synonymes": "compte bancaire, compte courant, compte épargne, IBAN, RIB, relevé de compte, solde bancaire, virement bancaire, open banking, PSD2, DSP2, agrégation bancaire, clôture de compte, ouverture de compte, extrait de compte, historique des transactions, solde en temps réel, compte chèques, livret d'épargne, fintech banking",
+    "x-false-positive-warning": "Portefeuille électronique interne sans IBAN → utiliser wallet-api. Paiement en ligne, transaction par carte ou e-commerce → utiliser payment-api-v3. Prêt, crédit ou financement bancaire → utiliser loan-api-v2. Gestion des identités bancaires ou KYC → utiliser identity-api. Versions précédentes obsolètes → bank-account-api-v1 (deprecated) et bank-account-api-v2 (deprecated). Ne pas confondre avec card-api qui gère les cartes bancaires associées aux comptes.",
+    "x-cas-usage": "Comment ouvrir un compte bancaire courant ou épargne pour un nouveau client et obtenir son IBAN ? | Comment consulter le solde en temps réel et les informations détaillées d'un compte bancaire ? | Comment récupérer l'historique des transactions d'un compte avec catégorisation PSD2 ? | Comment initier un virement bancaire depuis un compte vers un bénéficiaire externe ? | Comment clôturer définitivement un compte bancaire et gérer les opérations de fin de cycle de vie ?"
+  },
+  "paths": {
+    "/v3/accounts": {
+      "get": {
+        "summary": "Lister tous les comptes bancaires courants et épargne du client avec soldes en temps réel et statuts PSD2",
+        "operationId": "listAccountsV3",
+        "tags": ["Accounts"],
+        "responses": {"200": {"description": "Liste des comptes avec soldes"}}
+      },
+      "post": {
+        "summary": "Ouvrir un nouveau compte bancaire courant ou épargne avec génération automatique d'IBAN et de RIB client",
+        "operationId": "createAccountV3",
+        "tags": ["Accounts"],
+        "responses": {"200": {"description": "Compte ouvert avec IBAN"}}
+      }
+    },
+    "/v3/accounts/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter le détail complet d'un compte bancaire — IBAN, RIB, solde temps réel, type et statut du compte",
+        "operationId": "getAccountV3",
+        "tags": ["Accounts"],
+        "responses": {"200": {"description": "Détail du compte bancaire"}}
+      },
+      "put": {
+        "summary": "Modifier les paramètres d'un compte bancaire existant — mise à jour du libellé, des préférences et des notifications",
+        "operationId": "updateAccount",
+        "tags": ["Accounts"],
+        "responses": {"200": {"description": "Compte mis à jour"}}
+      },
+      "delete": {
+        "summary": "Clôturer définitivement un compte bancaire après vérification des conditions de solde et des opérations en cours",
+        "operationId": "closeAccount",
+        "tags": ["Accounts"],
+        "responses": {"200": {"description": "Compte clôturé"}}
+      }
+    },
+    "/v3/accounts/{id}/transactions": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le relevé de compte avec historique complet des transactions catégorisées selon les normes PSD2",
+        "operationId": "getTransactions",
+        "tags": ["Transactions"],
+        "responses": {"200": {"description": "Relevé de transactions"}}
+      },
+      "post": {
+        "summary": "Initier un virement ou une transaction sortante depuis le compte bancaire vers un bénéficiaire interne ou externe",
+        "operationId": "initiateTransaction",
+        "tags": ["Transactions"],
+        "responses": {"200": {"description": "Transaction initiée"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Surgery Scheduling API",
+    "version": "1.0.0",
+    "x-api-id": "surgery-scheduling-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Planification chirurgicale. Gestion et optimisation des plages horaires des blocs opératoires, affectation du personnel spécialisé (chirurgiens, anesthésistes, infirmiers) et régulation de la liste d'attente des patients. DIFFÉRENCE vs medical-appointment-api : Surgery Scheduling API orchestre des infrastructures lourdes et des équipes pluridisciplinaires en bloc chirurgical, tandis que medical-appointment-api gère les consultations externes courantes et les rendez-vous individuels en cabinet.",
+    "x-synonymes": "chirurgie, opération, bloc, bloc opératoire, chirurgien, anesthésiste, planification, intervention, hôpital, clinique, patient, liste d'attente, salle d'opération, programmation, acte médical, hospitalisation, praticien, réanimation",
+    "x-false-positive-warning": "Pour la prise de rendez-vous de consultations médicales standards ou de téléconsultation, utilisez medical-appointment-api.",
+    "x-cas-usage": "je veux planifier une intervention chirurgicale dans un bloc opératoire | je veux vérifier la disponibilité des salles d'opération pour une date | je veux consulter le planning des chirurgies programmées | je veux modifier l'affectation de l'équipe médicale pour une opération"
+  },
+  "paths": {
+    "/v1/surgeries": {
+      "get": {
+        "summary": "Consulter l'agenda d'occupation global des blocs opératoires et des équipes chirurgicales",
+        "operationId": "listSurgeries",
+        "tags": [
+          "Surgeries"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Programmer une nouvelle opération chirurgicale en réservant un créneau de bloc et du personnel",
+        "operationId": "scheduleSurgery",
+        "tags": [
+          "Surgeries"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/surgeries/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la fiche complète, l'équipe affectée et les détails cliniques d'une chirurgie planifiée",
+        "operationId": "getSurgery",
+        "tags": [
+          "Surgeries"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Modifier l'horaire, la salle d'opération ou le personnel d'une intervention chirurgicale enregistrée",
+        "operationId": "updateSurgery",
+        "tags": [
+          "Surgeries"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Annuler une intervention chirurgicale programmée et libérer la disponibilité de la salle",
+        "operationId": "cancelSurgery",
+        "tags": [
+          "Surgeries"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/or/availability": {
+      "get": {
+        "summary": "Vérifier la disponibilité en temps réel des blocs opératoires (Operating Rooms) selon les contraintes de planning",
+        "operationId": "getORAvailability",
+        "tags": [
+          "OR"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

@@ -1,0 +1,32 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Document Management API",
+    "version": "1.0.0",
+    "x-api-id": "document-management-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Divers",
+    "x-domain": "Cross",
+    "x-successor": "document-management-api-v2",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS document-management-api-v2] Cette API gérait historiquement la version 1 du système de Gestion Électronique des Documents (GED) et de l'archivage numérique de l'entreprise. Elle permettait l'indexation de base et la consultation linéaire des fichiers documentaires. Cette infrastructure est obsolète ; toutes les intégrations applicatives doivent obligatoirement migrer vers la version 2 (document-management-api-v2) pour bénéficier des fonctionnalités avancées de versionnement, de recherche plein texte et de cycles de validation.",
+    "x-synonymes": "gestion électronique des documents, GED, archivage numérique, stockage de fichiers, indexation documentaire, consultation de documents, référentiel de fichiers, classement numérique, recherche documentaire, arborescence de documents, cycle de vie documentaire, coffre-fort numérique, métadonnées de fichier, gestion de documents, partage de documents",
+    "x-false-positive-warning": "Attention : Cette API obsolète était limitée à la consultation de documents existants. Ne pas la confondre avec la `document-api` (dédiée à la génération dynamique de fichiers à partir de templates), ni avec la nouvelle version cible fonctionnelle `document-management-api-v2`."
+  },
+  "paths": {
+    "/v1/documents": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS document-management-api-v2 - Parcourir et lister l'inventaire historique des documents stockés dans le référentiel de la GED v1",
+        "operationId": "listDocumentsV1",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

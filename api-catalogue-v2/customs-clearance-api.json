@@ -1,0 +1,106 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Customs Clearance API",
+    "version": "1.0.0",
+    "x-api-id": "customs-clearance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Cette API pilote l'ensemble des procédures réglementaires de dédouanement des marchandises pour les flux de commerce international (import/export). Elle permet aux transitaires, commissionnaires en douane, transporteurs et plateformes e-commerce transfrontalières d'automatiser la création et le dépôt des déclarations douanières. L'API intègre également des moteurs d'estimation pour calculer les droits de douane et taxes associés (TVA, taxes additionnelles) selon les nomenclatures officielles, et assure le suivi du statut réglementaire des cargaisons jusqu'à l'obtention du feu vert des autorités douanières.",
+    "x-synonymes": "dédouanement, déclaration en douane, droits de douane, frais de douane, code douanier, nomenclature TARIC, Incoterm, transitaire, commissionnaire en douane, importation, exportation, Bon à Enlever, BAE, valeur en douane, marchandise sous douane, bureau de douane, liquidation douanière, manifeste de fret",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement de la conformité réglementaire, douanière et fiscale des marchandises aux frontières. Ne pas la confondre avec l'API Suivi de Colis / tracking-api (qui suit uniquement le transport géolocalisé et les étapes logistiques du colis), l'API Expédition / shipping-api (dédiée à l'édition d'étiquettes de transport), ni avec une API de Facturation classique.",
+    "x-cas-usage": "Comment soumettre la déclaration en douane pour un conteneur de composants électroniques importé de Taïwan ? | Quel est le montant estimé des droits de douane et de la TVA pour l'importation de ces textiles selon l'Incoterm DAP ? | Comment obtenir le statut en temps réel et savoir si ma marchandise a reçu le statut 'Bon à enlever' (BAE) ? | Est-il possible de modifier les informations d'un brouillon de déclaration douanière avant sa validation définitive par les autorités ? | Quelles sont les taxes applicables pour l'exportation d'un lot de produits agroalimentaires vers le Royaume-Uni ?"
+  },
+  "paths": {
+    "/v1/customs/declarations": {
+      "get": {
+        "summary": "Lister et filtrer l'historique des déclarations douanières en cours de traitement ou archivées",
+        "operationId": "listDeclarations",
+        "tags": [
+          "Declarations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un nouveau dossier ou brouillon de déclaration en douane pour l'importation ou l'exportation de marchandises",
+        "operationId": "createDeclaration",
+        "tags": [
+          "Declarations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/customs/declarations/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les détails réglementaires, la valeur déclarée et le statut douanier actuel d'une déclaration spécifique",
+        "operationId": "getDeclaration",
+        "tags": [
+          "Declarations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les données, les pièces justificatives ou les nomenclatures d'un dossier de dédouanement encore modifiable",
+        "operationId": "updateDeclaration",
+        "tags": [
+          "Declarations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Soumettre définitivement la déclaration douanière aux autorités pour liquidation des taxes et obtention du Bon à enlever (BAE)",
+        "operationId": "submitDeclaration",
+        "tags": [
+          "Declarations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/customs/tariffs": {
+      "post": {
+        "summary": "Simuler et calculer le montant prévisionnel des droits de douane et de la TVA selon l'origine de la marchandise et sa nomenclature TARIC",
+        "operationId": "calculateTariffs",
+        "tags": [
+          "Tariffs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

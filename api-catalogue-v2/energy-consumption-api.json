@@ -1,0 +1,102 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Energy Consumption API",
+    "version": "1.0.0",
+    "x-api-id": "energy-consumption-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Cette API assure le suivi, l'ingestion de données de masse et l'analyse de l'historique de consommation énergétique (électricité, gaz, eau) pour l'ensemble des bâtiments administratifs et des installations immobilières de l'entreprise. Elle permet d'enregistrer les index bruts des compteurs connectés (télérelève), d'interroger les courbes de charge réelles consolidées sur des périodes définies et de consulter des calculs d'optimisation ou des projections de dépenses.",
+    "x-synonymes": "consommation énergétique, courbe de charge historique, suivi de consommation électricité, télérelève de compteur connecté, index de consommation, efficacité énergétique des bâtiments, monitoring de fluides immobiliers, historique énergétique, consommation en kilowattheures, kWh, mesure d'énergie brute, sous-comptage immobilier, analyse de dépenses énergétiques, intensité carbone du parc, observabilité énergétique",
+    "x-false-positive-warning": "Attention : Cette API stocke et restitue exclusivement des relevés, index et historiques de consommation réelle d'infrastructures ou de bâtiments (IoT). Ne pas la confondre avec la `energy-forecast-api` (centrée sur le calcul prédictif futur par Machine Learning) ni avec la `energy-industry-api` (dédiée au monitoring d'énergie spécifique des machines d'usinage industrielles).",
+    "x-cas-usage": "Comment interroger la courbe de charge en électricité historique d'un bâtiment sur le mois passé ? | Comment publier et enregistrer une nouvelle mesure de consommation brute transmise par un capteur connecté ? | Où consulter les estimations de consommation calculées de manière analytique pour un site particulier ?"
+  },
+  "paths": {
+    "/v1/consumption/{siteId}": {
+      "parameters": [
+        {
+          "name": "siteId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la consommation d'énergie actuelle en temps réel et les métriques instantanées du site spécifié",
+        "operationId": "getConsumption",
+        "tags": [
+          "Consumption"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et ingérer une nouvelle mesure de consommation brute transmise par un capteur ou compteur connecté",
+        "operationId": "recordConsumption",
+        "tags": [
+          "Consumption"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/consumption/{siteId}/history": {
+      "parameters": [
+        {
+          "name": "siteId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la courbe de charge historique consolidée et les journaux de consommation passés sur une période temporelle",
+        "operationId": "getConsumptionHistory",
+        "tags": [
+          "History"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/consumption/{siteId}/forecast": {
+      "parameters": [
+        {
+          "name": "siteId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les estimations ou projections de consommation analytiques calculées pour l'infrastructure ciblée",
+        "operationId": "forecastConsumption",
+        "tags": [
+          "Forecast"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SOC API",
+    "version": "1.0.0",
+    "x-api-id": "soc-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Security Operations Center — gestion opérationnelle du centre d'opérations de sécurité. Création et suivi des tickets d'investigation, escalade vers les niveaux supérieurs (N1/N2/N3), gestion des analystes SOC disponibles et affectation aux incidents, et consultation des KPIs opérationnels (MTTD, MTTR, taux de résolution). DIFFÉRENCE vs siem-api : SOC gère les tickets, analystes et flux de travail humain du SOC, SIEM collecte et corrèle automatiquement les événements de sécurité en amont. DIFFÉRENCE vs security-incident-api-v2 : SOC = gestion opérationnelle de l'équipe SOC avec tickets et affectations, Security Incident = cycle de vie technique des incidents avec playbooks et timeline.",
+    "x-synonymes": "SOC opérations, ticket sécurité, analyste SOC, centre opérations sécurité, escalade incident, KPI SOC, MTTD MTTR, affectation analyste, triage SOC, Security Operations Center, gestion équipe sécurité, ticket investigation, niveau N1 N2 N3, rotation SOC, dashboard SOC",
+    "x-false-positive-warning": "Collecte et corrélation d'événements automatique → siem-api. Cycle de vie technique des incidents → security-incident-api-v2. Failles et CVE → vulnerability-api.",
+    "x-cas-usage": "je veux créer un ticket SOC suite à une alerte SIEM | je veux voir tous les tickets ouverts assignés à mon équipe SOC | je veux escalader un ticket vers un analyste de niveau supérieur | je veux voir quels analystes SOC sont disponibles pour une affectation | je veux consulter les KPIs du SOC (temps de réponse, taux de résolution)"
+  },
+  "paths": {
+    "/v1/soc/tickets": {
+      "get": {
+        "summary": "Lister tous les tickets SOC en cours avec priorité, statut et analyste assigné",
+        "operationId": "listSOCTickets",
+        "tags": ["Tickets"],
+        "responses": { "200": { "description": "Tickets SOC" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Créer un ticket SOC pour investigation d'un événement ou alerte de sécurité",
+        "operationId": "createSOCTicket",
+        "tags": ["Tickets"],
+        "responses": { "200": { "description": "Ticket créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/soc/tickets/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le détail d'un ticket SOC (historique, commentaires, pièces jointes)",
+        "operationId": "getSOCTicket",
+        "tags": ["Tickets"],
+        "responses": { "200": { "description": "Détail ticket" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Mettre à jour le statut, la priorité ou les informations d'un ticket SOC",
+        "operationId": "updateSOCTicket",
+        "tags": ["Tickets"],
+        "responses": { "200": { "description": "Ticket mis à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Escalader un ticket SOC vers un analyste ou niveau de compétence supérieur",
+        "operationId": "escalateSOCTicket",
+        "tags": ["Tickets"],
+        "responses": { "200": { "description": "Ticket escaladé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/soc/analysts": {
+      "get": {
+        "summary": "Lister les analystes SOC disponibles avec leur charge de travail et niveau de compétence",
+        "operationId": "listAnalysts",
+        "tags": ["Analysts"],
+        "responses": { "200": { "description": "Analystes disponibles" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Assigner un analyste SOC à un ticket d'investigation",
+        "operationId": "assignAnalyst",
+        "tags": ["Analysts"],
+        "responses": { "200": { "description": "Analyste assigné" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/soc/metrics": {
+      "get": {
+        "summary": "Consulter les KPIs opérationnels du SOC (MTTD, MTTR, tickets ouverts/fermés, taux de résolution)",
+        "operationId": "getSOCMetrics",
+        "tags": ["Metrics"],
+        "responses": { "200": { "description": "KPIs SOC" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

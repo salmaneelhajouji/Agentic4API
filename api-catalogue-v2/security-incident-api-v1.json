@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Security Incident API",
+    "version": "1.0.0",
+    "x-api-id": "security-incident-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "DEPRECATED — Version 1 de l'API de gestion des incidents de sécurité. Ne plus utiliser. Migrer vers security-incident-api-v2 qui apporte les playbooks automatiques, la timeline d'incidents et les notifications SIEM.",
+    "x-successor": "security-incident-api-v2",
+    "x-synonymes": "incident sécurité v1 deprecated",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser security-incident-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers security-incident-api-v2."
+  },
+  "paths": {
+    "/v1/incidents": {
+      "get": {
+        "summary": "[DEPRECATED] Lister les incidents — utiliser security-incident-api-v2",
+        "operationId": "listIncidentsV1",
+        "tags": ["Incidents"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

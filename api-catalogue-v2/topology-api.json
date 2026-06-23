@@ -1,0 +1,103 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Topology API",
+    "version": "1.0.0",
+    "x-api-id": "topology-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Topologie reseau. Cartographie logique et dynamique des interconnexions télécoms, gestion de l'état des liens et suivi des capacités de routage. DIFFÉRENCE vs network-inventory-api : Topology API trace de manière dynamique les liens et la bande passante inter-noeuds, tandis que network-inventory-api gère l'inventaire des composants matériels physiques (routeurs, switches, cartes d'interface).",
+    "x-synonymes": "topologie, réseau, lien réseau, routage, architecture réseau, carte réseau, télécom, bande passante, capacité, noeud, connectivité, infrastructure logique, liaison, commutateur, routeur, trafic, flux réseau",
+    "x-false-positive-warning": "Pour consulter le stock ou l'emplacement physique d'un routeur ou d'une baie de brassage, utilisez network-inventory-api.",
+    "x-cas-usage": "je veux consulter la carte des modifications récentes de notre topologie réseau | je veux lister l'intégralité des liaisons de télécommunication actives | je veux ajouter un nouveau lien logique entre deux commutateurs | je veux vérifier l'état opérationnel et la charge d'un lien réseau"
+  },
+  "paths": {
+    "/v1/topology/map": {
+      "get": {
+        "summary": "Récupérer la cartographie et l'historique des modifications de la topologie réseau",
+        "operationId": "getTopologyChanges",
+        "tags": [
+          "Map"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/topology/links": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des liens logiques et liaisons réseaux interconnectant nos noeuds",
+        "operationId": "listNetworkLinks",
+        "tags": [
+          "Links"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Ajouter et configurer une nouvelle liaison logique ou un canal réseau inter-équipements",
+        "operationId": "addLink",
+        "tags": [
+          "Links"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/topology/links/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter en temps réel le statut, la bande passante et la charge de trafic d'un lien réseau spécifique",
+        "operationId": "getLinkStatus",
+        "tags": [
+          "Links"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

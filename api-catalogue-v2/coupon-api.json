@@ -1,0 +1,100 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Coupon API",
+    "version": "1.0.0",
+    "x-api-id": "coupon-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Retail",
+    "x-domain": "Retail",
+    "description": "Cette API gère le cycle de vie complet des coupons de réduction et des codes promotionnels au sein de l'écosystème Retail. Elle permet aux équipes marketing de générer des offres et des campagnes ciblées, aux canaux de vente (sites e-commerce, applications mobiles, terminaux de caisse en magasin) de valider l'éligibilité des paniers en temps réel, et d'assurer le suivi précis (tracking) de l'utilisation des codes. Ses utilisateurs cibles sont les développeurs chargés de l'intégration dans les tunnels d'achat et les outils d'animation commerciale.",
+    "x-synonymes": "code promo, code promotionnel, coupon de réduction, bon d'achat, remise commerciale, rabais, offre promotionnelle, avantage client, chèque cadeau, code avantage, bon de réduction, code de fidélité, ristourne, campagne de réduction, ticket de réduction, code privilège",
+    "x-false-positive-warning": "Ne pas confondre cette API avec l'API Cartes Cadeaux (qui gère des moyens de paiement avec un solde monétaire dédié), l'API Fidélité (dédiée à la gestion des points, des cagnottes de fidélité et des statuts clients), ou l'API Moteur de Prix / Tarification (qui applique des remises automatiques et globales basées sur le catalogue sans saisie de code spécifique par l'utilisateur).",
+    "x-cas-usage": "Comment puis-je vérifier si le code promo 'SUMMER26' est encore valide pour ce panier ? | Est-il possible de générer un lot de 500 coupons uniques pour une campagne d'influenceurs ? | Pourquoi le coupon de ce client a-t-il été refusé lors de son passage en caisse ? | Comment enregistrer le fait qu'un client a utilisé son bon de réduction de 10% ? | Quels sont les détails et les conditions d'application associés au coupon 'BIENVENUE' ?"
+  },
+  "paths": {
+    "/v1/coupons": {
+      "get": {
+        "summary": "Récupérer la liste des coupons et codes promotionnels actuellement actifs et applicables aux ventes",
+        "operationId": "listCoupons",
+        "tags": [
+          "Coupons"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer un nouveau coupon ou un lot de codes promotionnels uniques associés à une campagne retail",
+        "operationId": "createCoupon",
+        "tags": [
+          "Coupons"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/coupons/{code}": {
+      "parameters": [
+        {
+          "name": "code",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les caractéristiques détaillées, les restrictions d'usage et les conditions d'éligibilité d'un coupon via son code unique",
+        "operationId": "getCouponDetails",
+        "tags": [
+          "Coupons"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Enregistrer l'application définitive et la consommation d'un coupon pour un achat client afin d'éviter les utilisations multiples",
+        "operationId": "redeemCoupon",
+        "tags": [
+          "Coupons"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

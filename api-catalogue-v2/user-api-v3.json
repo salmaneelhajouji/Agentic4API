@@ -1,0 +1,168 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "User API",
+    "version": "3.0.0",
+    "x-api-id": "user-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Identity",
+    "x-domain": "Identity & Access",
+    "description": "Version actuelle et recommandée de la gestion des utilisateurs. Ajoute le provisioning automatique SCIM 2.0 (synchronisation depuis Azure AD, Okta), la gestion native des groupes d'utilisateurs avec permissions, la liaison aux Identity Providers SSO, l'administration déléguée par périmètre, et l'audit trail complet des actions. DIFFÉRENCE vs user-api (v2) : v3 introduit SCIM 2.0, les groupes natifs (remplace les rôles imbriqués), la délégation d'admin et la vérification téléphone pour MFA SMS. DIFFÉRENCE vs customer-profile-api : User v3 gère l'identité technique, Customer Profile gère les données commerciales.",
+    "x-synonymes": "SCIM provisioning, groupe utilisateur, identité fédérée SSO, délégation admin, audit trail utilisateur, provisioning automatique, user management v3, groupes permissions, phone MFA, synchronisation Okta Azure AD, SCIM 2.0, gestion identité entreprise, filtres SCIM, user provisioning, annuaire utilisateurs",
+    "x-false-positive-warning": "Profil commercial client → customer-profile-api. Données RH → employee-api. Configuration SSO/IdP → sso-api. Version v2 (sans SCIM) → user-api.",
+    "x-cas-usage": "je veux provisionner automatiquement des utilisateurs depuis Azure AD via SCIM | je veux créer un groupe d'utilisateurs avec permissions spécifiques | je veux ajouter un utilisateur à un groupe existant | je veux lister les utilisateurs d'un groupe précis | je veux créer un utilisateur lié à un IdP SSO",
+    "x-breaking-changes-from-previous": [
+      "SCIM 2.0 endpoint /v3/scim ajouté",
+      "groups: nouveau sous-objet (remplace les rôles imbriqués)",
+      "identity_providers: liste des IdP liés (SSO)",
+      "delegated_admin: un user peut administrer un périmètre",
+      "password_policy: désormais retourné dans le profil",
+      "phone_verified: champ ajouté pour MFA SMS"
+    ]
+  },
+  "paths": {
+    "/v3/users": {
+      "post": {
+        "summary": "Créer un utilisateur avec groupes, IdP SSO lié et numéro de téléphone pour MFA SMS",
+        "operationId": "createUserV3",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserV3Create" } } }
+        },
+        "responses": { "201": { "description": "Utilisateur créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "get": {
+        "summary": "Lister les utilisateurs avec filtres SCIM-compatibles (userName, email, group_id)",
+        "operationId": "listUsersV3",
+        "tags": ["Users"],
+        "parameters": [
+          { "name": "filter", "in": "query", "schema": { "type": "string" }, "description": "Filtre SCIM ex: userName eq 'alice'" },
+          { "name": "group_id", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Liste" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v3/users/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^USR-[0-9]{3}$" } }
+      ],
+      "get": {
+        "summary": "Récupérer le profil complet d'un utilisateur avec ses groupes, IdP liés et politique de mot de passe",
+        "operationId": "getUserV3",
+        "tags": ["Users"],
+        "responses": { "200": { "description": "Profil complet" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Mettre à jour les informations d'un utilisateur",
+        "operationId": "updateUserV3",
+        "tags": ["Users"],
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "Mis à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Désactiver un utilisateur avec entrée dans l'audit trail (soft delete)",
+        "operationId": "deleteUserV3",
+        "tags": ["Users"],
+        "responses": { "204": { "description": "Désactivé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v3/users/{id}/groups": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lister les groupes auxquels appartient un utilisateur",
+        "operationId": "getUserGroups",
+        "tags": ["Groups"],
+        "responses": { "200": { "description": "Groupes" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Ajouter un utilisateur à un groupe existant",
+        "operationId": "addUserToGroup",
+        "tags": ["Groups"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "required": ["group_id"], "properties": { "group_id": { "type": "string" } } }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Ajouté au groupe" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v3/groups": {
+      "get": {
+        "summary": "Lister tous les groupes avec leurs permissions associées",
+        "operationId": "listGroups",
+        "tags": ["Groups"],
+        "responses": { "200": { "description": "Groupes" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Créer un nouveau groupe d'utilisateurs avec liste de permissions",
+        "operationId": "createGroup",
+        "tags": ["Groups"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "permissions": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Groupe créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v3/scim/v2/Users": {
+      "get": {
+        "summary": "Endpoint SCIM 2.0 — lister les utilisateurs pour synchronisation depuis Azure AD / Okta (nouveau en v3)",
+        "operationId": "scimListUsers",
+        "tags": ["SCIM"],
+        "responses": { "200": { "description": "SCIM UserList" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Endpoint SCIM 2.0 — provisionner automatiquement un utilisateur depuis un IdP externe",
+        "operationId": "scimCreateUser",
+        "tags": ["SCIM"],
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "201": { "description": "Utilisateur provisionné" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserV3Create": {
+        "type": "object",
+        "required": ["email", "password", "full_name", "user_type"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "format": "password", "minLength": 10 },
+          "full_name": { "type": "string" },
+          "user_type": { "type": "string", "enum": ["customer", "employee", "partner", "admin"] },
+          "group_ids": { "type": "array", "items": { "type": "string" }, "description": "Nouveau en v3" },
+          "identity_provider_id": { "type": "string", "description": "Nouveau en v3 — lié à un IdP SSO" },
+          "phone": { "type": "string" },
+          "preferred_language": { "type": "string", "default": "fr" }
+        }
+      }
+    }
+  }
+}

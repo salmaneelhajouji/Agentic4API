@@ -1,0 +1,78 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Lease API",
+    "version": "2.0.0",
+    "x-api-id": "lease-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Gestion des contrats de bail résidentiels et commerciaux. Permet de créer, modifier et résilier des baux, de calculer et appliquer l indexation annuelle IRL, et d accéder aux documents juridiques du bail. DIFFÉRENCE vs property-api-v3 : Lease API = contrat juridique de location entre bailleur et locataire. property-api-v3 = données du bien immobilier lui-même.",
+    "x-breaking-changes-from-previous": ["Indexation IRL automatique", "Signature électronique bail"],
+    "x-synonymes": "bail résidentiel, bail commercial, contrat location, bail loi Alur, bail meublé, bail nu, indexation IRL, révision loyer, résiliation bail, préavis départ, dépôt de garantie, quittance loyer, bail professionnel, renouvellement bail, sous-location bail, état des lieux bail, caution bail, garant bail, bail mobilité, congé bailleur",
+    "x-false-positive-warning": "Bien immobilier données cadastrales → property-api-v3. Colocation courte durée → co-living-api. Location courte durée touristique → hotel-api-v3. Permis de construire → building-permit-api.",
+    "x-cas-usage": "je veux créer un bail résidentiel pour un nouveau locataire | je veux calculer la révision de loyer selon l IRL du trimestre | je veux appliquer l indexation annuelle sur tous nos baux | je veux résilier un bail avec préavis | je veux consulter les documents officiels d un bail — contrat et état des lieux"
+  },
+  "paths": {
+    "/v2/leases": {
+      "get": {
+        "summary": "Lister les baux actifs — résidentiels et commerciaux avec dates et loyers",
+        "operationId": "listLeasesV2",
+        "tags": ["Leases"],
+        "responses": {"200": {"description": "Baux actifs"}}
+      },
+      "post": {
+        "summary": "Créer un contrat de bail — résidentiel, commercial ou bail mobilité",
+        "operationId": "createLeaseV2",
+        "tags": ["Leases"],
+        "responses": {"200": {"description": "Bail créé"}}
+      }
+    },
+    "/v2/leases/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un bail — loyer, charges, indexation et statut",
+        "operationId": "getLeaseV2",
+        "tags": ["Leases"],
+        "responses": {"200": {"description": "Détail bail"}}
+      },
+      "put": {
+        "summary": "Modifier un bail — avenant, loyer ou conditions",
+        "operationId": "updateLeaseV2",
+        "tags": ["Leases"],
+        "responses": {"200": {"description": "Bail modifié"}}
+      },
+      "delete": {
+        "summary": "Résilier un bail — avec préavis et date de fin",
+        "operationId": "terminateLease",
+        "tags": ["Leases"],
+        "responses": {"200": {"description": "Bail résilié"}}
+      }
+    },
+    "/v2/leases/{id}/indexation": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Calculer la révision de loyer IRL — nouveau loyer après indexation annuelle",
+        "operationId": "getIndexation",
+        "tags": ["Indexation"],
+        "responses": {"200": {"description": "Calcul indexation IRL"}}
+      },
+      "post": {
+        "summary": "Appliquer la révision de loyer indexée IRL — met à jour le loyer du bail",
+        "operationId": "applyIndexation",
+        "tags": ["Indexation"],
+        "responses": {"200": {"description": "Indexation appliquée"}}
+      }
+    },
+    "/v2/leases/{id}/documents": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Documents officiels du bail — contrat signé, état des lieux et quittances",
+        "operationId": "getLeaseDocuments",
+        "tags": ["Documents"],
+        "responses": {"200": {"description": "Documents bail"}}
+      }
+    }
+  }
+}

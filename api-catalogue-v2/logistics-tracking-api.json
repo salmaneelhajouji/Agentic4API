@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Logistics Tracking API",
+    "version": "1.0.0",
+    "x-api-id": "logistics-tracking-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Logistique",
+    "x-domain": "Supply Chain",
+    "description": "Suivi de colis unifié multi-transporteurs. Agrège en une seule API les statuts de Chronopost, Colissimo, UPS, FedEx et DHL avec détection automatique du transporteur. Permet de tracker un colis par numéro, de traiter plusieurs colis en lot et de consulter l historique complet des événements de livraison. Utilisé par les équipes e-commerce et logistique pour le suivi client centralisé.",
+    "x-synonymes": "suivi colis, tracking colis, numéro suivi, numéro tracking, Chronopost tracking, Colissimo tracking, UPS tracking, FedEx tracking, DHL tracking, statut livraison, état colis, colis en transit, colis livré, colis retardé, événements livraison, multi-transporteur, tracking unifié, agrégateur tracking, batch tracking, historique livraison",
+    "x-false-positive-warning": "DIFFÉRENCE vs shipping-api-v2 : Logistics Tracking API = consultation du statut de livraison d un colis existant. shipping-api-v2 = création d étiquettes et organisation des envois. DIFFÉRENCE vs cargo-api-v2 : Logistics Tracking API = suivi colis e-commerce multi-transporteurs. cargo-api-v2 = suivi fret industriel lourd conteneurs. DIFFÉRENCE vs delivery-api : Logistics Tracking API = tracking externe transporteurs. delivery-api = livraison last-mile interne.",
+    "x-cas-usage": "je veux afficher le statut de livraison d un colis dans mon espace client | je veux tracker automatiquement 50 colis en même temps après expédition | je veux voir l historique complet des événements d un colis retardé | je veux détecter automatiquement le transporteur d un numéro de suivi | je veux centraliser le suivi de tous nos transporteurs dans une seule interface"
+  },
+  "paths": {
+    "/v1/tracking/{code}": {
+      "parameters": [{"name": "code", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Suivi d un colis par numéro de tracking — statut, position et délai estimé",
+        "operationId": "trackPackage",
+        "tags": ["Tracking"],
+        "parameters": [{"name": "carrier", "in": "query", "schema": {"type": "string", "enum": ["chronopost", "colissimo", "ups", "fedex", "dhl", "auto"], "default": "auto"}}],
+        "responses": {"200": {"description": "Statut livraison colis"}}
+      }
+    },
+    "/v1/tracking/batch": {
+      "post": {
+        "summary": "Suivi de plusieurs colis simultanément — jusqu à 50 numéros de tracking",
+        "operationId": "trackBatchPackages",
+        "tags": ["Tracking"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["tracking_codes"],
+                "properties": {
+                  "tracking_codes": {"type": "array", "items": {"type": "string"}, "maxItems": 50}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Statuts groupés"}}
+      }
+    },
+    "/v1/tracking/{code}/events": {
+      "parameters": [{"name": "code", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Historique complet des événements d un colis — de l expédition à la livraison",
+        "operationId": "getTrackingEvents",
+        "tags": ["Tracking"],
+        "responses": {"200": {"description": "Événements livraison chronologiques"}}
+      }
+    }
+  }
+}

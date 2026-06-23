@@ -1,0 +1,47 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Legal Notice API",
+    "version": "1.0.0",
+    "x-api-id": "legal-notice-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Génération, envoi et suivi des actes juridiques et mises en demeure. Permet de créer des mises en demeure, sommations, injonctions et lettres de mise en cause, de les envoyer par voie recommandée ou électronique certifiée, et de suivre leur remise. Utilisé par les équipes juridiques et cabinets d avocats pour les procédures précontentieuses.",
+    "x-synonymes": "mise en demeure, acte juridique, sommation, injonction, lettre recommandée juridique, lettre mise en cause, précontentieux, relance juridique, lettre avocat, acte extrajudiciaire, signification, accusé réception juridique, remise acte, courrier recommandé électronique, LRAR, acte huissier, mise en demeure paiement, mise en demeure exécution, procédure amiable, acte de procédure",
+    "x-false-positive-warning": "DIFFÉRENCE vs contract-api : Legal Notice API = actes de procédure et mises en demeure. contract-api = gestion des contrats juridiques. DIFFÉRENCE vs compliance-legal-api : Legal Notice API = actes d huissier et mises en cause. compliance-legal-api = suivi des obligations légales réglementaires. DIFFÉRENCE vs notification-api-v2 : Legal Notice API = actes juridiques à valeur probante. notification-api-v2 = notifications applicatives sans valeur légale.",
+    "x-cas-usage": "je veux envoyer une mise en demeure de payer à un client débiteur | je veux voir si notre mise en demeure a bien été remise au destinataire | je veux générer une sommation d exécuter un contrat | je veux lister toutes les mises en demeure envoyées ce trimestre | je veux créer une lettre de mise en cause avant d engager une procédure judiciaire"
+  },
+  "paths": {
+    "/v1/notices": {
+      "get": {
+        "summary": "Lister les actes juridiques et mises en demeure envoyés — statuts de remise",
+        "operationId": "listLegalNotices",
+        "tags": ["Notices"],
+        "responses": {"200": {"description": "Actes juridiques"}}
+      },
+      "post": {
+        "summary": "Créer un acte juridique — mise en demeure, sommation ou injonction",
+        "operationId": "createNotice",
+        "tags": ["Notices"],
+        "responses": {"200": {"description": "Acte créé"}}
+      }
+    },
+    "/v1/notices/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut de remise d un acte — accusé réception et date de remise",
+        "operationId": "getDeliveryStatus",
+        "tags": ["Notices"],
+        "responses": {"200": {"description": "Statut remise acte"}}
+      },
+      "post": {
+        "summary": "Envoyer un acte juridique — recommandé électronique ou voie postale certifiée",
+        "operationId": "sendNotice",
+        "tags": ["Notices"],
+        "responses": {"200": {"description": "Acte envoyé"}}
+      }
+    }
+  }
+}

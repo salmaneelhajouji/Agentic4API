@@ -1,0 +1,121 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Contract API",
+    "version": "1.0.0",
+    "x-api-id": "contract-api",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Operations",
+    "description": "Gestion du cycle de vie complet des contrats juridiques. Permet de rédiger, négocier, envoyer en signature électronique eIDAS, suivre les obligations contractuelles avec leurs échéances et renouveler les contrats. Supporte les types NDA, SLA, partenariat, achat, licence et service. DIFFÉRENCE vs document-api : Contract API gère le cycle de vie juridique complet avec négociation, obligations et renouvellement. document-api génère des documents depuis templates. DIFFÉRENCE vs invoice-api : Contract = accord juridique entre parties. invoice-api = document fiscal de facturation.",
+    "x-synonymes": "contrat juridique, NDA accord confidentialité, SLA accord niveau service, contrat fournisseur, contrat partenariat, contrat emploi, contrat achat, licence logiciel, signature électronique eIDAS, obligation contractuelle, renouvellement contrat, négociation contrat, version contrat, expiration contrat, préavis contrat, contrepartie contrat, cycle vie contrat, CLM contract lifecycle, gestion contrats, suivi échéances contractuelles",
+    "x-false-positive-warning": "Génération document depuis template → document-api. Facture fiscale → invoice-api. Signature électronique seule → esignature-api. Analyse IA du contrat → contract-analytics-api. Versions précédentes → contract-api-v1 et contract-api-v2 (deprecated).",
+    "x-cas-usage": "je veux créer et envoyer un NDA en signature électronique | je veux voir tous les contrats qui arrivent à expiration dans les 30 jours | je veux ajouter une obligation de paiement avec échéance à un contrat | je veux renouveler un contrat fournisseur qui expire | je veux voir l historique des versions d un contrat négocié"
+  },
+  "paths": {
+    "/v1/contracts": {
+      "post": {
+        "summary": "Créer un contrat juridique — NDA, SLA, partenariat, achat ou licence",
+        "operationId": "createContract",
+        "tags": ["Contracts"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "counterparty_id", "type", "start_date", "end_date"],
+                "properties": {
+                  "title": {"type": "string"},
+                  "counterparty_id": {"type": "string"},
+                  "type": {"type": "string", "enum": ["nda", "sla", "partnership", "employment", "purchase", "license", "service"]},
+                  "start_date": {"type": "string", "format": "date"},
+                  "end_date": {"type": "string", "format": "date"},
+                  "value": {"type": "number"},
+                  "currency": {"type": "string", "default": "EUR"},
+                  "auto_renew": {"type": "boolean", "default": false},
+                  "notice_days": {"type": "integer"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Contrat créé"}}
+      },
+      "get": {
+        "summary": "Lister les contrats — filtre par statut, contrepartie et expiration proche",
+        "operationId": "listContracts",
+        "tags": ["Contracts"],
+        "parameters": [
+          {"name": "status", "in": "query", "schema": {"type": "string", "enum": ["draft", "review", "negotiation", "signed", "active", "expired", "terminated"]}},
+          {"name": "counterparty_id", "in": "query", "schema": {"type": "string"}},
+          {"name": "expiring_in_days", "in": "query", "schema": {"type": "integer"}}
+        ],
+        "responses": {"200": {"description": "Contrats"}}
+      }
+    },
+    "/v1/contracts/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^CTR-[0-9]{4}$"}}],
+      "get": {
+        "summary": "Contrat complet avec historique de versions et obligations",
+        "operationId": "getContract",
+        "tags": ["Contracts"],
+        "responses": {"200": {"description": "Contrat avec versions"}}
+      },
+      "put": {
+        "summary": "Modifier le contrat — crée une nouvelle version avec historique",
+        "operationId": "updateContract",
+        "tags": ["Contracts"],
+        "responses": {"200": {"description": "Nouvelle version créée"}}
+      }
+    },
+    "/v1/contracts/{id}/sign": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Envoyer le contrat en signature électronique eIDAS aux parties",
+        "operationId": "signContract",
+        "tags": ["Contracts"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["signatories"],
+                "properties": {
+                  "signatories": {"type": "array", "items": {"type": "object"}},
+                  "signature_method": {"type": "string", "enum": ["eidas_simple", "eidas_advanced", "eidas_qualified"]}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"202": {"description": "Invitations de signature envoyées"}}
+      }
+    },
+    "/v1/contracts/{id}/obligations": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Obligations contractuelles et échéances — paiements, livrables et rapports",
+        "operationId": "getObligations",
+        "tags": ["Obligations"],
+        "responses": {"200": {"description": "Obligations avec échéances"}}
+      },
+      "post": {
+        "summary": "Ajouter une obligation contractuelle — paiement, livrable ou renouvellement",
+        "operationId": "addObligation",
+        "tags": ["Obligations"],
+        "responses": {"201": {"description": "Obligation ajoutée"}}
+      }
+    },
+    "/v1/contracts/{id}/renew": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Renouveler un contrat arrivant à terme — nouvelle période avec historique",
+        "operationId": "renewContract",
+        "tags": ["Contracts"],
+        "responses": {"201": {"description": "Contrat renouvelé"}}
+      }
+    }
+  }
+}

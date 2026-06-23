@@ -1,0 +1,120 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Supplier Quality API",
+    "version": "1.0.0",
+    "x-api-id": "supplier-quality-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Qualite fournisseurs. Suivi de la conformité des matières premières, planification des audits de certification sur site et ouverture des dossiers de non-conformité (NC). DIFFERENCE vs quality-control-api : Supplier Quality = qualite entrants fournisseurs, Quality Control = qualite production interne. DIFFÉRENCE vs supplier-api : Supplier Quality pilote les métriques de conformité technique et d'audits industriels, tandis que Supplier API gère la relation contractuelle, les fiches d'identité et les catalogues de vente.",
+    "x-synonymes": "qualité, audit, non-conformité, incident, usine, industrie, inspection, entrant, matière première, rebut, contrôle, fournisseur, norme, certification, anomalie, réclamation, correction, standard, conformité",
+    "x-false-positive-warning": "Pour le contrôle de conformité des lignes de production internes ou des usines de l'entreprise, utilisez quality-control-api.",
+    "x-cas-usage": "je veux déclarer une non-conformité sur un lot de pièces reçu | je veux consulter le calendrier des audits industriels planifiés | je veux obtenir le score de qualité technique d'un sous-traitant | je veux enregistrer le compte-rendu d'un audit mené chez un fournisseur"
+  },
+  "paths": {
+    "/v1/supplier-quality/{supplierId}": {
+      "parameters": [
+        {
+          "name": "supplierId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la note de performance qualité globale et le taux de rebut calculés pour un fournisseur",
+        "operationId": "getSupplierQualityScore",
+        "tags": [
+          "Suppliers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/supplier-quality/audits": {
+      "get": {
+        "summary": "Lister l'historique et le calendrier des audits de certification menés chez les fournisseurs",
+        "operationId": "listSupplierAudits",
+        "tags": [
+          "Audits"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Ouvrir et programmer un protocole formel d'audit industriel chez un prestataire",
+        "operationId": "createSupplierAudit",
+        "tags": [
+          "Audits"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/supplier-quality/ncs": {
+      "get": {
+        "summary": "Lister et suivre toutes les fiches d'anomalies et déclarations de non-conformité d'entrants",
+        "operationId": "listSupplierNCs",
+        "tags": [
+          "NCs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Déclarer un défaut de fabrication ou un écart de conformité constaté sur un lot livré",
+        "operationId": "createSupplierNC",
+        "tags": [
+          "NCs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

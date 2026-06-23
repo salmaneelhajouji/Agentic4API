@@ -1,0 +1,86 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Trip API",
+    "version": "2.0.0",
+    "x-api-id": "trip-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Gestion des trajets et missions de transport. Planification d'un trajet avec points de départ/arrivée, suivi de position en temps réel, gestion des points de passage (waypoints), clôture du trajet et bilan carbone CO2. DIFFÉRENCE vs route-optimization-api : Trip gère le trajet effectivement réalisé par un conducteur/véhicule (exécution), Route Optimization calcule l'itinéraire optimal théorique (planification). DIFFÉRENCE vs fleet-api : Trip est le trajet unitaire, Fleet gère l'ensemble du parc de véhicules.",
+    "x-synonymes": "trajet mission, suivi trajet, géolocalisation trajet, mission transport, bilan CO2 trajet, waypoint point passage, trajet temps réel, livraison trajet, tournée chauffeur, tracking véhicule trajet, kilométrage trajet, rapport trajet, trajet conducteur, suivi GPS mission, déplacement professionnel",
+    "x-false-positive-warning": "Calcul d'itinéraire optimal → route-optimization-api. Gestion parc véhicules → fleet-api. Réservation transport → booking-api.",
+    "x-cas-usage": "je veux créer un trajet pour un chauffeur avec point de départ et d'arrivée | je veux suivre en temps réel la position d'un véhicule sur un trajet | je veux ajouter un point de passage supplémentaire à un trajet en cours | je veux clôturer un trajet et obtenir son bilan CO2 | je veux voir l'historique de tous les trajets effectués",
+    "x-breaking-changes-from-previous": [
+      "Suivi temps reel",
+      "Bilan CO2"
+    ]
+  },
+  "paths": {
+    "/v2/trips": {
+      "get": {
+        "summary": "Lister les trajets avec filtres sur statut (en cours, terminé), véhicule et conducteur",
+        "operationId": "listTripsV2",
+        "tags": ["Trips"],
+        "responses": { "200": { "description": "Trajets" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Créer un nouveau trajet avec origine, destination, véhicule et conducteur assignés",
+        "operationId": "createTripV2",
+        "tags": ["Trips"],
+        "responses": { "200": { "description": "Trajet créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/trips/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le détail d'un trajet (position actuelle, kilomètres parcourus, statut, CO2)",
+        "operationId": "getTripV2",
+        "tags": ["Trips"],
+        "responses": { "200": { "description": "Détail trajet" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Modifier les informations d'un trajet (destination, notes, urgence)",
+        "operationId": "updateTripV2",
+        "tags": ["Trips"],
+        "responses": { "200": { "description": "Trajet mis à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Clôturer et terminer un trajet — génère le bilan kilométrique et CO2 (nouveau en v2)",
+        "operationId": "endTrip",
+        "tags": ["Trips"],
+        "responses": { "200": { "description": "Trajet terminé avec bilan" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/trips/{id}/waypoints": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lister les points de passage d'un trajet avec coordonnées et heures de passage",
+        "operationId": "getWaypoints",
+        "tags": ["Waypoints"],
+        "responses": { "200": { "description": "Points de passage" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Ajouter un point de passage intermédiaire à un trajet en cours",
+        "operationId": "addWaypoint",
+        "tags": ["Waypoints"],
+        "responses": { "200": { "description": "Point ajouté" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

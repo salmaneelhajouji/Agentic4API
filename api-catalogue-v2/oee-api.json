@@ -1,0 +1,44 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OEE API",
+    "version": "1.0.0",
+    "x-api-id": "oee-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Calcul et analyse du TRS (Taux de Rendement Synthétique) et OEE (Overall Equipment Effectiveness) des machines industrielles. Décompose l OEE en disponibilité, performance et qualité, fournit l historique par machine et le TRS consolidé par équipe ou poste. Utilisé par les responsables de production pour identifier les gisements d amélioration de productivité.",
+    "x-synonymes": "TRS taux rendement synthétique, OEE overall equipment effectiveness, disponibilité machine, performance machine, qualité production, décomposition TRS, historique OEE, OEE par équipe, OEE par shift, TPM maintenance productive totale, lean manufacturing OEE, amélioration productivité, benchmark OEE, OEE classe mondiale 85%, arrêt non planifié OEE, micro-arrêt OEE, taux rebut qualité, cadence machine, calcul OEE automatique, KPI production",
+    "x-false-positive-warning": "DIFFÉRENCE vs mes-api : OEE API = calcul et analyse détaillée du TRS/OEE. mes-api = supervision globale de l atelier avec tous les KPIs production. DIFFÉRENCE vs machine-api-v2 : OEE API = métriques de performance machine calculées. machine-api-v2 = gestion des machines CNC et états opérationnels. DIFFÉRENCE vs maintenance-work-order-api : OEE API = performance et disponibilité. maintenance-work-order-api = ordres de travail réparation.",
+    "x-cas-usage": "je veux voir le TRS détaillé de notre fraiseuse CNC — disponibilité, performance et qualité | je veux voir l évolution du TRS d une machine sur les 30 derniers jours | je veux comparer le TRS par équipe matin, après-midi et nuit | je veux identifier pourquoi notre OEE est sous les 85% de classe mondiale | je veux suivre l impact de notre programme TPM sur le TRS des machines"
+  },
+  "paths": {
+    "/v1/oee/{machineId}": {
+      "parameters": [{"name": "machineId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Décomposition TRS/OEE d une machine — disponibilité, performance et qualité",
+        "operationId": "getOEEBreakdown",
+        "tags": ["OEE"],
+        "responses": {"200": {"description": "TRS décomposé"}}
+      }
+    },
+    "/v1/oee/{machineId}/history": {
+      "parameters": [{"name": "machineId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Historique TRS d une machine — évolution quotidienne et tendance",
+        "operationId": "getOEEHistory",
+        "tags": ["History"],
+        "responses": {"200": {"description": "Historique OEE"}}
+      }
+    },
+    "/v1/oee/site": {
+      "get": {
+        "summary": "TRS consolidé par équipe et poste de travail — matin, après-midi et nuit",
+        "operationId": "getOEEByShift",
+        "tags": ["Site"],
+        "responses": {"200": {"description": "TRS par équipe"}}
+      }
+    }
+  }
+}

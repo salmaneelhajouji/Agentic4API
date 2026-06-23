@@ -1,0 +1,89 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Production Planning API",
+    "version": "1.0.0",
+    "x-api-id": "production-planning-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Cette API régit la planification macro-industrielle à moyen et long terme à travers la modélisation du Plan Directeur de Production (PDP / Master Production Schedule - MPS). Conçue pour les directeurs de la planification et les ingénieurs Supply Chain, elle permet d'aligner les capacités de charge des centres de travail face aux prévisions de vente et aux contraintes logistiques globales.",
+    "x-synonymes": "Plan Directeur de Production, PDP, Master Production Schedule, MPS, Planification de capacité, Plan de charge industriel, Gestion des capacités, Prévisions de fabrication, Centre de charge, Volume de production, Capacité machine, Plan de production global, Arbitrage charge-capacité, Plan industriel et commercial, Horizon de planification, Disponibilité ressources",
+    "x-false-positive-warning": "Attention : Cette API est restreinte à la planification macroscopique et capacitaire (PDP/MPS). Pour la programmation fine au jour le jour et le séquencement horaire des tâches sur les machines, utilisez la Production Scheduling API. Pour le suivi d'exécution concret sur le terrain, utilisez la Production Order API.",
+    "x-cas-usage": "Comment faire pour consulter le Plan Directeur de Production (PDP) sur un horizon de trois mois pour une gamme de produits ? | Comment faire pour mettre à jour les prévisions de volumes de fabrication du Plan Directeur de Production suite à un pic de vente ? | Comment faire pour analyser et réajuster la capacité disponible d'un centre de travail en cas de maintenance planifiée ?"
+  },
+  "paths": {
+    "/v1/planning/pdp": {
+      "get": {
+        "summary": "Extraire le Plan Directeur de Production (PDP) consolidé pour analyser les projections de volumes et les stocks de couverture",
+        "operationId": "getMasterProductionSchedule",
+        "tags": [
+          "PDP"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Actualiser les données directrices du plan de production en fonction des nouvelles expressions de besoins ou prévisions",
+        "operationId": "updatePDP",
+        "tags": [
+          "PDP"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/planning/capacity/{workcenter}": {
+      "parameters": [
+        {
+          "name": "workcenter",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'adéquation charge/capacité d'un centre de travail spécifique sur une période donnée",
+        "operationId": "getCapacityPlan",
+        "tags": [
+          "Capacity"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajuster la capacité nominale d'un atelier ou d'un îlot de production (ex: ajout d'équipes de suppléance, heures supplémentaires)",
+        "operationId": "adjustCapacity",
+        "tags": [
+          "Capacity"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

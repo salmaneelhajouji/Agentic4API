@@ -1,0 +1,65 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cohort API",
+    "version": "1.0.0",
+    "x-api-id": "cohort-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "API spécialisée dans l'analyse de cohortes clients permettant de mesurer la rétention, la valeur vie client (LTV) et les comportements d'achat par groupe d'acquisition. Couvre les processus de segmentation temporelle des clients, de calcul de matrices de rétention (J7, J30, J90, M1, M6, M12) et d'analyse du revenu cumulé par cohorte. Utilisée par les équipes growth, product et data analytics pour comprendre l'évolution comportementale des clients au fil du temps et comparer des cohortes d'acquisition sur différentes périodes ou canaux. DIFFÉRENCE vs analytics-api-v3 : Cohort API est dédiée à la rétention et au LTV par groupe d'acquisition, tandis qu'analytics-api-v3 couvre des métriques business générales (ventes, trafic). DIFFÉRENCE vs attribution-api : Cohort API mesure le comportement des clients dans le temps après acquisition, alors qu'attribution-api attribue des conversions aux canaux marketing. DIFFÉRENCE vs clinical-trial-api : Cohort API traite des cohortes marketing clients commerciaux, alors que clinical-trial-api gère des cohortes de patients dans un cadre d'essai clinique réglementé.",
+    "x-synonymes": "analyse cohorte, rétention client, LTV lifetime value, valeur vie client, matrice rétention, cohorte acquisition, groupe acquisition, churn cohorte, rétention mensuelle, cohorte hebdomadaire, taux rétention J7 J30 J90, comportement client cohorte, cohorte SaaS, revenue cohorte, orders cohorte, analyse temporelle clients, cohorte marketing, segment acquisition, cohorte par canal, rétention produit",
+    "x-false-positive-warning": "DIFFÉRENCE vs analytics-api-v3 : Cohort API = analyse spécialisée rétention et LTV par groupe d'acquisition. analytics-api-v3 = métriques business générales ventes et trafic. DIFFÉRENCE vs attribution-api : Cohort API = comportement des clients dans le temps après acquisition. attribution-api = attribution des conversions aux canaux marketing. DIFFÉRENCE vs clinical-trial-api : Cohort API = cohortes marketing clients commerciaux. clinical-trial-api = cohortes de patients dans un essai clinique réglementé. DIFFÉRENCE vs analytics-api (v1/v2) : Cohort API offre une granularité temporelle fine sur des groupes cohésifs d'utilisateurs, alors que les versions antérieures d'analytics-api exposent des agrégats globaux sans notion de groupe d'acquisition.",
+    "x-cas-usage": "Comment voir la rétention des clients acquis en janvier sur les 6 mois suivants ? | Comment calculer le LTV des clients venus par le canal SEO versus publicité payante ? | Comment créer une matrice de rétention mensuelle pour les abonnés d'un produit SaaS ? | Quels sont les taux de rétention J7, J30 et J90 pour une cohorte d'acquisition donnée ? | Comment comparer la rétention et le revenu cumulé des cohortes 2025 versus 2026 ?"
+  },
+  "paths": {
+    "/v1/cohorts": {
+      "post": {
+        "summary": "Créer une analyse de cohorte en définissant la période d'acquisition, la métrique cible (rétention, LTV, commandes ou revenu) et la granularité temporelle souhaitée",
+        "operationId": "createCohort",
+        "tags": ["Cohorts"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "acquisition_period", "metric"],
+                "properties": {
+                  "name": {"type": "string"},
+                  "acquisition_period": {"type": "string", "example": "2026-01"},
+                  "metric": {"type": "string", "enum": ["retention", "ltv", "orders_count", "revenue"]}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Analyse cohorte créée"}}
+      },
+      "get": {
+        "summary": "Lister toutes les analyses de cohortes disponibles avec leurs métriques associées (rétention, LTV, comportement d'achat) et leurs périodes d'acquisition",
+        "operationId": "listCohorts",
+        "tags": ["Cohorts"],
+        "responses": {"200": {"description": "Cohortes"}}
+      }
+    },
+    "/v1/cohorts/{id}/retention": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer la matrice de rétention complète d'une cohorte avec les taux de retour à J7, J30, J90, M1, M6 et M12 pour chaque sous-période d'observation",
+        "operationId": "getCohortRetention",
+        "tags": ["Cohorts"],
+        "responses": {"200": {"description": "Matrice de rétention"}}
+      }
+    },
+    "/v1/cohorts/{id}/ltv": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Calculer et récupérer la valeur vie client (LTV) cumulée d'une cohorte par période, permettant de suivre l'évolution du revenu généré au fil du temps depuis l'acquisition",
+        "operationId": "getCohortLTV",
+        "tags": ["Cohorts"],
+        "responses": {"200": {"description": "LTV par période"}}
+      }
+    }
+  }
+}

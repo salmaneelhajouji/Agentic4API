@@ -1,0 +1,137 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Property Inspection API",
+    "version": "1.0.0",
+    "x-api-id": "property-inspection-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Cette API est dédiée au suivi réglementaire, à la réalisation et à la certification des états des lieux et audits techniques des biens immobiliers. Elle fournit les outils nécessaires aux agents de terrain pour formaliser les constats d'entrée, de sortie ou les contrôles périodiques, y adjoindre des constatations photographiques contradictoires et sceller juridiquement les documents par signature électronique.",
+    "x-synonymes": "État des lieux, Inspection de bien, Constat d'entrée, Constat de sortie, Audit immobilier, Contrôle périodique, Inventaire du logement, Rapport d'inspection, Preuve photographique, Signature d'état des lieux, Constat contradictoire, Relevé des compteurs, Dégradation logement, Scellé électronique, Vérification technique, Audit de conformité",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement des états des lieux physiques et des audits de conformité du logement. Pour le référentiel des caractéristiques du bâtiment ou des annonces, utilisez la Property API. Pour la gestion financière des sinistres ou des dépôts de garantie, contactez l'API de comptabilité locative.",
+    "x-cas-usage": "Comment faire pour initialiser un dossier d'état des lieux d'entrée pour un locataire arrivant ? | Comment faire pour ajouter des photos de constatation contradictoire sur un équipement dégradé lors d'une inspection ? | Comment faire pour valider et déclencher le processus de signature électronique sécurisée d'un constat de sortie ?"
+  },
+  "paths": {
+    "/v1/inspections": {
+      "get": {
+        "summary": "Rechercher et lister l'historique des dossiers d'états des lieux et d'audits réalisés ou en attente",
+        "operationId": "listInspections",
+        "tags": [
+          "Inspections"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ouvrir un nouveau dossier d'état des lieux (entrée, sortie, intermédiaire) associé à un bail ou à un logement",
+        "operationId": "createInspection",
+        "tags": [
+          "Inspections"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/inspections/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le contenu exhaustif d'un rapport d'inspection, ses relevés de compteurs et le statut des validations",
+        "operationId": "getInspection",
+        "tags": [
+          "Inspections"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Compléter ou amender les observations textuelles et les relevés techniques d'un état des lieux non encore signé",
+        "operationId": "updateInspection",
+        "tags": [
+          "Inspections"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Clore le rapport contradictoire et initier la procédure de signature électronique sécurisée des parties",
+        "operationId": "signInspection",
+        "tags": [
+          "Inspections"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/inspections/{id}/photos": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister les clichés photographiques probants rattachés aux différentes pièces et constats de l'inspection",
+        "operationId": "getInspectionPhotos",
+        "tags": [
+          "Photos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Téléverser une photographie horodatée et géolocalisée pour servir de preuve à une constatation d'état des lieux",
+        "operationId": "addInspectionPhoto",
+        "tags": [
+          "Photos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

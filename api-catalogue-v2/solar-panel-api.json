@@ -1,0 +1,61 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Solar Panel API",
+    "version": "1.0.0",
+    "x-api-id": "solar-panel-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Gestion des installations photovoltaïques. Suivi de la production d'énergie en temps réel (kWh produits, puissance instantanée), analyse du rendement et des performances par rapport aux conditions météo, et enregistrement de nouvelles installations dans le parc. DIFFÉRENCE vs smart-meter-api-v2 : Solar Panel suit la production d'énergie solaire et le rendement des panneaux, Smart Meter mesure la consommation multi-fluides (eau, gaz, électricité). DIFFÉRENCE vs energy-api : Solar Panel est spécifique aux installations PV, Energy API agrège toutes les sources et usages énergétiques.",
+    "x-synonymes": "panneau solaire, photovoltaïque, production solaire, énergie solaire, kWh produit, rendement PV, installation solaire, puissance instantanée, onduleur, autoconsommation, énergie renouvelable, monitoring solaire, performance panneau, ombrages, ensoleillement",
+    "x-false-positive-warning": "Consommation électrique/eau/gaz → smart-meter-api-v2. Agrégation toutes énergies → energy-api. Capteurs IoT génériques → sensor-data-api-v2.",
+    "x-cas-usage": "je veux voir la production solaire en temps réel de mon installation | je veux enregistrer une nouvelle installation photovoltaïque | je veux analyser le rendement de mes panneaux sur la dernière semaine | je veux comparer la production réelle vs la production théorique | je veux lister toutes les installations solaires de mon parc"
+  },
+  "paths": {
+    "/v1/solar-panels": {
+      "get": {
+        "summary": "Lister toutes les installations photovoltaïques du parc avec puissance nominale et statut",
+        "operationId": "listPanels",
+        "tags": ["Panels"],
+        "responses": { "200": { "description": "Installations solaires" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Enregistrer une nouvelle installation photovoltaïque avec ses caractéristiques techniques",
+        "operationId": "registerInstallation",
+        "tags": ["Panels"],
+        "responses": { "200": { "description": "Installation enregistrée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/solar-panels/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lire la production solaire en temps réel (puissance instantanée, kWh du jour, statut onduleur)",
+        "operationId": "getProduction",
+        "tags": ["Panels"],
+        "responses": { "200": { "description": "Production temps réel" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/solar-panels/{id}/performance": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Analyser le rendement et les performances d'une installation sur une période (production réelle vs théorique)",
+        "operationId": "getPanelPerformance",
+        "tags": ["Performance"],
+        "responses": { "200": { "description": "Analyse de rendement" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

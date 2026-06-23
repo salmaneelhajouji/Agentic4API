@@ -1,0 +1,118 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Grade API",
+    "version": "2.0.0",
+    "x-api-id": "grade-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Cette API administre le système central de notation, de suivi des performances académiques et d'évaluation des étudiants (v2). Elle permet aux enseignants d'enregistrer de nouvelles notes par matière, d'exécuter le calcul automatisé et pondéré des moyennes générales par trimestre ou semestre, et de compiler ou générer les bulletins de notes officiels au format PDF sécurisé. Elle alimente directement les espaces parents, étudiants et secrétariats de scolarité.",
+    "x-synonymes": "relevé de notes, évaluation scolaire, calcul de moyenne générale, bulletin de notes PDF, livret scolaire v2, coefficient de matière, saisie des notes, performance académique, trimestre pédagogique, conseil de classe note, appréciation enseignant, moyenne pondérée",
+    "x-false-positive-warning": "Attention : Cette API régit de façon exclusive le système de notation chiffrée, d'évaluations de matières et de bulletins PDF (Education). Ne pas la confondre avec l'api `exam-api` (dédiée à l'organisation logistique lourde, à la planification des centres et à l'inscription aux examens officiels et concours de certification).",
+    "x-cas-usage": "Comment ajouter et consigner une nouvelle note d'évaluation coefficientée pour un étudiant ? | Où consulter l'historique complet des notes obtenues par un élève au cours du semestre ? | Comment appeler le calcul en temps réel de la moyenne pondérée générale d'un cursus ? | Quelle méthode appeler pour compiler et générer le bulletin de notes officiel au format PDF ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "Calcul automatique moyennes",
+    "Bulletins PDF"
+  ],
+  "paths": {
+    "/v2/grades/{studentId}": {
+      "parameters": [
+        {
+          "name": "studentId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique complet des notes et des évaluations chiffrées enregistrées pour un étudiant",
+        "operationId": "getGradesV2",
+        "tags": [
+          "Grades"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter et enregistrer une nouvelle note ou un résultat d'évaluation dans le livret scolaire de l'étudiant",
+        "operationId": "addGradeV2",
+        "tags": [
+          "Grades"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/grades/{studentId}/average": {
+      "parameters": [
+        {
+          "name": "studentId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter et calculer la moyenne générale pondérée (par matière ou globale) pour l'étudiant spécifié",
+        "operationId": "getAverageV2",
+        "tags": [
+          "Average"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/grades/{studentId}/report-card": {
+      "parameters": [
+        {
+          "name": "studentId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer les métadonnées ou le lien du bulletin de notes consolidé pour la période d'évaluation",
+        "operationId": "getReportCard",
+        "tags": [
+          "ReportCard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Compiler et générer officiellement le fichier PDF sécurisé du bulletin de notes de fin de trimestre ou semestre",
+        "operationId": "generateReportCard",
+        "tags": [
+          "ReportCard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

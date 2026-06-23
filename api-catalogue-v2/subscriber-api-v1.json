@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Subscriber API",
+    "version": "1.0.0",
+    "x-api-id": "subscriber-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "DEPRECATED — Version 1 de l'API de gestion des abonnés télécom. Ne plus utiliser. Migrer vers subscriber-api-v3 qui apporte la gestion multi-lignes, l'eSIM et la portabilité complète.",
+    "x-successor": "subscriber-api-v3",
+    "x-synonymes": "abonné télécom v1 deprecated",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser subscriber-api-v3.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers subscriber-api-v3."
+  },
+  "paths": {
+    "/v1/subscribers": {
+      "get": {
+        "summary": "[DEPRECATED] Lister les abonnés — utiliser subscriber-api-v3",
+        "operationId": "listSubscribersV1",
+        "tags": ["Subscribers"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Reporting API",
+    "version": "1.0.0",
+    "x-api-id": "reporting-api-V1",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "Génération de rapports planifiés sur des populations de données. Permet de générer des rapports ventes, inventaire, clients et commandes en PDF, Excel ou CSV, de les télécharger et de planifier leur envoi récurrent par email. DIFFÉRENCE vs analytics-api : Reporting = documents générés et envoyés par email. analytics-api = métriques consultables en temps réel. DIFFÉRENCE vs report-api : reporting-api = rapports périodiques sur populations. report-api = rapport contextuel sur une ressource précise.",
+    "x-synonymes": "rapport ventes mensuel, rapport inventaire, rapport commandes, export Excel données, rapport PDF planifié, rapport CSV, rapport hebdomadaire automatique, envoi rapport email, rapport périodique, planification rapport, rapport commercial, rapport business, download rapport, génération rapport asynchrone, rapport filtre, template rapport périodique, rapport statistiques, rapport KPI mensuel, rapport direction, dispatch rapport",
+    "x-false-positive-warning": "Rapport HTML interactif avec white-labeling → reporting-api-v2. Rapport contextuel sur une entité précise → report-api. Métriques temps réel → analytics-api-v3. Version v2 avec collaboration → reporting-api-v2.",
+    "x-cas-usage": "je veux générer le rapport mensuel des ventes en PDF | je veux exporter les données de commandes en Excel pour le mois dernier | je veux planifier l envoi automatique du rapport hebdomadaire des stocks | je veux télécharger le rapport de commandes généré ce matin | je veux voir quels templates de rapports sont disponibles"
+  },
+  "paths": {
+    "/v1/reports/generate": {
+      "post": {
+        "summary": "Générer un rapport — ventes, inventaire, clients ou commandes en PDF/Excel/CSV",
+        "operationId": "generateReportDoc",
+        "tags": ["Reports"],
+        "responses": {"202": {"description": "Génération lancée"}}
+      }
+    },
+    "/v1/reports/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut de génération d un rapport — en cours, prêt ou échoué",
+        "operationId": "getReportStatus",
+        "tags": ["Reports"],
+        "responses": {"200": {"description": "Statut rapport"}}
+      }
+    },
+    "/v1/reports/{id}/download": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Télécharger un rapport généré — PDF, Excel ou CSV",
+        "operationId": "downloadReport",
+        "tags": ["Reports"],
+        "responses": {"200": {"description": "Fichier rapport"}}
+      }
+    },
+    "/v1/reports/schedule": {
+      "post": {
+        "summary": "Planifier un rapport récurrent — cron et envoi automatique par email",
+        "operationId": "scheduleReport",
+        "tags": ["Reports"],
+        "responses": {"201": {"description": "Rapport planifié"}}
+      }
+    },
+    "/v1/reports/templates": {
+      "get": {
+        "summary": "Modèles de rapports disponibles — ventes, stocks, clients et commandes",
+        "operationId": "getReportTemplates",
+        "tags": ["Reports"],
+        "responses": {"200": {"description": "Templates disponibles"}}
+      }
+    }
+  }
+}

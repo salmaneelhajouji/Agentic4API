@@ -1,0 +1,130 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Demand Forecast API",
+    "version": "1.0.0",
+    "x-api-id": "demand-forecast-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Supply",
+    "x-domain": "Supply Chain",
+    "description": "Cette API exploite des modèles de Machine Learning avancés (ensemblistes, ARIMA, Prophet) pour générer des prévisions de la demande de produits à court et moyen terme. Elle permet aux gestionnaires de la Supply Chain et aux acheteurs d'anticiper les volumes de vente, de détecter proactivement les risques de rupture de stock et d'obtenir des plans de réapprovisionnement optimisés sous contrainte budgétaire. Elle est indispensable pour rationaliser le niveau des stocks en entrepôt et maximiser le taux de service.",
+    "x-synonymes": "prévision de la demande, demand forecast, prévision des ventes, machine learning prédictif, modèle Prophet, modèle ARIMA, risques de rupture, stockout forecast, plan de réapprovisionnement, optimisation des stocks, niveau de stock cible, gestion des approvisionnements, horizon de prévision, tendance d'achat, saisonnalité des ventes, approvisionnement recommandé, planification supply chain, réassort automatisé",
+    "x-false-positive-warning": "Attention : Cette API génère des analyses prédictives et probabilistes basées sur l'intelligence artificielle pour anticiper les besoins futurs (Forecast). Ne pas la confondre avec l'API de gestion des stocks courante (inventory-api) qui renvoie les quantités physiques réelles actuellement disponibles en entrepôt.",
+    "x-cas-usage": "Quelle est la prévision de vente sur un horizon de 45 jours pour notre catalogue de produits phares ? | Quels articles présentent un risque critique de rupture de stock au cours des 30 prochains jours ? | Quel plan de réapprovisionnement optimal et de réassort devrais-je appliquer pour cet entrepôt en respectant mon enveloppe budgétaire ?"
+  },
+  "paths": {
+    "/v1/forecast/demand": {
+      "post": {
+        "summary": "Générer des prévisions de demande quotidiennes par produit sur un horizon temporel spécifié via des modèles de Machine Learning",
+        "operationId": "forecastDemand",
+        "tags": [
+          "Forecast"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "product_ids",
+                  "horizon_days"
+                ],
+                "properties": {
+                  "product_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "horizon_days": {
+                    "type": "integer",
+                    "example": 30,
+                    "description": "Nombre de jours à prévoir"
+                  },
+                  "model": {
+                    "type": "string",
+                    "enum": [
+                      "arima",
+                      "prophet",
+                      "ml_ensemble"
+                    ],
+                    "default": "ml_ensemble"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prévisions par produit et par jour"
+          }
+        }
+      }
+    },
+    "/v1/forecast/stockouts": {
+      "get": {
+        "summary": "Identifier la liste des produits présentant un risque critique de rupture de stock à court terme avec leur probabilité associée",
+        "operationId": "getForecastStockouts",
+        "tags": [
+          "Forecast"
+        ],
+        "parameters": [
+          {
+            "name": "horizon_days",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 30
+            }
+          },
+          {
+            "name": "confidence",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "default": 0.85
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Produits à risque avec probabilité"
+          }
+        }
+      }
+    },
+    "/v1/forecast/replenishment": {
+      "post": {
+        "summary": "Calculer un plan de réapprovisionnement recommandé pour un entrepôt sous contrainte de budget limite",
+        "operationId": "getReplenishmentPlan",
+        "tags": [
+          "Forecast"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "warehouse_id": {
+                    "type": "string"
+                  },
+                  "budget_limit": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Plan avec quantités recommandées par produit"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sensor Data API",
+    "version": "1.0.0",
+    "x-api-id": "sensor-data-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "DEPRECATED — Version 1 de l'API de données capteurs IoT. Ne plus utiliser. Migrer vers sensor-data-api-v2 qui apporte le streaming SSE temps réel, le support multi-protocoles et la calibration automatique.",
+    "x-successor": "sensor-data-api-v2",
+    "x-synonymes": "capteur IoT v1 deprecated",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser sensor-data-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers sensor-data-api-v2."
+  },
+  "paths": {
+    "/v1/sensors": {
+      "get": {
+        "summary": "[DEPRECATED] Lister les capteurs — utiliser sensor-data-api-v2",
+        "operationId": "listSensorsV1",
+        "tags": ["Sensors"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

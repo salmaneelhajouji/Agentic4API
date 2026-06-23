@@ -1,0 +1,305 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Webhook API",
+    "version": "1.0.0",
+    "x-api-id": "webhook-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Communication",
+    "description": "Enregistrement et gestion des webhooks entrants/sortants. Réception d'événements externes et diffusion d'événements applicatifs internes vers des serveurs tiers configurés avec signature de sécurité HMAC. DIFFÉRENCE vs notification-api : Webhook API distribue des payloads JSON de données structurées de machine à machine (systèmes B2B), tandis que notification-api envoie des messages texte lisibles par des humains (SMS, e-mails, push notifications).",
+    "x-synonymes": "webhook, callback, événement, hmac, signature, endpoint, routage, payload, livraison, retry, notification b2b, abonnement événement, webhook url, api event, http post, communication asynchrone, rappel http",
+    "x-false-positive-warning": "Pour l'envoi d'alertes textuelles, de courriels ou de SMS de communication à destination d'utilisateurs humains finaux, utilisez de manière exclusive notification-api.",
+    "x-cas-usage": "je veux enregistrer un nouvel endpoint webhook pour recevoir des notifications d'événements | je veux lister les abonnements webhooks configurés sur la plateforme | je veux modifier l'url de callback ou la liste des événements écoutés d'un webhook | je veux envoyer un événement de test pour valider l'accessibilité technique de mon url | je veux consulter le journal historique des tentatives de livraison et codes http de réponse",
+    "x-breaking-changes-from-previous": []
+  },
+  "paths": {
+    "/v1/webhooks": {
+      "post": {
+        "summary": "Enregistrer et configurer un nouvel endpoint de callback HTTP pour l'écoute asynchrone d'événements de la plateforme",
+        "operationId": "createWebhook",
+        "tags": [
+          "Webhooks"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Enregistré",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Webhook"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Lister et rechercher l'ensemble des endpoints de webhooks enregistrés au sein de l'organisation",
+        "operationId": "listWebhooks",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/webhooks/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la configuration complète, la liste des événements abonnés et la clé secrète HMAC d'un webhook spécifique",
+        "operationId": "getWebhook",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Webhook"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour les paramètres, l'URL cible ou l'état d'activation d'un abonnement webhook existant",
+        "operationId": "updateWebhook",
+        "tags": [
+          "Webhooks"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Supprimer un webhook et stopper définitivement le routage automatique et la distribution des événements",
+        "operationId": "deleteWebhook",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/webhooks/{id}/test": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Déclencher l'envoi immédiat d'un événement factice (ping) pour valider la connectivité technique de l'URL cible",
+        "operationId": "testWebhook",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "200": {
+            "description": "Test envoyé"
+          },
+          "502": {
+            "description": "Endpoint inaccessible"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/webhooks/{id}/deliveries": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le journal historique complet des tentatives de livraison, latences et codes de réponse HTTP retournés par le serveur externe",
+        "operationId": "getDeliveries",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "200": {
+            "description": "Livraisons"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "WebhookCreate": {
+        "type": "object",
+        "required": [
+          "url",
+          "events"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://myapp.com/webhooks/devoteam"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "order.created",
+                "order.shipped",
+                "order.delivered",
+                "order.cancelled",
+                "payment.succeeded",
+                "payment.failed",
+                "user.created"
+              ]
+            },
+            "example": [
+              "order.shipped",
+              "payment.succeeded"
+            ]
+          },
+          "secret": {
+            "type": "string",
+            "description": "Secret HMAC pour valider les signatures"
+          },
+          "active": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "WebhookUpdate": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Webhook": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "WH-001"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "last_triggered_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}

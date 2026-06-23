@@ -1,0 +1,289 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Customer Profile API",
+    "version": "2.0.0",
+    "x-api-id": "customer-profile-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe CRM",
+    "x-domain": "CRM & Marketing",
+    "description": "Cette API gère le référentiel centralisé des profils clients (B2C) dans sa version 2. Elle unifie les données d'identité, l'état civil, et les indicateurs de fidélité. Elle enrichit chaque profil avec des dimensions analytiques avancées issues de modèles prédictifs (scores de propension à l'achat par Machine Learning) et des tags comportementaux. Elle intègre nativement la conformité réglementaire via une gestion stricte des statuts de consentement RGPD. Elle est principalement exploitée par les plateformes e-commerce, les moteurs de ciblage marketing et les outils de support pour personnaliser l'expérience de l'acheteur final.",
+    "x-breaking-changes-from-previous": [
+      "metadata imbriqué → champs à plat au niveau racine",
+      "interests → behavioral_tags (renommage)",
+      "Nouveau champ obligatoire: consent_status",
+      "segment_history ajouté"
+    ],
+    "x-synonymes": "profil client, fiche client, identité de l'acheteur, client B2C, segmentation client, score de propension, appétence d'achat, tag comportemental, consentement RGPD, historique de segment, points de fidélité, base de données clients, attributs de l'acheteur, préférences client, données démographiques, dossier client, statut de consentement",
+    "x-false-positive-warning": "Attention : cette API est exclusivement dédiée au profil de l'acheteur final B2C et à ses attributs analytiques. Ne pas la confondre avec la `crm-contact-api` (qui gère la vue d'ensemble des relations commerciales globales incluant les prospects, leads et partenaires B2B) ni avec la `customer-journey-api` (dédiée au suivi analytique temporel des points de contact et des parcours d'achat).",
+    "x-cas-usage": "Comment récupérer la liste des clients VIP ayant validé leur consentement RGPD pour une campagne d'activation ? | Quel est le score d'appétence et de propension à l'achat calculé par l'IA pour ce client spécifique ? | Comment mettre à jour la ville et la langue de préférence d'un acheteur après une modification sur son compte ? | Où consulter l'historique des changements de segments d'un client pour analyser l'évolution de sa valeur ? | Comment créer un nouveau profil client conforme en spécifiant obligatoirement ses choix de consentement ?"
+  },
+  "paths": {
+    "/v2/customers": {
+      "get": {
+        "summary": "Lister et filtrer les profils clients B2C actifs en fonction de leur segment, de leur score de propension ou de leur statut de consentement RGPD",
+        "operationId": "listCustomersV2",
+        "tags": [
+          "Customers"
+        ],
+        "parameters": [
+          {
+            "name": "segment",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "VIP",
+                "Standard",
+                "Nouveau"
+              ]
+            }
+          },
+          {
+            "name": "min_propensity",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          {
+            "name": "consent_status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "granted",
+                "revoked",
+                "pending"
+              ]
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer un nouveau profil client enrichi au sein du référentiel central avec ses attributs initiaux et son état de consentement",
+        "operationId": "createCustomerV2",
+        "tags": [
+          "Customers"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerV2Create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/customers/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^CUST-[0-9]{3}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche complète, les indicateurs analytiques et l'état RGPD d'un client via son identifiant unique",
+        "operationId": "getCustomerV2",
+        "tags": [
+          "Customers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Ressource non trouvée"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour les coordonnées, les préférences ou les tags comportementaux d'un profil client existant",
+        "operationId": "updateCustomerV2",
+        "tags": [
+          "Customers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/customers/{id}/segment-history": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la chronologie historique des bascules et évolutions de segmentation commerciale de l'acheteur",
+        "operationId": "getSegmentHistory",
+        "tags": [
+          "Customers"
+        ],
+        "responses": {
+          "200": {
+            "description": "Historique"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/customers/{id}/propensity": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le score prédictif d'appétence et de propension à l'achat généré par les modèles de Machine Learning pour ce profil",
+        "operationId": "getPropensityScore",
+        "tags": [
+          "Customers"
+        ],
+        "responses": {
+          "200": {
+            "description": "Score 0-1"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CustomerV2Create": {
+        "type": "object",
+        "required": [
+          "customer_id",
+          "full_name",
+          "email",
+          "segment",
+          "consent_status"
+        ],
+        "properties": {
+          "customer_id": {
+            "type": "string",
+            "pattern": "^CUST-[0-9]{3}$"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "segment": {
+            "type": "string",
+            "enum": [
+              "VIP",
+              "Standard",
+              "Nouveau"
+            ]
+          },
+          "consent_status": {
+            "type": "string",
+            "enum": [
+              "granted",
+              "revoked",
+              "pending"
+            ]
+          },
+          "behavioral_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Remplace 'interests' de v1"
+          },
+          "loyalty_points": {
+            "type": "integer",
+            "default": 0
+          },
+          "city": {
+            "type": "string"
+          },
+          "preferred_language": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

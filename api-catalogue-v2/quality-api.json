@@ -1,0 +1,169 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Quality Control API",
+    "version": "1.0.0",
+    "x-api-id": "quality-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Supply",
+    "x-domain": "Supply Chain",
+    "description": "Cette API régit les opérations d'inspection et de contrôle qualité appliquées aux produits et marchandises lors de leur réception en entrepôt logistique (flux amont). Utilisée par les contrôleurs qualité et les gestionnaires de la supply chain, elle centralise le référencement des non-conformités physiques et automatise la gestion des réclamations ou litiges envers les fournisseurs.",
+    "x-synonymes": "Contrôle qualité arrivage, Rapport d'inspection qualité, Non-conformité produit, Réclamation fournisseur, Défaut de fabrication, Article défectueux, Inspection de réception, Non-conformité logistique, Contrôle de conformité marchandises, Taux de démarque, Lot défectueux, Rapport de non-conformité, Litige fournisseur, Contrôle qualité amont, Fiche d'anomalie produit, Avarie de transport",
+    "x-false-positive-warning": "Attention : Cette API s'applique uniquement au contrôle qualité des marchandises achetées lors des phases de réception logistique en entrepôt. Pour le contrôle de conformité, les mesures de tolérance et les plans de contrôle de la production usine en cours de fabrication, utilisez la Quality Control API de la direction de l'industrie.",
+    "x-cas-usage": "Comment faire pour rédiger et soumettre un rapport d'inspection qualité suite au déchargement d'un bon de commande fournisseur ? | Comment faire pour déclarer formellement une fiche d'anomalie ou de non-conformité sur un lot de produits (articles défectueux ou manquants) ? | Comment faire pour extraire la liste des dossiers de non-conformités logistiques ouverts en attente d'arbitrage tiers ?"
+  },
+  "paths": {
+    "/v1/quality/inspections": {
+      "post": {
+        "summary": "Enregistrer le compte-rendu et les résultats d'un contrôle de conformité physique effectué sur des marchandises reçues d'un fournisseur",
+        "operationId": "createInspection",
+        "tags": [
+          "Inspections"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "purchase_order_id",
+                  "inspector_id"
+                ],
+                "properties": {
+                  "purchase_order_id": {
+                    "type": "string"
+                  },
+                  "inspector_id": {
+                    "type": "string"
+                  },
+                  "items_inspected": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string"
+                        },
+                        "quantity_ok": {
+                          "type": "integer"
+                        },
+                        "quantity_nok": {
+                          "type": "integer"
+                        },
+                        "defect_type": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Rapport créé"
+          }
+        }
+      },
+      "get": {
+        "summary": "Parcourir et filtrer l'historique des rapports d'inspections qualité selon leur statut de validation (conforme, en échec, partiel)",
+        "operationId": "listInspections",
+        "tags": [
+          "Inspections"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "passed",
+                "failed",
+                "partial"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inspections"
+          }
+        }
+      }
+    },
+    "/v1/quality/non-conformities": {
+      "get": {
+        "summary": "Lister l'ensemble des fiches de non-conformités, avaries et litiges logistiques en suspens en attente de traitement",
+        "operationId": "getNonConformities",
+        "tags": [
+          "NonConformities"
+        ],
+        "responses": {
+          "200": {
+            "description": "Non-conformités"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ouvrir formellement un dossier de litige ou de non-conformité sur un produit reçu défectueux, expiré ou erroné",
+        "operationId": "createNonConformity",
+        "tags": [
+          "NonConformities"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "product_id",
+                  "type",
+                  "description"
+                ],
+                "properties": {
+                  "product_id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "defect",
+                      "missing",
+                      "wrong_product",
+                      "expired"
+                    ]
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "quantity_affected": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Non-conformité déclarée"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

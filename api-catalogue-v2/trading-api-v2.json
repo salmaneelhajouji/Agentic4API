@@ -1,0 +1,69 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Trading API",
+    "version": "2.0.0",
+    "x-api-id": "trading-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Exécution d'ordres de bourse en temps réel sur actions, obligations et produits dérivés. Passage d'ordres market, limit et stop-loss, consultation du carnet d'ordres, annulation d'ordres en attente, et accès aux cotations de marché en temps réel via protocole FIX. DIFFÉRENCE vs investment-api : Trading gère l'exécution en temps réel sur les marchés financiers (ordres, carnet, cotations), Investment gère l'épargne retail long terme (placements, SCPI, assurance-vie). DIFFÉRENCE vs savings-api : Trading est pour les marchés financiers actifs, Savings est pour les livrets d'épargne réglementés.",
+    "x-synonymes": "trading bourse, ordre de bourse, carnet ordres, cotation temps réel, ordre market limit stop, FIX protocol, actions obligations, produits dérivés, exécution ordre, annulation ordre, marché financier, placement boursier, trading temps réel, cours boursier, stop-loss",
+    "x-false-positive-warning": "Épargne retail et placements long terme → investment-api. Livrets d'épargne réglementés → savings-api. Paiements et virements → transfer-api-v2.",
+    "x-cas-usage": "je veux passer un ordre d'achat sur une action avec un prix limite | je veux voir tous mes ordres de bourse en attente d'exécution | je veux annuler un ordre de bourse non encore exécuté | je veux consulter les cotations temps réel d'une valeur boursière | je veux passer un ordre stop-loss pour protéger ma position",
+    "x-breaking-changes-from-previous": [
+      "FIX protocol",
+      "Ordres stop-loss"
+    ]
+  },
+  "paths": {
+    "/v2/trading/orders": {
+      "get": {
+        "summary": "Consulter le carnet d'ordres avec statut d'exécution (en attente, exécuté, annulé) et détails",
+        "operationId": "listTradingOrders",
+        "tags": ["Orders"],
+        "responses": { "200": { "description": "Carnet d'ordres" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Passer un ordre de bourse (market, limit ou stop-loss) sur une valeur avec quantité et prix",
+        "operationId": "placeTradingOrder",
+        "tags": ["Orders"],
+        "responses": { "200": { "description": "Ordre passé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/trading/orders/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le statut et les détails d'exécution d'un ordre de bourse",
+        "operationId": "getTradingOrder",
+        "tags": ["Orders"],
+        "responses": { "200": { "description": "Détail ordre" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Annuler un ordre de bourse en attente d'exécution",
+        "operationId": "cancelTradingOrder",
+        "tags": ["Orders"],
+        "responses": { "200": { "description": "Ordre annulé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/trading/market-data": {
+      "get": {
+        "summary": "Consulter les cotations et données de marché en temps réel (cours, volume, variation)",
+        "operationId": "getMarketData",
+        "tags": ["Market"],
+        "responses": { "200": { "description": "Cotations temps réel" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

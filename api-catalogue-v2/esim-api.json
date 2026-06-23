@@ -1,0 +1,102 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "eSIM API",
+    "version": "1.0.0",
+    "x-api-id": "esim-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Cette API régit le provisionnement à distance (Over-The-Air) et le cycle de vie des puces et profils eSIM (Embedded SIM) pour les appareils cellulaires du réseau mobile. Elle permet de consulter les abonnements rattachés à un terminal, d'activer des lignes à distance, d'orchestrer des transferts de profils de manière sécurisée d'un appareil à un autre, et de générer l'URI ou l'image des QR codes de configuration indispensables au téléchargement par l'utilisateur final.",
+    "x-synonymes": "gestion eSIM, profil eSIM, SIM embarquée, activation cellulaire, puce virtuelle, téléchargement de profil réseau, transfert d'abonnement mobile, QR code d'activation eSIM, provisioning over-the-air, réseau cellulaire mobile, désactivation de ligne, carte SIM électronique, connexion mobile à distance, profil opérateur",
+    "x-false-positive-warning": "Attention : Cette API exécute les opérations réseau de provisionnement logique et d'activation de la connectivité sur puces virtuelles (Telecom). Ne pas la confondre avec la `device-registry-api` (qui dresse l'inventaire et le suivi du cycle de vie matériel des objets connectés IoT corporatifs) ni avec la `data-usage-api` (suivi de volume de données consommées).",
+    "x-cas-usage": "Comment lister les profils cellulaires actifs ou en attente enregistrés sur la puce eSIM d'un appareil mobile ? | Quelle méthode appeler pour lancer l'activation et le provisionnement à distance d'un forfait sur un boîtier connecté ? | Comment orchestrer le transfert sécurisé d'un profil eSIM d'un ancien smartphone vers un nouveau ? | Comment générer le QR code d'activation permettant à un utilisateur de scanner et de télécharger son profil cellulaire ?"
+  },
+  "paths": {
+    "/v1/esim/{deviceId}": {
+      "parameters": [
+        {
+          "name": "deviceId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister et inspecter les profils cellulaires (actifs, inactifs, téléchargés) configurés sur la puce eSIM d'un appareil",
+        "operationId": "getESIMProfiles",
+        "tags": [
+          "eSIM"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher l'activation et le provisionnement à distance (Over-The-Air) d'un profil d'abonnement sur la puce eSIM",
+        "operationId": "activateESIM",
+        "tags": [
+          "eSIM"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/esim/{deviceId}/transfer": {
+      "parameters": [
+        {
+          "name": "deviceId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Orchestrer le transfert sécurisé d'un profil d'abonnement cellulaire d'une puce eSIM vers un nouvel appareil mobile cible",
+        "operationId": "transferESIM",
+        "tags": [
+          "Transfer"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/esim/qrcode/{profileId}": {
+      "parameters": [
+        {
+          "name": "profileId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Générer et récupérer le QR code d'activation pour permettre le téléchargement sécurisé du profil eSIM sélectionné",
+        "operationId": "getESIMQRCode",
+        "tags": [
+          "QR"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

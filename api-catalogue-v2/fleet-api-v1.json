@@ -1,0 +1,32 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Fleet API",
+    "version": "1.0.0",
+    "x-api-id": "fleet-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "x-successor": "fleet-api-v4",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS fleet-api-v4] Cette API gérait historiquement l'inventaire linéaire initial des véhicules de la flotte de transport (v1). Elle est désormais entièrement obsolète et gelée. Toutes les intégrations logistiques doivent obligatoirement migrer vers la version 4 (fleet-api-v4) pour bénéficier de la géolocalisation GPS en temps réel, du suivi de la consommation de carburant, de l'affectation des conducteurs et des alertes de maintenance avancées.",
+    "x-synonymes": "gestion de flotte v1, parc de véhicules historique, inventaire automobile, flotte de camions, suivi des actifs roulants, registre des véhicules, gestion de parc transport, ancienne flotte",
+    "x-false-positive-warning": "Attention : Cette API historique est dépréciée et restreinte à la consultation d'anciennes listes de véhicules. Rediriger immédiatement vos flux applicatifs vers la `fleet-api-v4` pour intégrer le suivi complet de l'exploitation."
+  },
+  "paths": {
+    "/v1/vehicles": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS fleet-api-v4 - Consulter la liste historique et l'inventaire des véhicules enregistrés sur l'ancienne infrastructure v1",
+        "operationId": "listVehiclesV1",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

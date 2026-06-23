@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Drug Interaction API",
+    "version": "1.0.0",
+    "x-api-id": "drug-interaction-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Cette API sécurise la prescription médicale en analysant instantanément les interactions médicamenteuses dangereuses, les redondances thérapeutiques et les contre-indications cliniques d'un traitement. Elle permet aux professionnels de santé de soumettre une liste de molécules ou de spécialités pharmaceutiques pour détecter les incompatibilités majeures ou modérées, d'interroger la base de connaissances d'un médicament, et de confronter la prescription avec le profil physiologique ou les allergies du patient.",
+    "x-synonymes": "interaction médicamenteuse, contre-indication, sécurité de prescription, incompatibilité thérapeutique, médicament, base de connaissances pharmaceutiques, effet indésirable, ordonnance médicale, vigilance pharmacologique, molécule, surdosage, redondance thérapeutique, iatrogénie médicamenteuse, allergie médicamenteuse, aide à la prescription",
+    "x-false-positive-warning": "Attention : Cette API est un outil d'analyse scientifique et clinique de sécurité pharmacologique (Drug Interaction). Ne pas la confondre avec la `prescription-api-v2` qui gère la création légale, la validation administrative et l'envoi de l'ordonnance dématérialisée à la pharmacie pour dispensation.",
+    "x-cas-usage": "Comment soumettre une liste de plusieurs médicaments pour vérifier s'il existe une interaction dangereuse ou une contre-indication majeure ? | Où récupérer la liste exhaustive de toutes les interactions documentées et des alertes de sécurité pour cette molécule ? | Comment lancer une vérification de contre-indication en confrontant un traitement avec le profil de pathologies ou les allergies d'un patient ?"
+  },
+  "paths": {
+    "/v1/interactions/check": {
+      "post": {
+        "summary": "Analyser une liste de médicaments pour détecter en temps réel les interactions iatrogènes ou incompatibilités moléculaires réciproques",
+        "operationId": "checkInteractions",
+        "tags": [
+          "Interactions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/interactions/{drugId}": {
+      "parameters": [
+        {
+          "name": "drugId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'ensemble des interactions médicamenteuses documentées et alertes de sécurité associées à une molécule spécifique",
+        "operationId": "getDrugInteractions",
+        "tags": [
+          "Drugs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/contraindications/check": {
+      "post": {
+        "summary": "Vérifier la présence de contre-indications absolues ou relatives en confrontant un traitement avec le profil clinique ou physiologique d'un patient",
+        "operationId": "checkContraindications",
+        "tags": [
+          "Contraindications"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

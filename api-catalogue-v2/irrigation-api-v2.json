@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Irrigation API",
+    "version": "2.0.0",
+    "x-api-id": "irrigation-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Gestion des systèmes d irrigation agricole connectés. Permet de consulter le statut d arrosage d une parcelle, de programmer les cycles d irrigation, de suivre la consommation d eau en temps réel et d optimiser l usage selon les données météo et hydriques. Utilisé par les exploitations agricoles et gestionnaires de grandes cultures pour l irrigation de précision.",
+    "x-breaking-changes-from-previous": ["Programmation avancée cycles", "Consommation eau temps réel"],
+    "x-synonymes": "irrigation parcelle, arrosage automatique, programmation irrigation, planning arrosage, consommation eau agricole, débit irrigation, asperseur programmé, goutte à goutte pilotage, cycle arrosage, irrigation précision, eau parcelle, volumétrie eau agricole, irrigation connectée, pilotage irrigation IoT, capteur humidité sol, irrigation solaire, optimisation eau culture, irrigation localisation GPS, irrigation périmètre, schedule irrigation",
+    "x-false-positive-warning": "DIFFÉRENCE vs air-quality-api : Irrigation API = pilotage actif de l arrosage. air-quality-api = surveillance qualité air. DIFFÉRENCE vs crop-api-v2 : Irrigation API = gestion de l eau sur les parcelles. crop-api-v2 = gestion des cultures et récoltes. DIFFÉRENCE vs weather-api : Irrigation API = action d arrosage. weather-api = données météo pour décider d arroser.",
+    "x-cas-usage": "je veux voir si l irrigation de ma parcelle est en cours | je veux programmer un cycle d arrosage de 2h demain matin à 6h | je veux suivre la consommation d eau de ma parcelle ce mois-ci | je veux arrêter l irrigation d urgence car il va pleuvoir | je veux optimiser mon planning d arrosage selon les prévisions météo"
+  },
+  "paths": {
+    "/v2/irrigation/{fieldId}": {
+      "parameters": [{"name": "fieldId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut d irrigation d une parcelle — en cours, arrêtée et débit actuel",
+        "operationId": "getIrrigationStatus",
+        "tags": ["Irrigation"],
+        "responses": {"200": {"description": "Statut irrigation parcelle"}}
+      },
+      "post": {
+        "summary": "Arrêter l irrigation d une parcelle immédiatement",
+        "operationId": "stopIrrigation",
+        "tags": ["Irrigation"],
+        "responses": {"200": {"description": "Irrigation arrêtée"}}
+      }
+    },
+    "/v2/irrigation/{fieldId}/schedule": {
+      "parameters": [{"name": "fieldId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Planning d irrigation — cycles programmés avec horaires et durées",
+        "operationId": "getIrrigationSchedule",
+        "tags": ["Schedule"],
+        "responses": {"200": {"description": "Planning irrigation"}}
+      },
+      "put": {
+        "summary": "Modifier le planning d irrigation — reprogrammer les cycles d arrosage",
+        "operationId": "updateSchedule",
+        "tags": ["Schedule"],
+        "responses": {"200": {"description": "Planning mis à jour"}}
+      }
+    },
+    "/v2/irrigation/{fieldId}/consumption": {
+      "parameters": [{"name": "fieldId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consommation d eau d une parcelle — volume journalier, hebdomadaire et mensuel",
+        "operationId": "getWaterConsumption",
+        "tags": ["Consumption"],
+        "responses": {"200": {"description": "Consommation eau"}}
+      }
+    }
+  }
+}

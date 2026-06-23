@@ -1,0 +1,118 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Library API",
+    "version": "1.0.0",
+    "x-api-id": "library-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Cette API régit le fonctionnement de la bibliothèque numérique et physique de l'établissement. Elle permet aux étudiants, enseignants et chercheurs de parcourir le catalogue d'ouvrages, de réserver ou d'emprunter des livres physiques, de consigner les retours de documents et de consulter en ligne l'ensemble du catalogue de ressources numériques (périodiques, thèses, abonnements scientifiques). Elle s'intègre nativement avec le portail de scolarité et les espaces étudiants.",
+    "x-synonymes": "bibliothèque numérique, catalogue d'ouvrages, emprunt de livre, retour d'ouvrage, ressource numérique, référentiel documentaire, fond de dotation littéraire, périodique scientifique, fiche de lecture de livre, disponibilité d'ouvrage, prolongation d'emprunt, médiathèque scolaire, gestion documentaire",
+    "x-false-positive-warning": "Attention : Cette API gère la réservation de livres, le catalogue d'ouvrages physiques et l'accès aux documents de recherche (Library). Ne pas la confondre avec la `document-management-api` (GED corporative d'archivage administratif) ni avec la `course-management-api` gérant le contenu des cours.",
+    "x-cas-usage": "Comment rechercher un livre scientifique par son code ISBN ou son auteur au catalogue ? | Où lister l'historique complet et la date d'échéance des emprunts actifs d'un étudiant ? | Comment enregistrer le retour physique d'un ouvrage pour le rendre de nouveau disponible ? | Comment accéder aux liens de téléchargement sécurisés de nos thèses et ressources numériques ?"
+  },
+  "paths": {
+    "/v1/library/books": {
+      "get": {
+        "summary": "Rechercher et filtrer les livres, revues et ouvrages disponibles au catalogue général de la bibliothèque",
+        "operationId": "searchBooks",
+        "tags": [
+          "Books"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter, indexer et référencer un nouvel ouvrage ou un nouvel exemplaire dans le fond documentaire",
+        "operationId": "addBook",
+        "tags": [
+          "Books"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/library/books/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive détaillée, le statut de disponibilité et l'emplacement physique d'un ouvrage",
+        "operationId": "getBook",
+        "tags": [
+          "Books"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et valider le retour physique d'un livre emprunté pour clôturer le dossier de prêt",
+        "operationId": "returnBook",
+        "tags": [
+          "Books"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/library/loans/{studentId}": {
+      "parameters": [
+        {
+          "name": "studentId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le registre des emprunts actifs, les retards et l'historique de prêt pour un étudiant spécifié",
+        "operationId": "getStudentLoans",
+        "tags": [
+          "Loans"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/library/digital": {
+      "get": {
+        "summary": "Lister et accéder au catalogue complet des ressources électroniques, articles scientifiques et thèses en ligne",
+        "operationId": "getDigitalResources",
+        "tags": [
+          "Digital"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

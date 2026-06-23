@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Hotel API",
+    "version": "2.0.0",
+    "x-api-id": "hotel-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "x-successor": "hotel-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS hotel-api-v3] Cette API gérait la version 2 du catalogue des hôtels, introduisant les grilles tarifaires de base. Elle est obsolète et gelée. Toutes les applications de distribution ou de réservation de voyages doivent impérativement migrer vers la version 4 ou v3 (hotel-api-v3) pour bénéficier du moteur d'ajustement automatique de tarification dynamique (Yield) et du channel manager.",
+    "x-synonymes": "catalogue hôtelier v2, tarification hôtelière de base, référentiel d'hôtels ancien, hébergement touristique, grille tarifaire hôtel",
+    "x-false-positive-warning": "Attention : Cette API intermédiaire est dépréciée et ses modules de tarifs sont gelés. Veiller à cibler directement la nouvelle version unifiée `hotel-api-v3`."
+  },
+  "paths": {
+    "/v2/hotels": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS hotel-api-v3 - Consulter la liste historique des établissements hôteliers de la version v2",
+        "operationId": "listHotelsV2",
+        "tags": [
+          "Hotels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS hotel-api-v3 - Référencer un nouvel hôtel dans l'ancien catalogue v2 (opération dépréciée)",
+        "operationId": "addHotelV2",
+        "tags": [
+          "Hotels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/hotels/{id}/rates": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS hotel-api-v3 - Consulter les anciennes grilles de tarifs fixes liées à l'établissement v2",
+        "operationId": "getRatesV2",
+        "tags": [
+          "Rates"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

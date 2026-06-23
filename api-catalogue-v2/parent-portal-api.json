@@ -1,0 +1,126 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Parent Portal API",
+    "version": "1.0.0",
+    "x-api-id": "parent-portal-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Cette API régit le fonctionnement du portail web et de l'application mobile dédiés aux familles (Espace Parents) de l'établissement d'enseignement. Elle centralise les services indispensables au suivi de la scolarité des enfants (assiduité, notes, bulletins), facilite les communications directes bidirectionnelles avec le corps enseignant, et expose l'historique ainsi que le règlement en ligne des frais de scolarité, de demi-pension ou d'activités périscolaires.",
+    "x-synonymes": "espace parents, portail familles, suivi scolaire des enfants, communication enseignants parents, bulletin de notes enfants, paiement cantine, frais de scolarité, absence de l'élève, cahier de texte parents, relation école familles, facturation périscolaire, suivi d'assiduité, carnet de liaison numérique",
+    "x-false-positive-warning": "Attention : Cette API est une interface de consultation et de communication grand public destinée exclusivement aux tuteurs légaux (Parents). Ne pas la confondre avec la `student-api` (réservée à l'usage direct de l'élève connecté) ni avec la `grade-api-v2` qui sert à la saisie souveraine des notes par les enseignants.",
+    "x-cas-usage": "Comment récupérer les informations de profil et les coordonnées de contact d'un tuteur légal ? | Où extraire le relevé de notes, le suivi d'absences et l'évaluation de la progression pédagogique de mes enfants ? | Comment envoyer un message d'explication ou une note d'absence à destination du professeur principal ? | Comment consulter le solde des factures de demi-pension dues pour le trimestre en cours ?"
+  },
+  "paths": {
+    "/v1/parent/{parentId}": {
+      "parameters": [
+        {
+          "name": "parentId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les informations de profil, les coordonnées de contact et les données de rattachement d'un parent d'élève",
+        "operationId": "getParentInfo",
+        "tags": [
+          "Parent"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/parent/{parentId}/children": {
+      "parameters": [
+        {
+          "name": "parentId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Suivre l'assiduité, les bulletins de notes, les évaluations et la progression scolaire de l'ensemble des enfants rattachés",
+        "operationId": "getChildrenProgress",
+        "tags": [
+          "Children"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/parent/{parentId}/messages": {
+      "parameters": [
+        {
+          "name": "parentId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le flux de communications, annonces et messages échangés avec l'équipe pédagogique ou la direction",
+        "operationId": "getParentMessages",
+        "tags": [
+          "Messages"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Envoyer un nouveau message ou une réponse justificative à destination des enseignants ou de l'administration scolaire",
+        "operationId": "sendMessage",
+        "tags": [
+          "Messages"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/parent/{parentId}/payments": {
+      "parameters": [
+        {
+          "name": "parentId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique des règlements, les factures de scolarité, de cantine ou d'activités périscolaires dues ou payées",
+        "operationId": "getSchoolPayments",
+        "tags": [
+          "Payments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

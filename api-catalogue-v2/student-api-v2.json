@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Student API",
+    "version": "2.0.0",
+    "x-api-id": "student-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Gestion complète des étudiants et apprenants. Profils étudiants, inscriptions aux formations, suivi de la progression et des cours complétés, et gestion des certificats obtenus. DIFFÉRENCE vs employee-api : Student gère les apprenants (inscriptions, notes, parcours, certifications), Employee gère les salariés (RH, paie, contrat de travail). DIFFÉRENCE vs scholarship-api : Student API gère le profil et le parcours de l'étudiant, Scholarship gère les dossiers de bourses et aides financières.",
+    "x-synonymes": "étudiant apprenant, inscription formation, profil étudiant, parcours formation, cours complété, certification étudiant, progression pédagogique, dossier étudiant, suivi apprenant, programme études, notes étudiant, diplôme certificat, formation en ligne, LMS étudiant, scolarité",
+    "x-false-positive-warning": "Salariés et RH → employee-api. Bourses et aides financières → scholarship-api. Cours et formations (catalogue) → course-api.",
+    "x-cas-usage": "je veux inscrire un nouvel étudiant dans une formation | je veux voir le profil complet et le parcours d'un étudiant | je veux suivre la progression et les cours complétés d'un apprenant | je veux récupérer les certificats obtenus par un étudiant | je veux modifier les informations du profil d'un étudiant",
+    "x-breaking-changes-from-previous": [
+      "Progression détaillée",
+      "Certificats"
+    ]
+  },
+  "paths": {
+    "/v2/students": {
+      "get": {
+        "summary": "Lister les étudiants avec filtres sur statut d'inscription, formation et progression",
+        "operationId": "listStudentsV2",
+        "tags": ["Students"],
+        "responses": { "200": { "description": "Étudiants" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Inscrire un nouvel étudiant et créer son profil dans le système de gestion de formation",
+        "operationId": "createStudentV2",
+        "tags": ["Students"],
+        "responses": { "200": { "description": "Étudiant inscrit" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/students/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le profil complet d'un étudiant (informations personnelles, formations inscrites, statut)",
+        "operationId": "getStudentV2",
+        "tags": ["Students"],
+        "responses": { "200": { "description": "Profil étudiant" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Modifier les informations du profil d'un étudiant",
+        "operationId": "updateStudentV2",
+        "tags": ["Students"],
+        "responses": { "200": { "description": "Profil mis à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/students/{id}/progress": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter la progression détaillée d'un étudiant — cours complétés, temps passé, taux de complétion (nouveau en v2)",
+        "operationId": "getCompletedCourses",
+        "tags": ["Progress"],
+        "responses": { "200": { "description": "Progression étudiant" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/students/{id}/certificates": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Récupérer les certificats et attestations obtenus par un étudiant (nouveau en v2)",
+        "operationId": "getCertificates",
+        "tags": ["Certs"],
+        "responses": { "200": { "description": "Certificats" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

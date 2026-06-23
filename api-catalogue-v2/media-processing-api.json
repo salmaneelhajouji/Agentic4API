@@ -1,0 +1,59 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Media Processing API",
+    "version": "1.0.0",
+    "x-api-id": "media-processing-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "Pipeline de traitement multimédia avancé asynchrone. Transcodage vidéo multi-format et multi-résolution (MP4, WebM, HLS, DASH), OCR sur images et PDFs, ajout de watermark, et détection IA de contenu inapproprié. Les traitements complexes sont asynchrones avec suivi du job. DIFFÉRENCE vs media-api : Media API = stockage et resize simple d images. Media Processing API = transformations complexes transcodage/OCR/watermark. DIFFÉRENCE vs file-storage-api : File Storage = stockage générique. Media Processing = traitement et transformation multimédia.",
+    "x-synonymes": "transcodage vidéo, OCR extraction texte, watermark image vidéo, détection contenu NSFW, modération contenu IA, MP4 WebM HLS DASH, multi-résolution vidéo, 720p 1080p 4K, PDF searchable OCR, extraction texte image, logo watermark, pipeline traitement, job asynchrone, traitement vidéo, filigrane image, reconnaissance texte, content moderation, nudité détection, violence détection, spam image détection",
+    "x-false-positive-warning": "Upload et resize simple d images → media-api. Stockage fichiers génériques → file-storage-api. Génération de documents PDF → document-api. Purge CDN → cdn-api.",
+    "x-cas-usage": "je veux transcoder une vidéo en HLS pour le streaming adaptatif | je veux extraire le texte d un scan PDF par OCR | je veux ajouter notre logo en watermark sur toutes nos photos produit | je veux détecter si une image uploadée contient du contenu inapproprié avant publication | je veux suivre le statut d un job de transcodage vidéo en cours"
+  },
+  "paths": {
+    "/v1/media-processing/transcode": {
+      "post": {
+        "summary": "Transcoder une vidéo — MP4, WebM, HLS ou DASH en plusieurs résolutions",
+        "operationId": "transcodeVideo",
+        "tags": ["Video"],
+        "responses": {"202": {"description": "Transcodage lancé — job_id retourné"}}
+      }
+    },
+    "/v1/media-processing/ocr": {
+      "post": {
+        "summary": "OCR sur image ou PDF — extraction de texte avec coordonnées des blocs",
+        "operationId": "runOCR",
+        "tags": ["OCR"],
+        "responses": {"200": {"description": "Texte extrait"}}
+      }
+    },
+    "/v1/media-processing/watermark": {
+      "post": {
+        "summary": "Ajouter un watermark texte ou logo sur image ou vidéo — position et opacité configurables",
+        "operationId": "addWatermark",
+        "tags": ["Image"],
+        "responses": {"200": {"description": "Média avec watermark"}}
+      }
+    },
+    "/v1/media-processing/detect-content": {
+      "post": {
+        "summary": "Détection IA de contenu inapproprié — nudité, violence, symboles haineux et spam",
+        "operationId": "detectContent",
+        "tags": ["AI"],
+        "responses": {"200": {"description": "Scores de détection avec confiance"}}
+      }
+    },
+    "/v1/media-processing/jobs/{jobId}": {
+      "parameters": [{"name": "jobId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut d un job de traitement asynchrone — pending, processing, done ou failed",
+        "operationId": "getProcessingJob",
+        "tags": ["Jobs"],
+        "responses": {"200": {"description": "Statut job traitement"}}
+      }
+    }
+  }
+}

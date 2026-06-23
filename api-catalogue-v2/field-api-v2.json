@@ -1,0 +1,145 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Field API",
+    "version": "2.0.0",
+    "x-api-id": "field-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Cette API administre le référentiel cartographique, géospatial (SIG) et agronomique des parcelles agricoles de l'entreprise (v2). Elle permet de définir les contours géographiques des champs, d'archiver les rapports d'analyses de sol (pH, matière organique, nutriments) et d'assurer le suivi détaillé de l'historique cultural (rotations, assolements, précédents) pour piloter l'agriculture de précision et pérenniser les rendements.",
+    "x-synonymes": "parcelle agricole, îlot cultural, cartographie SIG, système d'information géographique, analyse de sol, historique cultural, rotation des cultures, assollement, précédent cultural, pH du sol, matière organique, délimitation géospatiale, rendement parcellaire, agriculture de précision",
+    "x-false-positive-warning": "Attention : Cette API structure la géographie et les attributs agronomiques de base de la terre (Fields). Ne pas la confondre avec la `drone-survey-api` (dédiée au traitement d'imagerie multispectrale par survol aérien type NDVI) ni avec la `fertilizer-api` (suivi des opérations d'épandage d'intrants).",
+    "x-cas-usage": "Comment dessiner et enregistrer les contours géospatiaux (polygones SIG) d'une nouvelle parcelle cultivée ? | Où consulter les résultats d'analyses physico-chimiques de la terre pour une parcelle spécifique ? | Comment extraire la liste des cultures successives pratiquées sur un champ au cours des 5 dernières années ? | Quelle est la méthode pour mettre à jour les informations de culture principales d'un îlot ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "Cartographie GIS",
+    "Analyse sol",
+    "Historique cultural"
+  ],
+  "paths": {
+    "/v2/fields": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des parcelles agricoles actives du référentiel selon leur domaine ou culture",
+        "operationId": "listFieldsV2",
+        "tags": [
+          "Fields"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et cartographier une nouvelle parcelle agricole en y adossant sa géométrie spatiale (coordonnées SIG)",
+        "operationId": "createFieldV2",
+        "tags": [
+          "Fields"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/fields/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche signalétique, la surface exacte et les coordonnées cartographiques d'une parcelle ciblée",
+        "operationId": "getFieldV2",
+        "tags": [
+          "Fields"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier la configuration, la délimitation géographique ou l'affectation culturale de la parcelle",
+        "operationId": "updateFieldV2",
+        "tags": [
+          "Fields"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/fields/{id}/soil": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le profil pédologique et les dernières données de composition du sol de la parcelle",
+        "operationId": "getSoilData",
+        "tags": [
+          "Soil"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Consigner et ajouter un nouveau rapport d'analyse en laboratoire sur les caractéristiques chimiques de la terre",
+        "operationId": "addSoilAnalysis",
+        "tags": [
+          "Soil"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/fields/{id}/history": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Extraire l'historique cultural complet et la chronologie des assolements ou précédents de l'îlot",
+        "operationId": "getCulturalHistory",
+        "tags": [
+          "History"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

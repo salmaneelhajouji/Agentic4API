@@ -1,0 +1,183 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "VoIP API",
+    "version": "1.0.0",
+    "x-api-id": "voip-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Telephonie sur IP. Appels, conferences et enregistrements de flux audio d'entreprise. DIFFÉRENCE vs roaming-api : VoIP API gère les communications vocales logicielles sur réseau IP (SIP), alors que roaming-api traite de l'itinérance réseau et des tarifs mobiles physiques des cartes SIM à l'étranger.",
+    "x-synonymes": "voip, téléphonie ip, appel, conférence, audio, communication, sip, raccrocher, numéro de téléphone, trunk, standard téléphonique, enregistrement vocal, appel sortant, télécom, ligne téléphonique, flux audio, communication vocale",
+    "x-false-positive-warning": "Pour la connectivité et l'itinérance internationale de cartes SIM ou abonnements cellulaires mobiles, utilisez roaming-api. Pour des cours collectifs avec visioconférence, utilisez virtual-classroom-api.",
+    "x-cas-usage": "je veux consulter l'historique complet des appels passés sur la ligne | je veux lancer ou initier un nouvel appel téléphonique vocal sip | je veux connaître le statut d'un appel téléphonique en cours | je veux créer un salon de conférence audio virtuel multi-participants"
+  },
+  "paths": {
+    "/v1/voip/calls": {
+      "get": {
+        "summary": "Extraire le journal complet et l'historique traçable des appels téléphoniques passés sur la plateforme",
+        "operationId": "listVoIPCalls",
+        "tags": [
+          "Calls"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Initier, établir et router un nouvel appel téléphonique vocal via le protocole logiciel VoIP/SIP",
+        "operationId": "initiateCall",
+        "tags": [
+          "Calls"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/voip/calls/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état de connexion, la durée, les codecs et le statut en temps réel d'un appel en cours",
+        "operationId": "getCallStatus",
+        "tags": [
+          "Calls"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Mettre fin immédiatement à la communication téléphonique ou session audio en cours (raccrocher)",
+        "operationId": "hangupCall",
+        "tags": [
+          "Calls"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/voip/conferences": {
+      "get": {
+        "summary": "Lister l'ensemble des salons et ponts de conférence téléphonique audio actuellement actifs",
+        "operationId": "listConferences",
+        "tags": [
+          "Conferences"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer et provisionner un nouveau salon de conférence audio virtuel pour des appels d'équipe ou de groupe",
+        "operationId": "createConference",
+        "tags": [
+          "Conferences"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/voip/conferences/{id}/participants": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister les correspondants et numéros de téléphone actuellement connectés dans le pont de conférence",
+        "operationId": "getParticipants",
+        "tags": [
+          "Participants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Ajouter, inviter et connecter un nouveau participant ou collaborateur au salon de conférence téléphonique actif",
+        "operationId": "addParticipant",
+        "tags": [
+          "Participants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

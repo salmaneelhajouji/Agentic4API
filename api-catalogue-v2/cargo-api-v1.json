@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cargo API",
+    "version": "1.0.0",
+    "x-api-id": "cargo-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "⚠️ DEPRECATED — Migrer vers cargo-api-v2. API de gestion du fret et des cargaisons couvrant la création, le suivi et la gestion des expéditions de marchandises. Permet la gestion des envois, des lots de fret, des consignataires et des transporteurs. Utilisée par les équipes logistique, les gestionnaires de transport et les intégrateurs de systèmes TMS. DIFFÉRENCE vs cargo-api-v2 : cette version v1 ne dispose pas des manifestes électroniques ni de l'intégration douanière ; préférer cargo-api-v2 pour tout nouveau développement.",
+    "x-successor": "cargo-api-v2",
+    "x-synonymes": "fret, cargaison, expédition, envoi de marchandises, lot de fret, transport de marchandises, bordereau d'expédition, manifeste de fret, connaissement, bon d'expédition, lettre de transport, consignataire, transitaire, déclaration de fret, gestion des envois, suivi de cargaison, transporteur, TMS, logistique fret",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser cargo-api-v2. Ne pas confondre avec shipment-api (orienté livraison last-mile et colis) ni avec logistics-api (gestion d'entrepôt et stocks) ; cargo-api-v1 est spécifique au fret longue distance sans manifestes électroniques ni intégration douanière.",
+    "x-cas-usage": "Comment lister les cargaisons existantes dans le système ? | Comment créer une nouvelle expédition de fret ? | Comment suivre l'état d'une cargaison en transit ? | Quels sont les endpoints disponibles pour gérer les lots de fret ? | Comment migrer mes intégrations de cargo-api-v1 vers cargo-api-v2 ?"
+  },
+  "paths": {
+    "/v1/cargo": {
+      "get": {
+        "summary": "DEPRECATED — Lister les cargaisons enregistrées dans le système sans support des manifestes électroniques ni des données douanières",
+        "operationId": "listCargoV1",
+        "tags": ["Cargo"],
+        "responses": {
+          "200": {
+            "description": "Cargaisons"
+          }
+        }
+      }
+    }
+  }
+}

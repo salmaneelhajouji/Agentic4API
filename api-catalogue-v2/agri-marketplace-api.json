@@ -1,0 +1,57 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Agri Marketplace API",
+    "version": "1.0.0",
+    "x-api-id": "agri-marketplace-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Marketplace agricole peer-to-peer couvrant la publication, la recherche et la mise en relation directe entre agriculteurs et professionnels du secteur. Permet de gérer des annonces de vente de récoltes (blé, maïs, colza, fruits, légumes), d'intrants agricoles (semences, engrais, produits phytosanitaires) et de matériel agricole d'occasion (tracteurs, moissonneuses, outils). Les utilisateurs typiques sont des exploitants agricoles souhaitant vendre leurs surplus, des coopératives cherchant des approvisionnements locaux et des négociants en matériel d'occasion. DIFFÉRENCE vs commodity-price-api : Agri Marketplace = plateforme de vente directe entre agriculteurs avec annonces ; commodity-price-api = cours des matières premières agricoles sur les marchés financiers. DIFFÉRENCE vs purchase-order-api : Agri Marketplace = place de marché peer-to-peer entre agriculteurs ; purchase-order-api = bons de commande fournisseurs dans un contexte B2B supply chain. DIFFÉRENCE vs harvest-api : Agri Marketplace = vente des récoltes après collecte ; harvest-api = enregistrement et suivi de la récolte sur les parcelles.",
+    "x-synonymes": "vente récolte, achat récolte, matériel agricole occasion, tracteur occasion, moissonneuse occasion, vente blé, vente maïs, vente colza, intrants agricoles, semences, engrais vente, produits phytosanitaires, petites annonces agricoles, bourse agricole, négoce agricole, vente entre agriculteurs, surplus récolte, vente stock agricole, matériel farm, occasion agricole",
+    "x-false-positive-warning": "DIFFÉRENCE vs commodity-price-api : Agri Marketplace = plateforme de vente directe entre agriculteurs avec annonces ; commodity-price-api = cours des matières premières agricoles sur les marchés financiers, sans transaction directe. DIFFÉRENCE vs purchase-order-api : Agri Marketplace = place de marché peer-to-peer entre agriculteurs ; purchase-order-api = bons de commande fournisseurs dans un contexte B2B supply chain structuré. DIFFÉRENCE vs harvest-api : Agri Marketplace = vente des récoltes après collecte ; harvest-api = enregistrement et suivi de la récolte sur les parcelles agricoles. DIFFÉRENCE vs inventory-api : Agri Marketplace = annonces publiques de vente ouvertes à la mise en relation ; inventory-api = gestion interne des stocks d'une entreprise sans publication d'annonces.",
+    "x-cas-usage": "Comment publier une annonce pour vendre mon surplus de blé ou de colza ? | Comment rechercher du matériel agricole d'occasion (tracteur, moissonneuse) dans ma région ? | Comment contacter le vendeur d'une annonce de semences ou d'intrants agricoles ? | Quels filtres sont disponibles pour trouver des récoltes ou des équipements selon le type et la localisation ? | Comment récupérer le détail complet d'une annonce agricole avec prix, description et coordonnées du vendeur ?"
+  },
+  "paths": {
+    "/v1/agri-market/listings": {
+      "get": {
+        "summary": "Lister les annonces agricoles actives — récoltes, intrants et matériel d'occasion disponibles à la vente",
+        "operationId": "listAgriListings",
+        "tags": ["Listings"],
+        "responses": {
+          "200": {"description": "Liste des annonces agricoles"}
+        }
+      },
+      "post": {
+        "summary": "Publier une nouvelle annonce de vente agricole avec description du produit, prix, quantité disponible et localisation du vendeur",
+        "operationId": "createAgriListing",
+        "tags": ["Listings"],
+        "responses": {
+          "200": {"description": "Annonce publiée"}
+        }
+      }
+    },
+    "/v1/agri-market/listings/{id}": {
+      "parameters": [
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Récupérer le détail complet d'une annonce agricole — description produit, prix demandé, quantité et coordonnées du vendeur",
+        "operationId": "getAgriListing",
+        "tags": ["Listings"],
+        "responses": {
+          "200": {"description": "Détail de l'annonce"}
+        }
+      },
+      "post": {
+        "summary": "Envoyer un message de prise de contact au vendeur d'une annonce agricole pour négocier ou obtenir des informations complémentaires",
+        "operationId": "contactSeller",
+        "tags": ["Listings"],
+        "responses": {
+          "200": {"description": "Message envoyé au vendeur"}
+        }
+      }
+    }
+  }
+}

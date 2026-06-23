@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Irrigation API",
+    "version": "1.0.0",
+    "x-api-id": "irrigation-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "DEPRECATED — NE PAS UTILISER. Version 1 basique sans programmation avancée ni consommation en temps réel. Migrer vers irrigation-api-v2 qui intègre la programmation avancée des cycles d arrosage et le suivi de consommation d eau en temps réel.",
+    "x-successor": "irrigation-api-v2",
+    "x-synonymes": "irrigation v1 deprecated, arrosage legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser irrigation-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers irrigation-api-v2."
+  },
+  "paths": {
+    "/v1/irrigation": {
+      "get": {
+        "summary": "DEPRECATED — Lister les systèmes d irrigation",
+        "operationId": "listIrrigationV1",
+        "tags": ["Irrigation"],
+        "responses": {"200": {"description": "Systèmes irrigation"}}
+      }
+    }
+  }
+}

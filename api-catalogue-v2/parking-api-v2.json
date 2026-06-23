@@ -1,0 +1,97 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Parking API",
+    "version": "2.0.0",
+    "x-api-id": "parking-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Cette API supervise l'exploitation, la réservation et le paiement des places de stationnement au sein des parkings gérés par l'entreprise (v2). Elle permet de diffuser en temps réel l'état d'occupation et la disponibilité des emplacements libres, d'enregistrer des réservations prioritaires de places et d'intégrer le règlement ou le paiement de la redevance de stationnement. Elle est au cœur des applications de navigation urbaine, des systèmes de guidage à la place et des bornes de péage d'accès.",
+    "x-synonymes": "gestion de parking, place de stationnement, emplacement de parking, disponibilité en temps réel, réservation de place, paiement stationnement, redevance de stationnement, parking public connecte, borne de péage parking, taux d'occupation parking, guidage à la place, stationnement urbain",
+    "x-false-positive-warning": "Attention : Cette API gère le stationnement générique des véhicules de toutes motorisations et les infrastructures d'aires de parcage (Parking). Ne pas la confondre avec la `ev-charging-api-v2` qui est spécifiquement dédiée à l'administration, au statut de charge et à la réservation des bornes de recharge pour véhicules électriques.",
+    "x-cas-usage": "Comment lister l'ensemble des parcs de stationnement actifs avec leurs coordonnées géographiques ? | Où interroger le nombre exact de places de stationnement actuellement libres et disponibles dans un ouvrage ? | Comment réserver un emplacement spécifique pour un véhicule pour une plage horaire donnée ? | Quelle méthode appeler pour enregistrer le paiement de la redevance avant la sortie du véhicule ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "Reservation",
+    "Paiement integre",
+    "Temps reel"
+  ],
+  "paths": {
+    "/v2/parking": {
+      "get": {
+        "summary": "Rechercher et lister les parcs de stationnement et parkings cartographiés sur le réseau avec leurs métadonnées de capacité",
+        "operationId": "listParkingV2",
+        "tags": [
+          "Parking"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Réserver formellement un emplacement de stationnement spécifique au sein d'un parking pour une durée déterminée",
+        "operationId": "reserveSpot",
+        "tags": [
+          "Parking"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/parking/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter en temps réel le taux d'occupation, le nombre de places libres et l'état de disponibilité d'un parking",
+        "operationId": "getAvailability",
+        "tags": [
+          "Parking"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/parking/{id}/payment": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Traiter et enregistrer le règlement financier ou le paiement de la redevance rattachée au ticket de stationnement",
+        "operationId": "payParking",
+        "tags": [
+          "Payment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

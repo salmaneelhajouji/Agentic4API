@@ -1,0 +1,42 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Lab Result API",
+    "version": "1.0.0",
+    "x-api-id": "lab-result-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Résultats d analyses biologiques et de laboratoire. Permet d enregistrer et consulter les résultats d analyses sanguines, urinaires et microbiologiques, et d identifier les valeurs critiques nécessitant une action médicale urgente. Utilisé par les laboratoires, biologistes et applications médicales pour le partage des résultats avec les prescripteurs. DIFFÉRENCE vs vital-signs-api : Lab Result = analyses biologiques ponctuelles en laboratoire. vital-signs-api = constantes physiologiques continues (FC, PA, SpO2).",
+    "x-synonymes": "résultat analyse biologique, bilan sanguin, résultat labo, NFS numération formule sanguine, glycémie résultat, créatinine résultat, bilan hépatique, CRP résultat, troponine, hémoglobine résultat, analyse urinaire ECBU, microbiologie résultat, valeur critique labo, seuil alerte labo, résultat hors norme, bilan thyroïdien, ionogramme résultat, TP TCA coagulation, résultat histologie, sérologie résultat",
+    "x-false-positive-warning": "Constantes physiologiques continues FC/PA/SpO2 → vital-signs-api. Résultats d imagerie radiologie → imaging-api. Résultats essai clinique → clinical-trial-api. Prescriptions médicaments → prescription-api-v2.",
+    "x-cas-usage": "je veux enregistrer les résultats du bilan sanguin d un patient | je veux consulter tous les résultats d analyses d un patient sur 6 mois | je veux voir quelles valeurs sont critiques dans les résultats de ce patient | je veux partager les résultats d analyse avec le médecin prescripteur | je dois alerter l équipe médicale si un résultat dépasse le seuil critique"
+  },
+  "paths": {
+    "/v1/results/{patientId}": {
+      "parameters": [{"name": "patientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Résultats d analyses biologiques d un patient — bilan sanguin, urinaire et microbiologie",
+        "operationId": "getLabResults",
+        "tags": ["Results"],
+        "responses": {"200": {"description": "Résultats analyses"}}
+      },
+      "post": {
+        "summary": "Enregistrer un résultat d analyse biologique — avec valeurs et unités",
+        "operationId": "addLabResult",
+        "tags": ["Results"],
+        "responses": {"200": {"description": "Résultat enregistré"}}
+      }
+    },
+    "/v1/results/{patientId}/critical": {
+      "parameters": [{"name": "patientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Valeurs critiques d un patient — résultats hors seuils nécessitant action urgente",
+        "operationId": "getCriticalValues",
+        "tags": ["Critical"],
+        "responses": {"200": {"description": "Valeurs critiques"}}
+      }
+    }
+  }
+}

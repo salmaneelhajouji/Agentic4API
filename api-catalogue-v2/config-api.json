@@ -1,0 +1,135 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Config API",
+    "version": "1.0.0",
+    "x-api-id": "config-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "API de gestion de la configuration applicative et des feature flags, couvrant la lecture et l'écriture de paramètres clé-valeur ainsi que le pilotage du déploiement progressif de fonctionnalités. Elle permet aux équipes développement d'externaliser la configuration des applications, d'activer ou de désactiver des features en production sans redéploiement, et de contrôler le rollout par pourcentage d'utilisateurs. Utilisée par les développeurs, les SRE et les product owners pour gérer les toggles de fonctionnalités, les kill switches et les canary releases. DIFFÉRENCE vs configuration-api : Config API = feature flags et paramètres simples clé-valeur. configuration-api = configuration multi-application par environnement avec secrets. DIFFÉRENCE vs cache-api : Config API = stockage persistant de configuration. cache-api = cache temporaire avec TTL et éviction. DIFFÉRENCE vs secret-management-api : Config API = paramètres de configuration non sensibles. secret-management-api = secrets chiffrés mots de passe et clés.",
+    "x-synonymes": "feature flag, feature toggle, configuration applicative, paramètre application, déploiement progressif, rollout progressif, activation fonctionnalité, désactiver feature, configuration clé-valeur, remote config, paramètre runtime, kill switch, canary release, flag fonctionnalité, activation par pourcentage, configuration dynamique, paramètre environnement, toggle feature, config service, LaunchDarkly style",
+    "x-false-positive-warning": "DIFFÉRENCE vs configuration-api : Config API = feature flags et paramètres simples clé-valeur. configuration-api = configuration multi-application par environnement avec secrets. DIFFÉRENCE vs cache-api : Config API = stockage persistant de configuration. cache-api = cache temporaire avec TTL et éviction. DIFFÉRENCE vs secret-management-api : Config API = paramètres de configuration non sensibles. secret-management-api = secrets chiffrés mots de passe et clés. DIFFÉRENCE vs env-api : Config API = configuration applicative dynamique modifiable à chaud. env-api = variables d'environnement système au niveau infrastructure, non modifiables sans redémarrage.",
+    "x-cas-usage": "Comment activer un feature flag pour 10% des utilisateurs en production sans redéployer ? | Comment lire la valeur d'un paramètre de configuration applicative depuis mon service ? | Comment désactiver immédiatement une fonctionnalité défaillante via un kill switch ? | Quels feature flags sont actuellement activés et quel est leur pourcentage de rollout ? | Comment effectuer un déploiement progressif d'une nouvelle fonctionnalité en contrôlant le pourcentage d'exposition ?"
+  },
+  "paths": {
+    "/v1/config/{key}": {
+      "parameters": [
+        {
+          "name": "key",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la valeur d'un paramètre de configuration applicative identifié par sa clé unique",
+        "operationId": "getConfig",
+        "tags": ["Config"],
+        "responses": {
+          "200": {
+            "description": "Valeur de configuration retournée avec succès"
+          },
+          "404": {
+            "description": "Paramètre de configuration introuvable pour la clé spécifiée"
+          }
+        }
+      },
+      "put": {
+        "summary": "Définir ou mettre à jour un paramètre de configuration clé-valeur avec description optionnelle",
+        "operationId": "setConfig",
+        "tags": ["Config"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["value"],
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Paramètre de configuration créé ou mis à jour avec succès"
+          },
+          "400": {
+            "description": "Données invalides — la valeur est requise et doit être une chaîne de caractères"
+          }
+        }
+      }
+    },
+    "/v1/config/features": {
+      "get": {
+        "summary": "Lister tous les feature flags avec leur statut activé/désactivé et leur pourcentage de rollout courant",
+        "operationId": "listFeatureFlags",
+        "tags": ["Features"],
+        "responses": {
+          "200": {
+            "description": "Liste complète des feature flags avec statuts et pourcentages de déploiement"
+          }
+        }
+      }
+    },
+    "/v1/config/features/{flag}/toggle": {
+      "parameters": [
+        {
+          "name": "flag",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Activer ou désactiver un feature flag avec contrôle du déploiement progressif par pourcentage d'utilisateurs",
+        "operationId": "toggleFeatureFlag",
+        "tags": ["Features"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["enabled"],
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "rollout_percent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100,
+                    "description": "Déploiement progressif"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Feature flag mis à jour avec succès — statut et pourcentage de rollout appliqués"
+          },
+          "404": {
+            "description": "Feature flag introuvable pour l'identifiant spécifié"
+          },
+          "400": {
+            "description": "Données invalides — le champ enabled est requis et rollout_percent doit être compris entre 0 et 100"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Intellectual Property API",
+    "version": "1.0.0",
+    "x-api-id": "intellectual-property-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Cette API gère l'inventaire, le cycle de vie légal et l'octroi de licences pour l'ensemble des actifs de propriété intellectuelle (PI) de l'entreprise. Elle permet d'enregistrer les dépôts de brevets, de marques commerciales, de dessins ou de droits d'auteur, de suivre leurs dates d'échéance pour planifier les renouvellements obligatoires, d'associer des contrats de licence d'exploitation concédés à des tiers, et d'exécuter des recherches préventives pour identifier d'éventuels conflits ou contrefaçons.",
+    "x-synonymes": "propriété intellectuelle, actif PI, dépôt de brevet, marque commerciale, droit d'auteur, copyright, licence d'exploitation, renouvellement de marque, contrefaçon, recherche de conflits PI, portefeuille de brevets, protection légale, propriété industrielle, contrat de concession PI, dessins et modèles, innovation brevetée",
+    "x-false-positive-warning": "Attention : Cette API administre exclusivement le patrimoine immatériel juridique, les brevets et les licences d'exploitation associés (Intellectual Property). Ne pas la confondre avec la `contract-api` (gestion des contrats commerciaux généraux) ni avec la `dispute-resolution-api` (résolution des litiges généraux).",
+    "x-cas-usage": "Comment enregistrer un nouveau brevet ou une marque commerciale dans le portefeuille d'actifs de l'entreprise ? | Où consulter les contrats de licence d'exploitation rattachés à un actif de propriété intellectuelle ? | Comment lancer une recherche préventive pour détecter des conflits ou suspicions de contrefaçon sur le marché ? | Quelle est la méthode pour renouveler la protection juridique d'une marque arrivant à échéance ?"
+  },
+  "paths": {
+    "/v1/ip/assets": {
+      "get": {
+        "summary": "Lister et filtrer le portefeuille complet des actifs de propriété intellectuelle de l'organisation",
+        "operationId": "listIPAssets",
+        "tags": [
+          "Assets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et enregistrer un nouvel actif de propriété intellectuelle (brevet, marque, droit d'auteur) pour engager sa protection",
+        "operationId": "registerIPAsset",
+        "tags": [
+          "Assets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/ip/assets/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive détaillée, le numéro d'enregistrement officiel et le statut légal d'un actif PI",
+        "operationId": "getIPAsset",
+        "tags": [
+          "Assets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Enregistrer le renouvellement officiel de la protection juridique d'un actif de propriété intellectuelle auprès des offices",
+        "operationId": "renewIPAsset",
+        "tags": [
+          "Assets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Déclarer l'abandon volontaire ou la fin de protection d'un actif de propriété intellectuelle du portefeuille",
+        "operationId": "abandonIPAsset",
+        "tags": [
+          "Assets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/ip/assets/{id}/licenses": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister l'ensemble des contrats de licence d'exploitation et d'accords d'usage accordés à des tiers pour cet actif",
+        "operationId": "getIPLicenses",
+        "tags": [
+          "Licenses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et associer une nouvelle licence d'exploitation contractuelle pour concéder l'usage de l'actif PI",
+        "operationId": "createLicense",
+        "tags": [
+          "Licenses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/ip/search": {
+      "post": {
+        "summary": "Exécuter une recherche avancée de similarité pour identifier d'éventuels conflits, antériorités ou contrefaçons d'actifs",
+        "operationId": "searchIPConflicts",
+        "tags": [
+          "Search"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

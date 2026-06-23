@@ -1,0 +1,161 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MFA API",
+    "version": "1.0.0",
+    "x-api-id": "mfa-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Identity",
+    "x-domain": "Identity & Access",
+    "description": "Cette API d'infrastructure orchestre et sécurise la validation des accès via des mécanismes d'Authentification Multi-Facteurs (MFA). Elle gère l'enrôlement et la vérification cryptographique de l'ensemble des facteurs de sécurité officiels de l'entreprise : générateurs d'OTP (TOTP), envois de codes de sécurité par SMS, et clés de sécurité matérielles conformes aux standards FIDO2 et WebAuthn. Elle est au cœur de la stratégie Zero-Trust d'accès aux applications.",
+    "x-synonymes": "authentification multi-facteurs, MFA, double facteur, code OTP d'authentification, secret TOTP, norme FIDO2, standard WebAuthn, clé de sécurité matérielle, enrôlement MFA, validation de deuxième facteur, sécurisation de compte, vérification d'identité",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement de l'administration et de la vérification cryptographique des facteurs d'authentification (MFA). Ne pas la confondre avec la `user-api` (chargée de l'identité civile et des informations de profil de l'utilisateur), ni avec la `sms-api` qui est dédiée aux envois de SMS marketing.",
+    "x-cas-usage": "Comment initialiser l'enrôlement d'un nouveau jeton d'authentification (TOTP) pour générer le QR code d'activation ? | Comment soumettre et valider le code à 6 chiffres saisi par l'utilisateur lors du second facteur de connexion ? | Où consulter la liste des facteurs de sécurité (SMS, FIDO2) actuellement configurés et actifs pour un compte ? | Quelle méthode appeler pour révoquer ou désactiver définitivement un facteur MFA perdu par le collaborateur ?"
+  },
+  "paths": {
+    "/v1/mfa/enroll": {
+      "post": {
+        "summary": "Initier le parcours d'enrôlement d'un nouveau facteur de sécurité (TOTP, SMS, FIDO2) et générer les secrets associés",
+        "operationId": "enrollMFA",
+        "tags": [
+          "MFA"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_id",
+                  "factor_type"
+                ],
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "factor_type": {
+                    "type": "string",
+                    "enum": [
+                      "totp",
+                      "sms",
+                      "fido2"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Facteur enrôlé (secret TOTP ou challenge FIDO2)"
+          }
+        }
+      }
+    },
+    "/v1/mfa/verify": {
+      "post": {
+        "summary": "Vérifier la validité cryptographique d'un code OTP ou challenge d'authentification soumis pour valider l'accès",
+        "operationId": "verifyMFA",
+        "tags": [
+          "MFA"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_id",
+                  "factor_type",
+                  "code"
+                ],
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "factor_type": {
+                    "type": "string",
+                    "enum": [
+                      "totp",
+                      "sms",
+                      "fido2"
+                    ]
+                  },
+                  "code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Vérifié"
+          },
+          "401": {
+            "description": "Code invalide"
+          }
+        }
+      }
+    },
+    "/v1/mfa/{userId}/factors": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister et auditer l'ensemble des facteurs d'authentification ou dispositifs de confiance actuellement actifs pour l'utilisateur",
+        "operationId": "getMFAFactors",
+        "tags": [
+          "MFA"
+        ],
+        "responses": {
+          "200": {
+            "description": "Facteurs"
+          }
+        }
+      }
+    },
+    "/v1/mfa/{userId}/factors/{factorId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "factorId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Révoquer et supprimer définitivement un facteur de sécurité ou dispositif MFA rattaché au compte",
+        "operationId": "revokeMFAFactor",
+        "tags": [
+          "MFA"
+        ],
+        "responses": {
+          "204": {
+            "description": "Révoqué"
+          }
+        }
+      }
+    }
+  }
+}

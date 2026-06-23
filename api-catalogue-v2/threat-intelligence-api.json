@@ -1,0 +1,158 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Threat Intelligence API",
+    "version": "1.0.0",
+    "x-api-id": "threat-intelligence-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Renseignement sur les menaces. Collecte de données sur les indicateurs de compromission (IoC), typologies d'acteurs malveillants et TTPs (Tactics, Techniques, and Procedures) mondiaux. DIFFÉRENCE vs risk-management-api : Threat Intelligence fournit de la veille et des flux de données techniques sur les menaces informatiques externes, tandis que Risk Management suit la gouvernance, les audits internes et les plans de remédiation de l'entreprise.",
+    "x-synonymes": "cybersecurité, menace, ioc, malware, piratage, virus, adresse ip malveillante, indicateur de compromission, flux de sécurité, hacker, ttps, attaque cyber, cyberdéfense, renseignement, cybercriminalité, vulnérabilité, flux de veille",
+    "x-false-positive-warning": "Pour piloter la remédiation interne des failles du SI ou la cartographie de conformité ISO, utilisez risk-management-api.",
+    "x-cas-usage": "je veux lister les menaces cyber actives répertoriées | je veux ingérer et vérifier un indicateur de compromission ioc | je veux voir la liste des flux de renseignement disponibles | je veux consulter le profil d'un groupe de hackers ou d'un acteur malveillant"
+  },
+  "paths": {
+    "/v1/threats": {
+      "get": {
+        "summary": "Lister et rechercher les menaces de cybersécurité actuellement qualifiées d'actives",
+        "operationId": "listActiveThreats",
+        "tags": [
+          "Threats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Déclarer et documenter une nouvelle signature de menace informatique ou un vecteur d'attaque",
+        "operationId": "addThreat",
+        "tags": [
+          "Threats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/threats/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le profil détaillé, la criticité et l'historique d'une cybermenace enregistrée",
+        "operationId": "getThreat",
+        "tags": [
+          "Threats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/threats/ioc/check": {
+      "post": {
+        "summary": "Ingérer et analyser une entité (IP, hash, domaine) pour valider s'il s'agit d'un indicateur de compromission",
+        "operationId": "ingestIoC",
+        "tags": [
+          "IoC"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/threats/feeds": {
+      "get": {
+        "summary": "Lister l'ensemble des flux de veille et de renseignement cyber connectés au système",
+        "operationId": "listThreatFeeds",
+        "tags": [
+          "Feeds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "S'abonner à un nouveau flux de données de renseignement technique externe",
+        "operationId": "subscribeFeed",
+        "tags": [
+          "Feeds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/threats/actors": {
+      "get": {
+        "summary": "Consulter le répertoire des groupes d'acteurs malveillants (APT) et leurs modes opératoires connus",
+        "operationId": "listThreatActors",
+        "tags": [
+          "Actors"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

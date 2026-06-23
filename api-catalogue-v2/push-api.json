@@ -1,0 +1,227 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Push Notification API",
+    "version": "1.0.0",
+    "x-api-id": "push-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Communication",
+    "description": "Cette API centralise l'expédition des notifications push mobiles natives à destination des terminaux iOS (APNs) et Android (FCM). Elle s'adresse aux équipes de développement d'applications mobiles et aux outils marketing pour orchestrer la gestion des jetons d'appareils (device tokens), le ciblage par segments d'audience et le suivi analytique des campagnes de notifications push.",
+    "x-synonymes": "Notification push mobile, Token de notification, Segment push, Alerte push iOS, Notification Android, Firebase Cloud Messaging, Apple Push Notification service, Token de device, Notification native mobile, Campagne de push, Notification système mobile, Push transactionnel, Enregistrement de terminal mobile, Statistiques de push, Notification applicative mobile, Jeton d'appareil mobile",
+    "x-false-positive-warning": "Attention : Cette API gère exclusivement le canal push mobile natif via la gestion directe des tokens d'appareils. Pour l'envoi de messages de communication omnicanaux unifiés (Email, SMS, Web push combinés), vous devez utiliser la Notification API. Pour les fonctionnalités de tchat ou messagerie in-app bidirectionnelle, utilisez la Messaging API.",
+    "x-cas-usage": "Comment faire pour enregistrer ou rafraîchir le jeton de notification push (device token) d'un smartphone iOS ou Android associé à un utilisateur ? | Comment faire pour diffuser une notification push transactionnelle immédiate à un groupe d'utilisateurs ? | Comment faire pour programmer l'envoi d'une campagne push à un segment d'audience cible et analyser ses taux d'ouverture ?"
+  },
+  "paths": {
+    "/v1/push/send": {
+      "post": {
+        "summary": "Expédier une alerte push transactionnelle immédiate et ciblée vers un groupe d'identifiants d'utilisateurs connectés",
+        "operationId": "sendPush",
+        "tags": [
+          "Push"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PushSend"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Envoyée"
+          }
+        }
+      }
+    },
+    "/v1/push/register-device": {
+      "post": {
+        "summary": "Enregistrer ou actualiser le jeton de notification (device token) d'un terminal mobile iOS ou Android pour un utilisateur donné",
+        "operationId": "registerDevice",
+        "tags": [
+          "Devices"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_id",
+                  "device_token",
+                  "platform"
+                ],
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "device_token": {
+                    "type": "string"
+                  },
+                  "platform": {
+                    "type": "string",
+                    "enum": [
+                      "ios",
+                      "android"
+                    ]
+                  },
+                  "app_version": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Enregistré"
+          }
+        }
+      }
+    },
+    "/v1/push/unregister-device": {
+      "delete": {
+        "summary": "Révoquer et désenregistrer un jeton de notification mobile afin d'interrompre définitivement les envois sur un appareil",
+        "operationId": "unregisterDevice",
+        "tags": [
+          "Devices"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "device_token"
+                ],
+                "properties": {
+                  "device_token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Désenregistré"
+          }
+        }
+      }
+    },
+    "/v1/push/campaigns": {
+      "post": {
+        "summary": "Planifier, configurer et diffuser une campagne marketing de notifications push vers un segment d'utilisateurs ciblé",
+        "operationId": "createCampaign",
+        "tags": [
+          "Campaigns"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "message",
+                  "segment"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "segment": {
+                    "type": "string"
+                  },
+                  "scheduled_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créée"
+          }
+        }
+      }
+    },
+    "/v1/push/campaigns/{id}/stats": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Extraire les métriques de performance et statistiques d'engagement (taux de réception, clics, ouvertures) d'une campagne de push mobile",
+        "operationId": "getCampaignStats",
+        "tags": [
+          "Campaigns"
+        ],
+        "responses": {
+          "200": {
+            "description": "Stats"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PushSend": {
+        "type": "object",
+        "required": [
+          "user_ids",
+          "title",
+          "body"
+        ],
+        "properties": {
+          "user_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "description": "Données custom pour l'app"
+          },
+          "badge": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Clé API Kong Gateway"
+      }
+    }
+  }
+}

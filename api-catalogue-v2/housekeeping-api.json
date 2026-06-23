@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Housekeeping API",
+    "version": "1.0.0",
+    "x-api-id": "housekeeping-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Cette API pilote l'organisation opérationnelle, la planification des tâches de nettoyage et la gestion du statut de propreté des chambres (Housekeeping) au sein des hôtels. Elle permet de générer automatiquement le plan de ménage quotidien des gouvernantes, de définir des priorités d'interventions en fonction des flux d'arrivées/départs des clients, de modifier l'état de préparation d'une chambre en temps réel (sale, en cours, propre/inspectée), et d'assurer le suivi d'activité de l'équipe de ménage.",
+    "x-synonymes": "ménage hôtelier, housekeeping, plan de ménage, statut de chambre, gouvernante d'hôtel, tâche de nettoyage, chambre propre inspectée, priorité de ménage, recouche, chambre à blanc, personnel d'entretien hôtel, planning de nettoyage, remise en état de chambre, propreté hôtelière",
+    "x-false-positive-warning": "Attention : Cette API gère exclusivement la logistique de ménage, l'état de propreté des pièces et la feuille de route du personnel d'entretien interne d'un établissement (Housekeeping). Ne pas la confondre avec la `maintenance-api` (gestion des pannes matérielles ou de plomberie des chambres) ni avec une API de blanchisserie industrielle externe.",
+    "x-cas-usage": "Comment extraire le plan de ménage et la feuille de route optimisée pour les gouvernantes ce matin ? | Comment déclarer qu'une chambre vient d'être nettoyée et inspectée pour autoriser le check-in immédiat du client ? | Où créer une tâche de ménage urgente pour une chambre suite à une demande spécifique ? | Comment consulter la liste et le statut d'activité des membres de l'équipe d'entretien ?"
+  },
+  "paths": {
+    "/v1/housekeeping/{hotelId}": {
+      "parameters": [
+        {
+          "name": "hotelId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le plan de ménage du jour consolidé, ordonnancé par priorité d'arrivée et de départ pour l'hôtel",
+        "operationId": "getHousekeepingPlan",
+        "tags": [
+          "Housekeeping"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et affecter une nouvelle tâche de nettoyage spécifique ou exceptionnelle (ex: recouche ou incident) pour une chambre",
+        "operationId": "createHousekeepingTask",
+        "tags": [
+          "Housekeeping"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/housekeeping/rooms/{roomId}": {
+      "parameters": [
+        {
+          "name": "roomId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le statut de propreté instantané et l'état d'occupation d'une chambre (sale, en cours, inspectée)",
+        "operationId": "getRoomStatus",
+        "tags": [
+          "Rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour et valider le changement d'état de propreté d'une chambre suite à l'intervention du personnel",
+        "operationId": "updateRoomStatus",
+        "tags": [
+          "Rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/housekeeping/staff": {
+      "get": {
+        "summary": "Lister les membres du personnel d'entretien et les gouvernantes actuellement en service avec leurs affectations",
+        "operationId": "getHousekeepingStaff",
+        "tags": [
+          "Staff"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

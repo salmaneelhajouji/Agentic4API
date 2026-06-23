@@ -1,0 +1,51 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Concierge API",
+    "version": "1.0.0",
+    "x-api-id": "concierge-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Services de conciergerie hôtelière digitale couvrant l'ensemble des interactions client durant le séjour : consultation du catalogue de services, soumission de demandes (room service, taxi, réservation restaurant, pressing, spa) et obtention de recommandations locales personnalisées. Destinée aux équipes produit hôtelière et aux développeurs d'applications mobiles hôtelières souhaitant offrir une expérience client premium sans passer par la réception physique. Les utilisateurs typiques sont les clients de l'hôtel via application mobile, les applications de conciergerie intégrées aux systèmes PMS, et les portails self-service en chambre. DIFFÉRENCE vs checkin-api-v2 : Concierge API = services et demandes pendant le séjour ; checkin-api-v2 = arrivée et départ de l'hôtel. DIFFÉRENCE vs activity-booking-api : Concierge API = services intégrés à l'hôtel avec recommandations locales ; activity-booking-api = réservation d'activités touristiques externes indépendantes. DIFFÉRENCE vs room-service-api : Concierge API = orchestrateur de tous les services hôteliers multi-catégories ; room-service-api = commande de repas en chambre uniquement.",
+    "x-synonymes": "conciergerie hôtel, service hôtelier, room service, demande hôtel, service client hôtel, recommandation locale, restaurant recommandé, taxi hôtel, pressing hôtel, spa hôtel, excursion recommandée, bon plan local, concierge digital, demande client hôtel, service en chambre, portier hôtel, butler service, conciergerie luxe, activité locale, guide touristique hôtel",
+    "x-false-positive-warning": "DIFFÉRENCE vs checkin-api-v2 : Concierge API = services et demandes pendant le séjour ; checkin-api-v2 = gestion de l'arrivée et du départ physique du client à l'hôtel. DIFFÉRENCE vs activity-booking-api : Concierge API = services intégrés à l'établissement hôtelier avec recommandations locales contextualisées ; activity-booking-api = réservation d'activités touristiques externes auprès de prestataires tiers. DIFFÉRENCE vs room-service-api : Concierge API = orchestrateur multi-catégories de tous les services hôteliers (taxi, pressing, spa, restauration, etc.) ; room-service-api = commande de repas et boissons en chambre spécifiquement. DIFFÉRENCE vs hotel-api : Concierge API = interactions opérationnelles durant le séjour ; hotel-api = informations descriptives sur l'établissement (localisation, équipements, tarifs).",
+    "x-cas-usage": "Comment afficher la liste complète des services disponibles dans l'hôtel sur une application mobile client ? | Comment permettre à un client de soumettre une demande de room service depuis son smartphone sans appeler la réception ? | Comment créer une demande de taxi planifiée pour le lendemain matin à une heure précise ? | Quels restaurants et bons plans locaux peut-on recommander automatiquement à un client selon la localisation de l'hôtel ? | Comment récupérer l'historique des demandes de service en cours pour un hôtel donné afin de les traiter en temps réel ?"
+  },
+  "paths": {
+    "/v1/concierge/{hotelId}": {
+      "parameters": [{"name": "hotelId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Lister les services de conciergerie disponibles dans l'hôtel — room service, spa, taxi, pressing et autres prestations",
+        "operationId": "getServices",
+        "tags": ["Concierge"],
+        "responses": {"200": {"description": "Services disponibles"}}
+      }
+    },
+    "/v1/concierge/{hotelId}/requests": {
+      "parameters": [{"name": "hotelId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer la liste des demandes clients en cours pour un hôtel — room service, taxi et autres services actifs",
+        "operationId": "listRequests",
+        "tags": ["Requests"],
+        "responses": {"200": {"description": "Demandes en cours"}}
+      },
+      "post": {
+        "summary": "Soumettre une nouvelle demande de service à la conciergerie hôtelière avec type de service, heure souhaitée et détails client",
+        "operationId": "createRequest",
+        "tags": ["Requests"],
+        "responses": {"200": {"description": "Demande créée"}}
+      }
+    },
+    "/v1/concierge/{hotelId}/recommendations": {
+      "parameters": [{"name": "hotelId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Obtenir des recommandations locales personnalisées autour de l'hôtel — restaurants, activités culturelles et bons plans à proximité",
+        "operationId": "getLocalRecommendations",
+        "tags": ["Recommendations"],
+        "responses": {"200": {"description": "Recommandations locales"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Renewal API",
+    "version": "1.0.0",
+    "x-api-id": "renewal-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Gestion des renouvellements de contrats d assurance. Permet de consulter les renouvellements à venir, de traiter un renouvellement, de négocier les nouvelles conditions tarifaires et de confirmer le renouvellement. Utilisé par les gestionnaires de contrats et équipes commerciales en période de renouvellement.",
+    "x-synonymes": "renouvellement contrat assurance, tacite reconduction, échéance principale contrat, avis renouvellement, prime renouvellement, résiliation avant renouvellement, négociation renouvellement, offre renouvellement, renouvellement automatique, campagne renouvellement, date échéance assurance, confirmation renouvellement, renouvellement refusé, nouvelles conditions contrat, renouvellement avec modifications, portefeuille à renouveler, préavis résiliation, offre concurrente, fidélisation renouvellement, taux rétention contrat",
+    "x-false-positive-warning": "DIFFÉRENCE vs policy-api-v3 : Renewal API = workflow spécifique de renouvellement avec négociation. policy-api-v3 = gestion complète du contrat avec endpoint /renewal intégré. Utiliser policy-api-v3/renewal pour les renouvellements simples, Renewal API pour les campagnes de renouvellement en masse.",
+    "x-cas-usage": "je veux voir tous les contrats qui arrivent à renouvellement dans les 60 prochains jours | je veux traiter le renouvellement d un contrat arrivant à échéance | je veux négocier de nouvelles conditions tarifaires pour un renouvellement | je veux voir le statut d un renouvellement en cours de négociation | je veux lancer une campagne de renouvellement pour tous les contrats du mois prochain"
+  },
+  "paths": {
+    "/v1/renewals": {
+      "get": {
+        "summary": "Renouvellements à venir — contrats arrivant à échéance avec délais",
+        "operationId": "listUpcomingRenewals",
+        "tags": ["Renewals"],
+        "responses": {"200": {"description": "Renouvellements à venir"}}
+      },
+      "post": {
+        "summary": "Traiter un renouvellement — confirmer, modifier ou résilier",
+        "operationId": "processRenewal",
+        "tags": ["Renewals"],
+        "responses": {"200": {"description": "Renouvellement traité"}}
+      }
+    },
+    "/v1/renewals/{contractId}": {
+      "parameters": [{"name": "contractId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut du renouvellement d un contrat — en cours, confirmé ou annulé",
+        "operationId": "getRenewalStatus",
+        "tags": ["Renewals"],
+        "responses": {"200": {"description": "Statut renouvellement"}}
+      },
+      "post": {
+        "summary": "Négocier les conditions d un renouvellement — nouvelle prime et garanties",
+        "operationId": "negotiateRenewal",
+        "tags": ["Renewals"],
+        "responses": {"200": {"description": "Négociation enregistrée"}}
+      }
+    }
+  }
+}

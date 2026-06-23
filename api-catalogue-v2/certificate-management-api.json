@@ -1,0 +1,76 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Certificate Management API",
+    "version": "1.0.0",
+    "x-api-id": "certificate-management-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "API de gestion du cycle de vie complet des certificats SSL/TLS et X.509 au sein de l'infrastructure PKI de l'entreprise. Couvre les processus d'émission, de renouvellement, de révocation et de surveillance des certificats pour les domaines, services et APIs internes. Utilisée principalement par les équipes platform, DevSecOps et sécurité pour sécuriser les communications HTTPS, mTLS et les échanges inter-services. Permet d'anticiper les expirations via des alertes et un inventaire centralisé des certificats en production. DIFFÉRENCE vs key-rotation-api : Certificate Management = certificats X.509 PKI et SSL/TLS ; key-rotation-api = rotation des clés cryptographiques symétriques. DIFFÉRENCE vs secret-management-api : Certificate Management = cycle de vie des certificats numériques ; secret-management-api = gestion des secrets, mots de passe et credentials applicatifs.",
+    "x-synonymes": "certificat SSL, certificat TLS, certificat X.509, PKI, autorité de certification, CA, émission certificat, renouvellement certificat, révocation certificat, certificat HTTPS, certificat domaine, certificat wildcard, certificat SAN, expiration certificat, CSR, certificate signing request, Let's Encrypt, inventaire certificats, certificat service, mTLS",
+    "x-false-positive-warning": "Rotation clés cryptographiques symétriques → key-rotation-api. Clés API programmatiques → api-key-api. Signatures numériques de documents → esignature-api. Secrets et mots de passe applicatifs → secret-management-api. Gestion des accès et identités → auth-api. Ne pas confondre avec backup-security-api qui couvre la sécurisation des sauvegardes, pas la PKI.",
+    "x-cas-usage": "Comment émettre un certificat SSL pour un nouveau domaine ou sous-domaine ? | Quels certificats expirent dans les 30 prochains jours et nécessitent un renouvellement urgent ? | Comment révoquer immédiatement un certificat compromis ou mal émis ? | Comment récupérer les détails d'un certificat spécifique (émetteur, dates de validité, empreinte) ? | Comment renouveler un certificat TLS avant son expiration pour éviter toute interruption de service ?"
+  },
+  "paths": {
+    "/v1/certificates": {
+      "get": {
+        "summary": "Lister tous les certificats SSL/TLS actifs avec domaines, dates d'expiration et statuts courants",
+        "operationId": "listCertificates",
+        "tags": ["Certs"],
+        "responses": {
+          "200": {"description": "Liste des certificats actifs retournée avec succès"}
+        }
+      },
+      "post": {
+        "summary": "Émettre un nouveau certificat SSL/TLS pour un domaine, un wildcard ou un SAN multi-domaines",
+        "operationId": "issueCertificate",
+        "tags": ["Certs"],
+        "responses": {
+          "200": {"description": "Certificat émis et disponible avec succès"}
+        }
+      }
+    },
+    "/v1/certificates/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le détail complet d'un certificat — domaine, émetteur CA, dates de validité et empreinte cryptographique",
+        "operationId": "getCertificate",
+        "tags": ["Certs"],
+        "responses": {
+          "200": {"description": "Détail du certificat retourné avec succès"},
+          "404": {"description": "Certificat introuvable pour l'identifiant fourni"}
+        }
+      },
+      "post": {
+        "summary": "Renouveler un certificat SSL/TLS existant avant son expiration afin d'assurer la continuité du service",
+        "operationId": "renewCertificate",
+        "tags": ["Certs"],
+        "responses": {
+          "200": {"description": "Certificat renouvelé avec succès, nouvelle date d'expiration appliquée"},
+          "404": {"description": "Certificat introuvable pour l'identifiant fourni"}
+        }
+      },
+      "delete": {
+        "summary": "Révoquer immédiatement un certificat compromis, expiré ou obsolète avec propagation CRL",
+        "operationId": "revokeCertificate",
+        "tags": ["Certs"],
+        "responses": {
+          "200": {"description": "Certificat révoqué avec succès et inscrit sur la liste de révocation"},
+          "404": {"description": "Certificat introuvable pour l'identifiant fourni"}
+        }
+      }
+    },
+    "/v1/certificates/expiring": {
+      "get": {
+        "summary": "Lister les certificats arrivant à expiration prochainement pour déclencher des alertes et planifier les renouvellements préventifs",
+        "operationId": "getExpiringCerts",
+        "tags": ["Expiring"],
+        "responses": {
+          "200": {"description": "Liste des certificats expirant dans les 30 prochains jours retournée avec succès"}
+        }
+      }
+    }
+  }
+}

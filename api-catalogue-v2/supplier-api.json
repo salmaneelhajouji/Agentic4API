@@ -1,0 +1,235 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Supplier API",
+    "version": "1.0.0",
+    "x-api-id": "supplier-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Supply",
+    "x-domain": "Supply Chain",
+    "description": "Fournisseurs et partenaires B2B. Gestion globale du référentiel d'identité des tiers, hébergement des catalogues de produits négociés et centralisation des évaluations de performance commerciale. DIFFÉRENCE vs supplier-quality-api : Supplier API gère les fiches administratives, l'onboarding et les fiches articles d'un prestataire, tandis que Supplier Quality API traite exclusivement de l'évaluation technique des entrants, des non-conformités industrielles et des audits usine.",
+    "x-synonymes": "fournisseur, partenaire, b2b, contrat, catalogue, approvisionnement, acheteur, négoce, vendor, sous-traitant, commande, tiers, entreprise, évaluation, sourcing, commerce, relation fournisseur",
+    "x-false-positive-warning": "Pour enregistrer une anomalie sur un lot de pièces reçues ou planifier un audit qualité en usine, utilisez supplier-quality-api.",
+    "x-cas-usage": "je veux enregistrer un nouveau fournisseur b2b dans notre référentiel | je veux consulter le catalogue d'articles d'un prestataire | je veux mettre à jour les coordonnées et contacts d'un tiers | je veux lister et filtrer tous nos partenaires commerciaux actifs"
+  },
+  "paths": {
+    "/v1/suppliers": {
+      "post": {
+        "summary": "Créer une fiche de référence pour un nouveau fournisseur ou prestataire de services B2B",
+        "operationId": "createSupplier",
+        "tags": [
+          "Suppliers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "contact_email"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "contact_email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "product_categories": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des fournisseurs et partenaires du réseau d'approvisionnement",
+        "operationId": "listSuppliers",
+        "tags": [
+          "Suppliers"
+        ],
+        "responses": {
+          "200": {
+            "description": "Fournisseurs"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/suppliers/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'identité, les fiches de contact et les données d'enregistrement d'un fournisseur",
+        "operationId": "getSupplier",
+        "tags": [
+          "Suppliers"
+        ],
+        "responses": {
+          "200": {
+            "description": "Fournisseur"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour les données administratives, les catégories de produits ou les informations d'un fournisseur",
+        "operationId": "updateSupplier",
+        "tags": [
+          "Suppliers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/suppliers/{id}/products": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'intégralité du catalogue d'articles et des références négociées fournis par ce prestataire",
+        "operationId": "getSupplierProducts",
+        "tags": [
+          "Suppliers"
+        ],
+        "responses": {
+          "200": {
+            "description": "Produits"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/suppliers/{id}/evaluate": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Enregistrer une note de performance commerciale basée sur des critères de prix, qualité et livraison",
+        "operationId": "evaluateSupplier",
+        "tags": [
+          "Suppliers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "score"
+                ],
+                "properties": {
+                  "score": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "criteria": {
+                    "type": "object",
+                    "properties": {
+                      "quality": {
+                        "type": "integer"
+                      },
+                      "delivery": {
+                        "type": "integer"
+                      },
+                      "price": {
+                        "type": "integer"
+                      }
+                    }
+                  },
+                  "comment": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Évaluation enregistrée"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

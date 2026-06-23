@@ -1,0 +1,128 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Device Registry API",
+    "version": "1.0.0",
+    "x-api-id": "device-registry-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Cette API sert de référentiel central pour l'enregistrement, l'inventaire et le provisioning de l'ensemble du parc d'objets connectés (IoT). Elle gère l'intégralité du cycle de vie technique des équipements (activation, appairage, configuration, mise à jour du firmware, déclassement) tout en consolidant leurs caractéristiques matérielles et statuts de connectivité. Elle est essentielle aux applications de domotique, de supervision industrielle et de réseaux de capteurs intelligents.",
+    "x-synonymes": "registre d'appareils, parc IoT, objet connecté, provisioning d'équipement, cycle de vie IoT, firmware, mise à jour logicielle, capteur intelligent, adresse MAC de l'appareil, statut de connectivité, télémétrie matériel, appairage matériel, identifiant d'équipement, capteur embarqué, déclassement matériel, flotte d'automates, passerelle IoT",
+    "x-false-positive-warning": "Attention : Cette API administre l'inventaire technique, l'état matériel et le provisionnement de l'infrastructure des équipements (IoT). Ne pas la confondre avec la `telemetry-api` (qui ingère les flux de données massifs envoyés par les capteurs) ni avec la `demand-response-api` (dédiée au pilotage et à l'effacement de charge énergétique).",
+    "x-cas-usage": "Comment provisionner et enregistrer un nouveau capteur de température ou un automate dans la flotte ? | Où trouver la version actuelle du firmware déployée sur un appareil connecté spécifique ? | Quelle méthode appeler pour pousser et planifier une mise à jour logicielle critique sur un boîtier ? | Comment déclarer et décommissionner définitivement un appareil matériel en fin de vie pour le sortir du parc ?"
+  },
+  "paths": {
+    "/v1/devices": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble du parc d'objets connectés (IoT) selon leur statut de connectivité, type ou version",
+        "operationId": "listDevices",
+        "tags": [
+          "Devices"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et provisionner un nouvel équipement matériel ou capteur intelligent dans le registre de la flotte",
+        "operationId": "registerDevice",
+        "tags": [
+          "Devices"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/devices/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche technique détaillée, le statut de fonctionnement et l'état de connectivité actuel d'un objet connecté",
+        "operationId": "getDevice",
+        "tags": [
+          "Devices"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les paramètres de configuration, les variables d'environnement ou la localisation d'un appareil",
+        "operationId": "updateDevice",
+        "tags": [
+          "Devices"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Désactiver, révoquer les accès réseau et décommissionner définitivement un appareil IoT du parc actif",
+        "operationId": "decommissionDevice",
+        "tags": [
+          "Devices"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/devices/{id}/firmware": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la version de micrologiciel (firmware) actuellement installée et active sur l'équipement",
+        "operationId": "getFirmwareVersion",
+        "tags": [
+          "Firmware"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Planifier et déployer une nouvelle version ou un correctif de mise à jour du firmware sur l'appareil ciblé",
+        "operationId": "updateFirmware",
+        "tags": [
+          "Firmware"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

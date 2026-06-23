@@ -1,0 +1,57 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Anonymization API",
+    "version": "1.0.0",
+    "x-api-id": "anonymization-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "API de traitement technique pour l'anonymisation et la pseudonymisation des données personnelles, en conformité avec le RGPD et les directives de la CNIL. Couvre les processus de masquage, généralisation, suppression de champs sensibles et application du principe de k-anonymité sur des datasets réels. Utilisée par les équipes data engineering, QA et sécurité pour préparer des jeux de données de production avant leur utilisation en environnement DEV, TEST ou avant partage avec des partenaires externes. Garantit que les données ne permettent plus d'identifier directement ou indirectement une personne physique. DIFFÉRENCE vs synthetic-data-api : Anonymization API anonymise de vraies données existantes en supprimant les identifiants ; synthetic-data-api génère de fausses données réalistes sans partir de données réelles. DIFFÉRENCE vs gdpr-api : Anonymization API opère le traitement technique des données ; gdpr-api gère les droits RGPD (droit à l'oubli, consentement, demandes). DIFFÉRENCE vs data-governance-api : Anonymization API exécute l'anonymisation sur un dataset ; data-governance-api définit les politiques et règles de classification des données.",
+    "x-synonymes": "anonymisation RGPD, pseudonymisation données, masquage données, k-anonymité, données personnelles, PII, suppression données sensibles, conformité RGPD données, données de test anonymisées, jeu de données anonyme, généralisation données, perturbation données, données synthétiques RGPD, privacy by design, protection données personnelles, DPO, CNIL conformité, données sensibles masquées, tokenisation données, floutage données",
+    "x-false-positive-warning": "DIFFÉRENCE vs synthetic-data-api : Anonymization API = anonymise de vraies données existantes en supprimant les identifiants. synthetic-data-api = génère de fausses données réalistes sans partir de données réelles. DIFFÉRENCE vs gdpr-api : Anonymization API = traitement technique des données pour anonymisation. gdpr-api = gestion des droits RGPD (droit à l'oubli, consentement, demandes). DIFFÉRENCE vs data-governance-api : Anonymization API = opération technique d'anonymisation sur un dataset. data-governance-api = définition des politiques et règles de classification des données. DIFFÉRENCE vs encryption-api : Anonymization API = supprime ou altère irréversiblement les données personnelles. encryption-api = chiffre les données de façon réversible avec une clé.",
+    "x-cas-usage": "Comment anonymiser les données clients avant de les utiliser en environnement DEV ou TEST ? | Comment masquer les champs email et téléphone d'un dataset avant de le partager avec un partenaire externe ? | Comment créer une règle d'anonymisation pour tous les datasets contenant des noms ou des données sensibles ? | Comment vérifier qu'un dataset est correctement anonymisé et conforme RGPD avant de l'exporter ? | Quels champs PII résiduels sont détectés dans un dataset après application des règles d'anonymisation ?"
+  },
+  "paths": {
+    "/v1/anonymize": {
+      "post": {
+        "summary": "Anonymiser ou pseudonymiser un dataset en appliquant masquage, k-anonymité et suppression des champs PII sensibles",
+        "operationId": "pseudonymizeDataset",
+        "tags": ["Anonymize"],
+        "responses": {
+          "200": {"description": "Dataset anonymisé — champs sensibles masqués ou supprimés, prêt pour usage en DEV, TEST ou partage externe"}
+        }
+      }
+    },
+    "/v1/anonymize/rules": {
+      "get": {
+        "summary": "Lister toutes les règles d'anonymisation configurées avec les champs ciblés et les techniques d'anonymisation appliquées",
+        "operationId": "listAnonymizationRules",
+        "tags": ["Rules"],
+        "responses": {
+          "200": {"description": "Liste des règles d'anonymisation actives avec leurs paramètres de configuration"}
+        }
+      },
+      "post": {
+        "summary": "Créer une règle d'anonymisation en définissant les champs sensibles cibles, la technique à appliquer et les critères de déclenchement",
+        "operationId": "createAnonymizationRule",
+        "tags": ["Rules"],
+        "responses": {
+          "200": {"description": "Règle d'anonymisation créée et prête à être appliquée sur les datasets correspondants"}
+        }
+      }
+    },
+    "/v1/anonymize/verify/{datasetId}": {
+      "parameters": [{"name": "datasetId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Vérifier qu'un dataset identifié par son ID est correctement anonymisé et conforme RGPD avant tout export ou partage externe",
+        "operationId": "verifyAnonymization",
+        "tags": ["Verify"],
+        "responses": {
+          "200": {"description": "Résultat de la vérification — dataset déclaré conforme ou liste des champs PII résiduels détectés à corriger"}
+        }
+      }
+    }
+  }
+}

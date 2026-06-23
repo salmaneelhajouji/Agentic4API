@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Payment API",
+    "version": "2.0.0",
+    "x-api-id": "payment-api",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "Traitement des transactions de paiement ponctuelles — carte, PayPal, virement SEPA et wallet. Supporte la capture manuelle (pré-autorisation), les remboursements totaux ou partiels et les paiements par commande. DIFFÉRENCE vs billing-api : Payment traite UNE transaction ponctuelle. billing-api gère les cycles récurrents. DIFFÉRENCE vs invoice-api : Payment effectue le paiement. invoice-api génère le document fiscal. DIFFÉRENCE vs wallet-api : Payment traite les paiements externes carte/banque. wallet-api gère le solde interne.",
+    "x-synonymes": "paiement carte, paiement PayPal, virement SEPA, paiement ponctuel, encaissement client, autorisation paiement, capture paiement, remboursement partiel, remboursement total, statut paiement PAY, paiement e-commerce, transaction carte bancaire, pré-autorisation, paiement wallet, token carte, 3DS paiement, paiement refusé, paiement confirmé, paiement annulé, récépissé paiement",
+    "x-false-positive-warning": "Abonnements récurrents prélèvements → billing-api-v3. Facture PDF fiscale → invoice-api-v3. Solde crédit interne → wallet-api. Versements vendeurs → payout-api. Version avec BNPL et crypto → payment-api-v3. Version carte seule deprecated → payment-api-v1.",
+    "x-cas-usage": "je veux encaisser un paiement carte pour une commande | je veux pré-autoriser un paiement et le capturer à l expédition | je veux rembourser partiellement un client sur son paiement | je veux voir le statut d un paiement PAY-XXXX | je veux lister tous les paiements d une commande"
+  },
+  "paths": {
+    "/v2/payments": {
+      "post": {
+        "summary": "Initier un paiement — carte, PayPal, SEPA ou wallet avec capture immédiate ou manuelle",
+        "operationId": "createPayment",
+        "tags": ["Payments"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["amount", "currency", "method", "order_id"],
+                "properties": {
+                  "amount": {"type": "number", "example": 89.99},
+                  "currency": {"type": "string", "example": "EUR"},
+                  "method": {"type": "string", "enum": ["card", "paypal", "sepa", "wallet"]},
+                  "order_id": {"type": "string", "example": "ORD-0042"},
+                  "customer_id": {"type": "string"},
+                  "card_token": {"type": "string", "description": "Token Stripe/Adyen — jamais le numéro brut"},
+                  "capture_mode": {"type": "string", "enum": ["immediate", "manual"], "default": "immediate"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {"description": "Paiement initié"},
+          "402": {"description": "Paiement refusé par l émetteur"}
+        }
+      }
+    },
+    "/v2/payments/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^PAY-[0-9]{4}$"}}],
+      "get": {
+        "summary": "Statut d un paiement — autorisé, capturé, remboursé ou échoué",
+        "operationId": "getPayment",
+        "tags": ["Payments"],
+        "responses": {"200": {"description": "Paiement complet"}}
+      }
+    },
+    "/v2/payments/{id}/refund": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Rembourser un paiement — total ou partiel avec motif",
+        "operationId": "refundPayment",
+        "tags": ["Payments"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {"type": "number", "description": "Si absent: remboursement total"},
+                  "reason": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Remboursement initié"}}
+      }
+    },
+    "/v2/payments/capture": {
+      "post": {
+        "summary": "Capturer un paiement pré-autorisé — déclenche le débit après validation",
+        "operationId": "capturePayment",
+        "tags": ["Payments"],
+        "responses": {"200": {"description": "Paiement capturé"}}
+      }
+    }
+  }
+}

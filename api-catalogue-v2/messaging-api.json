@@ -1,0 +1,63 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MES API",
+    "version": "1.0.0",
+    "x-api-id": "mes-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Manufacturing Execution System — supervision de l atelier de production en temps réel. Permet de consulter l état de l atelier, de gérer les postes de charge, de calculer le TRS/OEE par poste, et d enregistrer les événements de production (arrêts, pannes, changements de série). Utilisé par les responsables de production et superviseurs d atelier pour piloter la fabrication.",
+    "x-synonymes": "MES, manufacturing execution system, supervision atelier, poste de charge, TRS taux rendement synthétique, OEE overall equipment effectiveness, production temps réel, événement production, arrêt production, panne atelier, changement série, ordre fabrication, atelier, shop floor, SCADA pilotage, pilotage production, KPI production, disponibilité atelier, performance production, qualité production",
+    "x-false-positive-warning": "DIFFÉRENCE vs machine-api-v2 : MES API = supervision globale de l atelier avec KPIs. machine-api-v2 = gestion individuelle des machines CNC et programmes. DIFFÉRENCE vs bom-api : MES API = exécution et supervision de la production. bom-api = nomenclature des composants nécessaires. DIFFÉRENCE vs maintenance-work-order-api : MES API = production et OEE atelier. maintenance-work-order-api = ordres de travail maintenance.",
+    "x-cas-usage": "je veux voir en temps réel l état de tous les postes de charge de mon atelier | je veux calculer le TRS de chaque poste sur la semaine écoulée | je veux enregistrer un arrêt production non planifié avec sa cause | je veux ajouter un nouveau poste de charge dans notre système MES | je veux voir les événements de production en temps réel pour détecter les anomalies"
+  },
+  "paths": {
+    "/v1/mes/shop-floor": {
+      "get": {
+        "summary": "État global de l atelier en temps réel — tous postes de charge et statuts",
+        "operationId": "getShopFloorStatus",
+        "tags": ["ShopFloor"],
+        "responses": {"200": {"description": "État atelier temps réel"}}
+      }
+    },
+    "/v1/mes/workcenters": {
+      "get": {
+        "summary": "Lister les postes de charge — machines, cellules et lignes de production",
+        "operationId": "listWorkcenters",
+        "tags": ["Workcenters"],
+        "responses": {"200": {"description": "Postes de charge"}}
+      },
+      "post": {
+        "summary": "Ajouter un poste de charge dans le système MES",
+        "operationId": "addWorkcenter",
+        "tags": ["Workcenters"],
+        "responses": {"200": {"description": "Poste ajouté"}}
+      }
+    },
+    "/v1/mes/workcenters/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "TRS/OEE d un poste de charge — disponibilité, performance et qualité",
+        "operationId": "getWorkcenterOEE",
+        "tags": ["Workcenters"],
+        "responses": {"200": {"description": "TRS/OEE poste de charge"}}
+      }
+    },
+    "/v1/mes/events": {
+      "get": {
+        "summary": "Événements de production — arrêts, pannes et changements de série",
+        "operationId": "getProductionEvents",
+        "tags": ["Events"],
+        "responses": {"200": {"description": "Événements production"}}
+      },
+      "post": {
+        "summary": "Enregistrer un événement de production — arrêt, panne ou fin de série",
+        "operationId": "recordProductionEvent",
+        "tags": ["Events"],
+        "responses": {"200": {"description": "Événement enregistré"}}
+      }
+    }
+  }
+}

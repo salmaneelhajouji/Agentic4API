@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Legal Entity API",
+    "version": "1.0.0",
+    "x-api-id": "legal-entity-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Gestion des entités juridiques — sociétés, associations et établissements. Permet de créer et gérer les données juridiques officielles (SIREN, SIRET, forme juridique, capital), d accéder aux documents officiels (statuts, Kbis) et de rechercher une entité par SIREN ou SIRET. DIFFÉRENCE vs company-profile-api : Legal Entity = données juridiques officielles registre du commerce. company-profile-api = profil commercial et marketing de l entreprise.",
+    "x-synonymes": "entité juridique, société, SIREN, SIRET, Kbis, registre commerce, RCS, forme juridique, SAS SARL SA SCI, capital social, établissement secondaire, siège social, représentant légal, statuts société, greffe tribunal, immatriculation entreprise, numéro RCS, TVA intracommunautaire, association loi 1901, personne morale",
+    "x-false-positive-warning": "Profil commercial et marketing → company-profile-api. Contacts et coordonnées → contact-api. Données financières entreprise → financial-data-api. Surveillance compliance → compliance-legal-api.",
+    "x-cas-usage": "je veux créer la fiche juridique de notre nouvelle filiale avec son SIREN | je veux rechercher une entreprise par son numéro SIRET | je veux accéder au Kbis d une entité pour un dossier | je veux vérifier la forme juridique et le capital social d un partenaire | je veux ajouter les statuts officiels au dossier d une entité juridique"
+  },
+  "paths": {
+    "/v1/entities": {
+      "get": {
+        "summary": "Lister les entités juridiques — sociétés, associations et établissements",
+        "operationId": "listEntities",
+        "tags": ["Entities"],
+        "responses": {"200": {"description": "Entités juridiques"}}
+      },
+      "post": {
+        "summary": "Créer une entité juridique — SIREN, forme juridique et siège social",
+        "operationId": "createEntity",
+        "tags": ["Entities"],
+        "responses": {"200": {"description": "Entité créée"}}
+      }
+    },
+    "/v1/entities/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d une entité juridique — SIREN, SIRET, capital et représentant légal",
+        "operationId": "getEntity",
+        "tags": ["Entities"],
+        "responses": {"200": {"description": "Détail entité juridique"}}
+      },
+      "put": {
+        "summary": "Modifier les données d une entité juridique — mise à jour RCS ou siège",
+        "operationId": "updateEntity",
+        "tags": ["Entities"],
+        "responses": {"200": {"description": "Entité mise à jour"}}
+      }
+    },
+    "/v1/entities/{id}/documents": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Documents officiels d une entité — Kbis, statuts et délégations de pouvoir",
+        "operationId": "getEntityDocuments",
+        "tags": ["Docs"],
+        "responses": {"200": {"description": "Documents officiels"}}
+      },
+      "post": {
+        "summary": "Ajouter un document officiel à une entité juridique",
+        "operationId": "addDocument",
+        "tags": ["Docs"],
+        "responses": {"200": {"description": "Document ajouté"}}
+      }
+    },
+    "/v1/entities/search": {
+      "post": {
+        "summary": "Rechercher une entité par SIREN ou SIRET — vérification registre commerce",
+        "operationId": "searchBySIREN",
+        "tags": ["Search"],
+        "responses": {"200": {"description": "Entité trouvée"}}
+      }
+    }
+  }
+}

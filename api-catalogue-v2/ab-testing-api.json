@@ -1,0 +1,120 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "A/B Testing API",
+    "version": "1.0.0",
+    "x-api-id": "ab-testing-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "API dédiée à la gestion des expérimentations statistiques de type A/B et multivariées (MVT) dans un contexte produit ou marketing digital. Couvre l'ensemble du cycle d'une expérience : création avec groupe contrôle et groupe test, allocation du trafic, assignation déterministe des utilisateurs à une variante, enregistrement des conversions et analyse statistique des résultats (p-value, uplift, significativité). Utilisée par les équipes produit, data science et growth pour optimiser le taux de conversion, valider des hypothèses UX et conduire des expériences champion-challenger. DIFFÉRENCE vs feature-flag-api : A/B Testing API = expérience statistique avec mesure d'impact et analyse de résultats ; feature-flag-api = simple activation ou désactivation d'une fonctionnalité sans mesure statistique. DIFFÉRENCE vs analytics-api : A/B Testing API = compare deux variantes avec protocole expérimental contrôlé ; analytics-api = analyse descriptive de données existantes sans groupe contrôle.",
+    "x-synonymes": "split test, test multivarié, MVT, groupe contrôle, groupe test, champion challenger, feature flag test, taux de conversion, uplift, p-value, significativité statistique, allocation trafic, randomisation, expérience utilisateur, optimisation conversion, test de performance, AB test, expérience produit, protocole expérimental, variante",
+    "x-false-positive-warning": "DIFFÉRENCE vs feature-flag-api : A/B Testing API = expérience statistique avec mesure d'impact et analyse de résultats. feature-flag-api = simple activation ou désactivation d'une fonctionnalité sans mesure statistique. DIFFÉRENCE vs analytics-api : A/B Testing API = compare deux variantes avec protocole expérimental. analytics-api = analyse descriptive de données existantes sans groupe contrôle. DIFFÉRENCE vs attribution-api : A/B Testing API = protocole expérimental contrôlé avec groupes randomisés ; attribution-api = modélisation de la contribution des canaux marketing aux conversions observées sans randomisation.",
+    "x-cas-usage": "Comment créer une expérience A/B avec groupe contrôle et variante test et définir la métrique à optimiser ? | Comment assigner un utilisateur à une variante de façon déterministe et reproductible ? | Comment enregistrer une conversion pour un utilisateur participant à une expérience en cours ? | Quels sont les résultats statistiques d'une expérience, notamment la p-value, l'uplift et la significativité ? | Comment lister toutes les expériences actives pour piloter les tests en production ?"
+  },
+  "paths": {
+    "/v1/experiments": {
+      "post": {
+        "summary": "Créer une expérience A/B avec ses variantes, hypothèse, allocation de trafic et métrique cible",
+        "operationId": "createExperiment",
+        "tags": ["Experiments"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "variants"],
+                "properties": {
+                  "name": {"type": "string"},
+                  "description": {"type": "string"},
+                  "variants": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {"type": "string"},
+                        "traffic_percent": {"type": "number"}
+                      }
+                    }
+                  },
+                  "hypothesis": {"type": "string"},
+                  "metric_to_optimize": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Expérience créée avec succès"}}
+      },
+      "get": {
+        "summary": "Lister toutes les expériences A/B existantes avec leur statut et configuration",
+        "operationId": "listExperiments",
+        "tags": ["Experiments"],
+        "responses": {"200": {"description": "Liste des expériences"}}
+      }
+    },
+    "/v1/experiments/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Obtenir les détails complets d'une expérience, ses variantes et paramètres d'allocation",
+        "operationId": "getExperiment",
+        "tags": ["Experiments"],
+        "responses": {"200": {"description": "Détails de l'expérience"}}
+      }
+    },
+    "/v1/experiments/{id}/assign": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Assigner un utilisateur à une variante de l'expérience de façon déterministe et reproductible",
+        "operationId": "assignVariant",
+        "tags": ["Experiments"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["user_id"],
+                "properties": {"user_id": {"type": "string"}}
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Variante assignée à l'utilisateur"}}
+      }
+    },
+    "/v1/experiments/{id}/convert": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Enregistrer une conversion pour un utilisateur participant à une expérience avec la métrique et valeur observées",
+        "operationId": "recordConversion",
+        "tags": ["Experiments"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["user_id", "metric", "value"],
+                "properties": {
+                  "user_id": {"type": "string"},
+                  "metric": {"type": "string"},
+                  "value": {"type": "number"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Conversion enregistrée avec succès"}}
+      }
+    },
+    "/v1/experiments/{id}/results": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer les résultats statistiques de l'expérience incluant p-value, uplift et niveau de significativité par variante",
+        "operationId": "getExperimentResults",
+        "tags": ["Experiments"],
+        "responses": {"200": {"description": "Résultats statistiques avec p-value, uplift et significativité par variante"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Exam API",
+    "version": "1.0.0",
+    "x-api-id": "exam-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Cette API orchestre l'ensemble du cycle de vie des examens officiels et des sessions d'évaluation au sein de l'écosystème éducatif. Elle permet de planifier les sessions d'examen, d'affecter les salles et surveillants, de gérant le registre des inscriptions des candidats, et d'administrer la saisie ainsi que la publication officielle des résultats et des notes d'évaluation. Elle garantit l'intégrité, la traçabilité et le suivi administratif du parcours de certification des apprenants.",
+    "x-synonymes": "session d'évaluation, planification d'examen, inscription candidat, registre d'examen, publication des résultats, relevé de notes, surveillance d'examen, suivi académique, grille d'évaluation, épreuve académique, centre d'examen, convocation candidat, certification pédagogique, contrôle des connaissances",
+    "x-false-positive-warning": "Attention : Cette API encadre la structure administrative, organisationnelle et les résultats des sessions d'épreuves et de certifications officielles (Exam). Ne pas la confondre avec la course-management-api (gestion du contenu des cours magistraux) ni avec la assignment-api (suivi des devoirs maison courants).",
+    "x-cas-usage": "Comment planifier et paramétrer une nouvelle épreuve d'examen officiel pour un domaine ou module spécifique ? | Comment inscrire et associer un candidat éligible à une session d'examen planifiée ? | Où consulter la fiche descriptive, la notation et les détails d'organisation logistique d'un examen ? | Quelle est la procédure pour saisir, valider et publier officiellement les relevés de notes des candidats ?"
+  },
+  "paths": {
+    "/v1/exams": {
+      "get": {
+        "summary": "Lister et filtrer le calendrier global des épreuves et examens officiels planifiés ou passés",
+        "operationId": "listExams",
+        "tags": [
+          "Exams"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer, configurer et programmer une nouvelle session d'examen ou une épreuve d'évaluation officielle",
+        "operationId": "createExam",
+        "tags": [
+          "Exams"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/exams/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les paramètres logistiques, les coefficients, la date et les consignes d'un examen spécifique",
+        "operationId": "getExam",
+        "tags": [
+          "Exams"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier l'horaire, la salle, la liste des surveillants ou les critères d'évaluation d'un examen",
+        "operationId": "updateExam",
+        "tags": [
+          "Exams"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/exams/{id}/candidates": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le registre nominatif complet de l'ensemble des candidats officiellement inscrits à l'épreuve",
+        "operationId": "getCandidates",
+        "tags": [
+          "Candidates"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et valider l'inscription d'un candidat ou élève éligible à la session d'examen spécifiée",
+        "operationId": "registerCandidate",
+        "tags": [
+          "Candidates"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/exams/{id}/results": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le tableau des notes, résultats et mentions obtenus par les candidats à l'issue de la correction",
+        "operationId": "getExamResults",
+        "tags": [
+          "Results"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Valider et publier officiellement les relevés de notes et résultats d'examen pour les rendre accessibles aux élèves",
+        "operationId": "publishResults",
+        "tags": [
+          "Results"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

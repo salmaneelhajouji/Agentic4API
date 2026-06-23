@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Event Bus API",
+    "version": "1.0.0",
+    "x-api-id": "event-bus-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Divers",
+    "x-domain": "Cross",
+    "description": "Cette API orchestre le bus d'événements applicatif central (Event Bus) permettant de connecter et de faire communiquer les systèmes d'information de manière asynchrone et découplée. Elle gère la publication sécurisée d'événements métiers, le catalogue des typologies d'événements autorisés, le registre des abonnements des applications réceptrices, ainsi que les mécanismes de rejeu (replay) basés sur des identifiants de corrélation pour garantir la résilience de l'architecture.",
+    "x-synonymes": "bus d'événements, event bus, messagerie asynchrone, publication d'événement, abonnement d'événement, rejeu d'événements, correlation id, architecture orientée événements, EDA, découplage applicatif, flux d'événements métiers, intégration asynchrone, registre d'abonnements, rejeu post-incident",
+    "x-false-positive-warning": "Attention : Cette API administre l'échange d'événements métiers et transactionnels asynchrones entre les applications de l'entreprise (Event Bus). Ne pas la confondre avec la streaming-api (dédiée au traitement de flux de données brutes continus à très haute fréquence type IoT ou logs), ni avec la event-tracking-api axée sur le comportement des utilisateurs web.",
+    "x-cas-usage": "Comment publier un événement métier asynchrone sur le bus central de l'entreprise ? | Où consulter la liste des types d'événements pris en charge et leurs structures ? | Comment inscrire une application à un flux d'événements spécifique via un abonnement ? | Quelle est la procédure pour rejouer une série d'événements spécifiques à l'aide d'un identifiant de corrélation ?"
+  },
+  "paths": {
+    "/v1/events": {
+      "post": {
+        "summary": "Publier et pousser un nouvel événement métier asynchrone sur le bus central d'intégration",
+        "operationId": "publishEvent",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Consulter le référentiel et la liste complète des typologies d'événements supportées par l'architecture",
+        "operationId": "listEventTypes",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/events/subscriptions": {
+      "get": {
+        "summary": "Lister l'ensemble des règles d'abonnements et les applications consommatrices enregistrées sur le bus",
+        "operationId": "listEventSubscriptions",
+        "tags": [
+          "Subscriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Inscrire et abonner un nouveau point de terminaison applicatif pour recevoir un flux d'événements ciblé",
+        "operationId": "createEventSubscription",
+        "tags": [
+          "Subscriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/events/replay/{correlationId}": {
+      "parameters": [
+        {
+          "name": "correlationId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Déclencher le rejeu (replay) ciblé d'une séquence de messages à partir de son identifiant de corrélation technique",
+        "operationId": "replayEvents",
+        "tags": [
+          "Replay"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Patient API",
+    "version": "2.0.0",
+    "x-api-id": "patient-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "x-successor": "patient-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS patient-api-v3] Cette API gérait la version 2 du référentiel patient, introduisant l'arborescence structurée du dossier médical et imposant des identifiants uniques de type UUID. Elle est obsolète ; toutes les intégrations de logiciels métiers doivent basculer vers la version 3 (patient-api-v3) pour s'aligner sur les profils de ressources HL7 FHIR et traiter les alertes cliniques temps réel.",
+    "x-synonymes": "référentiel patient v2, dossier médical structuré ancien, index patient UUID, historique de consultations obsolète, fiche clinique v2",
+    "x-false-positive-warning": "Attention : Cette API intermédiaire v2 est obsolète et gelée. Rediriger impérativement l'ensemble des requêtes logicielles vers la version cible active `patient-api-v3`."
+  },
+  "x-breaking-changes-from-previous": [
+    "Dossier médical structuré",
+    "UUID obligatoire"
+  ],
+  "paths": {
+    "/v2/patients": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS patient-api-v3 - Consulter l'index des fiches patients structurées de l'ancienne version v2",
+        "operationId": "listPatientsV2",
+        "tags": [
+          "Patients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS patient-api-v3 - Créer un dossier structuré dans l'ancien référentiel v2 (opération dépréciée)",
+        "operationId": "createPatientV2",
+        "tags": [
+          "Patients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/patients/{id}/consultations": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS patient-api-v3 - Consulter l'historique des examens et consultations rattachés à l'ancienne fiche v2",
+        "operationId": "getConsultations",
+        "tags": [
+          "Consultations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS patient-api-v3 - Ajouter un compte-rendu de consultation dans l'ancien format d'archive v2",
+        "operationId": "addConsultation",
+        "tags": [
+          "Consultations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

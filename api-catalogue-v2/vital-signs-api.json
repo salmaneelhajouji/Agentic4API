@@ -1,0 +1,111 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Vital Signs API",
+    "version": "1.0.0",
+    "x-api-id": "vital-signs-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Constantes physiologiques temps réel : tension, pouls, température, SpO2. Acquisition et suivi continu des flux physiques. DIFFÉRENCE vs lab-result-api : Vital Signs = mesures continues IoT médical, Lab = analyses biologiques ponctuelles. DIFFÉRENCE vs telemedicine-api : Vital Signs se concentre sur l'acquisition de signaux physiologiques par capteurs connectés, tandis que telemedicine-api gère l'interface de visio-consultation synchrone.",
+    "x-synonymes": "constantes, physiologiques, pouls, tension, température, spo2, rythme cardiaque, capteur médical, iot santé, monitoring, oxygène, alertes médicales, seuil critique, santé, clinique, rythme respiratoire, monitoring patient",
+    "x-false-positive-warning": "Pour les bilans sanguins, analyses d'urine ou examens de laboratoire biologiques, utilisez lab-result-api. Pour la gestion des consultations vidéo, utilisez telemedicine-api.",
+    "x-cas-usage": "je veux lire les dernières constantes vitales d'un patient hospitalisé | je veux consigner une nouvelle mesure de tension ou de pouls | je veux consulter les alertes de dépassement de seuil critique pour un patient | je veux configurer les seuils d'alerte physiologiques d'un malade"
+  },
+  "paths": {
+    "/v1/vitals/{patientId}": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le flux des dernières constantes vitales enregistrées par les capteurs médicaux pour un patient",
+        "operationId": "getVitals",
+        "tags": [
+          "Vitals"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Enregistrer une nouvelle mesure de constante physiologique (pouls, tension, SpO2) dans le dossier de suivi du patient",
+        "operationId": "recordVital",
+        "tags": [
+          "Vitals"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/vitals/{patientId}/alerts": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique des alertes médicales déclenchées suite au dépassement des seuils de tolérance critiques",
+        "operationId": "getVitalAlerts",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Configurer les seuils d'alerte minimaux et maximaux pour le monitoring des constantes d'un patient",
+        "operationId": "setThreshold",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

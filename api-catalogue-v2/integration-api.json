@@ -1,0 +1,146 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Integration API",
+    "version": "1.0.0",
+    "x-api-id": "integration-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Operations",
+    "description": "Cette API gère, configure et supervise le catalogue des connecteurs tiers intégrés à la plateforme de l'entreprise. Elle permet d'établir et de maintenir des passerelles sécurisées vers des systèmes externes complexes (ERP, CRM externes comme Salesforce, places de marché, plateformes de paiement ou de logistique partenaires), d'enregistrer les informations d'authentification associées et de forcer la synchronisation manuelle ou planifiée des flux de données opérationnels.",
+    "x-synonymes": "connecteur externe, intégration tierce, passerelle applicative, synchronisation de flux, hub d'intégration, Salesforce CRM, connecteur ERP, liaison tierce, gestion d'identifiants de connexion, webhook tiers, flux de données externe, synchronisation forcée, statut de passerelle, partenaire externe, transfert d'informations, interconnexion système",
+    "x-false-positive-warning": "Attention : Cette API administre uniquement la configuration, les identifiants et l'état des passerelles techniques vers des applications tierces (Integration). Ne pas la confondre avec la `erp-integration-api` (microservice métier dédié aux écritures comptables SAP/Oracle) ni avec la `event-bus-api` gérant la messagerie asynchrone interne.",
+    "x-cas-usage": "Comment activer et configurer un nouveau connecteur sécurisé vers Salesforce ? | Où vérifier le statut opérationnel d'une intégration tierce ? | Comment forcer manuellement une synchronisation immédiate des données clients depuis une marketplace partenaire ? | Quelle méthode appeler pour révoquer et déconnecter une passerelle applicative ?"
+  },
+  "paths": {
+    "/v1/integrations": {
+      "get": {
+        "summary": "Lister et parcourir l'ensemble des connecteurs tiers et intégrations applicatives disponibles sur la plateforme",
+        "operationId": "listIntegrations",
+        "tags": [
+          "Integrations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Intégrations"
+          }
+        }
+      }
+    },
+    "/v1/integrations/{name}/connect": {
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "salesforce"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Configurer les identifiants d'authentification et activer la connexion vers un système tiers spécifique",
+        "operationId": "connectIntegration",
+        "tags": [
+          "Integrations"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "credentials": {
+                    "type": "object"
+                  },
+                  "config": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Connectée"
+          }
+        }
+      }
+    },
+    "/v1/integrations/{name}/disconnect": {
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Révoquer les accès et déconnecter définitivement une intégration applicative tierce",
+        "operationId": "disconnectIntegration",
+        "tags": [
+          "Integrations"
+        ],
+        "responses": {
+          "204": {
+            "description": "Déconnectée"
+          }
+        }
+      }
+    },
+    "/v1/integrations/{name}/sync": {
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Déclencher immédiatement une tâche de synchronisation forcée des données avec la plateforme tierce sélectionnée",
+        "operationId": "syncIntegration",
+        "tags": [
+          "Integrations"
+        ],
+        "responses": {
+          "202": {
+            "description": "Sync lancée"
+          }
+        }
+      }
+    },
+    "/v1/integrations/{name}/status": {
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état de santé, le statut de connexion et la date de dernière synchronisation d'un connecteur",
+        "operationId": "getIntegrationStatus",
+        "tags": [
+          "Integrations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Statut"
+          }
+        }
+      }
+    }
+  }
+}

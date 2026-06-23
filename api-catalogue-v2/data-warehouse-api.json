@@ -1,0 +1,106 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Warehouse API",
+    "version": "1.0.0",
+    "x-api-id": "data-warehouse-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API expose l'interface d'accès, d'administration et de requêtage de l'entrepôt de données structurées (Data Warehouse) dédié à la Business Intelligence (BI). Elle permet de lister et de structurer les schémas logiques, de gérer le catalogue des tables relationnelles et des vues analytiques, et d'exécuter des requêtes SQL complexes pour l'extraction d'indicateurs de performance clés (KPIs). Elle offre également un suivi historique des requêtes exécutées pour optimiser les performances des cubes décisionnels et est exploitée par les Data Engineers, analystes BI et outils de dataviz (Tableau, PowerBI).",
+    "x-synonymes": "entrepôt de données, data warehouse, requêtage SQL, schéma de base de données, table relationnelle, vue analytique, business intelligence, décisionnel, cube OLAP, historique de requêtes, extraction de KPI, modélisation en étoile, table de faits, table de dimensions, data mart, optimisation SQL, requêtage BI, stockage structuré",
+    "x-false-positive-warning": "Attention : Cette API manipule exclusivement des données hautement structurées, nettoyées, agrégées et modélisées pour l'analyse décisionnelle (Data Warehouse). Ne pas la confondre avec la `data-lake-api` (dédiée au stockage brut, aux fichiers non structurés et aux zones d'atterrissage d'ingestion type blobs).",
+    "x-cas-usage": "Comment exécuter une requête SQL analytique complexe pour extraire le chiffre d'affaires consolidé par région ? | Quelles sont les tables et vues disponibles sous le schéma comptable de l'entrepôt décisionnel ? | Comment créer une nouvelle table de faits pour stocker les métriques d'audience mensuelles ? | Où consulter l'historique des requêtes SQL exécutées pour identifier les requêtes lentes à optimiser ?"
+  },
+  "paths": {
+    "/v1/warehouse/schemas": {
+      "get": {
+        "summary": "Lister l'ensemble des schémas logiques et structures organisationnelles configurés dans l'entrepôt décisionnel",
+        "operationId": "listSchemas",
+        "tags": [
+          "Schemas"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un nouveau schéma logique pour organiser des tables ou des structures de données décisionnelles",
+        "operationId": "createSchema",
+        "tags": [
+          "Schemas"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/warehouse/tables/{schema}": {
+      "parameters": [
+        {
+          "name": "schema",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister l'intégralité des tables relationnelles et des vues analytiques rattachées à un schéma spécifique",
+        "operationId": "listTables",
+        "tags": [
+          "Tables"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer une nouvelle table relationnelle ou une structure de stockage structurée dans le schéma spécifié",
+        "operationId": "createTable",
+        "tags": [
+          "Tables"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/warehouse/query": {
+      "post": {
+        "summary": "Soumettre et exécuter une requête SQL analytique complexe sur l'entrepôt de données pour extraire des indicateurs BI",
+        "operationId": "executeQuery",
+        "tags": [
+          "Query"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Consulter l'historique et le journal d'exécution des requêtes SQL pour auditer l'utilisation et les performances",
+        "operationId": "getQueryHistory",
+        "tags": [
+          "Query"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

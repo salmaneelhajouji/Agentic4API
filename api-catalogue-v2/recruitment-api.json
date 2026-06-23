@@ -1,0 +1,59 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Recruitment API",
+    "version": "1.0.0",
+    "x-api-id": "recruitment-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe RH",
+    "x-domain": "Human Resources",
+    "description": "Gestion du recrutement et des candidatures. Permet de publier des offres d emploi CDI/CDD/Stage/Freelance, de recevoir des candidatures, de consulter les candidats par offre et de faire avancer les candidats dans le pipeline de sélection. Utilisé par les équipes RH et managers pour digitaliser le processus de recrutement.",
+    "x-synonymes": "offre emploi, annonce recrutement, candidature emploi, postuler offre, candidat recrutement, pipeline recrutement, ATS applicant tracking, entretien recrutement, offre CDI CDD stage, processus sélection, recrutement RH, job board interne, CV candidat, lettre motivation, statut candidature, embauche recrutement, publication offre, filtre candidats, scoring candidat, onboarding recrutement",
+    "x-false-positive-warning": "Gestion du parcours d intégration après embauche → onboarding-api. Évaluation performance employé → performance-api. Gestion paie → payroll-api. Annuaire collaborateurs → employee-api.",
+    "x-cas-usage": "je veux publier une offre de développeur senior en CDI | je veux voir tous les candidats ayant postulé à notre offre de commercial | je veux faire passer un candidat en statut entretien | je veux lister toutes nos offres d emploi ouvertes par département | je veux enregistrer la candidature d un candidat avec son CV"
+  },
+  "paths": {
+    "/v1/jobs": {
+      "post": {
+        "summary": "Publier une offre d emploi — CDI, CDD, Stage ou Freelance avec compétences requises",
+        "operationId": "createJob",
+        "tags": ["Jobs"],
+        "responses": {"201": {"description": "Offre publiée"}}
+      },
+      "get": {
+        "summary": "Lister les offres d emploi — filtre par statut ouvert/fermé et département",
+        "operationId": "listJobs",
+        "tags": ["Jobs"],
+        "responses": {"200": {"description": "Offres d emploi"}}
+      }
+    },
+    "/v1/jobs/{id}/apply": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Soumettre une candidature — nom, email, CV et lettre de motivation",
+        "operationId": "applyJob",
+        "tags": ["Applications"],
+        "responses": {"201": {"description": "Candidature reçue"}}
+      }
+    },
+    "/v1/jobs/{id}/candidates": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Lister les candidats d une offre — avec statuts et notes",
+        "operationId": "getCandidates",
+        "tags": ["Applications"],
+        "responses": {"200": {"description": "Candidats"}}
+      }
+    },
+    "/v1/candidates/{id}/status": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Mettre à jour le statut d un candidat — nouveau, examiné, entretien, offre, embauché ou rejeté",
+        "operationId": "updateCandidateStatus",
+        "tags": ["Applications"],
+        "responses": {"200": {"description": "Statut mis à jour"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Training API",
+    "version": "1.0.0",
+    "x-api-id": "training-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe RH",
+    "x-domain": "Human Resources",
+    "description": "Gestion de la formation professionnelle des employés. Catalogue des formations disponibles (obligatoires ou facultatives par catégorie), inscription d'un employé à une formation, consultation des formations complétées par employé, et gestion du référentiel de compétences avec niveaux de maîtrise. DIFFÉRENCE vs course-api : Training gère les formations professionnelles RH avec suivi des compétences employés, Course gère les contenus pédagogiques en ligne (e-learning). DIFFÉRENCE vs student-api-v2 : Training est pour les employés dans un contexte RH, Student est pour les apprenants en formation initiale.",
+    "x-synonymes": "formation professionnelle, catalogue formation, inscription formation, compétences employé, formation obligatoire, plan formation, CPF formation, OPCO, bilan compétences, formation continue, suivi compétences, skillset employé, formation RH, montée compétences, habilitation formation",
+    "x-false-positive-warning": "Contenus e-learning en ligne → course-api. Formation initiale étudiants → student-api-v2. Tutorat individuel → tutor-api.",
+    "x-cas-usage": "je veux voir le catalogue des formations disponibles pour mon équipe | je veux inscrire un employé à une formation obligatoire | je veux consulter toutes les formations complétées par un employé | je veux mettre à jour le niveau de compétence d'un employé après formation | je veux voir quelles formations sont obligatoires pour un poste"
+  },
+  "paths": {
+    "/v1/trainings": {
+      "get": {
+        "summary": "Consulter le catalogue des formations disponibles avec filtres sur catégorie, caractère obligatoire et population cible",
+        "operationId": "listTrainings",
+        "tags": ["Trainings"],
+        "parameters": [
+          { "name": "category", "in": "query", "schema": { "type": "string" } },
+          { "name": "mandatory", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "available_for", "in": "query", "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Catalogue des formations" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/trainings/{id}/enroll": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "post": {
+        "summary": "Inscrire un employé à une formation avec date de session préférée",
+        "operationId": "enrollTraining",
+        "tags": ["Trainings"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["employee_id"],
+                "properties": {
+                  "employee_id": { "type": "string" },
+                  "preferred_date": { "type": "string", "format": "date" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Inscription confirmée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/trainings/{employeeId}/completed": {
+      "parameters": [
+        { "name": "employeeId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lister les formations complétées par un employé avec dates et évaluations",
+        "operationId": "getCompletedTrainings",
+        "tags": ["Trainings"],
+        "responses": { "200": { "description": "Formations complétées" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/skills/{employeeId}": {
+      "parameters": [
+        { "name": "employeeId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le référentiel de compétences validées d'un employé avec niveaux de maîtrise",
+        "operationId": "getSkills",
+        "tags": ["Skills"],
+        "responses": { "200": { "description": "Compétences employé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Mettre à jour les compétences d'un employé après formation (beginner, intermediate, advanced, expert)",
+        "operationId": "updateSkills",
+        "tags": ["Skills"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "skills": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": { "type": "string" },
+                        "level": { "type": "string", "enum": ["beginner", "intermediate", "advanced", "expert"] }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Compétences mises à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

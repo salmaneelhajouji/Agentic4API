@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Learning Path API",
+    "version": "1.0.0",
+    "x-api-id": "learning-path-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Parcours d apprentissage personnalisés avec recommandations IA et progression adaptative. Permet de créer des parcours pédagogiques séquentiels, de recommander des parcours adaptés au profil d un apprenant, et de suivre sa progression en temps réel. Utilisé par les plateformes e-learning, LMS et applications de formation professionnelle.",
+    "x-synonymes": "parcours apprentissage, parcours formation, learning path, cursus formation, programme formation, recommandation formation IA, progression apprenant, formation personnalisée, LMS parcours, chemin apprentissage, adaptive learning, parcours pédagogique, séquence formation, module formation, formation continue parcours, upskilling parcours, reskilling parcours, parcours e-learning, formation sur mesure, compétences parcours",
+    "x-false-positive-warning": "DIFFÉRENCE vs course-api-v3 : Learning Path API = séquence ordonnée de plusieurs cours. course-api-v3 = un cours individuel avec contenu et évaluations. DIFFÉRENCE vs certification-api : Learning Path API = parcours en cours menant à une certification. certification-api = émission du certificat à la fin. DIFFÉRENCE vs career-guidance-api : Learning Path API = parcours de formation concrets. career-guidance-api = orientation vers des métiers.",
+    "x-cas-usage": "je veux créer un parcours de formation data scientist en 6 modules | je veux recommander un parcours adapté au profil et aux objectifs d un apprenant | je veux voir la progression d un étudiant dans son parcours de formation | je veux modifier l ordre des modules dans un parcours existant | je veux intégrer des parcours personnalisés dans notre LMS d entreprise"
+  },
+  "paths": {
+    "/v1/learning-paths": {
+      "get": {
+        "summary": "Lister les parcours d apprentissage disponibles — filtre par domaine et niveau",
+        "operationId": "listLearningPaths",
+        "tags": ["Paths"],
+        "responses": {"200": {"description": "Parcours disponibles"}}
+      },
+      "post": {
+        "summary": "Créer un parcours d apprentissage — séquence ordonnée de modules et cours",
+        "operationId": "createLearningPath",
+        "tags": ["Paths"],
+        "responses": {"200": {"description": "Parcours créé"}}
+      }
+    },
+    "/v1/learning-paths/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un parcours — modules, durée estimée et prérequis",
+        "operationId": "getLearningPath",
+        "tags": ["Paths"],
+        "responses": {"200": {"description": "Détail parcours"}}
+      },
+      "put": {
+        "summary": "Modifier un parcours — ordre des modules, durée et contenu",
+        "operationId": "updateLearningPath",
+        "tags": ["Paths"],
+        "responses": {"200": {"description": "Parcours modifié"}}
+      }
+    },
+    "/v1/learning-paths/recommend/{studentId}": {
+      "parameters": [{"name": "studentId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Parcours recommandés par IA selon le profil et les objectifs de l apprenant",
+        "operationId": "getRecommendedPaths",
+        "tags": ["Recommend"],
+        "responses": {"200": {"description": "Parcours recommandés"}}
+      }
+    },
+    "/v1/learning-paths/{id}/progress/{studentId}": {
+      "parameters": [
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}},
+        {"name": "studentId", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Progression d un apprenant dans un parcours — modules complétés et score",
+        "operationId": "getLearningProgress",
+        "tags": ["Progress"],
+        "responses": {"200": {"description": "Progression dans le parcours"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Load Planning API",
+    "version": "1.0.0",
+    "x-api-id": "load-planning-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Cette API pilote et optimise l'ordonnancement géométrique tridimensionnel (3D) du chargement des marchandises au sein des véhicules de transport (camions, conteneurs, remorques). Elle s'appuie sur des algorithmes de recherche opérationnelle pour maximiser l'utilisation de l'espace volumétrique disponible, équilibrer le centre de gravité, respecter les contraintes réglementaires de poids maximum autorisé par essieu, et prendre en compte les règles d'incompatibilité de matières ou l'ordre séquentiel des étapes de livraison.",
+    "x-synonymes": "plan de chargement, load planning, optimisation volumétrique, répartition spatiale 3D, poids par essieu, centre de gravité cargaison, chargement de camion, remplissage de conteneur, ordonnancement de fret, incompatibilité de matières, colisage lourd, recherche opérationnelle transport, capacité d'emport",
+    "x-false-positive-warning": "Attention : Cette API calcule les contraintes géométriques de placement physique et l'équilibre des masses au sein d'un contenant unique (Load Planning). Ne pas la confondre avec la `dispatch-api` (chargée d'affecter les tournées globales et d'allouer les couples conducteurs/camions aux missions de fret).",
+    "x-cas-usage": "Comment concevoir un plan de chargement optimal en 3D pour remplir un conteneur maritime de colis hétérogènes ? | Comment lancer l'algorithme d'optimisation pour agencer la cargaison en fonction de l'ordre inverse de la tournée de livraison ? | Où consulter le plan d'essieu et le poids théorique calculés pour s'assurer de la conformité réglementaire avant le départ ?"
+  },
+  "paths": {
+    "/v1/loads": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des plans de chargement tridimensionnels déjà configurés ou en cours d'étude",
+        "operationId": "listLoads",
+        "tags": [
+          "Loads"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et initialiser un nouveau dossier de plan de chargement pour un véhicule ou une expédition spécifique",
+        "operationId": "createLoadPlan",
+        "tags": [
+          "Loads"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/loads/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le schéma d'agencement, les calculs de répartition des masses et les contraintes géométriques d'un plan de charge",
+        "operationId": "getLoadPlan",
+        "tags": [
+          "Loads"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier manuellement la disposition des palettes, ajuster le poids ou amender les contraintes du plan de chargement",
+        "operationId": "updateLoadPlan",
+        "tags": [
+          "Loads"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/loads/optimize": {
+      "post": {
+        "summary": "Déclencher l'algorithme de recherche opérationnelle pour calculer instantanément l'agencement optimal en volume et en poids",
+        "operationId": "optimizeLoad",
+        "tags": [
+          "Optimize"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Building Permit API",
+    "version": "1.0.0",
+    "x-api-id": "building-permit-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "API de gestion des permis de construire et autorisations d'urbanisme, couvrant l'ensemble du cycle administratif : dépôt de dossier, instruction par les services municipaux, ajout de pièces justificatives, suivi de statut et gestion des recours. Destinée aux promoteurs immobiliers, architectes, maîtres d'ouvrage et collectivités territoriales souhaitant dématérialiser et automatiser leurs démarches d'urbanisme. Permet de suivre en temps réel l'avancement de l'instruction, de gérer simultanément plusieurs dossiers de permis et d'intégrer les processus de conformité réglementaire. DIFFÉRENCE vs property-api : Building Permit API = démarches administratives d'autorisation de construire ; property-api = gestion des données cadastrales et des biens immobiliers. DIFFÉRENCE vs construction-api : Building Permit API = autorisation légale préalable aux travaux ; construction-api = suivi du chantier et avancement des travaux après autorisation. DIFFÉRENCE vs compliance-api : Building Permit API = conformité urbanistique spécifique au permis de construire ; compliance-api = conformité réglementaire générale multi-domaines.",
+    "x-synonymes": "permis de construire, autorisation d'urbanisme, dépôt de permis, instruction permis, déclaration préalable travaux, permis de démolir, certificat d'urbanisme, plan local d'urbanisme, dossier permis, pièces justificatives permis, mairie permis, recours permis, affichage permis, purge des recours tiers, extension maison permis, surélévation permis, changement de destination, conformité urbanisme, PLU, autorisation de construire",
+    "x-false-positive-warning": "DIFFÉRENCE vs property-api : Building Permit API = démarches administratives d'autorisation de construire ; property-api = gestion des données cadastrales et des biens immobiliers, sans lien avec les autorisations de travaux. DIFFÉRENCE vs construction-api : Building Permit API = autorisation légale préalable aux travaux (phase administrative) ; construction-api = suivi du chantier et avancement des travaux après obtention de l'autorisation. DIFFÉRENCE vs compliance-api : Building Permit API = conformité urbanistique spécifique au permis de construire et aux règles PLU ; compliance-api = conformité réglementaire générale multi-domaines sans notion de permis. DIFFÉRENCE vs document-api : Building Permit API gère les pièces justificatives dans le contexte strict d'un dossier de permis ; document-api est un gestionnaire documentaire générique sans logique métier urbanisme.",
+    "x-cas-usage": "Comment déposer une demande de permis de construire pour un nouveau programme immobilier ? | Comment suivre l'état d'instruction d'une demande de permis en cours ? | Comment ajouter le plan de masse, les photos et les notices au dossier de permis ? | Quels documents justificatifs sont requis pour compléter un dossier de permis de construire ? | Comment gérer et suivre plusieurs permis de construire simultanément pour différents chantiers ?"
+  },
+  "paths": {
+    "/v1/permits": {
+      "get": {
+        "summary": "Lister les permis de construire avec leur statut d'instruction, dates limites de réponse et résultats administratifs",
+        "operationId": "listPermits",
+        "tags": ["Permits"],
+        "responses": {
+          "200": {"description": "Liste des permis"}
+        }
+      },
+      "post": {
+        "summary": "Déposer une nouvelle demande de permis de construire ou déclaration préalable de travaux auprès des services municipaux",
+        "operationId": "applyPermit",
+        "tags": ["Permits"],
+        "responses": {
+          "200": {"description": "Demande déposée"}
+        }
+      }
+    },
+    "/v1/permits/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter le statut détaillé d'instruction d'un permis — en cours, accordé, refusé, tacite ou en recours",
+        "operationId": "getPermitStatus",
+        "tags": ["Permits"],
+        "responses": {
+          "200": {"description": "Statut du permis"}
+        }
+      },
+      "put": {
+        "summary": "Modifier ou compléter une demande de permis en cours d'instruction suite à une demande de pièces complémentaires",
+        "operationId": "updatePermit",
+        "tags": ["Permits"],
+        "responses": {
+          "200": {"description": "Permis modifié"}
+        }
+      }
+    },
+    "/v1/permits/{id}/documents": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter la liste des pièces justificatives d'un dossier permis — plans architecturaux, photos du site et notices descriptives",
+        "operationId": "getPermitDocuments",
+        "tags": ["Documents"],
+        "responses": {
+          "200": {"description": "Documents du dossier"}
+        }
+      },
+      "post": {
+        "summary": "Ajouter une pièce justificative au dossier permis — plan de masse, coupe, façades, photo ou notice explicative",
+        "operationId": "addDocument",
+        "tags": ["Documents"],
+        "responses": {
+          "200": {"description": "Document ajouté"}
+        }
+      }
+    }
+  }
+}

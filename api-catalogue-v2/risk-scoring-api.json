@@ -1,0 +1,85 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Risk Scoring API",
+    "version": "1.0.0",
+    "x-api-id": "risk-scoring-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Scoring risque assurance. Calcul d'indicateurs de sinistralité via modèles actuariels et ML. DIFFERENCE vs credit-scoring-api : Risk Scoring = risque assurable (santé, auto, habitation), Credit Scoring = risque crédit bancaire. DIFFÉRENCE vs risk-management-api : Risk Scoring quantifie le profil d'un assuré, tandis que Risk Management suit la sécurité et les menaces logicielles/SI.",
+    "x-synonymes": "assurance, actuariat, score, sinistre, prime, tarification, machine learning, souscription, profil, risque client, sinistralité, bonus malus, prévoyance, habitation, automobile, santé, prédiction, profilage",
+    "x-false-positive-warning": "Risque crédit ou calcul de solvabilité de prêt bancaire -> utiliser credit-scoring-api. Risques liés à la sécurité informatique -> utiliser risk-management-api.",
+    "x-cas-usage": "je veux calculer le score de risque pour un nouveau contrat auto | je veux obtenir le profil de risque actuariel d'un client assurance | je veux voir la liste des modèles prédictifs disponibles pour la tarification | je veux évaluer la probabilité de sinistre d'un prospect"
+  },
+  "paths": {
+    "/v1/risk/score": {
+      "post": {
+        "summary": "Calculer le score de risque assurantiel via des modèles actuariels ou algorithmes ML",
+        "operationId": "scoreRisk",
+        "tags": [
+          "Risk"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/risk/{clientId}": {
+      "parameters": [
+        {
+          "name": "clientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique et le score de risque calculé pour un client spécifique",
+        "operationId": "getClientRisk",
+        "tags": [
+          "Risk"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/risk/models": {
+      "get": {
+        "summary": "Lister les modèles d'évaluation, versions mathématiques et algorithmes de scoring actifs",
+        "operationId": "listRiskModels",
+        "tags": [
+          "Models"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

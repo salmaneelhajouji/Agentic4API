@@ -1,0 +1,85 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Smart Meter API",
+    "version": "2.0.0",
+    "x-api-id": "smart-meter-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Gestion des compteurs intelligents multi-fluides (électricité, gaz, eau). Enregistrement de compteurs, relevé de consommation en temps réel, historique de consommation sur période, et configuration d'alertes sur seuil de consommation (détection de fuite, surconsommation). DIFFÉRENCE vs water-meter-api : Smart Meter couvre tous les fluides (électricité, gaz, eau) en multi-fluide, Water Meter est spécialisé eau uniquement. DIFFÉRENCE vs sensor-data-api-v2 : Smart Meter gère les compteurs de consommation d'énergie réglementés, Sensor Data collecte les données brutes de capteurs IoT génériques.",
+    "x-synonymes": "compteur intelligent, Linky, télé-relève, consommation électricité, consommation gaz, consommation eau, relevé compteur, historique consommation, alerte consommation, seuil fuite, multi-fluides, smart meter, compteur connecté, index compteur, courbe de charge",
+    "x-false-positive-warning": "Compteur eau uniquement → water-meter-api. Capteurs IoT génériques → sensor-data-api-v2. Facturation énergie → energy-billing-api.",
+    "x-cas-usage": "je veux lire la consommation en temps réel d'un compteur électrique | je veux enregistrer un nouveau compteur intelligent dans le parc | je veux consulter l'historique de consommation sur le dernier mois | je veux configurer une alerte si la consommation dépasse un seuil | je veux détecter une fuite d'eau via une alerte de surconsommation",
+    "x-breaking-changes-from-previous": [
+      "Releve temps reel",
+      "Multi-fluides",
+      "Alertes seuils"
+    ]
+  },
+  "paths": {
+    "/v2/meters": {
+      "get": {
+        "summary": "Lister tous les compteurs intelligents du parc avec type de fluide, identifiant et statut de communication",
+        "operationId": "listMetersV2",
+        "tags": ["Meters"],
+        "responses": { "200": { "description": "Compteurs" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Enregistrer un nouveau compteur intelligent (électricité, gaz ou eau) dans le parc",
+        "operationId": "registerMeter",
+        "tags": ["Meters"],
+        "responses": { "200": { "description": "Compteur enregistré" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/meters/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lire le relevé de consommation en temps réel d'un compteur (index, puissance instantanée, horodatage)",
+        "operationId": "getReading",
+        "tags": ["Meters"],
+        "responses": { "200": { "description": "Relevé temps réel" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/meters/{id}/history": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter l'historique de consommation d'un compteur sur une période avec granularité configurable",
+        "operationId": "getMeterHistory",
+        "tags": ["History"],
+        "responses": { "200": { "description": "Historique consommation" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/meters/{id}/alerts": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lister les alertes de seuil actives pour un compteur (surconsommation, fuite détectée)",
+        "operationId": "getMeterAlerts",
+        "tags": ["Alerts"],
+        "responses": { "200": { "description": "Alertes compteur" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Configurer un seuil d'alerte de consommation (déclenchement si dépassement détecté)",
+        "operationId": "setThreshold",
+        "tags": ["Alerts"],
+        "responses": { "200": { "description": "Seuil configuré" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

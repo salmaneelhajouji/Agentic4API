@@ -1,0 +1,82 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Investment API",
+    "version": "1.0.0",
+    "x-api-id": "investment-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Cette API pilote le catalogue des instruments financiers de placement (OPCVM, actions, ETF, obligations) et l'orchestration de la passation d'ordres de bourse pour le domaine bancaire. Elle permet aux clients et conseillers financiers de parcourir les produits d'investissement disponibles, de consulter les ordres de marché en cours d'exécution, et de soumettre de nouveaux ordres d'achat ou de vente de titres de manière sécurisée.",
+    "x-synonymes": "placement financier, passation d'ordre, ordre de bourse, OPCVM, fonds d'investissement, ETF, obligation, action boursière, catalogue de produits financiers, ordre d'achat, ordre de vente, marché financier, investissement bancaire, courtage, titres vifs, ordre de marché",
+    "x-false-positive-warning": "Attention : Cette API gère la consultation du catalogue de produits financiers et la soumission d'ordres d'achat ou de vente sur les marchés (Investment). Ne pas la confondre avec la `portfolio-api` (dédiée exclusivement à l'analyse de performance, à la valorisation et à la répartition d'un portefeuille d'actifs déjà existant).",
+    "x-cas-usage": "Comment consulter la liste des fonds d'investissement (OPCVM, ETF) disponibles à la souscription ? | Comment passer et valider un ordre d'achat ou de vente d'actions sur les marchés boursiers ? | Où suivre le statut d'exécution de mes ordres de bourse actuellement en cours ?"
+  },
+  "paths": {
+    "/v1/investments/{clientId}": {
+      "parameters": [
+        {
+          "name": "clientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la situation globale, la valorisation et les actifs financiers composant le portefeuille d'un client",
+        "operationId": "getPortfolio",
+        "tags": [
+          "Investments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/investments/products": {
+      "get": {
+        "summary": "Parcourir le catalogue complet des produits de placement, OPCVM, obligations et ETF éligibles à l'investissement",
+        "operationId": "listInvestmentProducts",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/investments/orders": {
+      "get": {
+        "summary": "Lister et suivre l'état d'exécution des ordres de bourse (achat/vente) actuellement en cours sur les marchés",
+        "operationId": "listOrders",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Soumettre et exécuter un nouvel ordre d'achat ou de vente d'instruments financiers sur les marchés de bourse",
+        "operationId": "placeOrder",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

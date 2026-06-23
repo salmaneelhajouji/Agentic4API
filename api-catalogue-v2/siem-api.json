@@ -1,0 +1,78 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SIEM API",
+    "version": "1.0.0",
+    "x-api-id": "siem-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Security Information and Event Management — collecte, normalisation, corrélation et alerting des événements de sécurité. Ingestion d'événements de sources multiples (firewalls, AD, endpoints), gestion des règles de corrélation pour la détection de patterns d'attaque, génération et résolution d'alertes, et tableau de bord de sécurité en temps réel. DIFFÉRENCE vs soc-api : SIEM est le moteur automatique de collecte et corrélation d'événements bruts, SOC gère le travail humain des analystes (tickets, affectations, escalades) en réponse aux alertes SIEM. DIFFÉRENCE vs security-incident-api-v2 : SIEM détecte et alerte en amont, Security Incident gère le cycle de vie des incidents confirmés.",
+    "x-synonymes": "SIEM, collecte logs, corrélation événements, alerte sécurité, ingestion événements, règle détection, tableau bord sécurité, logs sécurité, normalisation logs, détection menaces, SOC SIEM, analyse sécurité, threat detection, security analytics, event correlation",
+    "x-false-positive-warning": "Gestion des tickets et analystes SOC → soc-api. Incidents de sécurité confirmés → security-incident-api-v2. Failles et CVE → vulnerability-api.",
+    "x-cas-usage": "je veux ingérer des événements de sécurité depuis mes firewalls et serveurs | je veux créer une règle de corrélation pour détecter des tentatives de brute force | je veux voir toutes les alertes SIEM actives non résolues | je veux résoudre une alerte SIEM après investigation | je veux consulter le tableau de bord de sécurité temps réel"
+  },
+  "paths": {
+    "/v1/siem/events": {
+      "get": {
+        "summary": "Consulter les événements de sécurité collectés avec filtres sur source, sévérité et période",
+        "operationId": "listSecurityEvents",
+        "tags": ["Events"],
+        "responses": { "200": { "description": "Événements sécurité" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Ingérer un événement de sécurité depuis une source externe (firewall, EDR, AD, application)",
+        "operationId": "ingestEvent",
+        "tags": ["Events"],
+        "responses": { "200": { "description": "Événement ingéré" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/siem/rules": {
+      "get": {
+        "summary": "Lister les règles de corrélation actives avec leur logique de détection et sévérité associée",
+        "operationId": "listCorrelationRules",
+        "tags": ["Rules"],
+        "responses": { "200": { "description": "Règles de corrélation" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Créer une nouvelle règle de corrélation pour détecter un pattern d'attaque ou comportement suspect",
+        "operationId": "addCorrelationRule",
+        "tags": ["Rules"],
+        "responses": { "200": { "description": "Règle ajoutée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/siem/alerts": {
+      "get": {
+        "summary": "Lister les alertes SIEM générées par corrélation avec sévérité, source et statut de traitement",
+        "operationId": "getSIEMAlerts",
+        "tags": ["Alerts"],
+        "responses": { "200": { "description": "Alertes SIEM" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Résoudre et clôturer une alerte SIEM après investigation (faux positif ou incident traité)",
+        "operationId": "resolveSIEMAlert",
+        "tags": ["Alerts"],
+        "responses": { "200": { "description": "Alerte résolue" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/siem/dashboards": {
+      "get": {
+        "summary": "Afficher le tableau de bord de sécurité temps réel (événements/heure, alertes actives, top sources)",
+        "operationId": "getSecurityDashboard",
+        "tags": ["Dashboards"],
+        "responses": { "200": { "description": "Dashboard sécurité" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

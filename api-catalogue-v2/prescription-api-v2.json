@@ -1,0 +1,144 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Prescription API",
+    "version": "2.0.0",
+    "x-api-id": "prescription-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Cette API pilote le cycle de vie légal et sécurisé des ordonnances médicales électroniques (e-prescriptions) au sein du système d'information de santé (v2). Elle permet aux médecins certifiés de rédiger et de valider des ordonnances protégées par signature numérique, d'organiser la transmission dématérialisée cryptée vers les pharmacies, de suivre l'historique des renouvellements de traitements et d'enregistrer la délivrance effective (dispensation) des médicaments en officine.",
+    "x-synonymes": "ordonnance électronique, e-prescription, prescription médicale sécurisée, signature numérique médecin, dispensation en pharmacie, renouvellement d'ordonnance, délivrance de médicaments, traitement thérapeutique, document légal de santé, ordonnance dématérialisée, posologie ordonnance",
+    "x-false-positive-warning": "Attention : Cette API crée, signe numériquement et administre le document légal d'ordonnance indispensable à la délivrance de médicaments (Prescription). Ne pas la confondre avec la `drug-interaction-api` (qui réalise les analyses scientifiques préalables de compatibilité moléculaire ou de contre-indications physiologiques sans valeur juridique d'ordonnance).",
+    "x-cas-usage": "Comment rédiger et apposer une signature numérique certifiée sur une ordonnance électronique ? | Comment une officine de pharmacie peut-elle marquer une e-prescription comme dispensée pour bloquer un double usage ? | Comment prolonger et autoriser le renouvellement périodique d'un traitement thérapeutique de fond ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "Signature numérique",
+    "Envoi pharmacie automatique"
+  ],
+  "paths": {
+    "/v2/prescriptions": {
+      "get": {
+        "summary": "Lister, trier et auditer l'ensemble des ordonnances électroniques actives, renouvelées ou clôturées du patient",
+        "operationId": "listPrescV2",
+        "tags": [
+          "Prescriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et générer une nouvelle ordonnance médicale électronique sécurisée prête pour la signature du praticien",
+        "operationId": "createPrescV2",
+        "tags": [
+          "Prescriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/prescriptions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le détail exhaustif, les posologies, la durée de traitement et la validité d'une e-prescription spécifique",
+        "operationId": "getPrescV2",
+        "tags": [
+          "Prescriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier les lignes de traitements ou réajuster les posologies d'un projet d'ordonnance électronique non encore signé",
+        "operationId": "updatePrescV2",
+        "tags": [
+          "Prescriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Annuler ou révoquer une ordonnance médicale active pour empêcher toute nouvelle dispensation en pharmacie",
+        "operationId": "cancelPrescV2",
+        "tags": [
+          "Prescriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/prescriptions/{id}/dispense": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Enregistrer la délivrance formelle des médicaments en officine et marquer l'ordonnance dématérialisée comme dispensée",
+        "operationId": "dispensePrescV2",
+        "tags": [
+          "Dispense"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/prescriptions/{id}/renew": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Enregistrer et prolonger la durée de validité d'un traitement par procédure de renouvellement d'ordonnance",
+        "operationId": "renewPrescV2",
+        "tags": [
+          "Renew"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

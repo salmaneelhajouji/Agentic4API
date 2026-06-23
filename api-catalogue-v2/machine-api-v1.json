@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Machine API",
+    "version": "1.0.0",
+    "x-api-id": "machine-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "DEPRECATED — NE PAS UTILISER. Version 1 sans programmes CNC ni calcul OEE. Migrer vers machine-api-v2 qui intègre les programmes CNC, le calcul OEE/TRS et les alertes automatiques.",
+    "x-successor": "machine-api-v2",
+    "x-synonymes": "machine industrielle v1 deprecated, équipement usine legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser machine-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers machine-api-v2."
+  },
+  "paths": {
+    "/v1/machines": {
+      "get": {
+        "summary": "DEPRECATED — Lister les machines industrielles",
+        "operationId": "listMachinesV1",
+        "tags": ["Machines"],
+        "responses": {"200": {"description": "Machines"}}
+      }
+    }
+  }
+}

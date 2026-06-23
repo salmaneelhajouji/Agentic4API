@@ -1,0 +1,51 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Portfolio API",
+    "version": "1.0.0",
+    "x-api-id": "portfolio-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Gestion et analyse du portefeuille d actifs financiers. Permet de consulter la valorisation d un portefeuille, de mesurer sa performance (TRI, rendement), et de lancer un rééquilibrage pour réaligner l allocation aux cibles. DIFFÉRENCE vs investment-api : Portfolio API = analyse et suivi du portefeuille existant. investment-api = passation d ordres d achat et vente.",
+    "x-synonymes": "portefeuille actifs, valorisation portefeuille, performance investissement, TRI taux rendement interne, rendement portefeuille, rééquilibrage portefeuille, allocation actifs, diversification portefeuille, actions obligations portefeuille, gestion actifs, allocation cible, drift portefeuille, rebalancing, valeur liquidative, plus moins value, portefeuille client banque, benchmark portefeuille, volatilité portefeuille, actif net portefeuille, reporting portefeuille",
+    "x-false-positive-warning": "Passer un ordre d achat vente → investment-api. Prix des actifs en temps réel → market-data-api. Gestion du risque financier → risk-api. Relevé bancaire → bank-account-api-v3.",
+    "x-cas-usage": "je veux voir la valorisation actuelle du portefeuille d un client | je veux calculer la performance TRI du portefeuille sur 3 ans | je veux créer un nouveau portefeuille pour un nouveau client | je veux rééquilibrer un portefeuille dont l allocation s est trop éloignée des cibles | je veux comparer la performance d un portefeuille par rapport à son benchmark"
+  },
+  "paths": {
+    "/v1/portfolios/{clientId}": {
+      "parameters": [{"name": "clientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Valorisation du portefeuille d un client — valeur totale et allocation actuelle",
+        "operationId": "getPortfolioValue",
+        "tags": ["Portfolios"],
+        "responses": {"200": {"description": "Valorisation portefeuille"}}
+      },
+      "post": {
+        "summary": "Créer un portefeuille pour un client — avec allocation cible initiale",
+        "operationId": "createPortfolio",
+        "tags": ["Portfolios"],
+        "responses": {"200": {"description": "Portefeuille créé"}}
+      }
+    },
+    "/v1/portfolios/{id}/performance": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Performance du portefeuille — TRI, rendement et comparaison benchmark",
+        "operationId": "getPerformance",
+        "tags": ["Performance"],
+        "responses": {"200": {"description": "Performance portefeuille"}}
+      }
+    },
+    "/v1/portfolios/{id}/rebalance": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Rééquilibrer le portefeuille — réaligner l allocation aux cibles définies",
+        "operationId": "rebalancePortfolio",
+        "tags": ["Rebalance"],
+        "responses": {"200": {"description": "Portefeuille rééquilibré"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Queue API",
+    "version": "1.0.0",
+    "x-api-id": "queue-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "Cette API fournit des services de messagerie asynchrone découplés de bas niveau basés sur des files d'attente de messages (Queues). Dédiée aux architectures logicielles événementielles et aux microservices de l'entreprise, elle permet d'assurer la publication fiable de messages, la consommation distribuée via des workers applicatifs et l'isolement des anomalies de traitement au sein de files de rebut (Dead-Letter Queues).",
+    "x-synonymes": "File d'attente de messages, Message queue asynchrone, Publication de message, Consommation asynchrone, Dead-letter queue, DLQ, Gestion des rejeux, Message ack, Visibilité de message, Broker de messages, Messagerie asynchrone, Queue de messages, Timeout de visibilité, Acquittement de message, Persistance des messages, Worker applicatif asynchrone",
+    "x-false-positive-warning": "Attention : Cette API fournit exclusivement des services d'infrastructure middleware pour la communication asynchrone entre applications informatiques. Elle ne doit en aucun cas être confondue avec des services de messagerie fonctionnelle utilisateur, de tchat d'entreprise ou d'envoi d'alertes push mobiles, régis par la Messaging API ou la Push Notification API.",
+    "x-cas-usage": "Comment faire pour provisionner une nouvelle file d'attente asynchrone en configurant un nombre maximal de rejeux système ? | Comment faire pour publier un message d'événement dans une file d'attente avec un délai d'affichage configurable ? | Comment faire pour extraire et inspecter les messages en échec persistant transférés dans la Dead-Letter Queue (DLQ) ?"
+  },
+  "paths": {
+    "/v1/queues": {
+      "get": {
+        "summary": "Parcourir la liste des files d'attente asynchrones actives configurées sur la plateforme d'infrastructure middleware",
+        "operationId": "listQueues",
+        "tags": [
+          "Queues"
+        ],
+        "responses": {
+          "200": {
+            "description": "Queues"
+          }
+        }
+      },
+      "post": {
+        "summary": "Provisionner une nouvelle file d'attente de messages asynchrones en définissant les règles de rejeu et le timeout de visibilité",
+        "operationId": "createQueue",
+        "tags": [
+          "Queues"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "max_retries": {
+                    "type": "integer",
+                    "default": 3
+                  },
+                  "visibility_timeout_seconds": {
+                    "type": "integer",
+                    "default": 30
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créée"
+          }
+        }
+      }
+    },
+    "/v1/queues/{name}/publish": {
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Injecter un payload ou un message d'événement dans une file d'attente spécifique pour traitement asynchrone différé",
+        "operationId": "publishMessage",
+        "tags": [
+          "Messages"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "body"
+                ],
+                "properties": {
+                  "body": {},
+                  "delay_seconds": {
+                    "type": "integer",
+                    "default": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Publié"
+          }
+        }
+      }
+    },
+    "/v1/queues/{name}/consume": {
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer de manière exclusive un lot contrôlé de messages disponibles dans la file d'attente en vue de leur traitement par un worker applicatif",
+        "operationId": "consumeMessages",
+        "tags": [
+          "Messages"
+        ],
+        "parameters": [
+          {
+            "name": "max_messages",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "maximum": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Messages"
+          }
+        }
+      }
+    },
+    "/v1/queues/{name}/messages/{id}/ack": {
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Confirmer l'acquittement et le traitement réussi d'un message afin de l'effacer définitivement de la file d'attente active",
+        "operationId": "ackMessage",
+        "tags": [
+          "Messages"
+        ],
+        "responses": {
+          "204": {
+            "description": "Acquitté"
+          }
+        }
+      }
+    },
+    "/v1/queues/{name}/dlq": {
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter et extraire les messages en échec persistant transférés automatiquement vers la file de rebut (Dead-Letter Queue)",
+        "operationId": "getDLQ",
+        "tags": [
+          "Messages"
+        ],
+        "responses": {
+          "200": {
+            "description": "Messages DLQ"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Clé API Kong Gateway — contacter votre équipe platform"
+      }
+    }
+  }
+}

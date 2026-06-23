@@ -1,0 +1,32 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Enrollment API",
+    "version": "1.0.0",
+    "x-api-id": "enrollment-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "x-successor": "enrollment-api-v2",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS enrollment-api-v2] Cette API gérait historiquement le registre et l'inscription linéaire des étudiants aux cours, examens et modules d'enseignement (v1). Elle est désormais entièrement figée et obsolète. Toutes les applications de scolarité et plateformes éducatives doivent obligatoirement migrer vers la version 2 (enrollment-api-v2) pour s'appuyer sur la validation automatique des prérequis académiques et le moteur de listes d'attente.",
+    "x-synonymes": "inscription universitaire, enregistrement aux cours, inscription pédagogique, dossier d'inscription scolaire, cursus étudiant, admission académique, sélection de modules de cours, scolarité administrative, attribution de classe, inscription de formation, parcours scolaire, choix de cours, validation d'unités d'enseignement, registre des étudiants inscrits, planification de rentrée pédagogique",
+    "x-false-positive-warning": "Attention : Cette API obsolète servait au référencement historique des étudiants dans des cursus académiques. Ne pas la confondre avec la `student-profile-api` (gestion de l'identité civile et des pièces justificatives de l'étudiant), et veiller à migrer les appels vers la nouvelle version cible `enrollment-api-v2`."
+  },
+  "paths": {
+    "/v1/enrollments": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS enrollment-api-v2 - Parcurir et lister le registre historique des inscriptions de la scolarité v1",
+        "operationId": "listEnrollmentsV1",
+        "tags": [
+          "Enrollments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

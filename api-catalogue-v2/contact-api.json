@@ -1,0 +1,96 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Contact API",
+    "version": "1.0.0",
+    "x-api-id": "contact-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Identity & Access",
+    "description": "Annuaire de contacts partagé de l entreprise. Répertoire interne des collaborateurs, prestataires et partenaires — accessible depuis toutes les applications. Permet de rechercher, créer, modifier et supprimer des contacts, d exporter en vCard et d importer en masse. DIFFÉRENCE vs crm-contact-api : Contact API = annuaire interne en lecture partagée. crm-contact-api = gestion complète des relations commerciales avec historique. DIFFÉRENCE vs address-api : Contact = personne avec coordonnées complètes. address-api = carnet d adresses postales d un utilisateur.",
+    "x-synonymes": "annuaire entreprise, répertoire contacts, carnet adresses partagé, fiche contact, coordonnées collaborateur, contact prestataire, contact partenaire, vCard export, import contacts, recherche contact, annuaire interne, directory entreprise, contact employé, contact fournisseur, contact externe, synchronisation contacts, LDAP annuaire, annuaire téléphonique, contact pro, liste contacts partagée",
+    "x-false-positive-warning": "Relations commerciales avec historique interactions → crm-contact-api. Adresses postales utilisateur → address-api. Dossier RH complet employé → employee-api. Contacts clients avec pipeline commercial → crm-api.",
+    "x-cas-usage": "je veux afficher l annuaire des collaborateurs dans notre application interne | je veux rechercher un contact par nom ou email dans le répertoire d entreprise | je veux exporter la fiche contact d un prestataire en vCard | je veux importer en masse nos contacts depuis un fichier CSV | je veux ajouter un nouveau partenaire externe dans l annuaire partagé"
+  },
+  "paths": {
+    "/v1/contacts": {
+      "get": {
+        "summary": "Rechercher dans l annuaire de contacts — filtre par nom, email, type et département",
+        "operationId": "listContacts",
+        "tags": ["Contacts"],
+        "parameters": [
+          {"name": "q", "in": "query", "schema": {"type": "string"}, "description": "Recherche par nom, email, téléphone"},
+          {"name": "type", "in": "query", "schema": {"type": "string", "enum": ["employee", "partner", "supplier", "external"]}},
+          {"name": "department", "in": "query", "schema": {"type": "string"}}
+        ],
+        "responses": {"200": {"description": "Contacts trouvés"}}
+      },
+      "post": {
+        "summary": "Ajouter un contact à l annuaire — collaborateur, prestataire ou partenaire",
+        "operationId": "createContact",
+        "tags": ["Contacts"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["full_name", "type"],
+                "properties": {
+                  "full_name": {"type": "string"},
+                  "type": {"type": "string", "enum": ["employee", "partner", "supplier", "external"]},
+                  "email": {"type": "string", "format": "email"},
+                  "phone": {"type": "string"},
+                  "mobile": {"type": "string"},
+                  "company": {"type": "string"},
+                  "department": {"type": "string"},
+                  "job_title": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Contact créé"}}
+      }
+    },
+    "/v1/contacts/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Fiche contact complète — coordonnées, poste et entreprise",
+        "operationId": "getContact",
+        "tags": ["Contacts"],
+        "responses": {"200": {"description": "Fiche contact"}}
+      },
+      "put": {
+        "summary": "Mettre à jour les informations d un contact",
+        "operationId": "updateContact",
+        "tags": ["Contacts"],
+        "responses": {"200": {"description": "Contact mis à jour"}}
+      },
+      "delete": {
+        "summary": "Retirer un contact de l annuaire",
+        "operationId": "deleteContact",
+        "tags": ["Contacts"],
+        "responses": {"204": {"description": "Contact supprimé"}}
+      }
+    },
+    "/v1/contacts/{id}/vcard": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Exporter la fiche contact en vCard (.vcf) — compatible tous clients mail",
+        "operationId": "exportVCard",
+        "tags": ["Contacts"],
+        "responses": {"200": {"description": "Fichier vCard (.vcf)"}}
+      }
+    },
+    "/v1/contacts/import": {
+      "post": {
+        "summary": "Importer des contacts en masse depuis CSV, vCard ou JSON",
+        "operationId": "importContacts",
+        "tags": ["Contacts"],
+        "responses": {"202": {"description": "Import lancé"}}
+      }
+    }
+  }
+}

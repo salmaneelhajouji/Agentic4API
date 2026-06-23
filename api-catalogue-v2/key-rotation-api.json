@@ -1,0 +1,67 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Key Rotation API",
+    "version": "1.0.0",
+    "x-api-id": "key-rotation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Gestion et rotation des clés cryptographiques via HSM et KMS. Permet de créer des clés symétriques et asymétriques, de déclencher leur rotation manuelle ou automatique selon une politique, de les désactiver et de gérer les politiques de rotation. Utilisé par les équipes sécurité pour maintenir la conformité cryptographique et réduire l exposition en cas de compromission. DIFFÉRENCE vs certificate-management-api : Key Rotation = clés cryptographiques symétriques/asymétriques KMS et HSM. certificate-management-api = certificats X.509 SSL/TLS publics.",
+    "x-synonymes": "rotation clés, clé cryptographique, HSM hardware security module, KMS key management service, rotation automatique, clé symétrique, clé asymétrique, clé AES, clé RSA, clé ECDSA, désactivation clé, politique rotation, cycle vie clé, renouvellement clé, révocation clé crypto, chiffrement clé, master key, data encryption key, DEK KEK, rotation cryptographique",
+    "x-false-positive-warning": "Certificats SSL/TLS X.509 → certificate-management-api. Clés API applicatives → api-key-api. Secrets mots de passe → secret-management-api. Rotation mots de passe utilisateurs → password-api.",
+    "x-cas-usage": "je veux faire tourner une clé cryptographique compromise immédiatement | je veux créer une nouvelle clé AES-256 pour chiffrer nos données | je veux configurer une rotation automatique de clés tous les 90 jours | je veux voir la politique de rotation de nos clés de chiffrement | je veux désactiver une clé obsolète sans la supprimer"
+  },
+  "paths": {
+    "/v1/keys": {
+      "get": {
+        "summary": "Lister les clés cryptographiques actives — type, algorithme et date de prochaine rotation",
+        "operationId": "listCryptoKeys",
+        "tags": ["Keys"],
+        "responses": {"200": {"description": "Clés cryptographiques"}}
+      },
+      "post": {
+        "summary": "Créer une nouvelle clé cryptographique — AES, RSA ou ECDSA",
+        "operationId": "createKey",
+        "tags": ["Keys"],
+        "responses": {"200": {"description": "Clé créée"}}
+      }
+    },
+    "/v1/keys/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Informations d une clé — algorithme, statut, dates et métadonnées",
+        "operationId": "getKeyInfo",
+        "tags": ["Keys"],
+        "responses": {"200": {"description": "Détail clé"}}
+      },
+      "post": {
+        "summary": "Déclencher la rotation manuelle d une clé — génère une nouvelle version",
+        "operationId": "rotateKey",
+        "tags": ["Keys"],
+        "responses": {"200": {"description": "Clé tournée"}}
+      },
+      "delete": {
+        "summary": "Désactiver une clé cryptographique — sans suppression pour auditabilité",
+        "operationId": "disableKey",
+        "tags": ["Keys"],
+        "responses": {"200": {"description": "Clé désactivée"}}
+      }
+    },
+    "/v1/keys/rotation-policy": {
+      "get": {
+        "summary": "Consulter la politique de rotation — fréquence, alertes et règles par type de clé",
+        "operationId": "getRotationPolicy",
+        "tags": ["Policy"],
+        "responses": {"200": {"description": "Politique rotation"}}
+      },
+      "put": {
+        "summary": "Mettre à jour la politique de rotation automatique des clés",
+        "operationId": "updateRotationPolicy",
+        "tags": ["Policy"],
+        "responses": {"200": {"description": "Politique mise à jour"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Field API",
+    "version": "1.0.0",
+    "x-api-id": "field-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "x-successor": "field-api-v2",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS field-api-v2] Cette API gérait historiquement l'inventaire linéaire et le référencement de base des surfaces et parcelles agricoles (v1). Elle est désormais entièrement obsolète et gelée. Toutes les applications de gestion d'exploitation doivent impérativement migrer vers la version 2 (field-api-v2) pour bénéficier des fonctionnalités avancées de cartographie géospatiale (SIG), de suivi de l'historique cultural et d'analyse physico-chimique des sols.",
+    "x-synonymes": "parcelle agricole, îlot cultural, surface cultivée, registre des champs, cartographie des parcelles, déclaration de surface, exploitation foncière, terrage agricole",
+    "x-false-positive-warning": "Attention : Cette API historique est dépréciée et restreinte à la consultation d'anciennes listes de parcelles. Rediriger immédiatement vos flux applicatifs vers la `field-api-v2` pour intégrer les calques géographiques natifs."
+  },
+  "paths": {
+    "/v1/fields": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS field-api-v2 - Consulter la liste et l'index historique des parcelles enregistrées sur l'ancienne infrastructure v1",
+        "operationId": "listFieldsV1",
+        "tags": [
+          "Fields"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

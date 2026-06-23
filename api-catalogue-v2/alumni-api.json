@@ -1,0 +1,69 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Alumni API",
+    "version": "1.0.0",
+    "x-api-id": "alumni-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "API dédiée à la gestion du réseau des anciens élèves et diplômés d'établissements scolaires et universitaires. Couvre les processus d'enregistrement des alumni, la mise à jour de leurs profils professionnels, la mise en relation avec des mentors issus des promotions passées, et l'organisation d'événements de networking. Utilisée par les bureaux des alumni d'écoles, universités et grandes écoles pour maintenir le lien avec leurs diplômés, favoriser l'insertion professionnelle des étudiants actuels et animer la communauté des anciens. Les utilisateurs typiques sont les responsables des associations d'anciens élèves, les étudiants en recherche de mentor, et les diplômés souhaitant s'impliquer dans la vie de leur établissement. DIFFÉRENCE vs student-api-v2 : Alumni API = anciens élèves diplômés qui ont quitté l'établissement. student-api-v2 = étudiants actuellement inscrits dans l'établissement. DIFFÉRENCE vs career-guidance-api : Alumni API = réseau de mentors anciens élèves pour mise en relation interpersonnelle. career-guidance-api = orientation professionnelle par IA basée sur compétences et profil. DIFFÉRENCE vs tutor-api : Alumni API = mentorat professionnel et networking entre diplômés. tutor-api = soutien scolaire académique entre pairs ou avec tuteurs.",
+    "x-synonymes": "anciens élèves, anciens étudiants, diplômés, promotion, réseau alumni, annuaire diplômés, mentorat étudiant, mentor professionnel, networking étudiant, association anciens élèves, événement alumni, réunion promotion, insertion professionnelle, parrainage étudiant, career alumni, communauté diplômés, anciens de l'école, old boys network, mise en relation professionnel étudiant, annuaire promotion",
+    "x-false-positive-warning": "DIFFÉRENCE vs student-api-v2 : Alumni API = anciens élèves diplômés qui ont quitté l'établissement. student-api-v2 = étudiants actuellement inscrits dans l'établissement. DIFFÉRENCE vs career-guidance-api : Alumni API = réseau de mentors anciens élèves pour mise en relation interpersonnelle. career-guidance-api = orientation professionnelle par IA basée sur compétences et profil. DIFFÉRENCE vs tutor-api : Alumni API = mentorat professionnel et networking entre diplômés. tutor-api = soutien scolaire académique entre pairs ou avec tuteurs. DIFFÉRENCE vs campus-api : Alumni API = gestion des anciens diplômés hors établissement. campus-api = gestion des services et infrastructures du campus pour les étudiants actuels.",
+    "x-cas-usage": "Comment inscrire un nouveau diplômé dans le réseau alumni de l'université et enrichir son profil professionnel ? | Comment trouver un mentor ancien élève disponible dans un secteur d'activité spécifique pour accompagner un étudiant ? | Comment récupérer la liste des événements alumni planifiés (réunions de promotion, conférences, networking) ? | Quels alumni sont disponibles pour du mentorat et comment soumettre une demande de mise en relation ? | Comment mettre à jour le poste actuel et les disponibilités de mentorat d'un ancien élève dans l'annuaire ?"
+  },
+  "paths": {
+    "/v1/alumni": {
+      "get": {
+        "summary": "Lister les anciens élèves et diplômés inscrits dans l'annuaire alumni, avec filtres par promotion, domaine d'études et secteur professionnel",
+        "operationId": "listAlumni",
+        "tags": ["Alumni"],
+        "responses": {"200": {"description": "Liste des alumni"}}
+      },
+      "post": {
+        "summary": "Inscrire un nouveau diplômé dans le réseau alumni de l'établissement avec ses informations de parcours, promotion et contact professionnel",
+        "operationId": "registerAlumni",
+        "tags": ["Alumni"],
+        "responses": {"200": {"description": "Alumni inscrit"}}
+      }
+    },
+    "/v1/alumni/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter le profil complet d'un ancien élève incluant son parcours professionnel, sa promotion d'origine et sa disponibilité pour le mentorat",
+        "operationId": "getAlumni",
+        "tags": ["Alumni"],
+        "responses": {"200": {"description": "Profil alumni"}}
+      },
+      "put": {
+        "summary": "Mettre à jour le profil d'un ancien élève avec son poste actuel, ses coordonnées professionnelles et ses créneaux de disponibilité pour le mentorat",
+        "operationId": "updateAlumni",
+        "tags": ["Alumni"],
+        "responses": {"200": {"description": "Profil mis à jour"}}
+      }
+    },
+    "/v1/alumni/mentoring": {
+      "get": {
+        "summary": "Lister les mentors disponibles parmi les anciens élèves, avec filtres par secteur d'activité, domaine de compétence et type d'accompagnement proposé",
+        "operationId": "listMentors",
+        "tags": ["Mentoring"],
+        "responses": {"200": {"description": "Liste des mentors disponibles"}}
+      },
+      "post": {
+        "summary": "Soumettre une demande de mise en relation avec un mentor alumni pour un accompagnement professionnel personnalisé selon le profil et les objectifs de l'étudiant",
+        "operationId": "requestMentoring",
+        "tags": ["Mentoring"],
+        "responses": {"200": {"description": "Demande de mentorat envoyée"}}
+      }
+    },
+    "/v1/alumni/events": {
+      "get": {
+        "summary": "Lister les événements alumni planifiés — réunions de promotion, sessions de networking, conférences métier et rencontres entre diplômés et étudiants actuels",
+        "operationId": "listAlumniEvents",
+        "tags": ["Events"],
+        "responses": {"200": {"description": "Événements alumni"}}
+      }
+    }
+  }
+}

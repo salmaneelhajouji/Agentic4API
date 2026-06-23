@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Attendance API",
+    "version": "1.0.0",
+    "x-api-id": "attendance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "API dédiée au suivi de l'assiduité dans les établissements d'enseignement (universités, écoles, lycées). Couvre l'ensemble du cycle de gestion des présences : enregistrement des émargements en cours, consultation de l'historique d'assiduité par étudiant ou par session, gestion des absences justifiées (certificats médicaux, convocations) et non justifiées, ainsi que le déclenchement d'alertes automatiques en cas d'absentéisme excessif. Les utilisateurs typiques sont les enseignants (saisie des appels), les responsables pédagogiques (suivi des taux d'assiduité), et l'administration scolaire (gestion des justificatifs et communication avec les familles). DIFFÉRENCE vs student-api-v2 : Attendance API = suivi quotidien des présences et absences en cours. student-api-v2 = gestion du dossier administratif et académique de l'étudiant. DIFFÉRENCE vs grade-api-v2 : Attendance API = assiduité et présences physiques. grade-api-v2 = notes, bulletins et résultats académiques. DIFFÉRENCE vs parent-portal-api : Attendance API = enregistrement et gestion des présences côté établissement. parent-portal-api = accès des parents aux informations scolaires dont les absences.",
+    "x-synonymes": "présence cours, absence étudiant, assiduité, appel en classe, feuille de présence, absence justifiée, absence injustifiée, justificatif absence, certificat médical absence, retard étudiant, taux absentéisme, alerte absentéisme, suivi assiduité, émargement numérique, liste présences, relevé absences, contrôle présences, fiche appel, absentéisme scolaire, pointage étudiant",
+    "x-false-positive-warning": "DIFFÉRENCE vs student-api-v2 : Attendance API = suivi quotidien des présences et absences en cours. student-api-v2 = gestion du dossier administratif et académique de l'étudiant. DIFFÉRENCE vs grade-api-v2 : Attendance API = assiduité et présences physiques. grade-api-v2 = notes, bulletins et résultats académiques. DIFFÉRENCE vs parent-portal-api : Attendance API = enregistrement et gestion des présences côté établissement. parent-portal-api = accès des parents aux informations scolaires dont les absences. DIFFÉRENCE vs schedule-api : Attendance API = enregistrement et consultation des présences effectives. schedule-api = gestion des emplois du temps et planification des sessions de cours.",
+    "x-cas-usage": "Comment automatiser la saisie des présences et absences des étudiants en cours ? | Comment consulter le taux d'assiduité d'un étudiant sur l'ensemble d'un semestre ? | Comment justifier une absence avec un certificat médical ou une convocation officielle ? | Quels étudiants ont dépassé le seuil d'absences autorisées et ont déclenché une alerte ? | Comment récupérer la liste complète des absences non justifiées d'un étudiant ?"
+  },
+  "paths": {
+    "/v1/attendance/{studentId}": {
+      "parameters": [
+        {
+          "name": "studentId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique complet de présences d'un étudiant avec taux d'assiduité global et détail par cours et par période",
+        "operationId": "getAttendance",
+        "tags": ["Attendance"],
+        "responses": {
+          "200": {
+            "description": "Historique des présences et taux d'assiduité"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer une présence ou une absence pour un étudiant lors d'une session de cours via émargement numérique",
+        "operationId": "recordAttendance",
+        "tags": ["Attendance"],
+        "responses": {
+          "200": {
+            "description": "Présence ou absence enregistrée"
+          }
+        }
+      }
+    },
+    "/v1/attendance/{studentId}/absences": {
+      "parameters": [
+        {
+          "name": "studentId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister toutes les absences d'un étudiant avec leur statut de justification : justifiées, non justifiées et en attente de traitement",
+        "operationId": "getAbsences",
+        "tags": ["Absences"],
+        "responses": {
+          "200": {
+            "description": "Liste des absences avec statut justification"
+          }
+        }
+      },
+      "post": {
+        "summary": "Soumettre la justification d'une absence avec pièce jointe : certificat médical, convocation officielle ou motif familial",
+        "operationId": "justifyAbsence",
+        "tags": ["Absences"],
+        "responses": {
+          "200": {
+            "description": "Absence justifiée"
+          }
+        }
+      }
+    },
+    "/v1/attendance/alerts": {
+      "get": {
+        "summary": "Consulter la liste des alertes d'absentéisme actives pour les étudiants ayant dépassé le seuil d'absences autorisées par le règlement",
+        "operationId": "getAttendanceAlerts",
+        "tags": ["Alerts"],
+        "responses": {
+          "200": {
+            "description": "Alertes absentéisme actives"
+          }
+        }
+      }
+    }
+  }
+}

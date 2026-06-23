@@ -1,0 +1,140 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "E-Signature API",
+    "version": "1.0.0",
+    "x-api-id": "esignature-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Cette API administre et automatise l'exécution des circuits de signature électronique conformes à la réglementation européenne eIDAS (signatures avancées et qualifiées). Elle prend en charge la préparation cryptographique des documents, l'injection d'ancres de paraphe, l'ordonnancement de workflows multi-signataires, la collecte en temps réel des consentements et la génération d'un dossier de preuve immuable transféré vers un système d'archivage probatoire légal.",
+    "x-synonymes": "signature électronique, e-signature, paraphe électronique, règlement eIDAS, signature qualifiée, workflow multi-signataires, archivage probatoire, dossier de preuve cryptographique, certificat numérique, chaîne de signature, horodatage certifié, relance de signataire, validation électronique contractuelle, scellement numérique de document, tiers de confiance légal",
+    "x-false-positive-warning": "Attention : Cette API gère la couche de cryptographie, le consentement eIDAS et le circuit de signature électronique d'un document (Legal). Ne pas la confondre avec la `document-api` (qui se limite à compiler des variables métiers dans des templates de type Handlebars) ni avec la `contract-api-v3` (qui pilote le cycle de vie commercial de la relation contractuelle macro).",
+    "x-cas-usage": "Comment charger un document et configurer l'emplacement des signatures et des paraphes pour chaque destinataire ? | Où vérifier en temps réel le statut d'approbation et l'avancement d'un circuit de signature électronique ? | Comment ajouter un témoin ou un signataire supplémentaire au sein d'un workflow électronique actif ? | Quelle est la méthode pour figer, horodater et archiver un document finalisé dans le coffre-fort probatoire ?"
+  },
+  "paths": {
+    "/v1/esign/documents": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des documents en attente de paraphe, rejetés ou en cours de validation dans les circuits",
+        "operationId": "listESignDocuments",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Préparer un document, configurer les coordonnées graphiques des signatures et initialiser le dossier de preuve",
+        "operationId": "prepareESignDocument",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/esign/documents/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les métadonnées juridiques, le niveau de conformité eIDAS et l'état d'un document soumis à signature",
+        "operationId": "getESignDocument",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Valider le dossier et envoyer officiellement les invitations de signature électronique sécurisées aux destinataires",
+        "operationId": "sendForSignature",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/esign/documents/{id}/signers": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'ordre de passage, l'adresse de contact et le statut de signature (émis, signé, refusé) de chaque signataire",
+        "operationId": "getSignatureStatus",
+        "tags": [
+          "Signers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter dynamiquement un nouveau signataire ou un témoin certificateur au sein du circuit de signature électronique",
+        "operationId": "addSigner",
+        "tags": [
+          "Signers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/esign/documents/{id}/archive": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Clôturer le circuit, apposer l'horodatage certifié et transférer le fichier signé vers le système d'archivage probatoire légal",
+        "operationId": "archiveSignedDocument",
+        "tags": [
+          "Archive"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

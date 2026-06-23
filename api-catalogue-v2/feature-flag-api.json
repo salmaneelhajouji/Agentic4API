@@ -1,0 +1,218 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Feature Flag API",
+    "version": "1.0.0",
+    "x-api-id": "feature-flag-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "Cette API orchestre l'activation dynamique et le déploiement progressif (rollout) de fonctionnalités logicielles à chaud, sans redéploiement de code source. Elle permet aux équipes de développement et Product Managers de gérer des feature flags, de définir des règles de ciblage par segment d'utilisateurs et d'administrer des lancements de type Canary ou des tests A/B en faisant varier précisément les pourcentages d'exposition de la plateforme.",
+    "x-synonymes": "feature flag, activation de fonctionnalité, déploiement progressif, rollout dynamique, test A/B, canary rollout, toggle de code, segmentation utilisateur, règle de ciblage, gestion de configuration à chaud, exposition de fonctionnalité, interrupteur logique",
+    "x-false-positive-warning": "Attention : Cette API gère les bascules logiques de fonctionnalités applicatives et les pourcentages d'exposition des versions de code (Flags). Ne pas la confondre avec la `config-api` (réservée à l'exposition de paramètres techniques généraux et variables d'environnement statiques du système).",
+    "x-cas-usage": "Comment déclarer un feature flag pour exposer le nouveau parcours de paiement à un échantillon de 10% d'utilisateurs ? | Où évaluer à chaud la valeur d'un indicateur logique pour un identifiant et un segment client spécifiques ? | Comment ajuster instantanément le pourcentage de déploiement progressif d'une fonctionnalité à 100% après validation ?"
+  },
+  "paths": {
+    "/v1/flags": {
+      "get": {
+        "summary": "Lister l'ensemble des feature flags déclarés dans le système avec leurs états et configurations de ciblage",
+        "operationId": "listFlags",
+        "tags": [
+          "Flags"
+        ],
+        "responses": {
+          "200": {
+            "description": "Flags"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et publier un nouveau feature flag en spécifiant sa clé unique, sa description et son état initial",
+        "operationId": "createFlag",
+        "tags": [
+          "Flags"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlagCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        }
+      }
+    },
+    "/v1/flags/{key}": {
+      "parameters": [
+        {
+          "name": "key",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Évaluer la valeur active d'un feature flag (vrai/faux) en fonction du contexte, du segment ou de l'utilisateur fourni",
+        "operationId": "getFlag",
+        "tags": [
+          "Flags"
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "segment",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Valeur du flag"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour la configuration d'un flag, ses règles d'éligibilité ou son activation globale",
+        "operationId": "updateFlag",
+        "tags": [
+          "Flags"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlagCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer définitivement un feature flag du référentiel d'infrastructure",
+        "operationId": "deleteFlag",
+        "tags": [
+          "Flags"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimé"
+          }
+        }
+      }
+    },
+    "/v1/flags/{key}/rollout": {
+      "parameters": [
+        {
+          "name": "key",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Ajuster dynamiquement à chaud le pourcentage d'exposition globale (de 0 à 100%) d'une fonctionnalité",
+        "operationId": "setRollout",
+        "tags": [
+          "Flags"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "percent"
+                ],
+                "properties": {
+                  "percent": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rollout mis à jour"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FlagCreate": {
+        "type": "object",
+        "required": [
+          "key",
+          "name"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "example": "new_checkout_flow"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": false
+          },
+          "rollout_percent": {
+            "type": "number",
+            "default": 0
+          },
+          "targeting_rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "attribute": {
+                  "type": "string"
+                },
+                "operator": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

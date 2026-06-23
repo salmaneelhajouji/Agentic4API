@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Predictive Maintenance API",
+    "version": "1.0.0",
+    "x-api-id": "predictive-maintenance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Cette API supervise l'analyse et l'exécution de modèles prédictifs de Machine Learning (ML) dédiés à la maintenance anticipée des équipements industriels de l'entreprise. Connectée aux flux de capteurs de télémétrie IoT (vibrations, température, pression), elle scrute les signaux faibles pour calculer la probabilité de défaillance, émettre des alertes de maintenance intelligentes et formuler des recommandations d'entretien curatif ou de remplacement avant la survenue d'une panne bloquante.",
+    "x-synonymes": "maintenance prédictive, détection anticipée de pannes, capteur IoT industriel, alerte d'usure prédictive, télémétrie machine ML, signal faible mécanique, usure d'équipement de production, recommandation d'entretien IA, historique d'interventions machines, RUL, durée de vie utile restante",
+    "x-false-positive-warning": "Attention : Cette API calcule des indices probabilistes de défaillance et des alertes d'usure à l'aide de modèles d'apprentissage automatique (Predictive Maintenance). Ne pas la confondre avec la `farm-equipment-api` ni avec la `fleet-api-v4` (qui orchestrent des plannings de révisions préventives déterministes basés sur le temps écoulé ou le kilométrage).",
+    "x-cas-usage": "Comment évaluer la probabilité de panne et la durée de vie utile restante (RUL) d'un moteur industriel ? | Où consulter la liste des alertes de maintenance prédictive générées par le modèle de Machine Learning ? | Comment récupérer l'historique complet des pannes réelles pour réajuster la sensibilité du modèle prédictif ?"
+  },
+  "paths": {
+    "/v1/maintenance/predictions/{deviceId}": {
+      "parameters": [
+        {
+          "name": "deviceId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les prévisions de défaillances, la probabilité de panne et l'indice RUL calculés pour un équipement",
+        "operationId": "getMaintenancePredictions",
+        "tags": [
+          "Predictions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher l'exécution immédiate du modèle d'analyse prédictive sur le flux de données de télémétrie IoT récent du composant",
+        "operationId": "runPrediction",
+        "tags": [
+          "Predictions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/maintenance/alerts": {
+      "get": {
+        "summary": "Consulter et filtrer le registre central des alertes de maintenance prédictives et des anomalies détectées",
+        "operationId": "getMaintenanceAlerts",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Acquitter et mettre à jour le statut d'une alerte d'usure ou d'anomalie suite à l'examen d'un technicien",
+        "operationId": "acknowledgeAlert",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/maintenance/history/{deviceId}": {
+      "parameters": [
+        {
+          "name": "deviceId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le journal chronologique complet des pannes réelles et des interventions d'entretien réalisées sur la machine",
+        "operationId": "getMaintenanceHistory",
+        "tags": [
+          "History"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

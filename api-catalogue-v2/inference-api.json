@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Inference API",
+    "version": "1.0.0",
+    "x-api-id": "inference-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API orchestre l'exécution opérationnelle et le déploiement en production des modèles de Machine Learning pour réaliser des prédictions (inférences). Elle gère à la fois le serving en temps réel à faible latence (requêtes unitaires via HTTP POST) et le traitement de masse asynchrone (Inference Batch) pour analyser de grands volumes de données. Elle constitue la passerelle d'accès direct pour les applications consommatrices d'intelligence artificielle au sein du système d'information.",
+    "x-synonymes": "inférence de modèle, serving de modèle ML, exécution de prédictions, machine learning serving, inférence en temps réel, inférence batch, prédiction unitaire, score de modèle IA, MLOps production, déploiement d'algorithme, appel de modèle prédictif, calcul de probabilité IA, pipeline d'inférence, scoring de données",
+    "x-false-positive-warning": "Attention : Cette API exécute physiquement les calculs de prédictions et expose les points de terminaison des modèles actifs (Inference). Ne pas la confondre avec la `model-registry-api` (dédiée au stockage, à l'historique des versions et au cycle de vie de l'artefact de fichier du modèle), ni avec la `experiment-tracking-api` réservée à la phase d'apprentissage.",
+    "x-cas-usage": "Comment soumettre un payload de données pour obtenir une prédiction immédiate en temps réel sur un modèle ? | Comment planifier un job d'inférence massif (batch) pour calculer les scores de propension de l'ensemble de notre base clients ? | Où vérifier le statut technique et l'état d'avancement d'un traitement prédictif asynchrone ? | Comment consulter les métadonnées opérationnelles d'un modèle d'intelligence artificielle déployé ?"
+  },
+  "paths": {
+    "/v1/inference/{modelId}": {
+      "parameters": [
+        {
+          "name": "modelId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Soumettre un jeu de caractéristiques pour exécuter une prédiction unitaire immédiate en temps réel sur le modèle sélectionné",
+        "operationId": "predict",
+        "tags": [
+          "Inference"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Consulter la configuration opérationnelle, l'architecture et les variables attendues par le modèle d'inférence",
+        "operationId": "getModelInfo",
+        "tags": [
+          "Inference"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/inference/batch": {
+      "post": {
+        "summary": "Déclencher un job d'inférence asynchrone pour traiter et calculer des prédictions sur un volume massif de données",
+        "operationId": "batchPredict",
+        "tags": [
+          "Batch"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Suivre l'état d'avancement, le taux de complétude et le statut d'un job de prédiction de masse",
+        "operationId": "getBatchJobStatus",
+        "tags": [
+          "Batch"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

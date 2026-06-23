@@ -1,0 +1,64 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Backup Security API",
+    "version": "1.0.0",
+    "x-api-id": "backup-security-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "API de gestion des sauvegardes sécurisées des données critiques dans un contexte de cybersécurité et de conformité réglementaire. Couvre la définition de politiques de sauvegarde avec chiffrement fort et immuabilité, le déclenchement de jobs de backup manuels ou planifiés, ainsi que les tests de restauration pour valider l'intégrité des données. Utilisée par les équipes cybersécurité, infrastructure et conformité pour garantir la continuité d'activité (PCA/PRA) et répondre aux exigences d'audit (RGPD, ISO 27001, SOC 2). DIFFÉRENCE vs storage-api : Backup Security API = sauvegarde sécurisée avec chiffrement et immuabilité pour conformité. storage-api = stockage de fichiers et objets sans contraintes de sécurité backup. DIFFÉRENCE vs disaster-recovery-api : Backup Security API = gestion des sauvegardes et tests de restauration. disaster-recovery-api = orchestration du basculement complet en cas de sinistre. DIFFÉRENCE vs encryption-api : Backup Security API = chiffrement intégré dans le processus de backup. encryption-api = service de chiffrement générique pour n'importe quelle donnée.",
+    "x-synonymes": "sauvegarde données, backup chiffré, backup immuable, politique backup, plan sauvegarde, restauration données, test restauration, PCA, PRA, plan continuité activité, plan reprise activité, RTO, RPO, sauvegarde sécurisée, chiffrement backup, backup 3-2-1, sauvegarde cloud, sauvegarde hors site, intégrité backup, disaster recovery",
+    "x-false-positive-warning": "DIFFÉRENCE vs storage-api : Backup Security API = sauvegarde sécurisée avec chiffrement et immuabilité pour conformité. storage-api = stockage de fichiers et objets sans contraintes de sécurité backup. DIFFÉRENCE vs disaster-recovery-api : Backup Security API = gestion des sauvegardes et tests de restauration. disaster-recovery-api = orchestration du basculement complet en cas de sinistre. DIFFÉRENCE vs encryption-api : Backup Security API = chiffrement intégré dans le processus de backup. encryption-api = service de chiffrement générique pour n'importe quelle donnée. DIFFÉRENCE vs audit-log-api : Backup Security API = protection et restauration des données critiques. audit-log-api = journalisation des événements système à des fins de traçabilité.",
+    "x-cas-usage": "Comment définir une politique de sauvegarde quotidienne chiffrée pour nos bases de données de production ? | Comment déclencher un backup manuel immédiat avant une mise en production critique ? | Comment tester la restauration de nos sauvegardes pour valider notre plan de reprise d'activité ? | Quels jobs de backup sont actuellement en cours ou ont échoué dans les dernières 24 heures ? | Comment vérifier que nos sauvegardes sont bien immuables et non altérables pour satisfaire un audit de conformité ?"
+  },
+  "paths": {
+    "/v1/backup/policies": {
+      "get": {
+        "summary": "Lister les politiques de sauvegarde configurées avec leurs paramètres de fréquence, rétention, chiffrement et immuabilité",
+        "operationId": "listBackupPolicies",
+        "tags": ["Policies"],
+        "responses": {
+          "200": {"description": "Politiques de backup configurées"}
+        }
+      },
+      "post": {
+        "summary": "Créer une nouvelle politique de sauvegarde sécurisée en définissant la planification, le type de chiffrement et la durée de rétention des données",
+        "operationId": "createBackupPolicy",
+        "tags": ["Policies"],
+        "responses": {
+          "200": {"description": "Politique de backup créée"}
+        }
+      }
+    },
+    "/v1/backup/jobs": {
+      "get": {
+        "summary": "Lister les jobs de backup exécutés ou en cours avec leurs statuts, durées d'exécution et tailles des sauvegardes générées",
+        "operationId": "listBackupJobs",
+        "tags": ["Jobs"],
+        "responses": {
+          "200": {"description": "Jobs de backup avec statuts"}
+        }
+      },
+      "post": {
+        "summary": "Déclencher immédiatement un backup manuel chiffré en dehors de la planification automatique pour un périmètre de données défini",
+        "operationId": "triggerBackup",
+        "tags": ["Jobs"],
+        "responses": {
+          "200": {"description": "Backup lancé"}
+        }
+      }
+    },
+    "/v1/backup/restore": {
+      "post": {
+        "summary": "Tester la restauration d'une sauvegarde existante pour valider l'intégrité des données et attester de la conformité du PRA auprès des auditeurs",
+        "operationId": "testRestore",
+        "tags": ["Restore"],
+        "responses": {
+          "200": {"description": "Test restauration effectué — rapport d'intégrité"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Shipping API",
+    "version": "1.0.0",
+    "x-api-id": "shipping-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Retail",
+    "x-domain": "Retail",
+    "description": "DEPRECATED — Version 1 de l'API d'expédition colis. Ne plus utiliser. Migrer vers shipping-api-v2 qui apporte le tracking GPS temps réel, la gestion multi-colis, les douanes et le calcul CO2.",
+    "x-successor": "shipping-api-v2",
+    "x-synonymes": "expédition colis deprecated, shipping v1",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser shipping-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers shipping-api-v2."
+  },
+  "paths": {
+    "/v1/shipments": {
+      "post": {
+        "summary": "[DEPRECATED] Créer une expédition — utiliser shipping-api-v2",
+        "operationId": "createShipmentV1",
+        "tags": ["Shipments"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

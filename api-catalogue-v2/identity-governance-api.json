@@ -1,0 +1,110 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Identity Governance API",
+    "version": "1.0.0",
+    "x-api-id": "identity-governance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Cette API régit le système de gouvernance et d'administration des identités (IGA) de l'entreprise. Elle pilote l'intégralité du cycle de vie des comptes numériques des collaborateurs (provisioning à l'embauche, mutations, déprovisioning au départ), administre le catalogue des rôles transverses, et applique de manière automatisée les règles de séparation des tâches (SoD - Separation of Duties) afin de prévenir les conflits d'intérêts et de sécuriser les audits de conformité d'accès.",
+    "x-synonymes": "gouvernance des identités, IGA, cycle de vie des comptes, provisioning d'identité, séparation des tâches, SoD, conflit de rôles, administration des droits macro, déprovisioning de compte, joiner mover leaver, attribution de rôle corporate, audit d'accès informatique, conformité de sécurité logique, matrice de droits corporatifs",
+    "x-false-positive-warning": "Attention : Cette API encadre la politique de gouvernance, le cycle de vie des identités et les conflits réglementaires de rôles macro (Identity Governance). Ne pas la confondre avec la `permission-api` (qui gère l'application opérationnelle basse et le contrôle d'accès fin type RBAC/ACL au sein des fonctionnalités d'une application).",
+    "x-cas-usage": "Comment provisionner automatiquement l'identité numérique et les rôles de base d'un nouveau collaborateur ? | Où auditer et vérifier si l'attribution de ce nouveau rôle crée un conflit de séparation des tâches (SoD) ? | Comment suivre le cycle de vie et suspendre l'ensemble des comptes système d'un utilisateur sur le départ ? | Comment lister le catalogue des rôles de gouvernance officiellement reconnus dans l'entreprise ?"
+  },
+  "paths": {
+    "/v1/identity/governance": {
+      "get": {
+        "summary": "Consulter l'état de conformité global, le score de couverture de l'annuaire et le statut de la gouvernance des identités",
+        "operationId": "getIdentityGovernanceStatus",
+        "tags": [
+          "Governance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/identity/roles": {
+      "get": {
+        "summary": "Lister l'ensemble des rôles transverses corporatifs définis et cartographiés dans la politique de sécurité",
+        "operationId": "listRoles",
+        "tags": [
+          "Roles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et formaliser un nouveau rôle de gouvernance macro regroupant un périmètre de fonctions",
+        "operationId": "createRole",
+        "tags": [
+          "Roles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/identity/sod": {
+      "get": {
+        "summary": "Récupérer la matrice des règles impératives de séparation des tâches (SoD) pour le contrôle de conformité",
+        "operationId": "getSoDRules",
+        "tags": [
+          "SoD"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Analyser et tester si une demande d'attribution de rôle génère un conflit d'intérêts ou une violation de règle SoD",
+        "operationId": "checkSoDConflict",
+        "tags": [
+          "SoD"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/identity/lifecycle": {
+      "get": {
+        "summary": "Consulter le journal des événements de mouvements de comptes (entrées, mutations, départs) traités",
+        "operationId": "getIdentityLifecycle",
+        "tags": [
+          "Lifecycle"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher le provisioning et l'ouverture automatisée des droits d'un collaborateur suite à son intégration",
+        "operationId": "provisionIdentity",
+        "tags": [
+          "Lifecycle"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Delivery API",
+    "version": "1.0.0",
+    "x-api-id": "delivery-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Logistique",
+    "x-domain": "Supply Chain",
+    "description": "Cette API gère la planification, la réservation et le suivi en temps réel des créneaux de livraison du dernier kilomètre (Last-Mile Delivery). Elle permet aux plateformes e-commerce et aux systèmes logistiques d'exposer les plages horaires disponibles aux clients, de valider des réservations de livraison rattachées à des commandes, de reprogrammer des rendez-vous et de suivre la position géographique ainsi que l'heure d'arrivée estimée (ETA) du livreur. Elle est principalement intégrée dans les tunnels d'achat, les applications de distribution et les consoles de supervision de la supply chain.",
+    "x-synonymes": "créneau de livraison, plage horaire, planification des tournées, livraison dernier kilomètre, last-mile delivery, réservation de créneau, reprogrammation de livraison, suivi du livreur, heure d'arrivée estimée, ETA, livraison à domicile, rendez-vous de livraison, gestion des livreurs, affectation de tournée, logistique de distribution, zone de livraison, adresse de livraison, créneau horaire",
+    "x-false-positive-warning": "Attention : Cette API gère exclusivement le calendrier de livraison, le rendez-vous client et le suivi en temps réel de la tournée du livreur (Delivery). Ne pas la confondre avec la `shipping-api` (qui s'occupe de l'édition d'étiquettes de transport, de la gestion des colis et du suivi macro via des transporteurs externes type DHL, FedEx ou Colissimo).",
+    "x-cas-usage": "Quels sont les créneaux horaires de livraison encore disponibles ce samedi pour un code postal spécifique ? | Comment réserver une plage horaire pour une commande de meubles volumineux ? | Comment modifier ou décaler le rendez-vous de livraison d'un client suite à un imprévu ? | Où suivre la position géographique en temps réel du camion de livraison et récupérer son heure d'arrivée estimée (ETA) ?"
+  },
+  "paths": {
+    "/v1/delivery/slots": {
+      "get": {
+        "summary": "Rechercher et lister les créneaux horaires de livraison disponibles pour une date et un code postal spécifiques",
+        "operationId": "getSlots",
+        "tags": [
+          "Delivery"
+        ],
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "zip",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Créneaux"
+          }
+        }
+      }
+    },
+    "/v1/delivery/book": {
+      "post": {
+        "summary": "Réserver un créneau horaire de livraison pour une commande spécifique et enregistrer les coordonnées de contact",
+        "operationId": "bookDelivery",
+        "tags": [
+          "Delivery"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "order_id",
+                  "slot_id"
+                ],
+                "properties": {
+                  "order_id": {
+                    "type": "string"
+                  },
+                  "slot_id": {
+                    "type": "string"
+                  },
+                  "contact_phone": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créneau réservé"
+          }
+        }
+      }
+    },
+    "/v1/delivery/{id}/reschedule": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Modifier et reprogrammer la plage horaire d'un rendez-vous de livraison existant",
+        "operationId": "rescheduleDelivery",
+        "tags": [
+          "Delivery"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "new_slot_id"
+                ],
+                "properties": {
+                  "new_slot_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reprogrammé"
+          }
+        }
+      }
+    },
+    "/v1/delivery/tracking/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Suivre en temps réel la position géographique du livreur et récupérer l'heure d'arrivée estimée (ETA) au domicile",
+        "operationId": "trackDelivery",
+        "tags": [
+          "Delivery"
+        ],
+        "responses": {
+          "200": {
+            "description": "Position et ETA"
+          }
+        }
+      }
+    }
+  }
+}

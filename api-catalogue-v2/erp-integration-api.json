@@ -1,0 +1,96 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ERP Integration API",
+    "version": "1.0.0",
+    "x-api-id": "erp-integration-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Cette API sert de passerelle d'intégration d'entreprise pour synchroniser les données d'exploitation industrielles avec les systèmes ERP centraux (notamment SAP et Oracle). Elle gère l'alignement bidirectionnel des données référentielles (Master Data articles, fournisseurs), automatise la remontée et la création des commandes d'achat (Purchase Orders), et pilote la comptabilisation directe des factures de production. Elle est indispensable pour assurer la continuité numérique entre l'atelier de fabrication et les services financiers.",
+    "x-synonymes": "intégration ERP, connecteur SAP, synchronisation Oracle, données référentielles, master data sync, commande d'achat ERP, purchase order, comptabilisation de facture, écritures comptables, synchronisation transactionnelle, flux financier d'usine, raprochement de commandes, comptabilité fournisseur ERP, référentiel articles, grand livre comptable, interface de production ERP",
+    "x-false-positive-warning": "Attention : Cette API assure la liaison technique de bas niveau pour l'intégration de transactions financières et logistiques avec l'ERP d'entreprise (Industry). Ne pas la confondre avec la `invoice-api` (microservice applicatif de facturation e-commerce directe aux clients) ni avec la `procurement-api` (gestion de la relation d'approvisionnement fournisseur sans écritures comptables directes).",
+    "x-cas-usage": "Comment déclencher une tâche de synchronisation des données d'articles et fournisseurs avec SAP ? | Où vérifier le statut technique de la dernière tâche de synchronisation ERP ? | Comment comptabiliser instantanément une facture d'achat fournisseur dans le grand livre comptable de l'ERP ? | Comment injecter une nouvelle commande d'achat générée par l'usine au sein du flux financier d'Oracle ?"
+  },
+  "paths": {
+    "/v1/erp/sync": {
+      "post": {
+        "summary": "Déclencher une tâche de synchronisation en bloc des données référentielles et articles (Master Data) avec l'ERP central",
+        "operationId": "syncMasterData",
+        "tags": [
+          "Sync"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Consulter l'état d'avancement, le statut d'exécution et le rapport de la dernière synchronisation de données ERP",
+        "operationId": "getSyncStatus",
+        "tags": [
+          "Sync"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/erp/purchase-orders": {
+      "get": {
+        "summary": "Lister et interroger les commandes d'achat (Purchase Orders) enregistrées ou synchronisées dans l'ERP corporatif",
+        "operationId": "getERPPurchaseOrders",
+        "tags": [
+          "PO"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et injecter dynamiquement une nouvelle commande d'achat validée au sein du flux transactionnel de l'ERP",
+        "operationId": "createERPPO",
+        "tags": [
+          "PO"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/erp/invoices": {
+      "get": {
+        "summary": "Récupérer la liste, l'échéance et le statut comptable des factures traitées dans l'ERP",
+        "operationId": "getERPInvoices",
+        "tags": [
+          "Invoices"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Soumettre et comptabiliser instantanément une facture de fournisseur dans le grand livre comptable de l'ERP",
+        "operationId": "postERPInvoice",
+        "tags": [
+          "Invoices"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

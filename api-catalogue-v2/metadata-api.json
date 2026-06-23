@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Metadata API",
+    "version": "1.0.0",
+    "x-api-id": "metadata-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API régit la gestion des métadonnées techniques, des dictionnaires de schémas et du marquage (tagging) des fichiers et objets au sein des architectures de données de l'entreprise. Elle permet de lire les structures de colonnes, d'associer des étiquettes descriptives aux tables logiques, et de documenter techniquement les ressources d'infrastructure de données pour assurer l'intégrité de l'indexation.",
+    "x-synonymes": "métadonnées techniques, schéma de fichier, tagging d'objet, étiquetage de données, dictionnaire technique, structure de colonnes, propriétés de ressource data, catalogue technique, attributs d'objet, indexation technique data",
+    "x-false-positive-warning": "Attention : Cette API manipule exclusivement les attributs structurels de bas niveau, les schémas et l'indexation technique des fichiers (Metadata). Ne pas la confondre avec la `data-catalog-api-v3` (qui pilote la gouvernance d'entreprise macro, le lignage fonctionnel et la conformité sémantique métier à grande échelle).",
+    "x-cas-usage": "Comment récupérer le dictionnaire technique et le schéma de colonnes d'un fichier de données brutes ? | Comment ajouter ou injecter un tag de classification technique sur une table logique ? | Quelle méthode appeler pour modifier la description technique d'un attribut de ressource data ?"
+  },
+  "paths": {
+    "/v1/metadata/{resourceId}": {
+      "parameters": [
+        {
+          "name": "resourceId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les métadonnées de structure, les schémas et l'ensemble des tags techniques d'une ressource",
+        "operationId": "getMetadata",
+        "tags": [
+          "Metadata"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour la structure technique, la description des champs ou les attributs de la ressource de données",
+        "operationId": "updateMetadata",
+        "tags": [
+          "Metadata"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Associer et injecter une nouvelle étiquette (tag technique) ou une propriété sur l'objet spécifié",
+        "operationId": "addTag",
+        "tags": [
+          "Metadata"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

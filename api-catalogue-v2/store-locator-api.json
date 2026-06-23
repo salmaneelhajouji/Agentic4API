@@ -1,0 +1,72 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Store Locator API",
+    "version": "1.0.0",
+    "x-api-id": "store-locator-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "Localisation",
+    "description": "Localisation des points de vente et magasins physiques. Recherche des magasins les plus proches par coordonnées GPS avec rayon configurable, consultation des détails d'un magasin (adresse, téléphone, services), horaires d'ouverture hebdomadaires et jours fériés, et vérification de la disponibilité d'un produit spécifique en magasin pour le click-and-collect. DIFFÉRENCE vs inventory-api : Store Locator interroge la disponibilité produit dans un magasin physique précis, Inventory gère les stocks globaux tous canaux. DIFFÉRENCE vs delivery-api : Store Locator est pour le click-and-collect et la visite en magasin, Delivery pour la livraison à domicile.",
+    "x-synonymes": "magasin proche, store locator, point de vente, localisation magasin, click and collect, horaires magasin, disponibilité magasin, GPS magasin, rayon proximité, stock magasin, trouver magasin, adresse magasin, ouverture magasin, retrait magasin, carte magasins",
+    "x-false-positive-warning": "Stocks globaux tous canaux → inventory-api. Livraison à domicile → delivery-api. Gestion interne des magasins (CRUD) → store-management-api.",
+    "x-cas-usage": "je veux trouver les magasins dans un rayon de 10km autour d'une position GPS | je veux vérifier si un produit est disponible dans un magasin précis | je veux connaître les horaires d'ouverture d'un magasin | je veux afficher les détails (adresse, téléphone, services) d'un point de vente | je veux implémenter le click-and-collect en vérifiant les stocks en magasin"
+  },
+  "paths": {
+    "/v1/stores/nearby": {
+      "get": {
+        "summary": "Rechercher les magasins les plus proches d'une position GPS dans un rayon donné (défaut 10km)",
+        "operationId": "getNearbyStores",
+        "tags": ["Stores"],
+        "parameters": [
+          { "name": "lat", "in": "query", "required": true, "schema": { "type": "number" } },
+          { "name": "lng", "in": "query", "required": true, "schema": { "type": "number" } },
+          { "name": "radius_km", "in": "query", "schema": { "type": "number", "default": 10 } }
+        ],
+        "responses": { "200": { "description": "Magasins proches" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/stores/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter les détails complets d'un magasin (adresse, téléphone, services, coordonnées GPS)",
+        "operationId": "getStore",
+        "tags": ["Stores"],
+        "responses": { "200": { "description": "Détails magasin" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/stores/{id}/hours": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter les horaires d'ouverture hebdomadaires d'un magasin et les jours de fermeture exceptionnelle",
+        "operationId": "getStoreHours",
+        "tags": ["Stores"],
+        "responses": { "200": { "description": "Horaires d'ouverture" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/stores/{id}/stock/{productId}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } },
+        { "name": "productId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Vérifier la disponibilité et le niveau de stock d'un produit dans un magasin précis (pour click-and-collect)",
+        "operationId": "getStoreProductStock",
+        "tags": ["Stores"],
+        "responses": { "200": { "description": "Disponibilité produit en magasin" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

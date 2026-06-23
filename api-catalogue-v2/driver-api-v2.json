@@ -1,0 +1,144 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Driver API",
+    "version": "2.0.0",
+    "x-api-id": "driver-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Cette API régit le référentiel réglementaire et comportemental des conducteurs de véhicules de la flotte de transport (v2). Elle assure le suivi strict de la conformité des permis de conduire, centralise les infractions, calcule les métriques d'éco-conduite et se synchronise avec les données des cartes chronotachygraphes de bord. Elle est indispensable pour valider l'habilitation des chauffeurs avant toute affectation de mission et est exploitée par les outils de dispatch et de conformité du transport.",
+    "x-breaking-changes-from-previous": [
+      "Score conduite",
+      "Tachygraphe digital"
+    ],
+    "x-synonymes": "conducteur routier, référentiel chauffeurs, permis de conduire, score de conduite, éco-conduite, tachygraphe digital, carte chronotachygraphe, infraction routière, flotte de transport, heures de conduite, aptitude médicale, catégorie de permis, chauffeur poids lourd, comportement routier, sécurité routière, personnel roulant",
+    "x-false-positive-warning": "Attention : Cette API administre de façon exclusive les attributs légaux, d'aptitude et de comportement des conducteurs d'exploitation (Driver). Ne pas la confondre avec la `employee-api` (réservée aux données RH génériques, contrats de travail et salaires de l'ensemble du personnel), ni avec la `dispatch-api` (chargée de l'affectation opérationnelle immédiate des tournées).",
+    "x-cas-usage": "Quelles sont les catégories de permis valides et les dates d'expiration enregistrées pour ce conducteur ? | Comment ajouter un nouveau chauffeur routier dans le référentiel d'exploitation avec ses informations de permis ? | Où consulter le score d'éco-conduite mensuel calculé à partir des données de télémétrie du véhicule ? | Comment mettre à jour le statut d'aptitude médicale d'un membre du personnel roulant ?"
+  },
+  "paths": {
+    "/v2/drivers": {
+      "get": {
+        "summary": "Lister, trier et filtrer l'ensemble des fiches des conducteurs routiers actifs selon leur dépôt ou statut réglementaire",
+        "operationId": "listDriversV2",
+        "tags": [
+          "Drivers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter un nouveau conducteur professionnel dans le référentiel opérationnel en y associant son profil de base",
+        "operationId": "addDriverV2",
+        "tags": [
+          "Drivers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/drivers/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le profil métier complet d'un conducteur, incluant ses variables de comportement et états d'activité",
+        "operationId": "getDriverV2",
+        "tags": [
+          "Drivers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier les informations de contact, le dépôt d'affectation ou les métadonnées d'exploitation d'un conducteur",
+        "operationId": "updateDriverV2",
+        "tags": [
+          "Drivers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/drivers/{id}/license": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Vérifier le statut, le numéro, les catégories (Poids lourds, Super lourds) et la validité du permis de conduire du chauffeur",
+        "operationId": "getLicense",
+        "tags": [
+          "License"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les données de contrôle réglementaire du permis de conduire suite à un renouvellement ou une visite médicale",
+        "operationId": "updateLicense",
+        "tags": [
+          "License"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/drivers/{id}/score": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les scores d'éco-conduite et les indicateurs de comportement routier (freinages brusques, excès de vitesse) du conducteur",
+        "operationId": "getDrivingScore",
+        "tags": [
+          "Score"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

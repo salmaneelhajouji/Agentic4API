@@ -1,0 +1,55 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Regulatory Reporting API",
+    "version": "1.0.0",
+    "x-api-id": "regulatory-reporting-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Reporting réglementaire obligatoire et soumissions automatisées aux régulateurs. Permet de créer les rapports réglementaires (AMF, ACPR, DGFiP, BCE), de les soumettre au régulateur et de suivre leur statut de validation. Permet aussi de consulter les échéances réglementaires à venir.",
+    "x-synonymes": "rapport réglementaire, déclaration AMF, reporting ACPR, reporting DGFiP, reporting BCE COREP, reporting FINREP, FRTB reporting, Solvabilité II reporting, reporting AML LCB-FT, déclaration réglementaire automatique, soumission régulateur, conformité réglementaire reporting, échéances réglementaires, EMIR reporting, MiFID reporting, DAC6 déclaration, FATCA reporting, QRT Solvabilité, XBRL taxonomie, déclaration périodique obligatoire",
+    "x-false-positive-warning": "DIFFÉRENCE vs compliance-check-api : Regulatory Reporting API = génération et soumission des rapports au régulateur. compliance-check-api = vérification interne de conformité ISO/PCI-DSS. DIFFÉRENCE vs reporting-api-v2 : Regulatory Reporting API = rapports obligatoires vers régulateurs externes. reporting-api-v2 = rapports business internes avec white-labeling.",
+    "x-cas-usage": "je veux générer notre rapport réglementaire mensuel COREP pour la BCE | je veux soumettre notre déclaration AMF au régulateur | je veux voir si notre soumission ACPR a bien été acceptée | je veux consulter toutes les échéances réglementaires des 30 prochains jours | je veux créer le rapport Solvabilité II pour ce trimestre"
+  },
+  "paths": {
+    "/v1/regulatory/reports": {
+      "get": {
+        "summary": "Rapports réglementaires — AMF, ACPR, DGFiP et statuts de soumission",
+        "operationId": "listRegulatoryReports",
+        "tags": ["Reports"],
+        "responses": {"200": {"description": "Rapports réglementaires"}}
+      },
+      "post": {
+        "summary": "Créer un rapport réglementaire — COREP, FINREP, Solvabilité II ou autre",
+        "operationId": "createRegulatoryReport",
+        "tags": ["Reports"],
+        "responses": {"200": {"description": "Rapport créé"}}
+      }
+    },
+    "/v1/regulatory/reports/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut de soumission d un rapport — accepté, rejeté ou en attente de validation",
+        "operationId": "getSubmissionStatus",
+        "tags": ["Reports"],
+        "responses": {"200": {"description": "Statut soumission"}}
+      },
+      "post": {
+        "summary": "Soumettre un rapport au régulateur — AMF, ACPR ou DGFiP",
+        "operationId": "submitToRegulator",
+        "tags": ["Reports"],
+        "responses": {"200": {"description": "Rapport soumis"}}
+      }
+    },
+    "/v1/regulatory/deadlines": {
+      "get": {
+        "summary": "Échéances réglementaires à venir — dates limites de soumission par régulateur",
+        "operationId": "getRegulatoryDeadlines",
+        "tags": ["Deadlines"],
+        "responses": {"200": {"description": "Échéances réglementaires"}}
+      }
+    }
+  }
+}

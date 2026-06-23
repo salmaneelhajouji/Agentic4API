@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Order API",
+    "version": "2.0.0",
+    "x-api-id": "order-api",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "DEPRECATED juin 2022 — NE PAS UTILISER. Version 2 avec multi-articles, IDs préfixés ORD- et pagination. Migrer vers order-api-v4.",
+    "x-breaking-changes-from-previous": ["ID integer→string ORD-XXXX", "customer_id→CUST-XXX", "product_id→tableau items", "Suppression interdite→/cancel"],
+    "x-successor": "order-api-v4",
+    "x-synonymes": "commandes v2 deprecated, order api multi-articles legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser order-api-v4.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers order-api-v4."
+  },
+  "paths": {
+    "/v2/orders": {
+      "post": {
+        "summary": "DEPRECATED — Créer une commande multi-articles",
+        "operationId": "createOrderV2",
+        "tags": ["Orders"],
+        "responses": {"201": {"description": "Commande créée"}}
+      },
+      "get": {
+        "summary": "DEPRECATED — Lister avec pagination",
+        "operationId": "listOrdersV2",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Commandes paginées"}}
+      }
+    },
+    "/v2/orders/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "DEPRECATED — Récupérer une commande ORD-XXXX",
+        "operationId": "getOrderV2",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Commande"}}
+      },
+      "put": {
+        "summary": "DEPRECATED — Modifier le statut d une commande",
+        "operationId": "updateOrderV2",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Modifiée"}}
+      }
+    },
+    "/v2/orders/{id}/cancel": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "DEPRECATED — Annuler une commande",
+        "operationId": "cancelOrderV2",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Annulée"}}
+      }
+    }
+  }
+}

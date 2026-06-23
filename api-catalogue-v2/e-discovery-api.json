@@ -1,0 +1,116 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "E-Discovery API",
+    "version": "1.0.0",
+    "x-api-id": "e-discovery-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Cette API gère les processus de recherche et de découverte électronique (E-Discovery) de documents et preuves numériques requis lors de contentieux juridiques, d'enquêtes réglementaires ou d'audits internes. Elle permet de mettre en place des mesures de conservation légale obligatoire (Legal Holds) pour empêcher la suppression de données par les collaborateurs concernés, de collecter massivement les correspondances et fichiers archivés, et d'exporter des collections de documents prêtes pour examen judiciaire. Elle est l'outil pivot des équipes de conformité et des conseils juridiques pour répondre aux réquisitions.",
+    "x-synonymes": "découverte électronique, e-discovery, conservation légale, legal hold, preuve numérique, collecte de documents, conservation de données, litige juridique, réquisition judiciaire, export de preuves, fouille de données légales, archivage légal, investigation numérique, forensic d'entreprise, saisie de documents",
+    "x-false-positive-warning": "Attention : Cette API orchestre la préservation forcée et l'extraction de documents dans un cadre de contentieux ou d'enquête (E-Discovery). Ne pas la confondre avec la `document-management-api` (gestion courante et collaborative des documents de l'entreprise) ni avec la `data-loss-prevention-api` (prévention active des fuites accidentelles).",
+    "x-cas-usage": "Comment activer une mesure de gel ou de conservation légale (Legal Hold) sur l'ensemble des boîtes mail d'un département impliqué dans un litige ? | Comment lever un hold légal après la clôture définitive d'une affaire pour libérer les politiques de rétention standard ? | Comment extraire et exporter une collection de documents d'archive indexés pour la transmettre aux autorités judiciaires ?"
+  },
+  "paths": {
+    "/v1/ediscovery/holds": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des mesures de conservation légale obligatoire (Legal Holds) actuellement actives sur le système",
+        "operationId": "listLegalHolds",
+        "tags": [
+          "Holds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et déployer une nouvelle mesure de conservation légale obligatoire (Legal Hold) pour interdire la suppression de documents ou de courriels",
+        "operationId": "createLegalHold",
+        "tags": [
+          "Holds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/ediscovery/holds/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le périmètre technique, la liste des collaborateurs ciblés et le statut détaillé d'une mesure de conservation légale",
+        "operationId": "getLegalHold",
+        "tags": [
+          "Holds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Lever officiellement une mesure de conservation légale (Legal Hold) pour réappliquer les politiques de rétention standard",
+        "operationId": "releaseLegalHold",
+        "tags": [
+          "Holds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/ediscovery/collections/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état, l'index et le volume de documents numériques rassemblés au sein d'une collection d'investigation informatique",
+        "operationId": "getCollection",
+        "tags": [
+          "Collections"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher l'exportation sécurisée de la collection de documents vers un format exploitable pour examen et expertise judiciaire",
+        "operationId": "exportCollection",
+        "tags": [
+          "Collections"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

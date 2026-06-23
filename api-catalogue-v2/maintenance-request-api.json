@@ -1,0 +1,53 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Maintenance Request API",
+    "version": "1.0.0",
+    "x-api-id": "maintenance-request-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Gestion des demandes d intervention maintenance formulées par les locataires. Permet de créer une demande d intervention (fuite, panne, dégradation), de suivre son statut, d assigner un technicien et de la clôturer. Utilisé par les portails locataires et les équipes property management pour traiter les demandes de travaux et d entretien.",
+    "x-synonymes": "demande intervention, ticket maintenance, signalement locataire, demande travaux locataire, panne signalement, fuite signalement, intervention technique, affectation technicien, priorité intervention, urgence maintenance, ticket immobilier, suivi intervention, demande réparation, bon intervention locataire, incident locataire, helpdesk immobilier, property management ticket, demande entretien, réclamation locataire, ordre intervention",
+    "x-false-positive-warning": "DIFFÉRENCE vs maintenance-work-order-api : Maintenance Request API = demande initiale côté locataire. maintenance-work-order-api = ordre de travail technique côté maintenance industrielle. DIFFÉRENCE vs maintenance-schedule-api : Maintenance Request API = maintenance corrective à la demande. maintenance-schedule-api = maintenance préventive planifiée sur véhicules. DIFFÉRENCE vs ticket-api : Maintenance Request API = tickets d intervention immobilier. ticket-api = tickets support client générique.",
+    "x-cas-usage": "un locataire veut signaler une fuite d eau dans son appartement | je veux voir toutes les demandes d intervention en cours dans notre parc immobilier | je veux assigner un plombier à une demande d intervention urgente | je veux mettre à jour le statut d une intervention en cours | je veux clôturer une demande d intervention résolue"
+  },
+  "paths": {
+    "/v1/maintenance-requests": {
+      "get": {
+        "summary": "Lister les demandes d intervention — filtre par priorité, statut et bien",
+        "operationId": "listMaintenanceRequests",
+        "tags": ["Requests"],
+        "responses": {"200": {"description": "Demandes d intervention"}}
+      },
+      "post": {
+        "summary": "Créer une demande d intervention — signalement locataire avec description et priorité",
+        "operationId": "createMaintenanceRequest",
+        "tags": ["Requests"],
+        "responses": {"200": {"description": "Demande créée"}}
+      }
+    },
+    "/v1/maintenance-requests/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d une demande d intervention — description, statut et technicien assigné",
+        "operationId": "getMaintenanceRequest",
+        "tags": ["Requests"],
+        "responses": {"200": {"description": "Détail demande"}}
+      },
+      "put": {
+        "summary": "Mettre à jour le statut d une demande — en attente, en cours ou résolue",
+        "operationId": "updateStatus",
+        "tags": ["Requests"],
+        "responses": {"200": {"description": "Statut mis à jour"}}
+      },
+      "post": {
+        "summary": "Assigner un technicien à une demande d intervention",
+        "operationId": "assignTechnician",
+        "tags": ["Requests"],
+        "responses": {"200": {"description": "Technicien assigné"}}
+      }
+    }
+  }
+}

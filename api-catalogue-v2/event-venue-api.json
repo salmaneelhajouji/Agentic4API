@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Event Venue API",
+    "version": "1.0.0",
+    "x-api-id": "event-venue-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Cette API centralise le référencement, le catalogue et la réservation des salles événementielles, espaces de congrès et lieux de réception physiques du domaine touristique et d'affaires. Elle gère la fiche technique des établissements (capacité d'accueil, équipements audiovisuels disponibles, configurations de salles), le calendrier de disponibilité en temps réel, ainsi que l'enregistrement des réservations fermes ou options de location. Elle est principalement exploitée par les agences événementielles et les plateformes de réservation d'espaces de réunion.",
+    "x-synonymes": "salle événementielle, lieu de réception, espace de congrès, réservation de salle, capacité d'accueil, fiche technique lieu, disponibilité de salle, location d'espace, complexe événementiel, salle de réunion, centre de conférence, planning de réservation, équipement de réception, tarification événementielle, tourisme d'affaires",
+    "x-false-positive-warning": "Attention : Cette API administre uniquement les espaces, complexes et salles physiques destinés à accueillir des rassemblements ou des événements réels (Event Venue). Ne pas la confondre avec la virtual-classroom-api dédiée aux salles de cours en ligne, visioconférences et environnements éducatifs virtuels.",
+    "x-cas-usage": "Comment rechercher et filtrer les lieux de réception physiques disponibles selon une capacité d'accueil minimale ? | Comment référencer et ajouter un nouvel espace événementiel avec sa grille tarifaire et ses équipements ? | Où vérifier le calendrier de disponibilité d'un centre de conférence pour une période donnée ? | Quelle méthode appeler pour poser une option ou réserver une salle pour un séminaire d'entreprise ?"
+  },
+  "paths": {
+    "/v1/venues": {
+      "get": {
+        "summary": "Rechercher et filtrer les complexes et lieux de réception physiques disponibles selon des critères de capacité",
+        "operationId": "listVenues",
+        "tags": [
+          "Venues"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Référencer, ajouter et documenter une nouvelle salle événementielle au sein du catalogue d'offres",
+        "operationId": "addVenue",
+        "tags": [
+          "Venues"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/venues/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le calendrier prévisionnel d'ouverture et de disponibilité en temps réel d'un lieu d'exception",
+        "operationId": "getVenueAvailability",
+        "tags": [
+          "Venues"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/venues/{id}/bookings": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la liste complète des dossiers de location et réservations enregistrés sur cet établissement",
+        "operationId": "getVenueBookings",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Valider et enregistrer une nouvelle réservation ferme ou une option de location de salle pour une période",
+        "operationId": "bookVenue",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SMS API",
+    "version": "1.0.0",
+    "x-api-id": "sms-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Communication",
+    "description": "Envoi de SMS transactionnels et codes OTP vers des numéros mobiles. Envoi de SMS avec sender ID personnalisé, génération et envoi de codes OTP (login, paiement, changement de compte), vérification des codes OTP reçus, et suivi du statut de livraison. Utilise des numéros courts dédiés. DIFFÉRENCE vs notification-api : SMS API est le canal SMS technique avec gestion des numéros courts et OTP, Notification API est la façade multi-canal (SMS + email + push) qui délègue au SMS API. DIFFÉRENCE vs messaging-api : SMS envoie vers des numéros mobiles externes (telco), Messaging gère le chat in-app bidirectionnel entre utilisateurs.",
+    "x-synonymes": "SMS transactionnel, OTP SMS, code vérification SMS, envoi SMS, numéro court, sender ID, statut livraison SMS, double authentification SMS, 2FA SMS, code confirmation, vérification téléphone, SMS marketing, SMS notification, MFA SMS, texto",
+    "x-false-positive-warning": "Notifications multi-canal (SMS + email + push) → notification-api. Chat in-app bidirectionnel → messaging-api. Email transactionnel → email-api.",
+    "x-cas-usage": "je veux envoyer un SMS transactionnel de confirmation de commande | je veux envoyer un code OTP par SMS pour authentifier un utilisateur | je veux vérifier si le code OTP saisi par l'utilisateur est correct | je veux vérifier si mon SMS a bien été livré sur le téléphone du destinataire | je veux envoyer un SMS de réinitialisation de mot de passe"
+  },
+  "paths": {
+    "/v1/sms/send": {
+      "post": {
+        "summary": "Envoyer un SMS transactionnel vers un numéro mobile avec sender ID personnalisé (max 160 caractères)",
+        "operationId": "sendSMS",
+        "tags": ["SMS"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SMSSend" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "SMS envoyé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/sms/otp/send": {
+      "post": {
+        "summary": "Générer et envoyer un code OTP à 6 chiffres par SMS pour un usage défini (login, paiement, changement de compte)",
+        "operationId": "sendOTP",
+        "tags": ["OTP"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["phone", "purpose"],
+                "properties": {
+                  "phone": { "type": "string", "example": "+33612345678" },
+                  "purpose": { "type": "string", "enum": ["login", "payment", "account_change"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "OTP envoyé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/sms/otp/verify": {
+      "post": {
+        "summary": "Vérifier la validité d'un code OTP saisi par l'utilisateur (expiration et correspondance)",
+        "operationId": "verifyOTP",
+        "tags": ["OTP"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["phone", "code"],
+                "properties": {
+                  "phone": { "type": "string" },
+                  "code": { "type": "string", "minLength": 6, "maxLength": 6 }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "OTP valide" },
+          "400": { "description": "OTP invalide ou expiré" }
+        },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/sms/{id}/status": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le statut de livraison d'un SMS (envoyé, livré, échec, en attente)",
+        "operationId": "getSMSStatus",
+        "tags": ["SMS"],
+        "responses": { "200": { "description": "Statut de livraison" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SMSSend": {
+        "type": "object",
+        "required": ["to", "message"],
+        "properties": {
+          "to": { "type": "string", "example": "+33612345678" },
+          "message": { "type": "string", "maxLength": 160 },
+          "sender_id": { "type": "string", "example": "DEVOTEAM" }
+        }
+      }
+    }
+  }
+}

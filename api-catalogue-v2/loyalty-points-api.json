@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Loyalty Points API",
+    "version": "1.0.0",
+    "x-api-id": "loyalty-points-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe CRM",
+    "x-domain": "CRM & Marketing",
+    "description": "Programme de fidélité e-commerce générique. Permet d attribuer des points après un achat, de les échanger contre des récompenses (bons de réduction, cadeaux), de consulter le solde et l historique des transactions de fidélité, et d accéder au catalogue des récompenses disponibles. Utilisé par les équipes CRM pour fidéliser les clients et augmenter le taux de rétention.",
+    "x-synonymes": "programme fidélité, points fidélité, cagnotte client, solde points, gagner points, échanger points, récompense fidélité, bon réduction fidélité, cadeau points, catalogue récompenses, historique points, transaction fidélité, points achat, attribution points, redemption points, solde insuffisant, fidélisation client, carte fidélité digitale, taux conversion points, expiration points",
+    "x-false-positive-warning": "Programme fidélité hôtelier avec nuitées → loyalty-hotel-api. Conversion points hôtel-retail → loyalty-points-hotel-api. Avantages salariaux RH → benefits-api. Promotions et codes promo → discount-api.",
+    "x-cas-usage": "je veux attribuer des points fidélité à un client après son achat | je veux voir le solde de points d un client avant de lui proposer une récompense | je veux échanger des points contre un bon de réduction de 10 € | je veux afficher le catalogue des récompenses disponibles dans l app | je veux consulter l historique des transactions de points d un client"
+  },
+  "paths": {
+    "/v1/loyalty/{customerId}": {
+      "parameters": [{"name": "customerId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Solde de points fidélité d un client — total disponible et points expirant bientôt",
+        "operationId": "getLoyaltyBalance",
+        "tags": ["Loyalty"],
+        "responses": {"200": {"description": "Solde points fidélité"}}
+      }
+    },
+    "/v1/loyalty/earn": {
+      "post": {
+        "summary": "Attribuer des points fidélité après un achat — liés à une commande",
+        "operationId": "earnPoints",
+        "tags": ["Loyalty"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["customer_id", "points", "order_id"],
+                "properties": {
+                  "customer_id": {"type": "string"},
+                  "points": {"type": "integer", "minimum": 1},
+                  "order_id": {"type": "string"},
+                  "reason": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Points attribués"}}
+      }
+    },
+    "/v1/loyalty/redeem": {
+      "post": {
+        "summary": "Échanger des points contre une récompense — bon de réduction ou cadeau",
+        "operationId": "redeemPoints",
+        "tags": ["Loyalty"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["customer_id", "points", "reward_id"],
+                "properties": {
+                  "customer_id": {"type": "string"},
+                  "points": {"type": "integer"},
+                  "reward_id": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Points échangés"},
+          "400": {"description": "Solde insuffisant"}
+        }
+      }
+    },
+    "/v1/loyalty/{customerId}/history": {
+      "parameters": [{"name": "customerId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Historique des transactions de fidélité — gains et échanges de points",
+        "operationId": "getLoyaltyHistory",
+        "tags": ["Loyalty"],
+        "responses": {"200": {"description": "Historique points"}}
+      }
+    },
+    "/v1/loyalty/rewards": {
+      "get": {
+        "summary": "Catalogue des récompenses disponibles — bons réduction, cadeaux et avantages",
+        "operationId": "getRewards",
+        "tags": ["Loyalty"],
+        "responses": {"200": {"description": "Catalogue récompenses"}}
+      }
+    }
+  }
+}

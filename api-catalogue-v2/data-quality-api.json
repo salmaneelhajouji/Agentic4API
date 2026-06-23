@@ -1,0 +1,106 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Quality API",
+    "version": "1.0.0",
+    "x-api-id": "data-quality-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API pilote et automatise l'évaluation de la qualité des données (Data Quality) au sein du patrimoine informationnel de l'entreprise. Elle permet de configurer des règles d'intégrité déterministes et d'exécuter des contrôles de conformité sur les tables du datalake ou du data warehouse. L'API identifie, isole et consigne automatiquement les anomalies (données manquantes, formats incorrects, ruptures de règles métiers) dans un registre centralisé pour déclencher des alertes de remédiation. Elle est indispensable aux Data Stewards, Data Engineers et équipes de gouvernance pour certifier la fiabilité des rapports décisionnels.",
+    "x-synonymes": "qualité des données, data quality, contrôle de conformité data, règle d'intégrité, anomalie de données, score de qualité, remédiation data, validation des données, données corrompues, seuil de tolérance, vérification de cohérence, registre des anomalies, acquittement d'anomalie, data cleansing, fiabilité de la donnée, règle métier data, data observability, indicateur de qualité",
+    "x-false-positive-warning": "Attention : Cette API exécute des contrôles basés sur des règles métiers strictes et lève des alertes exploitables (Data Quality). Ne pas la confondre avec la `data-profiling-api` (qui génère uniquement des statistiques descriptives et intrinsèques comme les distributions de fréquences ou taux de nullité bruts), ni avec la `data-catalog-api` (dédiée exclusivement à la documentation, à la recherche documentaire et au lignage technique).",
+    "x-cas-usage": "Comment créer une règle de validation exigeant que le statut d'une commande ne soit jamais vide ? | Comment lancer immédiatement le pipeline de contrôle de qualité sur le jeu de données des clients ? | Où récupérer le rapport d'exécution et les scores de conformité issus du dernier contrôle ? | Comment lister toutes les anomalies critiques détectées lors du traitement batch de cette nuit ? | Quelle méthode appeler pour acquitter et valider une anomalie après correction de la source ?"
+  },
+  "paths": {
+    "/v1/quality/rules": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des règles d'intégrité et de validation de données actuellement configurées",
+        "operationId": "listQualityRules",
+        "tags": [
+          "Rules"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et déployer une nouvelle règle de conformité ou un critère d'évaluation sur le référentiel qualité",
+        "operationId": "createQualityRule",
+        "tags": [
+          "Rules"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/quality/checks/{datasetId}": {
+      "parameters": [
+        {
+          "name": "datasetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Déclencher l'exécution immédiate d'un pipeline de contrôle de qualité sur un jeu de données spécifique",
+        "operationId": "runQualityCheck",
+        "tags": [
+          "Checks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Consulter l'historique des résultats, les rapports de validation et les taux de conformité d'un dataset",
+        "operationId": "getQualityResults",
+        "tags": [
+          "Checks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/quality/anomalies": {
+      "get": {
+        "summary": "Consulter et filtrer le registre centralisé des écarts de conformité et des anomalies de données détectées",
+        "operationId": "listDataAnomalies",
+        "tags": [
+          "Anomalies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Acquitter et mettre à jour le statut d'une anomalie ou d'un écart de données après analyse ou remédiation",
+        "operationId": "acknowledgeAnomaly",
+        "tags": [
+          "Anomalies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

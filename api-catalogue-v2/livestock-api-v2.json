@@ -1,0 +1,144 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Livestock API",
+    "version": "2.0.0",
+    "x-api-id": "livestock-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Cette API régit le référentiel réglementaire d'identification, de suivi de santé et de traçabilité des animaux (cheptel) au sein des exploitations d'élevage (v2). Elle prend en charge l'enregistrement individuel du bétail (ovins, bovins, porcins), consigne de manière auditable le carnet de santé électronique (soins vétérinaires, vaccins, traitements), trace les mouvements physiques entre les parcelles ou les bâtiments de stabulation, et sécurise la conformité avec les critères de certification des appellations (INAO).",
+    "x-synonymes": "gestion de cheptel, troupeau agricole, identification individuelle animal, carnet de santé électronique vétérinaire, traçabilité des mouvements bétail, fiche animale, bovins ovins porcins, registre d'élevage v2, certification INAO, traitement vétérinaire, stabulation, historique de pâturage, mouvement inter-parcelles",
+    "x-false-positive-warning": "Attention : Cette API structure la traçabilité légale, médicale et biologique des animaux d'élevage (Livestock). Ne pas la confondre avec la `field-api-v2` (qui gère la cartographie des surfaces de terre) ni avec la `harvest-api` dédiée aux récoltes végétales.",
+    "x-cas-usage": "Comment enregistrer un nouvel animal au registre du troupeau en y associant son numéro de boucle d'identification ? | Où consulter le carnet de santé électronique et l'historique des vaccins administrés à une bête ? | Comment déclarer un événement de mouvement physique ou de transfert de pâturage pour un groupe d'animaux ? | Comment extraire la fiche descriptive complète et le lignage généalogique d'un bovin ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "Traçabilité INAO",
+    "Santé electronique"
+  ],
+  "paths": {
+    "/v2/livestock": {
+      "get": {
+        "summary": "Lister, trier et filtrer l'ensemble des animaux constituant le troupeau selon leur espèce, âge ou statut sanitaire",
+        "operationId": "listLivestockV2",
+        "tags": [
+          "Livestock"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et identifier un nouvel animal au sein du registre d'élevage de l'exploitation",
+        "operationId": "addAnimalV2",
+        "tags": [
+          "Livestock"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/livestock/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive d'identité, la généalogie et les variables de conformité d'un animal spécifique",
+        "operationId": "getAnimalV2",
+        "tags": [
+          "Livestock"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour le poids, les indicateurs d'exploitation ou modifier les métadonnées de la fiche de l'animal",
+        "operationId": "updateAnimalV2",
+        "tags": [
+          "Livestock"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/livestock/{id}/health": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le carnet de santé électronique complet et l'historique des prescriptions ou traitements du bétail",
+        "operationId": "getAnimalHealth",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Consigner un nouvel événement vétérinaire, une auscultation ou l'administration d'un traitement médical",
+        "operationId": "recordHealthEvent",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/livestock/{id}/movements": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique géographique complet des déplacements et des changements de pâturage de l'animal",
+        "operationId": "getMovements",
+        "tags": [
+          "Movements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

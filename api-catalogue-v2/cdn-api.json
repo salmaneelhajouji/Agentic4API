@@ -1,0 +1,78 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CDN API",
+    "version": "1.0.0",
+    "x-api-id": "cdn-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "API de gestion du Content Delivery Network (CDN) pour la distribution géographique de contenu statique (images, CSS, JavaScript, polices, vidéos). Couvre les processus de purge et d'invalidation de cache après déploiement, la configuration de règles de mise en cache avec TTL par type de contenu ou pattern URL, et la consultation de métriques de performance (hit rate, bande passante, latence par edge node). Utilisée principalement par les équipes Platform, DevOps et SRE pour optimiser les temps de chargement des sites web et réduire la charge sur les serveurs d'origine. DIFFÉRENCE vs cache-api : CDN API = cache HTTP géographiquement distribué (edge nodes) pour contenu statique public ; cache-api = cache applicatif côté serveur pour données métier (Redis/Memcached). DIFFÉRENCE vs storage-api : CDN API = distribution et mise en cache de contenu déjà stocké ; storage-api = stockage persistant de fichiers sources. DIFFÉRENCE vs media-api : CDN API = configuration du réseau de distribution ; media-api = gestion, transformation et encodage des fichiers médias.",
+    "x-synonymes": "CDN purge, vider CDN, cache CDN, invalidation CDN, Content Delivery Network, distribution de contenu, edge cache, règle de cache CDN, TTL CDN, bande passante CDN, hit rate CDN, edge node, contenu statique CDN, purge URL, cache busting, cache géographique, réseau de diffusion de contenu, purge préfixe, performance CDN, cache navigateur CDN",
+    "x-false-positive-warning": "DIFFÉRENCE vs cache-api : CDN API = cache HTTP géographiquement distribué pour contenu statique public (images, JS, CSS) servi depuis des edge nodes mondiaux ; cache-api = cache applicatif côté serveur pour données métier (Redis/Memcached), invisible du navigateur. DIFFÉRENCE vs storage-api : CDN API = distribution et mise en cache de contenu existant via un réseau mondial ; storage-api = stockage persistant de fichiers (upload, lecture, suppression). DIFFÉRENCE vs media-api : CDN API = configuration du réseau de distribution (règles TTL, purge) ; media-api = gestion et transformation des fichiers médias (resize, transcode, métadonnées). DIFFÉRENCE vs api-gateway-api : CDN API = mise en cache de ressources statiques au niveau réseau ; api-gateway-api = routage, throttling et sécurité des appels API dynamiques.",
+    "x-cas-usage": "Comment purger le cache CDN après un déploiement pour forcer le rechargement des nouvelles ressources statiques ? | Comment configurer une règle de cache CDN avec un TTL de 30 jours pour toutes les images sous /assets/images/ ? | Quels sont le taux de cache hit et la bande passante consommée par le CDN sur les dernières 24 heures ? | Comment invalider toutes les URLs sous un préfixe donné après une mise à jour groupée des ressources statiques ? | Comment créer des règles de cache différentes pour les fichiers HTML (TTL court) et les fichiers JS/CSS versionnés (TTL long) ?"
+  },
+  "paths": {
+    "/v1/cdn/purge": {
+      "post": {
+        "summary": "Purger des URLs spécifiques ou un préfixe entier du cache CDN afin de forcer le rechargement depuis l'origine après un déploiement ou une mise à jour de contenu",
+        "operationId": "purgeCDN",
+        "tags": ["CDN"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "urls": {"type": "array", "items": {"type": "string", "format": "uri"}},
+                  "prefix": {"type": "string", "description": "Purge tout le contenu sous ce préfixe"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"202": {"description": "Purge planifiée"}}
+      }
+    },
+    "/v1/cdn/stats": {
+      "get": {
+        "summary": "Consulter les statistiques de performance CDN incluant taux de cache hit, bande passante consommée, nombre de requêtes et économies réalisées sur les serveurs d'origine",
+        "operationId": "getCDNStats",
+        "tags": ["CDN"],
+        "parameters": [{"name": "period", "in": "query", "schema": {"type": "string", "example": "24h"}}],
+        "responses": {"200": {"description": "Statistiques CDN"}}
+      }
+    },
+    "/v1/cdn/rules": {
+      "get": {
+        "summary": "Lister toutes les règles de cache CDN actives avec leurs paramètres de TTL, pattern URL et configuration de cache navigateur associée",
+        "operationId": "getCDNRules",
+        "tags": ["CDN"],
+        "responses": {"200": {"description": "Règles de cache"}}
+      },
+      "post": {
+        "summary": "Créer une nouvelle règle de cache CDN en définissant un pattern URL, une durée de vie TTL côté edge et une durée de cache navigateur pour optimiser la distribution de contenu statique",
+        "operationId": "createCDNRule",
+        "tags": ["CDN"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["path_pattern", "ttl"],
+                "properties": {
+                  "path_pattern": {"type": "string", "example": "/images/*"},
+                  "ttl": {"type": "integer", "description": "TTL en secondes"},
+                  "browser_cache_ttl": {"type": "integer"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Règle CDN créée"}}
+      }
+    }
+  }
+}

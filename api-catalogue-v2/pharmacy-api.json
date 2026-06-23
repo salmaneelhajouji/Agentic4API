@@ -1,0 +1,61 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pharmacy API",
+    "version": "1.0.0",
+    "x-api-id": "pharmacy-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Gestion du stock pharmaceutique et de la dispensation des médicaments. Permet de gérer l inventaire des médicaments avec alertes de péremption et ruptures de stock, d enregistrer les dispensations aux patients sur ordonnance, et de tracer les lots. Utilisé par les pharmacies hospitalières et officines pour la gestion et traçabilité des médicaments.",
+    "x-synonymes": "stock médicament, inventaire pharmacie, dispensation médicament, ordonnance médicament, péremption médicament, rupture stock médicament, traçabilité lot médicament, DCI dénomination commune, spécialité pharmaceutique, médicament liste I II, stupéfiant dispensation, reconstitution médicament, pharmacie hospitalière, officine gestion, stock pharmaco, fiche médicament, quantité stock, mouvement stock médicament, alerte stock bas, pharmacovigilance",
+    "x-false-positive-warning": "DIFFÉRENCE vs prescription-api-v2 : Pharmacy API = gestion du stock et dispensation physique. prescription-api-v2 = création et gestion des ordonnances médicales. DIFFÉRENCE vs lab-result-api : Pharmacy API = médicaments et dispensation. lab-result-api = résultats d analyses biologiques. DIFFÉRENCE vs care-plan-api : Pharmacy API = stock et dispensation. care-plan-api = plan de soins et tâches thérapeutiques.",
+    "x-cas-usage": "je veux vérifier le stock disponible d un médicament avant de le dispenser | je veux enregistrer la dispensation d un antibiotique à un patient sur ordonnance | je veux voir les médicaments qui arrivent à péremption dans les 30 prochains jours | je veux référencer un nouveau médicament dans notre stock pharmacie | je veux voir l historique des dispensations pour un patient"
+  },
+  "paths": {
+    "/v1/drugs": {
+      "get": {
+        "summary": "Stock de médicaments — quantités disponibles et alertes péremption/rupture",
+        "operationId": "listDrugs",
+        "tags": ["Drugs"],
+        "responses": {"200": {"description": "Stock médicaments"}}
+      },
+      "post": {
+        "summary": "Référencer un nouveau médicament dans le stock pharmaceutique",
+        "operationId": "addDrug",
+        "tags": ["Drugs"],
+        "responses": {"200": {"description": "Médicament référencé"}}
+      }
+    },
+    "/v1/drugs/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Fiche médicament — DCI, spécialité, lot, péremption et quantité",
+        "operationId": "getDrug",
+        "tags": ["Drugs"],
+        "responses": {"200": {"description": "Fiche médicament"}}
+      },
+      "put": {
+        "summary": "Mise à jour du stock — entrée ou sortie de médicament",
+        "operationId": "updateStock",
+        "tags": ["Drugs"],
+        "responses": {"200": {"description": "Stock mis à jour"}}
+      }
+    },
+    "/v1/dispensations": {
+      "get": {
+        "summary": "Historique des dispensations — médicaments remis aux patients sur ordonnance",
+        "operationId": "listDispensations",
+        "tags": ["Dispensations"],
+        "responses": {"200": {"description": "Historique dispensations"}}
+      },
+      "post": {
+        "summary": "Enregistrer une dispensation — médicament remis au patient avec traçabilité lot",
+        "operationId": "dispenseDrug",
+        "tags": ["Dispensations"],
+        "responses": {"200": {"description": "Dispensation enregistrée"}}
+      }
+    }
+  }
+}

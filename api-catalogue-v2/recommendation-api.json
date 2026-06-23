@@ -1,0 +1,76 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Recommendation API",
+    "version": "1.0.0",
+    "x-api-id": "recommendation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "E-Commerce",
+    "description": "Recommandations personnalisées de produits par IA. Filtrage collaboratif et basé sur le contenu. Permet d obtenir des recommandations personnalisées pour un utilisateur selon le contexte (homepage, panier, checkout, email), des produits similaires à un article, les tendances du moment, et d envoyer des feedbacks pour améliorer le modèle.",
+    "x-synonymes": "recommandation produit, personnalisation e-commerce, produits similaires, also bought, vous aimerez aussi, trending produits, produits populaires, filtrage collaboratif, moteur recommandation, cross-sell up-sell, personnalisation homepage, recommendation panier, recommendation email, produits tendance, IA recommandation, suggestion produit, related products, collaborative filtering, content based filtering, feedback recommandation",
+    "x-false-positive-warning": "DIFFÉRENCE vs search-api-v3 : Recommendation API = suggestion basée sur profil et comportement. search-api-v3 = recherche intentionnelle par requête. DIFFÉRENCE vs catalog-api : Recommendation API = sélection personnalisée. catalog-api = catalogue complet des produits.",
+    "x-cas-usage": "je veux afficher des recommandations personnalisées sur la homepage d un utilisateur connecté | je veux afficher les produits similaires sur une fiche produit | je veux afficher les produits tendance de la semaine sur notre site | je veux envoyer des recommandations personnalisées dans un email promotionnel | je veux enregistrer qu un utilisateur a cliqué sur une recommandation pour améliorer le modèle"
+  },
+  "paths": {
+    "/v1/recommendations/{userId}": {
+      "parameters": [{"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Recommandations personnalisées pour un utilisateur — selon contexte homepage, panier ou email",
+        "operationId": "getRecommendations",
+        "tags": ["Recommendations"],
+        "parameters": [
+          {"name": "limit", "in": "query", "schema": {"type": "integer", "default": 10}},
+          {"name": "context", "in": "query", "schema": {"type": "string", "enum": ["homepage", "cart", "checkout", "email"]}}
+        ],
+        "responses": {"200": {"description": "Produits recommandés"}}
+      }
+    },
+    "/v1/recommendations/similar/{productId}": {
+      "parameters": [{"name": "productId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Produits similaires à un article — aussi achetés et même catégorie",
+        "operationId": "getSimilarProducts",
+        "tags": ["Recommendations"],
+        "parameters": [{"name": "limit", "in": "query", "schema": {"type": "integer", "default": 6}}],
+        "responses": {"200": {"description": "Produits similaires"}}
+      }
+    },
+    "/v1/recommendations/trending": {
+      "get": {
+        "summary": "Produits tendance — les plus populaires du jour, de la semaine ou du mois",
+        "operationId": "getTrending",
+        "tags": ["Recommendations"],
+        "parameters": [
+          {"name": "period", "in": "query", "schema": {"type": "string", "enum": ["day", "week", "month"], "default": "week"}},
+          {"name": "category", "in": "query", "schema": {"type": "string"}}
+        ],
+        "responses": {"200": {"description": "Produits tendance"}}
+      }
+    },
+    "/v1/recommendations/feedback": {
+      "post": {
+        "summary": "Feedback sur une recommandation — clic, achat ou rejet pour améliorer le modèle",
+        "operationId": "sendRecommendationFeedback",
+        "tags": ["Recommendations"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["user_id", "product_id", "action"],
+                "properties": {
+                  "user_id": {"type": "string"},
+                  "product_id": {"type": "string"},
+                  "action": {"type": "string", "enum": ["clicked", "purchased", "dismissed"]}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"202": {"description": "Feedback enregistré"}}
+      }
+    }
+  }
+}

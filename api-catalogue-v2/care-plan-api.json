@@ -1,0 +1,116 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Care Plan API",
+    "version": "1.0.0",
+    "x-api-id": "care-plan-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "API dédiée à la gestion des plans de soins personnalisés dans le domaine de la santé, couvrant la création, le suivi et la coordination thérapeutique des patients. Elle permet de définir des objectifs thérapeutiques, d'associer des tâches de suivi structurées (prises médicamenteuses, exercices de rééducation, bilans cliniques) et de mesurer l'observance du patient dans le temps. Les utilisateurs typiques sont les médecins coordinateurs, infirmières de parcours, soignants à domicile et équipes pluridisciplinaires prenant en charge les maladies chroniques ou le suivi post-hospitalisation. DIFFÉRENCE vs medical-record-api : Care Plan API = plan de soins actif avec tâches et objectifs thérapeutiques ; medical-record-api = dossier médical complet avec historique clinique. DIFFÉRENCE vs prescription-api-v2 : Care Plan API = plan global de prise en charge multi-tâches ; prescription-api-v2 = ordonnance médicamenteuse spécifique. DIFFÉRENCE vs vital-signs-api : Care Plan API = plan et tâches de suivi programmées ; vital-signs-api = mesures physiologiques collectées en temps réel.",
+    "x-synonymes": "plan de soins, plan thérapeutique, objectif thérapeutique, observance patient, suivi patient, tâche de soin, protocole de soin, parcours patient, suivi maladie chronique, coordination des soins, plan infirmier, suivi post-hospitalisation, plan de rééducation, prescription de suivi, adhérence traitement, care management, disease management, suivi diabète, suivi cardiaque, télésurveillance patient",
+    "x-false-positive-warning": "DIFFÉRENCE vs medical-record-api : Care Plan API = plan de soins actif avec tâches et objectifs thérapeutiques ; medical-record-api = dossier médical complet avec historique clinique et antécédents. DIFFÉRENCE vs prescription-api-v2 : Care Plan API = plan global de prise en charge multi-tâches sur la durée ; prescription-api-v2 = ordonnance médicamenteuse ponctuelle et spécifique. DIFFÉRENCE vs vital-signs-api : Care Plan API = définition du plan et planification des tâches de suivi ; vital-signs-api = collecte et consultation des mesures physiologiques effectuées. DIFFÉRENCE vs appointment-api : Care Plan API = gestion des tâches thérapeutiques et de l'observance ; appointment-api = prise de rendez-vous et gestion du calendrier des consultations.",
+    "x-cas-usage": "Comment créer un plan de soins personnalisé pour le suivi d'un patient diabétique ? | Comment ajouter une tâche de prise médicamenteuse quotidienne à un plan de soins existant ? | Comment consulter le taux d'observance d'un patient sur ses tâches de rééducation de la semaine ? | Comment mettre à jour le statut d'une tâche de soin après une visite infirmière ? | Quels sont les plans de soins actifs pour un patient donné et leurs objectifs thérapeutiques en cours ?"
+  },
+  "paths": {
+    "/v1/care-plans/{patientId}": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer tous les plans de soins actifs d'un patient avec leurs objectifs thérapeutiques et taux d'observance",
+        "operationId": "getCarePlans",
+        "tags": ["Plans"],
+        "responses": {
+          "200": {
+            "description": "Plans de soins actifs du patient retournés avec succès"
+          },
+          "404": {
+            "description": "Patient non trouvé"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un nouveau plan de soins personnalisé pour un patient avec objectifs thérapeutiques, fréquence de suivi et intervenants",
+        "operationId": "createCarePlan",
+        "tags": ["Plans"],
+        "responses": {
+          "200": {
+            "description": "Plan de soins créé avec succès"
+          },
+          "400": {
+            "description": "Données invalides ou manquantes dans la requête"
+          },
+          "404": {
+            "description": "Patient non trouvé"
+          }
+        }
+      }
+    },
+    "/v1/care-plans/{id}/tasks": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister toutes les tâches associées à un plan de soins : prises médicamenteuses, exercices de rééducation et bilans cliniques planifiés",
+        "operationId": "getTasks",
+        "tags": ["Tasks"],
+        "responses": {
+          "200": {
+            "description": "Liste des tâches du plan de soins retournée avec succès"
+          },
+          "404": {
+            "description": "Plan de soins non trouvé"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter une nouvelle tâche thérapeutique au plan de soins : prise de médicament, exercice physique, consultation ou bilan biologique",
+        "operationId": "addTask",
+        "tags": ["Tasks"],
+        "responses": {
+          "200": {
+            "description": "Tâche ajoutée au plan de soins avec succès"
+          },
+          "400": {
+            "description": "Données invalides ou manquantes dans la requête"
+          },
+          "404": {
+            "description": "Plan de soins non trouvé"
+          }
+        }
+      },
+      "patch": {
+        "summary": "Mettre à jour le statut d'une tâche de soin suite à son exécution : effectuée, ignorée, reportée ou partiellement réalisée",
+        "operationId": "updateTask",
+        "tags": ["Tasks"],
+        "responses": {
+          "200": {
+            "description": "Statut de la tâche mis à jour avec succès"
+          },
+          "400": {
+            "description": "Données invalides ou statut non reconnu"
+          },
+          "404": {
+            "description": "Tâche ou plan de soins non trouvé"
+          }
+        }
+      }
+    }
+  }
+}

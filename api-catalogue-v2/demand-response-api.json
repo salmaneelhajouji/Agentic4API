@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Demand Response API",
+    "version": "1.0.0",
+    "x-api-id": "demand-response-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Cette API orchestre les programmes d'effacement de consommation électrique et de flexibilité énergétique (Demand Response) pour les réseaux intelligents (Smart Grids). Elle permet de répertorier les programmes de flexibilité disponibles, de gérer l'inscription automatique des infrastructures ou appareils IoT connectés, de déclencher des événements d'effacement lors des pics de charge du réseau, et de calculer les récompenses financières ou incitations accumulées par les participants. Elle s'adresse aux opérateurs de réseaux, aux agrégateurs d'énergie et aux gestionnaires de parcs d'équipements connectés.",
+    "x-synonymes": "effacement de consommation, demand response, flexibilité énergétique, effacement électrique, effacement de charge, smart grid, réseau intelligent, pic de consommation, activation d'effacement, prime d'effacement, programme de flexibilité, effacement diffus, réduction de puissance, modulation de charge, agrégateur d'énergie, récompense énergétique, optimisation de grille, pilotage énergétique",
+    "x-false-positive-warning": "Attention : Cette API gère spécifiquement la modulation temporaire de puissance et les contrats d'effacement de charge énergétique (Demand Response). Ne pas la confondre avec une API de télérelève de consommation brute de compteurs (smart-metering-api) ni avec une API de facturation d'énergie classique.",
+    "x-cas-usage": "Quels sont les programmes d'effacement et de flexibilité ouverts au recrutement pour ce type d'équipement ? | Comment inscrire un parc d'objets connectés (IoT) à un programme de réduction temporaire de charge ? | Comment déclencher et activer un événement d'effacement de consommation d'urgence lors d'un pic de tension sur le réseau ? | Où consulter l'historique des gains et des récompenses financières accumulées grâce aux effacements réussis ?"
+  },
+  "paths": {
+    "/v1/programs": {
+      "get": {
+        "summary": "Lister l'ensemble des programmes d'effacement de consommation (Demand Response) et de flexibilité disponibles sur le réseau",
+        "operationId": "listDRPrograms",
+        "tags": [
+          "Programs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Inscrire une infrastructure ou un parc d'équipements connectés à un programme de flexibilité énergétique spécifique",
+        "operationId": "enrollProgram",
+        "tags": [
+          "Programs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/programs/{id}/events": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la liste des événements d'effacement de charge actuellement en cours d'exécution sur le programme",
+        "operationId": "getDREvents",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclenched et activer un événement d'effacement de consommation d'urgence pour réduire la charge sur le réseau",
+        "operationId": "activateEvent",
+        "tags": [
+          "Events"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/programs/{id}/rewards": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le montant cumulé des récompenses financières et incitations obtenues grâce aux effacements validés",
+        "operationId": "getDRRewards",
+        "tags": [
+          "Rewards"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

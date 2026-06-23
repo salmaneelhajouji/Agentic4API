@@ -1,0 +1,54 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Legal Research API",
+    "version": "1.0.0",
+    "x-api-id": "legal-research-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Recherche juridique dans les bases de jurisprudence, textes de loi et doctrine. Permet de rechercher des décisions de justice par mots-clés, d accéder aux textes législatifs et réglementaires officiels, et de consulter la doctrine juridique. Utilisé par les avocats, juristes et équipes juridiques pour préparer des dossiers et argumentaires.",
+    "x-synonymes": "jurisprudence, recherche juridique, décision justice, arrêt Cour cassation, décision Conseil état, texte de loi, code civil, code commerce, loi juridique, règlement européen, doctrine juridique, commentaire arrêt, Légifrance recherche, Dalloz, LexisNexis, veille juridique, précédent juridique, recherche droit, base juridique, argumentaire juridique",
+    "x-false-positive-warning": "DIFFÉRENCE vs compliance-legal-api : Legal Research API = recherche de textes et décisions pour préparer des dossiers. compliance-legal-api = suivi des obligations légales de l entreprise. DIFFÉRENCE vs contract-analytics-api : Legal Research API = recherche dans des bases juridiques externes. contract-analytics-api = analyse IA de contrats internes. DIFFÉRENCE vs legal-notice-api : Legal Research API = consultation passive de sources juridiques. legal-notice-api = envoi actif d actes de procédure.",
+    "x-cas-usage": "je veux rechercher la jurisprudence sur la clause de non-concurrence | je veux accéder aux dernières décisions du Conseil d état sur le droit des données | je veux trouver le texte officiel de la loi RGPD et ses articles | je veux rechercher la doctrine sur la responsabilité contractuelle | je veux constituer un corpus de jurisprudence pour préparer un dossier contentieux"
+  },
+  "paths": {
+    "/v1/legal-research/jurisprudence": {
+      "post": {
+        "summary": "Rechercher dans les décisions de justice — Cour de cassation, Conseil d état, CJUE",
+        "operationId": "searchJurisprudence",
+        "tags": ["Jurisprudence"],
+        "responses": {"200": {"description": "Décisions trouvées"}}
+      },
+      "get": {
+        "summary": "Dernières décisions de justice publiées — jurisprudence récente par domaine",
+        "operationId": "getLatestDecisions",
+        "tags": ["Jurisprudence"],
+        "responses": {"200": {"description": "Décisions récentes"}}
+      }
+    },
+    "/v1/legal-research/statutes": {
+      "post": {
+        "summary": "Rechercher dans les textes de loi — codes, lois, décrets et règlements européens",
+        "operationId": "searchStatutes",
+        "tags": ["Statutes"],
+        "responses": {"200": {"description": "Textes de loi trouvés"}}
+      },
+      "get": {
+        "summary": "Accéder à un texte officiel — version consolidée d un article de loi ou code",
+        "operationId": "getStatute",
+        "tags": ["Statutes"],
+        "responses": {"200": {"description": "Texte officiel"}}
+      }
+    },
+    "/v1/legal-research/doctrine": {
+      "post": {
+        "summary": "Rechercher dans la doctrine juridique — articles, commentaires et analyses d experts",
+        "operationId": "searchDoctrine",
+        "tags": ["Doctrine"],
+        "responses": {"200": {"description": "Doctrine trouvée"}}
+      }
+    }
+  }
+}

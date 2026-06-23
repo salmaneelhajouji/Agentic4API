@@ -1,0 +1,114 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Usage API",
+    "version": "1.0.0",
+    "x-api-id": "data-usage-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Cette API gère le suivi et la régulation de la consommation de données mobiles (data) pour les lignes téléphoniques du réseau cellulaire. Elle permet de consulter le quota de données restant en temps réel, de suivre l'historique d'utilisation de l'abonné, et d'administrer le bridage de débit (throttling) lorsque les plafonds de consommation contractuels sont atteints ou dépassés. Elle est principalement exploitée par les applications de self-care client, les portails de gestion de flottes d'entreprise et les systèmes de provisionnement de réseau.",
+    "x-synonymes": "consommation data, quota mobile, bridage de débit, throttling, fair use, enveloppe internet, consommation cellulaire, ligne mobile, historique de consommation, débit réduit, recharge data, usage internet mobile, seuil de consommation, data mobile, consommation internet, suivi conso",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement de la consommation de données mobiles et de la gestion de la bande passante d'une ligne cellulaire (Telecom). Ne pas la confondre avec la `data-export-api` (dédiée à l'extraction massive de fichiers de bases de données), ni avec une API d'infrastructure Cloud ou de stockage de fichiers.",
+    "x-cas-usage": "Comment récupérer le quota internet restant en temps réel pour une ligne mobile spécifique ? | Où consulter l'historique de consommation de données cellulaires d'un abonné sur le mois en cours ? | Comment vérifier si une ligne mobile fait actuellement l'objet d'un bridage de débit (throttling) ? | Quelle méthode appeler pour appliquer manuellement un bridage de vitesse réseau sur une ligne ? | Comment lever la restriction de débit suite à l'achat d'une recharge internet par le client ?"
+  },
+  "paths": {
+    "/v1/data-usage/{lineId}": {
+      "parameters": [
+        {
+          "name": "lineId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le quota de données internet mobile restant et le solde disponible sur l'enveloppe de la ligne",
+        "operationId": "getDataQuota",
+        "tags": [
+          "Usage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/data-usage/{lineId}/history": {
+      "parameters": [
+        {
+          "name": "lineId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique chronologique détaillé de la consommation de données cellulaires d'une ligne",
+        "operationId": "getDataHistory",
+        "tags": [
+          "History"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/data-usage/{lineId}/throttling": {
+      "parameters": [
+        {
+          "name": "lineId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Vérifier le statut actuel du bridage de débit (throttling) appliqué à la ligne réseau",
+        "operationId": "getThrottlingStatus",
+        "tags": [
+          "Throttling"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Activer et appliquer immédiatement le bridage de débit (réduction de vitesse) sur une ligne mobile",
+        "operationId": "applyThrottling",
+        "tags": [
+          "Throttling"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Lever et révoquer le bridage de débit pour rétablir la vitesse de connexion nominale de la ligne",
+        "operationId": "removeThrottling",
+        "tags": [
+          "Throttling"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

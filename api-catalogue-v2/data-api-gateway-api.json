@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data API Gateway",
+    "version": "1.0.0",
+    "x-api-id": "data-api-gateway-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette passerelle d'API (API Gateway) dédiée aux flux de données gère le routage centralisé des requêtes, l'optimisation des performances par la mise en cache, et la sécurisation des interfaces d'accès aux datalakes et data warehouses. Elle permet de découpler les consommateurs de données des architectures d'arrière-plan complexes, assurant une distribution fluide et hautement disponible des données de l'entreprise. Ses utilisateurs cibles sont les Data Engineers, les Architectes d'APIs et les équipes DevOps responsables de la résilience et de l'exposition des données.",
+    "x-synonymes": "passerelle d'API, API gateway data, routage de requêtes, mise en cache, invalidation de cache, proxy de données, exposition de données, sécurisation des flux, reverse proxy, gestion de trafic, rate limiting, politique de routage, cache hit ratio, aiguillage de requêtes, data mesh exposure, point d'entrée unique, performance des APIs",
+    "x-false-positive-warning": "Attention : Cette API administre l'infrastructure de la passerelle de données (routage technique, politique de cache, proxying). Ne pas la confondre avec l'API Gateway globale de l'entreprise (qui gère les APIs applicatives et microservices métiers généraux), ni avec la `data-access-control-api` (qui régit les droits fins d'accès et d'habilitation aux jeux de données eux-mêmes).",
+    "x-cas-usage": "Comment ajouter une nouvelle règle de routage pour exposer un nouveau microservice de données ? | Quelle est la méthode pour purger ou invalider le cache suite à une mise à jour de nos tables froides ? | Où puis-je consulter les statistiques d'efficacité du cache (hit/miss ratio) pour optimiser les temps de réponse ? | Comment configurer le routage d'une requête de données volumineuse vers le réplica de lecture approprié ? | Comment lister l'intégralité des routes actuellement actives sur notre passerelle data ?"
+  },
+  "paths": {
+    "/v1/data-gateway/routes": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des routes actives et des règles d'aiguillage technique configurées sur la passerelle",
+        "operationId": "listDataRoutes",
+        "tags": [
+          "Routes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et déployer dynamiquement une nouvelle route d'exposition ou un nouveau point d'entrée de données sur la passerelle",
+        "operationId": "addDataRoute",
+        "tags": [
+          "Routes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/data-gateway/cache": {
+      "get": {
+        "summary": "Consulter les indicateurs de performance du cache de la passerelle (taux de hit, mémoire allouée) pour analyser la latence",
+        "operationId": "getCacheStats",
+        "tags": [
+          "Cache"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Forcer l'invalidation et la purge immédiate de la mémoire cache pour garantir la fraîcheur absolue des données distribuées",
+        "operationId": "invalidateCache",
+        "tags": [
+          "Cache"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

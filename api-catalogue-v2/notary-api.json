@@ -1,0 +1,77 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Notary API",
+    "version": "1.0.0",
+    "x-api-id": "notary-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Gestion des actes notariés — ventes immobilières, successions, donations et authentification. Permet de créer et gérer des actes notariés, d ajouter les parties prenantes (acheteur, vendeur, héritiers), d authentifier l acte notarié et de l archiver au rang des minutes. Utilisé par les études notariales et plateformes immobilières pour la dématérialisation des actes.",
+    "x-synonymes": "acte notarié, notaire acte, vente immobilière notaire, succession notaire, donation notaire, authentification acte, rang des minutes, SRN service réception notariés, acte authentique, compromis vente, promesse vente, acte sous seing privé notarié, parties acte notarié, archivage notaire, DINOT données immo notaires, MICEN minutier central, acte dématérialisé notaire, étude notariale, office notarial, acte authentique électronique",
+    "x-false-positive-warning": "DIFFÉRENCE vs legal-notice-api : Notary API = actes authentiques notariés. legal-notice-api = mises en demeure et actes de procédure non notariés. DIFFÉRENCE vs contract-api : Notary API = actes notariés authentiques avec force exécutoire. contract-api = contrats juridiques non notariés. DIFFÉRENCE vs esignature-api : Notary API = authentification par notaire avec rang des minutes. esignature-api = signature électronique sans intervention notariale.",
+    "x-cas-usage": "je veux créer un acte de vente immobilière dans notre système notarial | je veux ajouter le vendeur et l acheteur comme parties à l acte | je veux authentifier un acte notarié et lui donner force exécutoire | je veux archiver un acte au rang des minutes de l étude | je veux consulter tous les actes notariés en cours de préparation"
+  },
+  "paths": {
+    "/v1/notary/acts": {
+      "get": {
+        "summary": "Lister les actes notariés en cours — ventes, successions et donations",
+        "operationId": "listNotaryActs",
+        "tags": ["Acts"],
+        "responses": {"200": {"description": "Actes notariés"}}
+      },
+      "post": {
+        "summary": "Créer un acte notarié — vente immobilière, succession ou donation",
+        "operationId": "createNotaryAct",
+        "tags": ["Acts"],
+        "responses": {"200": {"description": "Acte créé"}}
+      }
+    },
+    "/v1/notary/acts/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un acte notarié — parties, statut et documents associés",
+        "operationId": "getNotaryAct",
+        "tags": ["Acts"],
+        "responses": {"200": {"description": "Détail acte notarié"}}
+      },
+      "put": {
+        "summary": "Modifier un acte notarié en cours de préparation",
+        "operationId": "updateNotaryAct",
+        "tags": ["Acts"],
+        "responses": {"200": {"description": "Acte modifié"}}
+      },
+      "post": {
+        "summary": "Authentifier un acte notarié — lui confère force exécutoire",
+        "operationId": "authenticateAct",
+        "tags": ["Acts"],
+        "responses": {"200": {"description": "Acte authentifié"}}
+      }
+    },
+    "/v1/notary/acts/{id}/parties": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Parties d un acte notarié — acheteur, vendeur, héritiers et témoins",
+        "operationId": "getActParties",
+        "tags": ["Parties"],
+        "responses": {"200": {"description": "Parties de l acte"}}
+      },
+      "post": {
+        "summary": "Ajouter une partie à un acte notarié — acheteur, vendeur ou héritier",
+        "operationId": "addParty",
+        "tags": ["Parties"],
+        "responses": {"200": {"description": "Partie ajoutée"}}
+      }
+    },
+    "/v1/notary/acts/{id}/archive": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Archiver un acte au rang des minutes de l étude notariale",
+        "operationId": "archiveAct",
+        "tags": ["Archive"],
+        "responses": {"200": {"description": "Acte archivé au rang des minutes"}}
+      }
+    }
+  }
+}

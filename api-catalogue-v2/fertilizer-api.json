@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fertilizer API",
+    "version": "1.0.0",
+    "x-api-id": "fertilizer-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Cette API assure le suivi réglementaire et la traçabilité agronomique de l'utilisation des fertilisants, engrais et intrants au sein des exploitations. Elle gère l'état des stocks physiques de produits, l'enregistrement minutieux de chaque opération d'épandage (dates, volumes à l'hectare) sur les parcelles de terre, et calcule automatiquement le bilan azoté global pour répondre aux obligations environnementales de fertilisation raisonnée.",
+    "x-synonymes": "gestion des fertilisants, intrant agricole, épandage d'engrais, bilan azoté, amendement du sol, nutriments de culture, traçabilité des intrants, fertilisation raisonnée, apport d'azote, registre d'épandage, parcelle fertilisée, fourniture agricole",
+    "x-false-positive-warning": "Attention : Cette API est dédiée au suivi des intrants, des volumes d'engrais épandus et du bilan chimique associé aux cultures (Fertilizer). Ne pas la confondre avec la `field-api-v2` (qui gère les contours cartographiques des parcelles et la nature géologique des sols) ni avec la `farm-equipment-api`.",
+    "x-cas-usage": "Comment référencer un nouveau lot d'intrants ou d'amendements au sein du stock de l'exploitation ? | Comment consigner et dater une opération d'épandage d'engrais sur une parcelle de céréales ? | Où consulter le calcul du bilan azoté global d'un îlot cultural pour vérifier notre conformité réglementaire ?"
+  },
+  "paths": {
+    "/v1/fertilizers": {
+      "get": {
+        "summary": "Lister et inventorier les types de fertilisants et intrants chimiques ou organiques disponibles en stock",
+        "operationId": "listFertilizers",
+        "tags": [
+          "Fertilizers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter et enregistrer une nouvelle référence ou un approvisionnement d'intrants au catalogue de stockage",
+        "operationId": "addFertilizer",
+        "tags": [
+          "Fertilizers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/fertilizers/{fieldId}/application": {
+      "parameters": [
+        {
+          "name": "fieldId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique complet des actions d'épandage et des apports de nutriments réalisés sur une parcelle spécifique",
+        "operationId": "getFertilizerApplications",
+        "tags": [
+          "Application"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Consigner et déclarer formellement une nouvelle opération d'épandage de fertilisant sur la parcelle ciblée",
+        "operationId": "recordApplication",
+        "tags": [
+          "Application"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/fertilizers/{fieldId}/balance": {
+      "parameters": [
+        {
+          "name": "fieldId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Calculer le bilan azoté prévisionnel ou réel d'un îlot cultural pour évaluer les besoins ou les excès du sol",
+        "operationId": "getNitrogenBalance",
+        "tags": [
+          "Balance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

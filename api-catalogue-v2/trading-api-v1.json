@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Trading API",
+    "version": "1.0.0",
+    "x-api-id": "trading-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "DEPRECATED — Version 1 de l'API de trading. Ne plus utiliser. Migrer vers trading-api-v2 qui apporte le protocole FIX, les ordres stop-loss et les cotations temps réel.",
+    "x-successor": "trading-api-v2",
+    "x-synonymes": "trading v1 deprecated",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser trading-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers trading-api-v2."
+  },
+  "paths": {
+    "/v1/orders": {
+      "post": {
+        "summary": "[DEPRECATED] Passer un ordre de trading — utiliser trading-api-v2",
+        "operationId": "placeOrderV1",
+        "tags": ["Orders"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Spa Booking API",
+    "version": "1.0.0",
+    "x-api-id": "spa-booking-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Réservation de soins spa et prestations bien-être. Consultation du catalogue de soins disponibles (massages, soins visage, balnéo), réservation auprès d'un thérapeute sur un créneau disponible, gestion et annulation de réservations. DIFFÉRENCE vs appointment-api : Spa Booking est spécialisé établissements spa/bien-être avec gestion des thérapeutes et cabines, Appointment est un système de rendez-vous générique. DIFFÉRENCE vs hotel-api : Spa Booking gère les soins et prestations, Hotel gère les chambres et séjours.",
+    "x-synonymes": "réservation spa, soin massage, bien-être, thérapeute, créneau spa, massage réservation, balnéo, soin visage, thalasso, cabine soin, planning thérapeute, disponibilité spa, annulation soin, programme bien-être, booking spa",
+    "x-false-positive-warning": "Rendez-vous génériques (médecin, coiffeur) → appointment-api. Réservation chambre hôtel → hotel-api. Activités touristiques → activity-api.",
+    "x-cas-usage": "je veux voir tous les soins disponibles au spa avec leurs tarifs et durées | je veux réserver un massage pour un client sur un créneau précis | je veux annuler une réservation de soin spa | je veux voir toutes les réservations spa du jour | je veux connaître les disponibilités d'un thérapeute pour la semaine"
+  },
+  "paths": {
+    "/v1/spa/services": {
+      "get": {
+        "summary": "Lister le catalogue des soins spa disponibles avec description, durée, tarif et disponibilité des thérapeutes",
+        "operationId": "listSpaServices",
+        "tags": ["Services"],
+        "responses": { "200": { "description": "Catalogue de soins" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/spa/bookings": {
+      "get": {
+        "summary": "Lister toutes les réservations spa avec statut, client, soin et thérapeute assigné",
+        "operationId": "listSpaBookings",
+        "tags": ["Bookings"],
+        "responses": { "200": { "description": "Réservations spa" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Réserver un soin spa pour un client sur un créneau horaire et avec un thérapeute donné",
+        "operationId": "bookSpaService",
+        "tags": ["Bookings"],
+        "responses": { "200": { "description": "Réservation confirmée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/spa/bookings/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le détail d'une réservation spa (soin, thérapeute, créneau, client, statut)",
+        "operationId": "getSpaBooking",
+        "tags": ["Bookings"],
+        "responses": { "200": { "description": "Détail réservation" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Annuler une réservation de soin spa",
+        "operationId": "cancelSpaBooking",
+        "tags": ["Bookings"],
+        "responses": { "200": { "description": "Réservation annulée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fraud Detection API",
+    "version": "1.0.0",
+    "x-api-id": "fraud-detection-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Cette API de haute performance opère la détection et le blocage en temps réel de la fraude sur les transactions bancaires et les mouvements financiers. Elle permet de soumettre instantanément chaque ordre de paiement au moteur d'analyse pour évaluer son score de risque (scoring), d'administrer dynamiquement le catalogue des règles de filtrage (limitation de montants, géo-blocages, vélocité de cartes), et de lever des alertes de sécurité immédiates pour l'équipe de supervision du SOC bancaire.",
+    "x-synonymes": "détection de fraude bancaire, fraude transactionnelle, scoring de transaction, fraude à la carte bancaire, règles anti-fraude, alerte de paiement suspect, filtrage en temps réel, blocage de carte, sécurité monétique, fraude de paiement, moteur de règles de fraude, suspicion de virement, analyse comportementale bancaire",
+    "x-false-positive-warning": "Attention : Cette API est paramétrée pour le contrôle à la milliseconde des flux de paiement, virements et transactions monétiques (Banking). Ne pas la confondre avec la `fraud-claims-api` (dédiée aux investigations de fausses déclarations de sinistres d'assurance) ni avec la `aml-api` (chargée de la lutte contre le blanchiment d'argent à moyen terme).",
+    "x-cas-usage": "Comment soumettre une transaction par carte bancaire pour obtenir son score de risque de fraude avant autorisation ? | Où consulter la liste des règles de filtrage actives et injecter un nouveau critère de blocage d'urgence ? | Comment récupérer le flux des alertes de paiement suspect levées par le moteur ? | Quelle méthode appeler pour clore et marquer une alerte comme résolue ou confirmée après contact avec le client ?"
+  },
+  "paths": {
+    "/v1/fraud/score": {
+      "post": {
+        "summary": "Évaluer à la volée et calculer le score de risque de fraude d'une transaction bancaire en cours d'autorisation",
+        "operationId": "scoreFraud",
+        "tags": [
+          "Scoring"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/fraud/rules": {
+      "get": {
+        "summary": "Lister l'ensemble des règles de filtrage, restrictions géographiques et critères de vélocité actuellement actifs",
+        "operationId": "getFraudRules",
+        "tags": [
+          "Rules"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et déployer immédiatement une nouvelle règle impérative de filtrage ou de blocage sur le réseau monétique",
+        "operationId": "addRule",
+        "tags": [
+          "Rules"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/fraud/alerts": {
+      "get": {
+        "summary": "Consulter et filtrer la file d'attente des alertes de paiement bloqués ou suspects à analyser par le desk monétique",
+        "operationId": "getFraudAlerts",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour le statut d'une alerte et enregistrer la remédiation (confirmation de fraude ou levée de blocage)",
+        "operationId": "resolveAlert",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

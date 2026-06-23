@@ -1,0 +1,69 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "BOM API",
+    "version": "1.0.0",
+    "x-api-id": "bom-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "API de gestion des nomenclatures industrielles (Bill of Materials) couvrant la création, la versioning et la publication de structures produit multi-niveaux. Permet de définir l'arbre complet des composants, sous-ensembles, matières premières et quantités nécessaires à la fabrication d'un produit fini. Chaque publication de version déclenche une notification automatique aux équipes production et approvisionnement. Utilisée par les bureaux d'études, ingénieurs produit, planificateurs manufacturing et équipes ERP pour piloter les gammes de fabrication et gérer les ordres de modification engineering (ECO). DIFFÉRENCE vs product-api-v4 : BOM API = structure technique et nomenclature de fabrication. product-api-v4 = catalogue produit commercial avec prix et stock. DIFFÉRENCE vs asset-management-api : BOM API = structure des composants d'un produit à fabriquer. asset-management-api = valeur comptable des immobilisations existantes. DIFFÉRENCE vs inventory-api-v2 : BOM API = liste des composants nécessaires à la fabrication. inventory-api-v2 = stock disponible des composants en entrepôt.",
+    "x-synonymes": "BOM, bill of materials, nomenclature produit, nomenclature industrielle, nomenclature multi-niveaux, composant produit, sous-ensemble, matière première nomenclature, variante produit, version nomenclature, révision nomenclature, ECO engineering change order, modification produit, gamme fabrication, arbre produit, structure produit, liste matériaux, référence composant, quantité composant, nomenclature ERP",
+    "x-false-positive-warning": "DIFFÉRENCE vs product-api-v4 : BOM API = structure technique et nomenclature de fabrication. product-api-v4 = catalogue produit commercial avec prix et stock. DIFFÉRENCE vs asset-management-api : BOM API = structure des composants d'un produit à fabriquer. asset-management-api = valeur comptable des immobilisations existantes. DIFFÉRENCE vs inventory-api-v2 : BOM API = liste des composants nécessaires à la fabrication. inventory-api-v2 = stock disponible des composants en entrepôt. DIFFÉRENCE vs order-api : BOM API = structure technique de fabrication interne. order-api = commandes fournisseurs ou clients pour approvisionnement.",
+    "x-cas-usage": "Comment créer la nomenclature multi-niveaux d'un nouveau produit avec ses composants et sous-ensembles ? | Comment ajouter ou retirer un composant dans la nomenclature d'un produit existant ? | Comment publier une nouvelle version de nomenclature après une modification engineering (ECO) ? | Quels sont tous les composants nécessaires pour fabriquer un produit donné avec leurs quantités ? | Comment consulter l'historique des révisions de nomenclature d'un produit ?"
+  },
+  "paths": {
+    "/v1/bom/{productId}": {
+      "parameters": [{"name": "productId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter la nomenclature complète d'un produit — arbre de composants multi-niveaux avec références, quantités et sous-ensembles",
+        "operationId": "getBOM",
+        "tags": ["BOM"],
+        "responses": {"200": {"description": "Nomenclature complète"}}
+      },
+      "post": {
+        "summary": "Créer une nomenclature pour un nouveau produit — définir la structure initiale avec composants, niveaux d'assemblage et quantités",
+        "operationId": "createBOM",
+        "tags": ["BOM"],
+        "responses": {"200": {"description": "Nomenclature créée"}}
+      }
+    },
+    "/v1/bom/{productId}/components": {
+      "parameters": [{"name": "productId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Lister tous les composants d'un produit — références articles, quantités, niveaux de nomenclature et sous-ensembles associés",
+        "operationId": "getComponents",
+        "tags": ["Components"],
+        "responses": {"200": {"description": "Composants du produit"}}
+      },
+      "post": {
+        "summary": "Ajouter un composant à la nomenclature existante — spécifier référence, quantité, unité et niveau dans l'arbre produit",
+        "operationId": "addComponent",
+        "tags": ["Components"],
+        "responses": {"200": {"description": "Composant ajouté"}}
+      },
+      "delete": {
+        "summary": "Retirer un composant de la nomenclature produit — supprime la référence et ses dépendances du niveau concerné",
+        "operationId": "removeComponent",
+        "tags": ["Components"],
+        "responses": {"200": {"description": "Composant retiré"}}
+      }
+    },
+    "/v1/bom/{productId}/versions": {
+      "parameters": [{"name": "productId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter l'historique des versions de nomenclature — liste des révisions, dates de publication et auteurs des modifications engineering",
+        "operationId": "getBOMVersions",
+        "tags": ["Versions"],
+        "responses": {"200": {"description": "Versions de nomenclature"}}
+      },
+      "post": {
+        "summary": "Publier une nouvelle version de nomenclature après modification engineering — notifie automatiquement les équipes production et approvisionnement",
+        "operationId": "releaseBOMVersion",
+        "tags": ["Versions"],
+        "responses": {"200": {"description": "Version publiée"}}
+      }
+    }
+  }
+}

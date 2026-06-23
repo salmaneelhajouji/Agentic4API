@@ -1,0 +1,166 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tax API",
+    "version": "1.0.0",
+    "x-api-id": "tax-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "Calcul des taxes et TVA selon les régions. Moteur financier assurant la conformité fiscale internationale, la vérification réglementaire des identifiants d'entreprise et la consolidation des bilans de taxes. DIFFÉRENCE vs invoicing-api : Tax API se concentre de manière exclusive sur les règles de calcul des taxes et la validation de numéros légaux (TVA/VAT), alors que invoicing-api prend en charge la mise en page, la numérotation séquentielle et la publication des factures.",
+    "x-synonymes": "taxe, tva, vat, calcul, fiscalité, douane, impôt, taux, transaction, intracommunautaire, conformité fiscale, rapport fiscal, déclaration, facturation, finance, comptabilité, international",
+    "x-false-positive-warning": "Cette API n'émet pas de factures PDF ou de reçus clients et n'écrit pas dans le grand livre comptable (utilisez invoicing-api ou accounting-api).",
+    "x-cas-usage": "je veux calculer le montant exact de la tva pour une transaction e-commerce | je veux connaître le taux de taxe applicable dans un pays de l'ue | je veux vérifier si un numéro de tva intracommunautaire est valide | je veux générer le rapport fiscal complet pour ma déclaration de taxes"
+  },
+  "paths": {
+    "/v1/tax/calculate": {
+      "post": {
+        "summary": "Calculer en temps réel le montant des taxes et de la TVA applicables sur un montant selon la région géographique",
+        "operationId": "calculateTax",
+        "tags": [
+          "Tax"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "country"
+                ],
+                "properties": {
+                  "amount": {
+                    "type": "number"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "FR"
+                  },
+                  "product_type": {
+                    "type": "string",
+                    "enum": [
+                      "physical",
+                      "digital",
+                      "service"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Taxes calculées"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/tax/rates": {
+      "get": {
+        "summary": "Récupérer la grille officielle des taux de taxes et de TVA en vigueur pour un pays spécifique",
+        "operationId": "getTaxRates",
+        "tags": [
+          "Tax"
+        ],
+        "parameters": [
+          {
+            "name": "country",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Taux"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/tax/validate-vat": {
+      "post": {
+        "summary": "Vérifier la validité et l'existence légale d'un numéro de TVA intracommunautaire auprès du registre VIES",
+        "operationId": "validateVAT",
+        "tags": [
+          "Tax"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "vat_number"
+                ],
+                "properties": {
+                  "vat_number": {
+                    "type": "string",
+                    "example": "FR12345678901"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Valide"
+          },
+          "400": {
+            "description": "Numéro invalide"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/tax/reports": {
+      "get": {
+        "summary": "Générer un rapport financier et consolidé des taxes collectées sur une période fiscale donnée",
+        "operationId": "getTaxReport",
+        "tags": [
+          "Tax"
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "2026-Q1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rapport"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

@@ -1,0 +1,144 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Vehicle API",
+    "version": "2.0.0",
+    "x-api-id": "vehicle-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Données techniques véhicule. Diagnostics OBD, kilométrage et état mécanique en temps réel. DIFFERENCE vs fleet-api : Vehicle API fournit des diagnostics et métriques techniques sur un véhicule individuel, tandis que fleet-api gère l'attribution opérationnelle, l'inventaire et les coûts de l'ensemble du parc automobile.",
+    "x-synonymes": "véhicule, voiture, camion, obd, diagnostic, kilométrage, compteur, mécanique, maintenance, révision, alerte technique, voyant, télématique, capteur auto, code défaut, panne, moteur, calculateur",
+    "x-false-positive-warning": "Pour la gestion globale de votre flotte d'entreprise ou l'affectation des chauffeurs, utilisez fleet-api-v4.",
+    "x-cas-usage": "je veux obtenir le rapport technique et l'état d'un véhicule | je veux consulter les diagnostics obd et codes d'erreur du moteur | je veux lancer un scan de diagnostic à distance sur la voiture | je veux vérifier le kilométrage enregistré au compteur"
+  },
+  "x-breaking-changes-from-previous": [
+    "Diagnostics OBD",
+    "Alertes techniques"
+  ],
+  "paths": {
+    "/v2/vehicles/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la fiche technique, le statut et l'état général d'un véhicule spécifique",
+        "operationId": "getVehicleV2",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour les informations de configuration ou le statut opérationnel d'un véhicule",
+        "operationId": "updateVehicleV2",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/vehicles/{id}/diagnostics": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les derniers rapports de diagnostic obd et codes d'erreur mécanique de la voiture",
+        "operationId": "getDiagnostics",
+        "tags": [
+          "Diagnostics"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Déclencher à distance un scan complet des capteurs et diagnostics du système embarqué du véhicule",
+        "operationId": "runDiagnostic",
+        "tags": [
+          "Diagnostics"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/vehicles/{id}/mileage": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le relevé de kilométrage actuel stocké dans le calculateur du véhicule",
+        "operationId": "getMileageV2",
+        "tags": [
+          "Mileage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

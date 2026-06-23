@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Insurance Eligibility API",
+    "version": "1.0.0",
+    "x-api-id": "insurance-eligibility-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Cette API permet la vérification en temps réel des droits de couverture santé d'un patient auprès de l'Assurance Maladie Obligatoire (AMO) et des complémentaires/mutuelles (AMC). Intégrée par les progiciels de santé hospitaliers ou de cabinets de soins, elle interroge le référentiel pour s'assurer des droits ouverts du bénéficiaire, valider l'éligibilité au dispositif du tiers payant et calculer instantanément la part de prise en charge et le reste à charge exact du patient.",
+    "x-synonymes": "vérification des droits santé, éligibilité assurance maladie, droits ouverts AMO, couverture AMC mutuelle, tiers payant hospitalier, calcul du reste à charge, ticket modérateur, droits Vitale, prise en charge de soins, bénéficiaire de santé, facturation de soins droits, éligibilité complémentaire",
+    "x-false-positive-warning": "Attention : Cette API est un outil de vérification de droits à disposition des professionnels de santé (soignants, hôpitaux) lors de l'admission ou des soins (Eligibility). Ne pas la confondre avec la `health-insurance-api` (qui pilote la gestion interne des fiches de contrats et la liquidation comptable du côté de l'assureur).",
+    "x-cas-usage": "Comment interroger en temps réel le système pour valider les droits ouverts d'un patient à sa mutuelle ? | Où consulter le taux exact de prise en charge d'un acte médical pour calculer le ticket modérateur ? | Comment récupérer le récapitulatif des plafonds de remboursement applicables au tiers payant pour ce bénéficiaire ?"
+  },
+  "paths": {
+    "/v1/eligibility/check": {
+      "post": {
+        "summary": "Soumettre une demande de vérification de droits ouverts pour un patient auprès des organismes AMO/AMC",
+        "operationId": "checkEligibility",
+        "tags": [
+          "Eligibility"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/eligibility/{patientId}": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le statut d'éligibilité global et le profil de droits administratifs rattachés au patient",
+        "operationId": "getEligibility",
+        "tags": [
+          "Eligibility"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/eligibility/{patientId}/coverage": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le détail fin de la couverture, des taux d'exonération et d'application du tiers payant du patient",
+        "operationId": "getCoverage",
+        "tags": [
+          "Coverage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Attribution API",
+    "version": "1.0.0",
+    "x-api-id": "attribution-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "API d'attribution marketing multi-canal couvrant l'analyse de la contribution de chaque point de contact dans le parcours client jusqu'à la conversion. Prend en charge les modèles first-touch, last-touch, linéaire, time decay et data-driven pour répartir le crédit de conversion entre les canaux SEO, SEA, emailing, social media et display. Utilisée par les équipes marketing, growth et data pour optimiser les budgets publicitaires, mesurer le ROI par canal et comprendre les séquences de touchpoints qui génèrent le plus de valeur. DIFFÉRENCE vs analytics-api : Attribution API = analyse de la contribution de chaque canal marketing à une conversion spécifique ; analytics-api = métriques business générales sur les ventes et le trafic sans notion de crédit de conversion. DIFFÉRENCE vs ab-testing-api : Attribution API = attribue les conversions aux canaux marketing sur le parcours réel ; ab-testing-api = compare deux variantes d'une page ou d'un message pour optimiser le taux de conversion. DIFFÉRENCE vs campaign-api : Attribution API = analyse post-conversion des canaux ayant contribué à l'achat ; campaign-api = création, gestion et planification des campagnes marketing en amont.",
+    "x-synonymes": "attribution marketing, modèle d'attribution, first touch, last touch, attribution linéaire, time decay attribution, data driven attribution, canal marketing, ROI canal, contribution canal, parcours client, touchpoint, point de contact, attribution conversion, budget marketing, performance canal, SEO attribution, SEA attribution, social media attribution, email attribution",
+    "x-false-positive-warning": "DIFFÉRENCE vs analytics-api : Attribution API = analyse de la contribution de chaque canal marketing à une conversion. analytics-api = métriques business générales ventes et trafic sans répartition de crédit par canal. DIFFÉRENCE vs ab-testing-api : Attribution API = attribue les conversions aux canaux sur le parcours client réel. ab-testing-api = compare deux variantes pour optimiser le taux de conversion sans notion de parcours multi-canal. DIFFÉRENCE vs campaign-api : Attribution API = analyse post-conversion des canaux ayant contribué à l'achat. campaign-api = création et gestion des campagnes marketing en amont de la conversion. DIFFÉRENCE vs analytics-api-v2/v3 : Attribution API = focalisée exclusivement sur la répartition du crédit de conversion entre canaux ; les versions v2/v3 analytics couvrent un périmètre plus large de métriques sans modèles d'attribution dédiés.",
+    "x-cas-usage": "Comment savoir quels canaux marketing ont le plus contribué à mes conversions du mois dernier ? | Comment comparer les modèles first-touch et last-touch pour décider comment réattribuer mon budget publicitaire ? | Comment récupérer la performance de chaque canal sur une période donnée avec le ROI associé ? | Quels touchpoints sont les plus influents dans le parcours client avant achat selon un modèle time decay ? | Comment analyser l'attribution d'une conversion spécifique pour identifier les canaux ayant participé au parcours ?"
+  },
+  "paths": {
+    "/v1/attribution/models": {
+      "get": {
+        "summary": "Lister les modèles d'attribution disponibles — first-touch, last-touch, linéaire, time decay et data-driven avec leurs règles de répartition du crédit",
+        "operationId": "getAttributionModels",
+        "tags": ["Attribution"],
+        "responses": {
+          "200": {"description": "Modèles d'attribution disponibles"}
+        }
+      }
+    },
+    "/v1/attribution/analyze": {
+      "post": {
+        "summary": "Analyser l'attribution d'une conversion identifiée — répartition pondérée du crédit de conversion entre tous les canaux touchés selon le modèle sélectionné",
+        "operationId": "analyzeAttribution",
+        "tags": ["Attribution"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["conversion_id", "model"],
+                "properties": {
+                  "conversion_id": {"type": "string"},
+                  "model": {
+                    "type": "string",
+                    "enum": ["first_touch", "last_touch", "linear", "time_decay", "data_driven"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Attribution calculée par canal avec répartition du crédit de conversion"}
+        }
+      }
+    },
+    "/v1/attribution/channels": {
+      "get": {
+        "summary": "Obtenir la performance de chaque canal marketing sur une période — nombre de conversions attribuées, ROI et part du crédit total selon le modèle choisi",
+        "operationId": "getChannelAttribution",
+        "tags": ["Attribution"],
+        "parameters": [
+          {"name": "from", "in": "query", "schema": {"type": "string", "format": "date"}},
+          {"name": "to", "in": "query", "schema": {"type": "string", "format": "date"}},
+          {"name": "model", "in": "query", "schema": {"type": "string", "default": "last_touch"}}
+        ],
+        "responses": {
+          "200": {"description": "Performance par canal avec conversions attribuées, ROI et part relative sur la période"}
+        }
+      }
+    }
+  }
+}

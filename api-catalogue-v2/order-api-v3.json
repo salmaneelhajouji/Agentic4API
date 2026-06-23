@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Order API",
+    "version": "3.0.0",
+    "x-api-id": "order-api",
+    "x-api-version": "v3",
+    "x-status": "deprecated",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "DEPRECATED sept. 2023 — NE PAS UTILISER. Version 3 avec adresse structurée et statut partially_shipped. Migrer vers order-api-v4 qui intègre webhooks automatiques et devise obligatoire.",
+    "x-breaking-changes-from-previous": ["shipping_address string→objet structuré", "discount_code string→objet discount", "Nouveau statut partially_shipped", "updated_at→last_modified_at"],
+    "x-successor": "order-api-v4",
+    "x-synonymes": "commandes v3 deprecated, order api adresse structurée legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser order-api-v4.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers order-api-v4."
+  },
+  "paths": {
+    "/v3/orders": {
+      "post": {
+        "summary": "DEPRECATED — Créer une commande avec adresse structurée",
+        "operationId": "createOrderV3",
+        "tags": ["Orders"],
+        "responses": {"201": {"description": "Commande créée"}}
+      },
+      "get": {
+        "summary": "DEPRECATED — Lister avec filtres avancés",
+        "operationId": "listOrdersV3",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Commandes"}}
+      }
+    },
+    "/v3/orders/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "DEPRECATED — Récupérer une commande",
+        "operationId": "getOrderV3",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Commande"}}
+      },
+      "put": {
+        "summary": "DEPRECATED — Modifier une commande avant expédition",
+        "operationId": "updateOrderV3",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Modifiée"}}
+      }
+    },
+    "/v3/orders/{id}/cancel": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "DEPRECATED — Annuler avec option remboursement",
+        "operationId": "cancelOrderV3",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Annulée"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Loss Prevention API",
+    "version": "1.0.0",
+    "x-api-id": "data-loss-prevention-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Cette API orchestre la stratégie de prévention des fuites de données (DLP) de l'entreprise en automatisant la détection, l'inspection et le blocage des transferts non autorisés d'informations sensibles. Elle permet d'analyser les flux de données en temps réel pour y repérer des données hautement confidentielles (numéros de cartes bancaires, secrets industriels, PII), de lever des alertes de sécurité et de consigner les incidents. Elle est conçue pour être intégrée par les développeurs d'applications manipulant des données critiques, ainsi que par les outils de supervision des analystes du SOC (Security Operations Center).",
+    "x-synonymes": "prévention des fuites de données, data loss prevention, DLP, exfiltration de données, fuite de données, sécurité des données, inspection de contenu, données sensibles, information confidentielle, incident de sécurité, scan DLP, blocage de flux, détection de patterns, conformité sécurité, alerte cybersécurité, protection des données, classification de contenu, filtrage de données",
+    "x-false-positive-warning": "Attention : Cette API inspecte le contenu profond des flux pour détecter et interdire la fuite d'informations (DLP). Ne la confondez pas avec la `data-access-control-api` (qui gère l'attribution des droits et des habilitations d'accès à la source aux tables et datasets) ni avec les services classiques de chiffrement ou de pare-feu réseau.",
+    "x-cas-usage": "Comment soumettre un flux de texte ou un document pour un scan DLP immédiat avant son stockage ? | Comment configurer et déployer une nouvelle politique DLP pour interdire l'exfiltration de données personnelles (PII) ? | Où lister l'ensemble des incidents de fuite de données détectés et non résolus par le SOC ? | Quelle méthode appeler pour clore ou marquer un incident de sécurité comme résolu après remédiation ?"
+  },
+  "paths": {
+    "/v1/dlp/policies": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des politiques de prévention et règles d'inspection de contenu (DLP) actuellement actives",
+        "operationId": "listDLPPolicies",
+        "tags": [
+          "Policies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et déployer une nouvelle politique DLP pour interdire ou filtrer le transfert de certaines catégories de données",
+        "operationId": "createDLPPolicy",
+        "tags": [
+          "Policies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dlp/incidents": {
+      "get": {
+        "summary": "Consulter et filtrer le registre des alertes et incidents d'exfiltration suspecte ou de fuite de données détectés",
+        "operationId": "listDLPIncidents",
+        "tags": [
+          "Incidents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer ou signaler manuellement un nouvel incident de sécurité ou une suspicion de compromission de données",
+        "operationId": "reportDLPIncident",
+        "tags": [
+          "Incidents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dlp/incidents/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les détails techniques, l'élément déclencheur, le niveau de sévérité et l'état d'un incident DLP spécifique",
+        "operationId": "getDLPIncident",
+        "tags": [
+          "Incidents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour le statut d'une alerte ou archiver un incident DLP comme résolu après investigation et remédiation",
+        "operationId": "resolveDLPIncident",
+        "tags": [
+          "Incidents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dlp/scan": {
+      "post": {
+        "summary": "Analyser et scanner un payload ou un document en temps réel pour identifier et bloquer la présence d'informations sensibles",
+        "operationId": "scanDataForDLP",
+        "tags": [
+          "Scan"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

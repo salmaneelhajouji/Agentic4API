@@ -1,0 +1,199 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Workflow API",
+    "version": "1.0.0",
+    "x-api-id": "workflow-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Operations",
+    "description": "Orchestration de workflows métier. Définition, automatisation, exécution et suivi des processus métier automatisés multi-étapes. DIFFÉRENCE vs task-api : Workflow API pilote et orchestre des enchaînements logiques automatisés de système à système (machine-to-machine), alors que task-api s'applique à la gestion d'unités de travail et todos destinées à des collaborateurs humains.",
+    "x-synonymes": "workflow, orchestration, processus, automatisation, bpmn, étape, instance, exécution, flux métier, séquence, transition, pipeline, automatisation de processus, historique de flux, tâche automatisée, moteur de processus, cycle, routage logique",
+    "x-false-positive-warning": "Pour la création de listes de tâches à réaliser par des équipes ou le suivi de tickets d'assistance internes, utilisez task-api ou ticket-api.",
+    "x-cas-usage": "je veux concevoir une nouvelle définition de workflow d'automatisation | je veux lister tous les modèles de processus configurés | je veux démarrer une nouvelle instance de workflow avec des données d'entrée | je veux consulter le statut d'avancement d'une instance de processus active | je veux annuler un workflow en cours ou voir l'historique des exécutions"
+  },
+  "paths": {
+    "/v1/workflows": {
+      "post": {
+        "summary": "Créer et enregistrer une nouvelle modélisation de workflow avec ses étapes et critères conditionnels",
+        "operationId": "createWorkflow",
+        "tags": [
+          "Workflows"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "steps"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "api_call",
+                            "condition",
+                            "wait",
+                            "notification"
+                          ]
+                        },
+                        "config": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        }
+      },
+      "get": {
+        "summary": "Lister l'ensemble des définitions et structures de processus métier disponibles dans le moteur",
+        "operationId": "listWorkflows",
+        "tags": [
+          "Workflows"
+        ],
+        "responses": {
+          "200": {
+            "description": "Workflows"
+          }
+        }
+      }
+    },
+    "/v1/workflows/{id}/start": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Instancier et déclencher immédiatement le démarrage de l'exécution d'un processus automatique",
+        "operationId": "startWorkflow",
+        "tags": [
+          "Workflows"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Instance démarrée"
+          }
+        }
+      }
+    },
+    "/v1/workflows/{id}/status": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter en temps réel l'état d'avancement, l'étape courante et les variables d'une instance active",
+        "operationId": "getWorkflowStatus",
+        "tags": [
+          "Workflows"
+        ],
+        "responses": {
+          "200": {
+            "description": "Statut"
+          }
+        }
+      }
+    },
+    "/v1/workflows/{id}/cancel": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Interrompre de manière prématurée et annuler l'exécution d'une instance de processus en cours",
+        "operationId": "cancelWorkflow",
+        "tags": [
+          "Workflows"
+        ],
+        "responses": {
+          "200": {
+            "description": "Annulé"
+          }
+        }
+      }
+    },
+    "/v1/workflows/{id}/history": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la chronologie complète des étapes franchies, temps d'exécution et logs d'un processus",
+        "operationId": "getWorkflowHistory",
+        "tags": [
+          "Workflows"
+        ],
+        "responses": {
+          "200": {
+            "description": "Historique"
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}

@@ -1,0 +1,179 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Crop API",
+    "version": "2.0.0",
+    "x-api-id": "crop-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "x-breaking-changes-from-previous": [
+      "Stades phénologiques",
+      "Prévisions rendement"
+    ],
+    "description": "Cette API permet la gestion experte du cycle de vie des cultures agricoles et des campagnes de plantation (v2). Elle est destinée aux éditeurs de logiciels de gestion d'exploitation (FMIS), aux plateformes Agritech et aux coopératives. Elle introduit le suivi précis du développement végétatif via l'enregistrement des stades phénologiques (ex: échelle BBCH) et intègre des modèles d'intelligence agronomique pour estimer les rendements avant récolte.",
+    "x-synonymes": "culture agricole, récolte, stade phénologique, rendement, prévision de moisson, cycle végétatif, échelle BBCH, plantation, assolement, itinéraire technique, agronomie, production végétale, estimation de rendement, floraison, maturité, semis, variété cultivée, biomasse",
+    "x-false-positive-warning": "Attention : Cette API se concentre strictement sur la plante, son cycle de croissance et sa productivité. Ne pas la confondre avec l'API Field / Parcelle (qui gère la cartographie et les limites géographiques des champs), l'API Weather / Météo (qui fournit les données climatiques brutes) ou l'API Soil / Sol (dédiée aux analyses physico-chimiques de la terre).",
+    "x-cas-usage": "Quel est le stade phénologique (BBCH) actuel de ma culture de blé d'hiver ? | Comment déclarer un nouveau cycle de semis pour cette variété de maïs ? | Quelle est l'estimation de rendement (en tonnes/hectare) modélisée pour cette campagne avant la moisson ? | Comment enregistrer le rendement réel constaté après le passage de la moissonneuse-batteuse ? | Quelles sont les cultures actives en cours de développement sur l'exploitation ?"
+  },
+  "paths": {
+    "/v2/crops": {
+      "get": {
+        "summary": "Lister l'ensemble des cultures et cycles de plantation actuellement en cours d'exploitation",
+        "operationId": "listCropsV2",
+        "tags": [
+          "Crops"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Déclarer une nouvelle culture, un semis ou initier une nouvelle campagne de plantation",
+        "operationId": "createCropV2",
+        "tags": [
+          "Crops"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/crops/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les caractéristiques agronomiques détaillées d'une culture spécifique",
+        "operationId": "getCropV2",
+        "tags": [
+          "Crops"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour les informations générales ou le statut d'une culture existante",
+        "operationId": "updateCropV2",
+        "tags": [
+          "Crops"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/crops/{id}/phenology": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique et le stade phénologique actuel du développement végétatif de la plante",
+        "operationId": "getPhenology",
+        "tags": [
+          "Phenology"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/crops/{id}/yield": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les données de rendement réel et les volumes mesurés après la récolte",
+        "operationId": "getCropYield",
+        "tags": [
+          "Yield"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Déclencher l'algorithme prédictif pour générer une estimation du rendement avant la moisson",
+        "operationId": "forecastYield",
+        "tags": [
+          "Yield"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

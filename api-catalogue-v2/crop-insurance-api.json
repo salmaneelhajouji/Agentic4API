@@ -1,0 +1,90 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Crop Insurance API",
+    "version": "1.0.0",
+    "x-api-id": "crop-insurance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Cette API gère spécifiquement les contrats d'assurance paramétrique et multirisque climatique (MRC) couvrant la grêle, la sécheresse, le gel et les inondations pour les exploitations agricoles. Elle permet aux courtiers, aux assureurs spécialisés et aux plateformes de gestion d'exploitation (FMIS) de proposer des devis, de souscrire des polices basées sur les parcelles, et de gérer les déclarations de pertes de rendement (sinistres). Ses utilisateurs cibles sont les développeurs et intégrateurs de l'écosystème Agritech souhaitant embarquer des services financiers agricoles.",
+    "x-synonymes": "assurance récolte, multirisque climatique, MRC, assurance paramétrique, sinistre agricole, perte de rendement, déclaration de dégâts, grêle, sécheresse, gel, indemnisation agricole, police d'assurance agricole, franchise, aléa climatique, expert agricole, calamité agricole, couverture culture, risque météorologique",
+    "x-false-positive-warning": "Attention : Cette API est strictement dédiée à l'assurance des cultures et aux aléas climatiques. Ne pas la confondre avec la `insurance-claim-api` (qui gère les sinistres IARD classiques comme l'assurance auto ou habitation), ni avec la `equipment-insurance-api` (qui couvrirait les tracteurs et le matériel agricole matériel).",
+    "x-cas-usage": "Comment souscrire un contrat multirisque climatique pour une parcelle de blé tendre de 50 hectares ? | Comment déclarer un sinistre suite à un épisode de grêle ayant détruit 30% d'une récolte de maïs ? | Quelles sont les franchises applicables pour le risque de gel tardif sur ce contrat d'assurance viticole ? | Comment lister les contrats d'assurance en cours de validité pour cette exploitation agricole ? | Quel est le statut du traitement et de l'indemnisation de la déclaration de perte déposée le mois dernier ?"
+  },
+  "paths": {
+    "/v1/crop-insurance/contracts": {
+      "get": {
+        "summary": "Lister les contrats d'assurance récolte (multirisque climatique, paramétrique) actifs pour une exploitation",
+        "operationId": "listCropContracts",
+        "tags": [
+          "Contracts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Souscrire une nouvelle police d'assurance couvrant les cultures d'une parcelle contre les aléas climatiques",
+        "operationId": "subscribeCropInsurance",
+        "tags": [
+          "Contracts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/crop-insurance/claims": {
+      "get": {
+        "summary": "Consulter l'historique et le statut d'indemnisation des sinistres agricoles déclarés",
+        "operationId": "listCropClaims",
+        "tags": [
+          "Claims"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Déclarer une perte de rendement ou un dégât sur culture (grêle, gel, sécheresse) pour déclencher une expertise",
+        "operationId": "declareCropLoss",
+        "tags": [
+          "Claims"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

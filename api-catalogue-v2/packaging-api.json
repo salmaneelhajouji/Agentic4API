@@ -1,0 +1,106 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Packaging API",
+    "version": "1.0.0",
+    "x-api-id": "packaging-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Cette API régit les processus de conditionnement, de colisage (packing) et de gestion des emballages consignés réutilisables au sein des lignes de production industrielles. Elle permet d'administrer le catalogue des références de contenants normalisés, de valider le colisage des produits rattachés à un ordre d'expédition en générant la liste de colisage (packing list), et de tracer le retour ainsi que l'inspection des emballages industriels consignés.",
+    "x-synonymes": "gestion d'emballages, colisage industriel, packing list, liste de colisage, conditionnement de produits, emballage consigné, consigne réutilisable, contenant normalisé, ordre de colisage, palettisation usine, réintégration d'emballage, unification de charge",
+    "x-false-positive-warning": "Attention : Cette API encadre la structure physique du colisage, le type de cartons/palettes et la consigne d'emballage en usine (Packaging). Ne pas la confondre avec la `product-catalog-api` (gestion des caractéristiques commerciales de l'article) ni avec la `shipping-api` traitant de l'édition d'étiquettes de transporteurs.",
+    "x-cas-usage": "Comment lister le catalogue des types de contenants, caisses et emballages logistiques autorisés ? | Comment valider le colisage et le conditionnement des articles liés à un ordre de fabrication ? | Où récupérer la liste de colisage (packing list) détaillée affectant les produits par palette ? | Comment enregistrer la réception et l'état de conformité d'un lot d'emballages consignés retournés par un client ?"
+  },
+  "paths": {
+    "/v1/packaging": {
+      "get": {
+        "summary": "Lister et parcourir le catalogue des références d'emballage, des conditionnements et des contenants logistiques normalisés",
+        "operationId": "listPackagingTypes",
+        "tags": [
+          "Packaging"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Référencer et ajouter un nouveau type d'emballage ou de conditionnement technique au catalogue d'usine",
+        "operationId": "addPackagingType",
+        "tags": [
+          "Packaging"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/packaging/{orderId}/pack": {
+      "parameters": [
+        {
+          "name": "orderId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Valider et enregistrer le conditionnement (colisage, emballage) des produits rattachés à un ordre de fabrication ou d'expédition",
+        "operationId": "packOrder",
+        "tags": [
+          "Pack"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Consulter la liste de colisage (packing list) détaillée et l'affectation des articles par carton, caisse ou palette",
+        "operationId": "getPackingList",
+        "tags": [
+          "Pack"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/packaging/returns": {
+      "get": {
+        "summary": "Parcourir et suivre l'historique et l'état des demandes de retours de contenants ou d'emballages consignés et réutilisables",
+        "operationId": "listPackagingReturns",
+        "tags": [
+          "Returns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer la réception, l'inspection qualitative et la réintégration en stock d'un emballage consigné retourné",
+        "operationId": "processPackagingReturn",
+        "tags": [
+          "Returns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

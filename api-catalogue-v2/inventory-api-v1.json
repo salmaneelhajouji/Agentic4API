@@ -1,0 +1,95 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Inventory API",
+    "version": "1.0.0",
+    "x-api-id": "inventory-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Logistique",
+    "x-domain": "Supply Chain",
+    "x-successor": "inventory-api",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS inventory-api] Cette API gérait historiquement l'inventaire global et le niveau de stock unitaire de base de la plateforme (v1). Elle ne prend en charge aucune fonctionnalité moderne de seuil d'alerte, de réapprovisionnement automatisé ou de suivi multi-entrepôts. Cette version est totalement obsolète ; toutes les applications de la supply chain doivent obligatoirement migrer vers la version 3 active (inventory-api) pour s'appuyer sur le nouveau moteur d'approvisionnement.",
+    "x-breaking-changes-from-previous": "N/A — version initiale",
+    "x-breaking-changes-in-next": [
+      "Alertes de seuil de stock",
+      "Réapprovisionnement automatique",
+      "Historique des mouvements par produit",
+      "Support multi-entrepôts"
+    ],
+    "x-synonymes": "inventaire de stock v1, niveau de stock historique, quantité disponible ancienne, gestion des stocks historique, stock retail obsolète, mouvement de stock basique, catalogue de stock v1",
+    "x-false-positive-warning": "Attention : Cette API historique est dépréciée et restreinte à de simples consultations linéaires de volumes. Veiller à rediriger l'intégralité des flux applicatifs vers la version cible active `inventory-api`."
+  },
+  "paths": {
+    "/v1/inventory": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS inventory-api - Consulter l'état global et l'inventaire historique des produits de la version v1",
+        "operationId": "listInventoryV1",
+        "tags": [
+          "Inventory"
+        ],
+        "responses": {
+          "200": {
+            "description": "Inventaire"
+          }
+        }
+      }
+    },
+    "/v1/inventory/{productId}": {
+      "parameters": [
+        {
+          "name": "productId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS inventory-api - Consulter la quantité en stock disponible pour un produit spécifique (version dépréciée)",
+        "operationId": "getInventoryV1",
+        "tags": [
+          "Inventory"
+        ],
+        "responses": {
+          "200": {
+            "description": "Stock"
+          },
+          "404": {
+            "description": "Ressource introuvable sur l'ancienne base"
+          }
+        }
+      },
+      "put": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS inventory-api - Ajuster manuellement la quantité brute en stock d'un produit (opération obsolète)",
+        "operationId": "updateInventoryV1",
+        "tags": [
+          "Inventory"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "quantity"
+                ],
+                "properties": {
+                  "quantity": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      }
+    }
+  }
+}

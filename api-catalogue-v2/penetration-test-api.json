@@ -1,0 +1,77 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Penetration Test API",
+    "version": "1.0.0",
+    "x-api-id": "penetration-test-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Gestion des tests d intrusion (pentests) — planification, exécution et rapport de vulnérabilités. Permet de créer et lancer des tests d intrusion sur des cibles définies, d enregistrer les vulnérabilités découvertes (findings) par sévérité, et de générer le rapport final. Utilisé par les équipes sécurité et Red Team pour évaluer la résistance des systèmes.",
+    "x-synonymes": "pentest, test intrusion, test pénétration, Red Team, vulnérabilité sécurité, finding sécurité, rapport pentest, CVSS score, CVE vulnérabilité, test boîte noire, test boîte blanche, pentest web, pentest réseau, pentest API, OWASP test, scan vulnérabilité, audit sécurité offensif, test social engineering, rapport vulnérabilités, remédiation sécurité",
+    "x-false-positive-warning": "DIFFÉRENCE vs compliance-check-api : Penetration Test API = tests offensifs actifs de vulnérabilité. compliance-check-api = audit de conformité réglementaire ISO/PCI-DSS passif. DIFFÉRENCE vs network-quality-api : Penetration Test API = sécurité offensive. network-quality-api = qualité réseau et SLA. DIFFÉRENCE vs vulnerability-scan-api : Penetration Test API = test manuel avec findings détaillés. vulnerability-scan-api = scan automatique continu.",
+    "x-cas-usage": "je veux planifier un pentest sur notre application web avant son lancement | je veux lancer un test d intrusion sur notre infrastructure réseau | je veux enregistrer une vulnérabilité critique découverte pendant le pentest | je veux générer le rapport final du pentest avec toutes les vulnérabilités | je veux voir les résultats et recommandations de notre dernier pentest"
+  },
+  "paths": {
+    "/v1/pentests": {
+      "get": {
+        "summary": "Lister les tests d intrusion — planifiés, en cours et terminés",
+        "operationId": "listPentests",
+        "tags": ["Pentests"],
+        "responses": {"200": {"description": "Tests d intrusion"}}
+      },
+      "post": {
+        "summary": "Créer un test d intrusion — cible, périmètre et type de test",
+        "operationId": "createPentest",
+        "tags": ["Pentests"],
+        "responses": {"200": {"description": "Pentest créé"}}
+      }
+    },
+    "/v1/pentests/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un test d intrusion — statut, cibles et progression",
+        "operationId": "getPentest",
+        "tags": ["Pentests"],
+        "responses": {"200": {"description": "Détail pentest"}}
+      },
+      "put": {
+        "summary": "Modifier un test d intrusion — périmètre ou date",
+        "operationId": "updatePentest",
+        "tags": ["Pentests"],
+        "responses": {"200": {"description": "Pentest modifié"}}
+      },
+      "post": {
+        "summary": "Lancer l exécution d un test d intrusion planifié",
+        "operationId": "launchPentest",
+        "tags": ["Pentests"],
+        "responses": {"200": {"description": "Pentest lancé"}}
+      }
+    },
+    "/v1/pentests/{id}/findings": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Vulnérabilités découvertes — findings par sévérité CVSS et statut remédiation",
+        "operationId": "getPentestFindings",
+        "tags": ["Findings"],
+        "responses": {"200": {"description": "Vulnérabilités trouvées"}}
+      },
+      "post": {
+        "summary": "Ajouter une vulnérabilité découverte — sévérité, description et preuve",
+        "operationId": "addFinding",
+        "tags": ["Findings"],
+        "responses": {"200": {"description": "Finding ajouté"}}
+      }
+    },
+    "/v1/pentests/{id}/report": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Rapport final du pentest — synthèse vulnérabilités et recommandations",
+        "operationId": "getPentestReport",
+        "tags": ["Report"],
+        "responses": {"200": {"description": "Rapport pentest final"}}
+      }
+    }
+  }
+}

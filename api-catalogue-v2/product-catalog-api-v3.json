@@ -1,0 +1,183 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Product Catalog API",
+    "version": "3.0.0",
+    "x-api-id": "product-catalog-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Retail",
+    "x-domain": "Retail",
+    "description": "Cette API régit le système de gestion omnicanal unifié du catalogue de produits, des variantes et de la taxonomie commerciale (v3). Elle permet aux gestionnaires de l'offre d'administrer les fiches articles complètes, de lier des galeries multimédias multiples, d'exposer des structures de prix différenciées par canaux et d'intégrer nativement les métadonnées SEO obligatoires pour la publication. Elle alimente les moteurs de recherche et les tunnels de vente e-commerce.",
+    "x-breaking-changes-from-previous": [
+      "SEO integre",
+      "Medias multiples",
+      "Prix multiples"
+    ],
+    "x-synonymes": "catalogue produits omnicanal, fiche article v3, taxonomie du catalogue retail, variantes d'articles complexes, galerie médias produits, prix de vente multiples, métadonnées SEO catalogue, recherche de produits facettée, moteur de catalogue e-commerce, indexation d'articles omnicanale",
+    "x-false-positive-warning": "Attention : Cette API administre la taxonomie, les descriptifs documentaires et les variantes de la fiche article commerciale (Product Catalog). Ne pas la confondre avec la `inventory-api` qui est la seule autorisée à comptabiliser et restituer l'état physique réel des stocks disponibles en réserve.",
+    "x-cas-usage": "Comment lister et filtrer l'ensemble du catalogue d'articles omnicanal actif ? | Comment créer un produit complet en y attachant ses attributs de variantes et ses balises SEO ? | Où consulter la fiche descriptive, l'historique et les galeries médias d'un article spécifié ? | Comment associer un nouveau lot de photos ou de vidéos haute définition à un produit ?"
+  },
+  "paths": {
+    "/v3/products": {
+      "get": {
+        "summary": "Consulter et parcourir le catalogue général d'articles omnicanal avec prise en charge des facettes de recherche",
+        "operationId": "listProductsV3",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et publier une nouvelle fiche produit complète intégrant les structures de prix de base et configurations SEO",
+        "operationId": "createProductV3",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/products/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche article maîtresse unifiée, ses descriptifs sémantiques et ses liaisons de catégories",
+        "operationId": "getProductV3",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier la configuration, l'arbre de catégories ou amender les tags de recherche d'une fiche existante",
+        "operationId": "updateProductV3",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer définitivement ou révoquer la publication d'un produit du catalogue de distribution",
+        "operationId": "deleteProduct",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/products/{id}/variants": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister l'ensemble des variantes physiques (déclinaisons de tailles, dimensions ou couleurs) rattachées au produit",
+        "operationId": "getVariantsV3",
+        "tags": [
+          "Variants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter et classifier une nouvelle variante d'article (SKU spécifique) avec ses grilles de prix dédiées",
+        "operationId": "addVariant",
+        "tags": [
+          "Variants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/products/{id}/media": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la galerie complète des visuels, vidéos et médias associés à la fiche de l'article",
+        "operationId": "getProductMedia",
+        "tags": [
+          "Media"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Téléverser et associer un nouvel élément multimédia certifié (image, modèle 3D) au produit",
+        "operationId": "addMedia",
+        "tags": [
+          "Media"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/products/search": {
+      "get": {
+        "summary": "Exécuter une recherche multicritères facettée et textuelle sur l'ensemble du catalogue de produits",
+        "operationId": "searchProducts",
+        "tags": [
+          "Search"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Contact Form API",
+    "version": "1.0.0",
+    "x-api-id": "contact-form-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Support",
+    "x-domain": "Customer Support",
+    "description": "Formulaires de contact web et mobile pour la réception des demandes clients. Permet de soumettre un formulaire de contact qui crée automatiquement un ticket support, de configurer des formulaires personnalisés avec routing automatique selon la catégorie, et de gérer les règles d acheminement. DIFFÉRENCE vs ticket-api : Contact Form = point d entrée côté client (formulaire public). ticket-api = gestion interne des demandes côté backoffice.",
+    "x-synonymes": "formulaire contact, nous contacter, form contact, demande client, prise de contact, soumettre demande, formulaire support, formulaire web, demande assistance, formulaire réclamation, formulaire devis, nous écrire, contact page, form submission, création ticket automatique, routing demande, catégorie demande, formulaire mobile, pièce jointe formulaire, accusé réception formulaire",
+    "x-false-positive-warning": "Gestion interne des tickets côté agents → ticket-api. Chat en temps réel avec agent → live-chat-api. Bot conversationnel automatique → chatbot-api. Annuaire de contacts → contact-api.",
+    "x-cas-usage": "je veux créer un formulaire de contact sur notre site web qui génère automatiquement un ticket | je veux configurer le routing automatique des demandes selon la catégorie choisie | je veux permettre aux clients d envoyer des pièces jointes avec leur demande | je veux lister tous les formulaires de contact configurés sur notre plateforme | je veux créer un formulaire de réclamation avec des champs personnalisés"
+  },
+  "paths": {
+    "/v1/contact/submit": {
+      "post": {
+        "summary": "Soumettre un formulaire de contact — crée automatiquement un ticket support",
+        "operationId": "submitContactForm",
+        "tags": ["Contact"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "message"],
+                "properties": {
+                  "name": {"type": "string"},
+                  "email": {"type": "string", "format": "email"},
+                  "subject": {"type": "string"},
+                  "message": {"type": "string"},
+                  "phone": {"type": "string"},
+                  "category": {"type": "string"},
+                  "attachments": {"type": "array", "items": {"type": "string", "format": "uri"}}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Formulaire reçu — ticket créé automatiquement"}}
+      }
+    },
+    "/v1/contact/forms": {
+      "get": {
+        "summary": "Lister les formulaires de contact configurés — avec routing et champs personnalisés",
+        "operationId": "listForms",
+        "tags": ["Forms"],
+        "responses": {"200": {"description": "Formulaires configurés"}}
+      },
+      "post": {
+        "summary": "Créer un formulaire de contact — champs personnalisés et règles de routing",
+        "operationId": "createForm",
+        "tags": ["Forms"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "fields"],
+                "properties": {
+                  "name": {"type": "string"},
+                  "fields": {"type": "array", "items": {"type": "object"}},
+                  "auto_create_ticket": {"type": "boolean", "default": true},
+                  "routing_rules": {"type": "object"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Formulaire créé"}}
+      }
+    }
+  }
+}

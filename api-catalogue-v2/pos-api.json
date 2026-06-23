@@ -1,0 +1,61 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "POS API",
+    "version": "1.0.0",
+    "x-api-id": "pos-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Retail",
+    "x-domain": "Retail",
+    "description": "Point of Sale en magasin — caisse enregistreuse digitale. Permet de créer des transactions de vente, d annuler une vente, de gérer les sessions de caisse avec clôture et de consulter l historique des transactions. Utilisé par les enseignes retail et points de vente physiques pour encaisser les clients.",
+    "x-synonymes": "point de vente, caisse enregistreuse, caisse magasin, TPE terminal paiement, transaction vente magasin, vente caisse, annulation vente, clôture caisse, session caisse, ticket de caisse, reçu vente, Z de caisse, fond de caisse, encaissement magasin, vente comptoir, POS système, retail vente, transaction en magasin, caisse connectée, vente multi-canal omnicanal",
+    "x-false-positive-warning": "DIFFÉRENCE vs payment-api-v3 : POS API = vente en magasin avec session de caisse et annulation. payment-api-v3 = transaction de paiement en ligne. DIFFÉRENCE vs order-api-v4 : POS API = vente physique en caisse. order-api-v4 = commande e-commerce. DIFFÉRENCE vs cart-api : POS API = transaction directe en caisse. cart-api = panier numérique e-commerce.",
+    "x-cas-usage": "je veux créer une vente en caisse pour un client qui achète en magasin | je veux annuler une vente qui vient d être encaissée par erreur | je veux clôturer la caisse en fin de journée avec le total des ventes | je veux voir l historique des transactions de la journée pour ma caisse | je veux consulter le statut de la session de caisse actuellement ouverte"
+  },
+  "paths": {
+    "/v1/pos/transactions": {
+      "get": {
+        "summary": "Historique des transactions de caisse — ventes et annulations de la session",
+        "operationId": "listPOSTransactions",
+        "tags": ["Transactions"],
+        "responses": {"200": {"description": "Transactions caisse"}}
+      },
+      "post": {
+        "summary": "Créer une vente en caisse — articles, montant et mode de paiement",
+        "operationId": "createPOSTransaction",
+        "tags": ["Transactions"],
+        "responses": {"200": {"description": "Vente enregistrée"}}
+      }
+    },
+    "/v1/pos/transactions/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d une transaction de caisse — articles, paiement et reçu",
+        "operationId": "getPOSTransaction",
+        "tags": ["Transactions"],
+        "responses": {"200": {"description": "Détail transaction"}}
+      },
+      "post": {
+        "summary": "Annuler une vente en caisse — remboursement et retour stock",
+        "operationId": "voidTransaction",
+        "tags": ["Transactions"],
+        "responses": {"200": {"description": "Vente annulée"}}
+      }
+    },
+    "/v1/pos/sessions": {
+      "get": {
+        "summary": "Session de caisse en cours — fond de caisse et total ventes",
+        "operationId": "getCurrentSession",
+        "tags": ["Sessions"],
+        "responses": {"200": {"description": "Session caisse active"}}
+      },
+      "post": {
+        "summary": "Clôturer la caisse — Z de caisse et bilan fin de journée",
+        "operationId": "closeSession",
+        "tags": ["Sessions"],
+        "responses": {"200": {"description": "Caisse clôturée"}}
+      }
+    }
+  }
+}

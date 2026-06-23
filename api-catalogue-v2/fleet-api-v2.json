@@ -1,0 +1,71 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Fleet API",
+    "version": "2.0.0",
+    "x-api-id": "fleet-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "x-successor": "fleet-api-v4",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS fleet-api-v4] Cette API gérait la version 2 du système de gestion de flotte, introduisant le suivi de positionnement GPS en temps réel. Elle est désormais entièrement obsolète et gelée. Toutes les applications d'exploitation de transport doivent migrer vers la version 4 (fleet-api-v4) pour unifier le suivi GPS avec les modules de maintenance préventive, d'éco-conduite et d'affectation des chauffeurs.",
+    "x-synonymes": "gestion de flotte v2, parc de véhicules avec GPS, géolocalisation historique, suivi de positionnement, flotte de transport v2, coordonnées véhicules, télématique de base",
+    "x-false-positive-warning": "Attention : Cette API est dépréciée et ses fonctionnalités de positionnement sont obsolètes. Veiller à rediriger l'intégralité des flux vers la version cible `fleet-api-v4`."
+  },
+  "x-breaking-changes-from-previous": [
+    "GPS temps reel"
+  ],
+  "paths": {
+    "/v2/vehicles": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS fleet-api-v4 - Consulter l'inventaire historique des véhicules de la flotte v2",
+        "operationId": "listVehiclesV2",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS fleet-api-v4 - Déclarer ou ajouter un véhicule dans l'ancien référentiel v2 (opération dépréciée)",
+        "operationId": "addVehicleV2",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/vehicles/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS fleet-api-v4 - Consulter la fiche signalétique historique d'un véhicule de l'ancienne version 2",
+        "operationId": "getVehicleV2",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

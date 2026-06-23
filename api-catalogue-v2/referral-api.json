@@ -1,0 +1,52 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Referral API",
+    "version": "1.0.0",
+    "x-api-id": "referral-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Marketing",
+    "x-domain": "CRM & Marketing",
+    "description": "Programme de parrainage commercial. Permet de générer des codes de parrainage pour les clients existants, de valider un code lors d une inscription et d attribuer automatiquement les récompenses parrain et filleul. Utilisé par les équipes marketing pour les programmes d acquisition client par recommandation. DIFFÉRENCE vs referral-health-api : Referral API = parrainage commercial client. referral-health-api = orientation médicale entre professionnels de santé.",
+    "x-synonymes": "parrainage, code parrainage, code référent, programme parrain filleul, récompense parrainage, code promo parrainage, invite ami, refer a friend, MGM member get member, lien parrainage, bonus parrainage, tracking parrainage, conversion parrainage, statistiques parrain, inscription parrainage, validation code parrainage, expiration code parrainage, gain parrainage, acquisition parrainage, fidélisation parrainage",
+    "x-false-positive-warning": "Orientation médicale entre professionnels de santé → referral-health-api. Programme fidélité points → loyalty-points-api. Code promo commercial simple → promotion-api.",
+    "x-cas-usage": "je veux générer un code de parrainage pour un client existant | je veux valider le code de parrainage saisi par un nouvel inscrit | je veux voir combien de filleuls un parrain a apporté | je veux voir les statistiques de mon programme de parrainage | je veux créer un code de parrainage avec une date d expiration"
+  },
+  "paths": {
+    "/v1/referrals/generate": {
+      "post": {
+        "summary": "Générer un code de parrainage pour un client — avec date d expiration optionnelle",
+        "operationId": "generateReferral",
+        "tags": ["Referrals"],
+        "responses": {"201": {"description": "Code de parrainage généré"}}
+      }
+    },
+    "/v1/referrals/{code}": {
+      "parameters": [{"name": "code", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détails d un code de parrainage — parrain, statut et filleuls",
+        "operationId": "getReferral",
+        "tags": ["Referrals"],
+        "responses": {"200": {"description": "Parrainage"}}
+      }
+    },
+    "/v1/referrals/validate": {
+      "post": {
+        "summary": "Valider un parrainage lors d une inscription — déclenche les récompenses",
+        "operationId": "validateReferral",
+        "tags": ["Referrals"],
+        "responses": {"200": {"description": "Validé — récompenses attribuées"}}
+      }
+    },
+    "/v1/referrals/{userId}/stats": {
+      "parameters": [{"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statistiques de parrainage d un utilisateur — filleuls et récompenses gagnées",
+        "operationId": "getReferralStats",
+        "tags": ["Referrals"],
+        "responses": {"200": {"description": "Statistiques parrainage"}}
+      }
+    }
+  }
+}

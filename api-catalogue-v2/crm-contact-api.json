@@ -1,0 +1,308 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CRM Contact API",
+    "version": "1.0.0",
+    "x-api-id": "crm-contact-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe CRM",
+    "x-domain": "CRM & Marketing",
+    "description": "Cette API est le cœur du référentiel relationnel (CRM). Elle permet de centraliser, segmenter et gérer le cycle de vie complet des contacts de l'entreprise, qu'il s'agisse de clients actifs, de prospects (leads) ou de partenaires B2B. Elle est conçue pour être intégrée par les outils de force de vente, les plateformes de marketing automation, et les portails d'assistance. Elle offre une vue 360° en unifiant les coordonnées, les données de segmentation et l'historique complet des interactions commerciales (appels, emails, rendez-vous).",
+    "x-synonymes": "contact, prospect, lead, client B2B, partenaire, fiche client, carnet d'adresses, historique d'interactions, touchpoint, point de contact, opportunité commerciale, base de données CRM, segmentation, relation client, gestion des leads, suivi commercial, compte, pipeline",
+    "x-false-positive-warning": "Attention : cette API gère l'ensemble des relations commerciales (vue 360°, leads, B2B, interactions de vente). Ne pas la confondre avec la `customer-profile-api` (qui se concentre exclusivement sur le profil des acheteurs B2C finaux, leurs habitudes de consommation et leur fidélité), ni avec la `marketing-campaign-api` (qui gère la diffusion de campagnes globales et non la fiche individuelle d'un contact).",
+    "x-cas-usage": "Comment récupérer la liste des prospects (leads) assignés à mon commercial d'ici la fin du trimestre ? | Où puis-je consigner l'historique et la synthèse de notre dernier appel de négociation avec ce partenaire ? | Comment filtrer l'ensemble de nos contacts CRM pour extraire uniquement les clients existants ? | Puis-je rechercher tous les contacts rattachés à une entreprise spécifique via la recherche multicritères ? | Comment mettre à jour le numéro de téléphone et l'email d'un lead après une qualification téléphonique ?"
+  },
+  "paths": {
+    "/v1/crm/contacts": {
+      "post": {
+        "summary": "Créer une nouvelle fiche contact (prospect, client ou partenaire) dans le référentiel CRM",
+        "operationId": "createCRMContact",
+        "tags": [
+          "Contacts"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContactCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Récupérer et filtrer la liste globale des contacts CRM selon leur type ou leur assignation commerciale",
+        "operationId": "listCRMContacts",
+        "tags": [
+          "Contacts"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "customer",
+                "prospect",
+                "partner"
+              ]
+            }
+          },
+          {
+            "name": "assigned_to",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contacts"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/crm/contacts/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les informations détaillées et les attributs d'une fiche contact existante",
+        "operationId": "getCRMContact",
+        "tags": [
+          "Contacts"
+        ],
+        "responses": {
+          "200": {
+            "description": "Contact"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour les coordonnées, le statut ou les attributs commerciaux d'un contact",
+        "operationId": "updateCRMContact",
+        "tags": [
+          "Contacts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Supprimer définitivement une fiche contact et purger ses données du référentiel CRM",
+        "operationId": "deleteCRMContact",
+        "tags": [
+          "Contacts"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/crm/contacts/search": {
+      "post": {
+        "summary": "Exécuter une recherche multicritères avancée (full-text et filtres) dans la base de contacts",
+        "operationId": "searchCRMContacts",
+        "tags": [
+          "Contacts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string"
+                  },
+                  "filters": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Résultats"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/crm/contacts/{id}/interactions": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la chronologie et l'historique complet des échanges professionnels avec un contact",
+        "operationId": "getInteractions",
+        "tags": [
+          "Contacts"
+        ],
+        "responses": {
+          "200": {
+            "description": "Interactions"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Enregistrer une nouvelle interaction commerciale (appel, email, réunion, note) dans le journal d'activité du contact",
+        "operationId": "addInteraction",
+        "tags": [
+          "Contacts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "summary"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "call",
+                      "email",
+                      "meeting",
+                      "note"
+                    ]
+                  },
+                  "summary": {
+                    "type": "string"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date-time"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ajoutée"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ContactCreate": {
+        "type": "object",
+        "required": [
+          "full_name",
+          "email",
+          "type"
+        ],
+        "properties": {
+          "full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "customer",
+              "prospect",
+              "partner"
+            ]
+          },
+          "phone": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "assigned_to": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

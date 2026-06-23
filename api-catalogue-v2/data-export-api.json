@@ -1,0 +1,162 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Export API",
+    "version": "1.0.0",
+    "x-api-id": "data-export-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "Cette API orchestre l'extraction massive et l'exportation de données volumineuses (commandes, clients, produits, rapports analytiques) stockées dans le datalake ou l'entrepôt de données de l'entreprise. Conçue pour traiter de grands volumes sans impacter les systèmes transactionnels, elle fonctionne de manière asynchrone via la création de tâches (jobs), le suivi de leur progression et la mise à disposition de liens de téléchargement sécurisés pour des fichiers au format CSV, JSON ou Parquet hautement compressés. Ses utilisateurs cibles sont les Data Scientists, les Business Analysts et les intégrateurs tiers ayant besoin d'alimenter des outils externes de BI, d'intelligence artificielle ou d'archivage réglementaire.",
+    "x-synonymes": "export de données, extraction massive, dump de base de données, job asynchrone, tâche d'extraction, téléchargement de données, format Parquet, export CSV, extraction de rapports, data unloading, flux de données, archivage de données, data dump, gros volumes, lien de téléchargement, extraction de paniers, compression de données, batch export",
+    "x-false-positive-warning": "Attention : Cette API est réservée aux extractions massives et asynchrones de gros volumes de données. Ne pas la confondre avec l'API de Streaming d'Événements / event-api (dédiée aux flux de messages en temps réel), ni avec les APIs de consultation unitaire (comme la customer-profile-api ou la product-api qui récupèrent des fiches de données une par une de manière synchrone), ni avec la data-catalog-api (qui répertorie la documentation des données sans jamais exporter les données réelles).",
+    "x-cas-usage": "Comment lancer une extraction complète de l'historique des commandes au format Parquet pour l'année dernière ? | Où puis-je vérifier si mon travail d'exportation massif de données clients est terminé ? | Pourquoi le lien de téléchargement sécurisé généré hier pour mon rapport analytique renvoie-t-il une erreur 410 ? | Comment annuler une tâche d'exportation de données volumineuses lancée par erreur pour éviter de surcharger le cluster ?"
+  },
+  "paths": {
+    "/v1/exports": {
+      "post": {
+        "summary": "Créer et planifier une nouvelle tâche (job) d'extraction asynchrone pour exporter un grand volume de données selon des filtres spécifiques",
+        "operationId": "createExport",
+        "tags": [
+          "Exports"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "entity",
+                  "format"
+                ],
+                "properties": {
+                  "entity": {
+                    "type": "string",
+                    "enum": [
+                      "orders",
+                      "customers",
+                      "products",
+                      "analytics"
+                    ]
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "csv",
+                      "json",
+                      "parquet"
+                    ]
+                  },
+                  "filters": {
+                    "type": "object"
+                  },
+                  "date_range": {
+                    "type": "object",
+                    "properties": {
+                      "from": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "to": {
+                        "type": "string",
+                        "format": "date"
+                      }
+                    }
+                  },
+                  "compress": {
+                    "type": "boolean",
+                    "default": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Job lancé"
+          }
+        }
+      }
+    },
+    "/v1/exports/{jobId}/status": {
+      "parameters": [
+        {
+          "name": "jobId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état d'avancement, la progression et le statut technique d'un travail d'exportation massif (en attente, en cours, terminé, en échec)",
+        "operationId": "getExportStatus",
+        "tags": [
+          "Exports"
+        ],
+        "responses": {
+          "200": {
+            "description": "Statut"
+          }
+        }
+      }
+    },
+    "/v1/exports/{jobId}/download": {
+      "parameters": [
+        {
+          "name": "jobId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le fichier de données généré via un lien de téléchargement sécurisé éphémère (valable pendant une durée limitée de 24 heures)",
+        "operationId": "downloadExport",
+        "tags": [
+          "Exports"
+        ],
+        "responses": {
+          "200": {
+            "description": "Fichier"
+          },
+          "202": {
+            "description": "Export en cours"
+          },
+          "410": {
+            "description": "Lien expiré"
+          }
+        }
+      }
+    },
+    "/v1/exports/{jobId}": {
+      "parameters": [
+        {
+          "name": "jobId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Interrompre et annuler définitivement l'exécution d'un travail d'exportation en cours de traitement pour libérer les ressources du cluster data",
+        "operationId": "cancelExport",
+        "tags": [
+          "Exports"
+        ],
+        "responses": {
+          "204": {
+            "description": "Annulé"
+          }
+        }
+      }
+    }
+  }
+}

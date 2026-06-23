@@ -1,0 +1,140 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Due Diligence API",
+    "version": "1.0.0",
+    "x-api-id": "due-diligence-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Cette API encadre et automatise les processus d'audit de due diligence juridique, réglementaire et financière menés dans le cadre de fusions-acquisitions (M&A), de partenariats stratégiques ou de levées de fonds. Elle permet de structurer les listes de contrôle (checklists), de centraliser l'examen des documents sensibles au sein d'une data room virtuelle, de consigner les points d'attention ou risques identifiés (findings) et de compiler le rapport d'audit final. Elle est essentielle pour sécuriser les transactions et éclairer les prises de décision des directions juridiques et financières.",
+    "x-synonymes": "due diligence, audit juridique, audit financier, fusion-acquisition, M&A, levée de fonds, checklist d'audit, conformité transactionnelle, data room virtuelle, finding d'audit, risque juridique, rapport de due diligence, évaluation des risques, audit d'acquisition, investigation légale, due diligence financière",
+    "x-false-positive-warning": "Attention : Cette API gère spécifiquement les processus d'audit de conformité d'acquisition et les investigations pré-transactionnelles (Due Diligence). Ne pas la confondre avec la `litigation-api` (suivi des procès et contentieux en cours) ni avec la `risk-management-api` (gestion des risques opérationnels courants de l'entreprise).",
+    "x-cas-usage": "Comment initialiser un nouveau dossier de due diligence pour l'audit d'une cible d'acquisition ? | Où suivre l'état d'avancement de la checklist de conformité réglementaire ? | Comment enregistrer un nouveau risque fiscal ou contractuel majeur (finding) identifié par les auditeurs ? | Comment générer et exporter le rapport final de due diligence consolidé pour le comité d'investissement ?"
+  },
+  "paths": {
+    "/v1/due-diligence": {
+      "get": {
+        "summary": "Lister, filtrer et auditer l'ensemble des dossiers d'audit de due diligence et d'investigation pré-transactionnelle actifs",
+        "operationId": "listDueDiligences",
+        "tags": [
+          "DueDiligence"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Initialiser et lancer un nouveau processus de due diligence juridique et financière pour une cible ou un partenariat",
+        "operationId": "startDueDiligence",
+        "tags": [
+          "DueDiligence"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/due-diligence/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état d'avancement, le taux de complétude et la progression de la checklist d'audit",
+        "operationId": "getDueDiligence",
+        "tags": [
+          "DueDiligence"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour la configuration, la liste de contrôle ou les informations de cadrage du dossier d'audit",
+        "operationId": "updateDueDiligence",
+        "tags": [
+          "DueDiligence"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/due-diligence/{id}/findings": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le registre des points d'attention, risques juridiques et anomalies financières identifiés par les auditeurs",
+        "operationId": "getDDFindings",
+        "tags": [
+          "Findings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Consigner et ajouter un nouveau point de vigilance ou risque critique (finding) qualifié au dossier d'audit",
+        "operationId": "addDDFinding",
+        "tags": [
+          "Findings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/due-diligence/{id}/report": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Générer et exporter le rapport final de due diligence consolidé contenant les conclusions juridiques et financières",
+        "operationId": "getDDReport",
+        "tags": [
+          "Report"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

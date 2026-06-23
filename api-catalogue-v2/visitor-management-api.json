@@ -1,0 +1,120 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Visitor Management API",
+    "version": "1.0.0",
+    "x-api-id": "visitor-management-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Gestion visiteurs et accès immeubles. Attribution de badges d'accès physiques temporaires, planification d'invitations et journalisation historique des flux d'entrées/sorties. DIFFÉRENCE vs tenant-api-v2 : Visitor Management API gère l'accès ponctuel de personnes externes (invités, prestataires) dans des locaux d'entreprise, alors que tenant-api-v2 suit les dossiers de location et les baux immobiliers longue durée.",
+    "x-synonymes": "visiteur, badge, accès, accueil, immeuble, bâtiment, invitation, registre, sécurité, check-in, check-out, hall, entreprise, carte d'accès, journal des entrées, site sécurisé, pass temporaire, contrôle d'entrée",
+    "x-false-positive-warning": "Pour la gestion locative longue durée d'appartements ou bureaux, utilisez tenant-api-v2. Pour le contrôle logique des droits d'accès informatiques, utilisez iam-api.",
+    "x-cas-usage": "je veux voir la liste des visiteurs attendus aujourd'hui dans le bâtiment | je veux pré-enregistrer un invité externe pour lui générer un pass d'accès | je veux consulter l'historique du journal des accès de l'immeuble | je veux enregistrer la sortie d'un visiteur et invalider son badge"
+  },
+  "paths": {
+    "/v1/visitors": {
+      "get": {
+        "summary": "Lister l'ensemble des visiteurs pré-enregistrés ou attendus sur site pour la journée en cours",
+        "operationId": "listVisitors",
+        "tags": [
+          "Visitors"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Pré-enregistrer un visiteur externe et planifier son invitation sécurisée dans les locaux de l'immeuble",
+        "operationId": "preRegisterVisitor",
+        "tags": [
+          "Visitors"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/visitors/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'identité, l'hôte interne et les détails de rendez-vous d'un visiteur spécifique",
+        "operationId": "getVisitor",
+        "tags": [
+          "Visitors"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Enregistrer la sortie physique définitive du visiteur et désactiver son badge d'accès temporaire",
+        "operationId": "checkOutVisitor",
+        "tags": [
+          "Visitors"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/visitors/access-log": {
+      "get": {
+        "summary": "Extraire le journal historique complet et auditable des entrées et sorties (logs d'accès) des bâtiments",
+        "operationId": "getAccessLog",
+        "tags": [
+          "Log"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

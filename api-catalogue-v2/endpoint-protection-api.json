@@ -1,0 +1,116 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Endpoint Protection API",
+    "version": "1.0.0",
+    "x-api-id": "endpoint-protection-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Cette API orchestre la sécurité périmétrique et la surveillance en temps réel de l'ensemble des postes de travail, serveurs et terminaux mobiles (endpoints) de l'entreprise. Intégrée aux agents EDR (Endpoint Detection and Response) et outils antivirus, elle permet d'enrôler de nouveaux terminaux, d'auditer leur statut de protection, de remonter les menaces ou logiciels malveillants détectés, et de déclencher des actions de remédiation d'urgence telles que la mise en quarantaine de fichiers corrompus ou l'isolation réseau immédiate d'un poste infecté.",
+    "x-synonymes": "protection des postes, sécurité endpoint, EDR, antivirus d'entreprise, enrôlement de terminal, statut de protection, menace informatique, logiciel malveillant, mise en quarantaine, isolation réseau, poste infecté, cyber-défense, soc security, alerte de sécurité terminal, remédiation informatique",
+    "x-false-positive-warning": "Attention : Cette API gère de manière exclusive la protection, la détection et la réponse aux menaces sur les machines physiques et serveurs (Endpoints). Ne pas la confondre avec la `ddos-protection-api` (dédiée aux attaques de saturation réseau périmétrique) ni avec la `network-firewall-api`.",
+    "x-cas-usage": "Comment enrôler et rattacher un nouvel ordinateur portable au système central de supervision EDR ? | Où consulter la liste des alertes et menaces informatiques actives détectées sur un serveur ? | Quelle méthode appeler pour isoler immédiatement du réseau une machine compromise afin d'éviter une propagation ? | Comment ordonner la mise en quarantaine d'un fichier suspect identifié par l'antivirus sur un poste client ?"
+  },
+  "paths": {
+    "/v1/endpoints": {
+      "get": {
+        "summary": "Lister et auditer l'inventaire de l'ensemble des postes de travail, serveurs et terminaux mobiles managés par la solution de sécurité",
+        "operationId": "listEndpoints",
+        "tags": [
+          "Endpoints"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enrôler et installer l'agent de protection sur un nouveau terminal pour l'intégrer au périmètre de supervision centralisé",
+        "operationId": "enrollEndpoint",
+        "tags": [
+          "Endpoints"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/endpoints/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le statut de protection, la version de la base virale et l'état de conformité d'un terminal spécifique",
+        "operationId": "getEndpointStatus",
+        "tags": [
+          "Endpoints"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher l'isolation réseau immédiate d'un terminal compromis pour stopper toute tentative de propagation latérale",
+        "operationId": "isolateEndpoint",
+        "tags": [
+          "Endpoints"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/endpoints/{id}/threats": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le journal des menaces informatiques, logiciels malveillants ou comportements suspects détectés sur le terminal",
+        "operationId": "getEndpointThreats",
+        "tags": [
+          "Threats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ordonner la mise en quarantaine immédiate d'un fichier ou d'un processus identifié comme malveillant sur la machine ciblée",
+        "operationId": "quarantineFile",
+        "tags": [
+          "Threats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

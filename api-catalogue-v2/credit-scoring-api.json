@@ -1,0 +1,83 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Credit Scoring API",
+    "version": "1.0.0",
+    "x-api-id": "credit-scoring-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Cette API permet d'évaluer la solvabilité, la capacité de remboursement et le risque de défaut d'un client (particulier ou entreprise) lors d'une demande de financement. Elle consolide les résultats de modèles d'intelligence artificielle (Machine Learning) internes et interroge les bases réglementaires de la Banque de France (FICP, FCC, FIBEN). Ses utilisateurs cibles sont les développeurs des parcours digitaux d'octroi de crédit (crédit immobilier, conso, leasing) ainsi que les outils d'aide à la décision utilisés par les conseillers bancaires et les analystes risques en back-office.",
+    "x-synonymes": "score de crédit, risque de défaut, notation financière, solvabilité, profil de risque, octroi de crédit, interrogation Banque de France, FICP, FCC, FIBEN, probabilité de défaut, capacité de remboursement, taux d'endettement, évaluation du risque, credit rating, scoring bancaire, décision d'octroi, cote de crédit",
+    "x-false-positive-warning": "Ne pas confondre avec l'API KYC / Conformité (dédiée à la vérification d'identité, la fraude documentaire et la lutte anti-blanchiment LCB-FT, sans notion de solvabilité) ni avec l'API Simulateur de Prêt (qui se contente de calculer des tableaux d'amortissement, des taux et des mensualités de manière théorique).",
+    "x-cas-usage": "Quel est le score de solvabilité actualisé de ce client pour finaliser sa demande de prêt immobilier ? | Le client présente-t-il un fichage actif aux incidents de paiement de la Banque de France (FICP ou FCC) ? | Comment puis-je déclencher un recalcul immédiat du score de risque suite à la saisie de nouveaux revenus ? | Puis-je envoyer un fichier pour réévaluer le score de risque de tout mon portefeuille de crédits à la consommation ? | Quelle est la probabilité de défaut (PD) associée au SIREN de cette entreprise cliente ?"
+  },
+  "paths": {
+    "/v1/scoring/{clientId}": {
+      "parameters": [
+        {
+          "name": "clientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le dernier score de crédit calculé, la notation de risque et le statut Banque de France d'un client existant",
+        "operationId": "getScore",
+        "tags": [
+          "Scoring"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Demander le calcul ou la mise à jour en temps réel du score de solvabilité et de la probabilité de défaut pour un dossier client",
+        "operationId": "requestScore",
+        "tags": [
+          "Scoring"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/scoring/batch": {
+      "post": {
+        "summary": "Déclencher l'évaluation algorithmique du risque de crédit en masse pour un lot de clients (suivi de portefeuille et provisionnement)",
+        "operationId": "batchScoring",
+        "tags": [
+          "Batch"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

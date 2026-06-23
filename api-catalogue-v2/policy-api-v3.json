@@ -1,0 +1,87 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Policy API",
+    "version": "3.0.0",
+    "x-api-id": "policy-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Version actuelle — Contrats d assurance complets avec avenants multiples, renouvellement automatique et signature électronique eIDAS. Permet de souscrire un contrat, de gérer ses avenants, de consulter les informations de renouvellement et de résilier. Utilisé par les compagnies d assurance et courtiers pour la gestion du cycle de vie des polices.",
+    "x-breaking-changes-from_previous": ["Avenants multiples", "Renouvellement auto", "E-signature eIDAS"],
+    "x-synonymes": "police assurance, contrat assurance, souscription assurance, avenant contrat, renouvellement assurance, résiliation assurance, tacite reconduction, portefeuille contrats, garanties assurance, prime assurance, échéance contrat, condition particulières, condition générales assurance, assuré, bénéficiaire assurance, durée contrat, sinistre contrat, suspension contrat, délai carence, signature électronique assurance",
+    "x-false-positive-warning": "Sinistre et déclaration → insurance-claim-api-v3. Règlement sinistre → claims-settlement-api. Programme fidélité assurance → pas d API dédiée. Assurance auto spécifique → auto-insurance-api. Versions précédentes → policy-api-v1 et policy-api-v2 (deprecated).",
+    "x-cas-usage": "je veux souscrire un nouveau contrat d assurance habitation pour un client | je veux ajouter un avenant pour modifier les garanties d un contrat existant | je veux voir les informations de renouvellement d un contrat arrivant à échéance | je veux renouveler un contrat d assurance avant son expiration | je veux résilier un contrat d assurance avec préavis"
+  },
+  "paths": {
+    "/v3/policies": {
+      "get": {
+        "summary": "Portefeuille de contrats d assurance — actifs, en renouvellement et résiliés",
+        "operationId": "listPoliciesV3",
+        "tags": ["Policies"],
+        "responses": {"200": {"description": "Portefeuille contrats"}}
+      },
+      "post": {
+        "summary": "Souscrire un contrat d assurance — avec signature électronique eIDAS",
+        "operationId": "createPolicyV3",
+        "tags": ["Policies"],
+        "responses": {"200": {"description": "Contrat souscrit"}}
+      }
+    },
+    "/v3/policies/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un contrat — garanties, prime et statut",
+        "operationId": "getPolicyV3",
+        "tags": ["Policies"],
+        "responses": {"200": {"description": "Détail contrat"}}
+      },
+      "put": {
+        "summary": "Modifier un contrat d assurance — informations et conditions",
+        "operationId": "updatePolicyV3",
+        "tags": ["Policies"],
+        "responses": {"200": {"description": "Contrat modifié"}}
+      }
+    },
+    "/v3/policies/{id}/endorsements": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Avenants d un contrat — modifications de garanties et historique",
+        "operationId": "getEndorsements",
+        "tags": ["Endorsements"],
+        "responses": {"200": {"description": "Avenants du contrat"}}
+      },
+      "post": {
+        "summary": "Créer un avenant — modifier les garanties ou conditions d un contrat",
+        "operationId": "addEndorsementV3",
+        "tags": ["Endorsements"],
+        "responses": {"200": {"description": "Avenant créé"}}
+      }
+    },
+    "/v3/policies/{id}/renewal": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Informations de renouvellement — date, nouvelle prime et conditions",
+        "operationId": "getRenewalInfo",
+        "tags": ["Renewal"],
+        "responses": {"200": {"description": "Informations renouvellement"}}
+      },
+      "post": {
+        "summary": "Renouveler un contrat d assurance — nouvelle période avec conditions mises à jour",
+        "operationId": "renewPolicy",
+        "tags": ["Renewal"],
+        "responses": {"200": {"description": "Contrat renouvelé"}}
+      }
+    },
+    "/v3/policies/{id}/cancel": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Résilier un contrat d assurance — avec préavis légal",
+        "operationId": "cancelPolicy",
+        "tags": ["Cancel"],
+        "responses": {"200": {"description": "Contrat résilié"}}
+      }
+    }
+  }
+}

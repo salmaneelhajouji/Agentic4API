@@ -1,0 +1,214 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Course API",
+    "version": "3.0.0",
+    "x-api-id": "course-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "x-breaking-changes-from-previous": [
+      "Vidéos",
+      "Quiz interactifs",
+      "Certification"
+    ],
+    "description": "Cette API gère le catalogue des cours académiques e-learning dans leur version complète (v3). Elle permet aux plateformes d'apprentissage (LMS), aux universités et aux organismes d'enseignement virtuel de créer et diffuser des parcours pédagogiques interactifs. Contrairement aux versions précédentes, elle intègre nativement la gestion des contenus multimédias (vidéos), des évaluations (quiz) et la délivrance de certifications académiques. Ses utilisateurs cibles sont les développeurs métiers chargés d'intégrer l'offre de formation dans les portails étudiants.",
+    "x-synonymes": "cours e-learning, formation académique, parcours pédagogique en ligne, module d'apprentissage, leçon virtuelle, certification académique, quiz d'évaluation, contenu multimédia éducatif, MOOC, classe inversée, syllabus interactif, cursus en ligne, évaluation de connaissances, diplôme virtuel, unité d'enseignement, chapitre vidéo, tutoriel académique",
+    "x-false-positive-warning": "Attention : Cette API est strictement dédiée à la formation académique e-learning (Course). Ne pas la confondre avec la `training-api`, qui cible exclusivement la formation professionnelle continue en entreprise et le développement des compétences RH.",
+    "x-cas-usage": "Comment récupérer le catalogue complet des cours certifiants disponibles pour le semestre d'automne ? | Est-il possible d'intégrer une nouvelle vidéo explicative dans le module 2 de ce cursus ? | Comment soumettre et valider les réponses d'un étudiant au quiz final pour déclencher sa certification ? | Quelles sont les métadonnées renvoyées lors de la consultation des détails d'un parcours d'apprentissage spécifique ? | Comment mettre à jour le titre et la description d'un cours existant ?"
+  },
+  "paths": {
+    "/v3/courses": {
+      "get": {
+        "summary": "Consulter le catalogue complet des cours e-learning certifiants actifs.",
+        "operationId": "listCoursesV3",
+        "tags": [
+          "Courses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer un nouveau parcours de formation académique e-learning.",
+        "operationId": "createCourseV3",
+        "tags": [
+          "Courses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v3/courses/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer les détails complets d'un cours spécifique, incluant ses métadonnées et paramètres de certification.",
+        "operationId": "getCourseV3",
+        "tags": [
+          "Courses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour les informations globales d'un cours existant (titre, description, statuts).",
+        "operationId": "updateCourseV3",
+        "tags": [
+          "Courses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Supprimer ou archiver définitivement un cours du catalogue académique.",
+        "operationId": "deleteCourse",
+        "tags": [
+          "Courses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v3/courses/{id}/modules": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister l'ensemble des modules (vidéos, textes, leçons) qui composent la structure pédagogique d'un cours.",
+        "operationId": "getModulesV3",
+        "tags": [
+          "Modules"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Ajouter un nouveau module de contenu multimédia (ex: vidéo éducative) dans la progression d'un cours.",
+        "operationId": "addModuleV3",
+        "tags": [
+          "Modules"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v3/courses/{id}/quiz": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer les questions et le barème d'évaluation du quiz interactif associé à un cours.",
+        "operationId": "getQuiz",
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Soumettre les réponses d'un apprenant au quiz pour une correction automatisée et le calcul du score de certification.",
+        "operationId": "submitQuiz",
+        "tags": [
+          "Quiz"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

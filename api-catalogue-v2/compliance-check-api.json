@@ -1,0 +1,78 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Compliance Check API",
+    "version": "1.0.0",
+    "x-api-id": "compliance-check-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "API dédiée à la vérification et la gestion de la conformité réglementaire en sécurité informatique. Elle couvre l'ensemble du cycle de conformité : lancement d'audits selon les référentiels standards (ISO 27001, RGPD, PCI-DSS, SOC2, HDS, NIS2, DORA), identification des écarts et lacunes par rapport aux exigences, génération de rapports de conformité exportables et création de plans de remédiation priorisés. Les utilisateurs typiques sont les RSSI, équipes GRC (Gouvernance, Risque, Conformité), DPO, auditeurs internes et consultants en cybersécurité. DIFFÉRENCE vs compliance-legal-api : cette API traite la conformité en sécurité informatique (cadres techniques), tandis que compliance-legal-api couvre les obligations juridiques et réglementaires commerciales. DIFFÉRENCE vs aml-api : aml-api concerne la lutte contre le blanchiment d'argent (LCB-FT), ici il s'agit de conformité aux normes de sécurité IT.",
+    "x-synonymes": "audit conformité, ISO 27001, RGPD conformité, PCI-DSS, SOC2, HDS hébergement données santé, NIS2, DORA conformité, RSSI, GRC, gouvernance risque conformité, audit sécurité, gap analysis conformité, plan remédiation, rapport conformité, écart conformité, contrôle sécurité, assessment conformité, cyber conformité, référentiel sécurité",
+    "x-false-positive-warning": "Conformité droit des affaires et obligations légales → compliance-legal-api. Accessibilité web WCAG → accessibility-api. Conformité LCB-FT anti-blanchiment → aml-api. Conformité urbanistique et permis de construire → building-permit-api. Revue des accès utilisateurs et droits d'accès → access-review-api.",
+    "x-cas-usage": "Comment lancer un audit de conformité ISO 27001 sur notre organisation et obtenir un score global ? | Quels référentiels de conformité sont disponibles et supportés par l'API (PCI-DSS, SOC2, HDS, NIS2) ? | Comment récupérer le rapport de conformité RGPD d'une organisation pour notre DPO ? | Comment identifier les écarts et contrôles manquants par rapport au référentiel PCI-DSS ? | Comment créer un plan de remédiation priorisé pour corriger les lacunes de conformité SOC2 détectées ?"
+  },
+  "paths": {
+    "/v1/compliance/check": {
+      "post": {
+        "summary": "Lancer un audit de conformité sur une organisation selon un référentiel choisi (ISO 27001, RGPD, PCI-DSS, SOC2) et obtenir un identifiant de suivi",
+        "operationId": "runComplianceCheck",
+        "tags": ["Check"],
+        "responses": {
+          "200": {"description": "Audit lancé avec succès, retourne l'identifiant et le statut initial de l'audit"}
+        }
+      }
+    },
+    "/v1/compliance/frameworks": {
+      "get": {
+        "summary": "Lister tous les référentiels de conformité disponibles (ISO 27001, PCI-DSS, SOC2, HDS, NIS2, DORA) avec leurs versions et domaines couverts",
+        "operationId": "listFrameworks",
+        "tags": ["Frameworks"],
+        "responses": {
+          "200": {"description": "Liste des référentiels disponibles avec leurs métadonnées, versions et périmètres"}
+        }
+      }
+    },
+    "/v1/compliance/reports/{orgId}": {
+      "parameters": [{"name": "orgId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le rapport de conformité d'une organisation avec le score global, le niveau de maturité et le statut de conformité par domaine de contrôle",
+        "operationId": "getComplianceReport",
+        "tags": ["Reports"],
+        "responses": {
+          "200": {"description": "Rapport de conformité détaillé avec scores, statuts par domaine et historique d'évolution"},
+          "404": {"description": "Organisation non trouvée"}
+        }
+      },
+      "post": {
+        "summary": "Générer et exporter un rapport de conformité au format PDF ou JSON pour un audit externe ou une certification client",
+        "operationId": "generateReport",
+        "tags": ["Reports"],
+        "responses": {
+          "200": {"description": "Rapport de conformité généré et disponible au téléchargement"},
+          "404": {"description": "Organisation non trouvée"}
+        }
+      }
+    },
+    "/v1/compliance/gaps": {
+      "get": {
+        "summary": "Lister tous les écarts de conformité identifiés par l'audit, incluant les contrôles manquants, niveaux de risque et référentiels concernés",
+        "operationId": "listComplianceGaps",
+        "tags": ["Gaps"],
+        "responses": {
+          "200": {"description": "Liste des écarts de conformité avec criticité, référentiel associé et recommandations"}
+        }
+      },
+      "post": {
+        "summary": "Créer un plan de remédiation structuré et priorisé pour corriger les écarts de conformité identifiés, avec échéances et responsables",
+        "operationId": "createRemediationPlan",
+        "tags": ["Gaps"],
+        "responses": {
+          "200": {"description": "Plan de remédiation créé avec actions priorisées, responsables et délais de mise en conformité"},
+          "400": {"description": "Données invalides ou écarts non reconnus"}
+        }
+      }
+    }
+  }
+}

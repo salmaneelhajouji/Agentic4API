@@ -1,0 +1,52 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Performance API",
+    "version": "1.0.0",
+    "x-api-id": "performance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe RH",
+    "x-domain": "Human Resources",
+    "description": "Gestion des évaluations de performance et OKRs. Permet de créer des évaluations annuelles ou semestrielles avec critères notés, de suivre l historique des évaluations d un employé, de créer des objectifs OKR avec key results et de mettre à jour leur progression. Utilisé par les managers et équipes RH pour le suivi de la performance et le développement des collaborateurs.",
+    "x-synonymes": "évaluation performance, entretien annuel, entretien semestriel, OKR objectifs key results, feedback 360, notation employé, critères performance, plan développement, revue performance, évaluation manager, objectif SMART, KPI employé, performance review, progression objectif, évaluation compétences, notation 1 à 5, entretien professionnel, score performance, évaluation période, développement collaborateur",
+    "x-false-positive-warning": "Gestion de la paie → payroll-api. Congés et absences → leave-api. Formation et compétences → training-api. Onboarding nouveau employé → onboarding-api. Dossier RH administratif → employee-api.",
+    "x-cas-usage": "je veux créer l évaluation de performance semestrielle d un employé | je veux voir l historique des évaluations d un collaborateur sur 3 ans | je veux créer un OKR pour l objectif croissance de mon équipe | je veux mettre à jour la progression d un objectif à 75% | je veux accéder aux évaluations de tous mes collaborateurs pour le cycle annuel"
+  },
+  "paths": {
+    "/v1/performance/reviews": {
+      "post": {
+        "summary": "Créer une évaluation de performance — critères notés et commentaires par période",
+        "operationId": "createPerformanceReview",
+        "tags": ["Reviews"],
+        "responses": {"201": {"description": "Évaluation créée"}}
+      }
+    },
+    "/v1/performance/{employeeId}": {
+      "parameters": [{"name": "employeeId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Historique des évaluations d un employé — toutes périodes et scores",
+        "operationId": "getPerformanceHistory",
+        "tags": ["Reviews"],
+        "responses": {"200": {"description": "Historique évaluations"}}
+      }
+    },
+    "/v1/performance/objectives": {
+      "post": {
+        "summary": "Créer un objectif OKR — avec key results, cibles et période",
+        "operationId": "createObjective",
+        "tags": ["OKR"],
+        "responses": {"201": {"description": "Objectif OKR créé"}}
+      }
+    },
+    "/v1/performance/objectives/{id}/progress": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Mettre à jour la progression d un objectif OKR — pourcentage d avancement",
+        "operationId": "updateObjectiveProgress",
+        "tags": ["OKR"],
+        "responses": {"200": {"description": "Progression mise à jour"}}
+      }
+    }
+  }
+}

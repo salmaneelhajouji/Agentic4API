@@ -1,0 +1,128 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Flash Sale API",
+    "version": "1.0.0",
+    "x-api-id": "flash-sale-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Retail",
+    "x-domain": "Retail",
+    "description": "Cette API orchestre la création, la planification et la gestion haute performance des campagnes de ventes flash et d'offres promotionnelles à durée très limitée (LTO). Elle administre l'isolation des stocks dédiés à l'opération pour éviter les sur-réservations, gère les compteurs de validité temporels (comptes à rebours) créant un sentiment d'urgence, et sécurise la réservation prioritaire des articles mis en panier par les clients.",
+    "x-synonymes": "vente flash, offre à durée limitée, promotion flash, LTO, compte à rebours commercial, stock dédié promo, opération commerciale urgente, panier prioritaire, remise éphémère, exclusivité temporaire, black friday deal, réservation d'article promo, animation retail",
+    "x-false-positive-warning": "Attention : Cette API traite spécifiquement des mécaniques de ventes flash éphémères à fort trafic, impliquant des réservations de stocks isolés et minutés (Retail). Ne pas la confondre avec la `discount-api` (qui gère la création des codes de réduction et coupons de fidélité permanents) ni avec la `pricing-api`.",
+    "x-cas-usage": "Comment configurer et planifier une nouvelle vente flash de 2 heures sur une sélection d'articles avec un stock de 200 unités ? | Où interroger la liste des ventes flash actuellement actives sur le site e-commerce ? | Comment réserver prioritairement un article de la vente flash au sein du panier d'un client avec un délai d'expiration de 5 minutes ? | Quelle est la procédure pour clore de façon anticipée une campagne promotionnelle ?"
+  },
+  "paths": {
+    "/v1/flash-sales": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des campagnes de ventes flash en cours, planifiées ou terminées",
+        "operationId": "listFlashSales",
+        "tags": [
+          "FlashSales"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et programmer une nouvelle opération de vente flash en spécifiant la fenêtre de validité et la remise",
+        "operationId": "createFlashSale",
+        "tags": [
+          "FlashSales"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/flash-sales/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les caractéristiques, le compte à rebours et l'état d'avancement d'une vente flash spécifique",
+        "operationId": "getFlashSale",
+        "tags": [
+          "FlashSales"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier la durée, l'intitulé ou réajuster les critères d'une campagne promotionnelle non démarrée",
+        "operationId": "updateFlashSale",
+        "tags": [
+          "FlashSales"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Interrompre et terminer immédiatement une vente flash active pour suspendre les remises associées",
+        "operationId": "endFlashSale",
+        "tags": [
+          "FlashSales"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/flash-sales/{id}/stock": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les volumes de stocks dédiés restants et le taux d'écoulement des produits de la vente flash",
+        "operationId": "getFlashSaleStock",
+        "tags": [
+          "Stock"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Réserver temporairement un produit de la vente flash dans le panier d'un client avec application d'un minuteur d'expiration",
+        "operationId": "reserveFlashItem",
+        "tags": [
+          "Stock"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

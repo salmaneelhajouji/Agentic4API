@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "KYC API",
+    "version": "2.0.0",
+    "x-api-id": "kyc-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Vérification d identité KYC avec biométrie et scoring LCB-FT pour l onboarding bancaire. Permet d initier un parcours KYC, de soumettre les documents d identité, de réaliser la vérification biométrique faciale, et de consulter le statut de conformité. Vérifie automatiquement les listes de sanctions internationales. DIFFÉRENCE vs aml-api : KYC = vérification identité lors de l onboarding client. aml-api = surveillance continue des transactions pour détecter le blanchiment.",
+    "x-breaking-changes-from-previous": ["Biométrie faciale", "Vérification listes sanctions"],
+    "x-synonymes": "KYC, know your customer, vérification identité, onboarding bancaire, LCB-FT, lutte blanchiment, scoring conformité, biométrie faciale, liveness detection, document identité CNI, passeport vérification, liste sanctions OFAC, liste sanctions EU, due diligence client, EDD enhanced due diligence, PEP personne politiquement exposée, vérification FATF, CDD customer due diligence, identité numérique, eKYC",
+    "x-false-positive-warning": "Surveillance transactions LCB-FT continue → aml-api. Vérification identité en ligne générique → identity-api. Déclaration TRACFIN → aml-legal-api. Version précédente sans biométrie → kyc-api-v1 (deprecated).",
+    "x-cas-usage": "je veux initier un parcours KYC pour un nouveau client lors de l ouverture de compte | je veux soumettre la pièce d identité d un client pour vérification | je veux faire la vérification biométrique du selfie d un client | je veux voir si un client est sur une liste de sanctions internationales | je veux consulter le statut KYC d un client avant d activer son compte"
+  },
+  "paths": {
+    "/v2/kyc/{clientId}": {
+      "parameters": [{"name": "clientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut KYC d un client — conforme, en attente, refusé ou en révision",
+        "operationId": "getKycStatus",
+        "tags": ["KYC"],
+        "responses": {"200": {"description": "Statut KYC"}}
+      },
+      "post": {
+        "summary": "Initier un parcours KYC pour un nouveau client — crée le dossier de vérification",
+        "operationId": "initKyc",
+        "tags": ["KYC"],
+        "responses": {"200": {"description": "Parcours KYC initié"}}
+      },
+      "put": {
+        "summary": "Mettre à jour les informations d un dossier KYC en cours",
+        "operationId": "updateKyc",
+        "tags": ["KYC"],
+        "responses": {"200": {"description": "KYC mis à jour"}}
+      }
+    },
+    "/v2/kyc/{clientId}/documents": {
+      "parameters": [{"name": "clientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Soumettre un document d identité — CNI, passeport ou titre de séjour",
+        "operationId": "uploadDoc",
+        "tags": ["Docs"],
+        "responses": {"200": {"description": "Document soumis pour vérification"}}
+      }
+    },
+    "/v2/kyc/{clientId}/biometric": {
+      "parameters": [{"name": "clientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Soumettre la vérification biométrique faciale — liveness detection et matching",
+        "operationId": "submitBiometric",
+        "tags": ["Biometric"],
+        "responses": {"200": {"description": "Biométrie vérifiée"}}
+      }
+    }
+  }
+}

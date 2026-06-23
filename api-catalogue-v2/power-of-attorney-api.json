@@ -1,0 +1,128 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Power of Attorney API",
+    "version": "1.0.0",
+    "x-api-id": "power-of-attorney-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Cette API régit et centralise le cycle de vie légal des procurations, mandats de représentation et délégations de pouvoir au sein de l'entreprise. Elle permet de structurer les actes de délégation, d'en auditer ou modifier le périmètre de validité financière et juridique (scope), d'enregistrer les validations formelles et d'opérer la révocation immédiate des mandats en cas de mutation ou de départ d'un collaborateur.",
+    "x-synonymes": "procuration légale, délégation de pouvoir, mandat de représentation, pouvoir de signature, mandat juridique, périmètre de délégation, révocation de mandat, validation de procuration, mandant, mandataire, acte de délégation",
+    "x-false-positive-warning": "Attention : Cette API administre exclusivement le cadre juridique des mandats, procurations et habilitations de représentation légale (Power of Attorney). Ne pas la confondre avec la `identity-governance-api` (qui pilote le provisioning technique de comptes informatiques) ni avec une API de signature électronique générique.",
+    "x-cas-usage": "Comment formaliser et enregistrer une nouvelle procuration de signature pour un responsable de site ? | Où vérifier et amender le périmètre d'engagement financier d'une délégation de pouvoir existante ? | Comment révoquer de manière immédiate un mandat de représentation juridique devenu caduc ?"
+  },
+  "paths": {
+    "/v1/poa": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des procurations, mandats de représentation et délégations de pouvoir en vigueur",
+        "operationId": "listPOAs",
+        "tags": [
+          "POA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et consigner un nouveau projet d'acte de procuration ou de mandat de délégation légale",
+        "operationId": "createPOA",
+        "tags": [
+          "POA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/poa/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les clauses contractuelles, l'état d'activation et l'identité des parties d'une procuration spécifique",
+        "operationId": "getPOA",
+        "tags": [
+          "POA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Valider formellement la conformité juridique et enregistrer l'entrée en vigueur d'une procuration",
+        "operationId": "validatePOA",
+        "tags": [
+          "POA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Révoquer immédiatement une procuration existante pour annuler l'ensemble des droits de représentation associés",
+        "operationId": "revokePOA",
+        "tags": [
+          "POA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/poa/{id}/scope": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les plafonds d'engagement, restrictions et limites géographiques du périmètre de délégation",
+        "operationId": "getPOAScope",
+        "tags": [
+          "Scope"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier, étendre ou amender les clauses de restrictions du périmètre d'une délégation de pouvoir",
+        "operationId": "updateScope",
+        "tags": [
+          "Scope"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

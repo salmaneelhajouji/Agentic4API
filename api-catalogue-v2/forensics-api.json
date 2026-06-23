@@ -1,0 +1,140 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Forensics API",
+    "version": "1.0.0",
+    "x-api-id": "forensics-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Cette API orchestre l'ouverture des dossiers et la centralisation des analyses lors d'investigations numériques forensiques (Digital Forensics / DFIR) consécutives à une cyberattaque ou un incident de sécurité. Elle permet aux analystes d'enregistrer des dossiers d'enquête, d'indexer de façon auditable les artefacts numériques collectés (images disques, dumps de mémoire vive, journaux de logs d'activité), d'en suivre la chaîne de responsabilité et d'exporter le rapport d'expertise technique officiel.",
+    "x-synonymes": "investigation numérique, forensique, digital forensics, DFIR, incident de sécurité, artefact numérique, dump mémoire, image disque, chaîne de compromission, analyse post-mortem cyber, dossier d'enquête informatique, recherche de preuves numériques, rapport forensique, cyberattaque, indicateur de compromission, IOC",
+    "x-false-positive-warning": "Attention : Cette API encadre la collecte de preuves, l'analyse post-mortem de fichiers système et l'expertise forensique après compromission (Forensics). Ne pas la confondre avec la `endpoint-protection-api` (qui opère le blocage antivirus et l'isolation réseau des machines en direct) ni avec la `e-discovery-api` (dédiée au gel documentaire légal d'entreprise).",
+    "x-cas-usage": "Comment ouvrir un nouveau dossier d'investigation informatique suite à une attaque par rançongiciel ? | Comment consigner et indexer de manière intègre un artefact de mémoire vive (memory dump) pour analyse ? | Où récupérer le rapport d'expertise forensique consolidé destiné à la direction juridique ?"
+  },
+  "paths": {
+    "/v1/forensics/cases": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des dossiers d'investigation numérique et d'enquêtes forensiques en cours",
+        "operationId": "listForensicCases",
+        "tags": [
+          "Cases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ouvrir un nouveau dossier d'enquête forensique rattaché à un incident de sécurité qualifié",
+        "operationId": "createForensicCase",
+        "tags": [
+          "Cases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/forensics/cases/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état, l'avancement, le niveau de confidentialité et le résumé d'un dossier d'investigation",
+        "operationId": "getForensicCase",
+        "tags": [
+          "Cases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour le statut, le niveau de sévérité ou les notes d'analyse internes d'un dossier d'enquête",
+        "operationId": "updateCase",
+        "tags": [
+          "Cases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/forensics/cases/{id}/artifacts": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister l'ensemble des artefacts systèmes, images disques et éléments de preuve indexés pour ce dossier",
+        "operationId": "getArtifacts",
+        "tags": [
+          "Artifacts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter et enregistrer un nouvel artefact numérique collecté en certifiant son empreinte d'intégrité",
+        "operationId": "addArtifact",
+        "tags": [
+          "Artifacts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/forensics/cases/{id}/report": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Générer et exporter le rapport technique officiel d'expertise forensique résumant la chronologie de l'attaque",
+        "operationId": "getForensicReport",
+        "tags": [
+          "Report"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

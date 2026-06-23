@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Scholarship API",
+    "version": "1.0.0",
+    "x-api-id": "scholarship-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Gestion des bourses et aides financières étudiantes. Consultation des bourses disponibles avec critères d'éligibilité, dépôt de candidatures, instruction et revue des dossiers par les gestionnaires, et accès aux bourses attribuées d'un étudiant. DIFFÉRENCE vs student-aid-api : Scholarship gère spécifiquement les bourses (attribution sur critères mérite/ressources), Student Aid couvre l'ensemble des aides financières (prêts, allocations logement, etc.). DIFFÉRENCE vs payment-api : Scholarship gère le cycle de vie des dossiers, Payment traite les versements des montants accordés.",
+    "x-synonymes": "bourse étudiante, aide financière étudiant, candidature bourse, dossier bourse, bourse mérite, bourse sociale, critères éligibilité bourse, instruction dossier, attribution bourse, bourse CROUS, aide scolarité, financement études, bourse excellence, allocation étudiante, programme bourse",
+    "x-false-positive-warning": "Prêts étudiants et aides sociales → student-aid-api. Versement des montants de bourse → payment-api. Inscriptions et admissions → enrollment-api.",
+    "x-cas-usage": "je veux voir toutes les bourses disponibles et leurs critères | je veux soumettre une candidature à une bourse | je veux instruire et statuer sur un dossier de demande de bourse | je veux voir toutes les bourses attribuées à un étudiant | je veux connaître le détail d'une bourse spécifique"
+  },
+  "paths": {
+    "/v1/scholarships": {
+      "get": {
+        "summary": "Lister les bourses disponibles avec critères d'éligibilité, montants et dates limites de candidature",
+        "operationId": "listScholarships",
+        "tags": ["Scholarships"],
+        "responses": { "200": { "description": "Bourses disponibles" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Soumettre une candidature à une bourse avec les justificatifs requis",
+        "operationId": "applyScholarship",
+        "tags": ["Scholarships"],
+        "responses": { "200": { "description": "Candidature soumise" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/scholarships/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le détail d'une bourse ou d'un dossier de candidature (statut, commentaires, montant)",
+        "operationId": "getScholarship",
+        "tags": ["Scholarships"],
+        "responses": { "200": { "description": "Détail bourse ou candidature" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Instruire un dossier de candidature — accepter, refuser ou demander des pièces complémentaires",
+        "operationId": "reviewApplication",
+        "tags": ["Scholarships"],
+        "responses": { "200": { "description": "Dossier instruit" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/scholarships/student/{studentId}": {
+      "parameters": [
+        { "name": "studentId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lister toutes les bourses attribuées et candidatures en cours d'un étudiant",
+        "operationId": "getStudentScholarships",
+        "tags": ["Student"],
+        "responses": { "200": { "description": "Bourses de l'étudiant" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Savings API",
+    "version": "1.0.0",
+    "x-api-id": "savings-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Gestion des comptes d'épargne réglementés et non réglementés (Livret A, LDDS, PEL, LEP). Consultation des livrets d'un client avec taux d'intérêt et plafonds en vigueur, ouverture de nouveaux livrets, consultation du détail d'un compte épargne et effectuation de versements. DIFFÉRENCE vs account-api : Savings est spécialisé épargne réglementée avec taux/plafonds légaux, Account gère les comptes courants transactionnels. DIFFÉRENCE vs investment-api : Savings = livrets épargne garantis, Investment = placements financiers à risque (SCPI, actions, etc.).",
+    "x-synonymes": "livret épargne, Livret A, LDDS, PEL, LEP, compte épargne, taux épargne, plafond livret, versement épargne, épargne réglementée, ouverture livret, intérêts épargne, épargne bancaire, solde livret, programme épargne",
+    "x-false-positive-warning": "Comptes courants et virements → account-api. Placements et investissements financiers → investment-api. Épargne salariale (PEE, PERCO) → employee-savings-api.",
+    "x-cas-usage": "je veux voir tous les livrets d'épargne d'un client | je veux ouvrir un nouveau Livret A pour un client | je veux connaître le solde et le taux d'un livret | je veux effectuer un versement sur un compte épargne | je veux vérifier si un client a atteint son plafond de Livret A"
+  },
+  "paths": {
+    "/v1/savings/{clientId}": {
+      "parameters": [
+        { "name": "clientId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lister tous les livrets d'épargne d'un client avec soldes, taux et plafonds",
+        "operationId": "getSavingsAccounts",
+        "tags": ["Savings"],
+        "responses": { "200": { "description": "Liste des livrets du client" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Ouvrir un nouveau livret d'épargne (Livret A, LDDS, PEL) pour un client",
+        "operationId": "openSavings",
+        "tags": ["Savings"],
+        "responses": { "200": { "description": "Livret ouvert" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/savings/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le détail d'un livret (solde, taux, historique, plafond restant)",
+        "operationId": "getSavings",
+        "tags": ["Savings"],
+        "responses": { "200": { "description": "Détail du livret" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Effectuer un versement sur un livret d'épargne",
+        "operationId": "deposit",
+        "tags": ["Savings"],
+        "responses": { "200": { "description": "Versement effectué" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

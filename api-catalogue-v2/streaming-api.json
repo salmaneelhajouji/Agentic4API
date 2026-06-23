@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Streaming API",
+    "version": "1.0.0",
+    "x-api-id": "streaming-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Plateforme de streaming d'événements en temps réel (type Kafka). Gestion des topics (création, suppression), publication de messages par les producteurs, consommation de messages avec gestion des offsets, et gestion des groupes de consumers. DIFFÉRENCE vs queue-api : Streaming est un bus d'événements distribué multi-consumers avec rétention (Kafka-like), Queue est une file d'attente point-à-point avec consommation destructive. DIFFÉRENCE vs event-api : Streaming est l'infrastructure de transport bas niveau (topics/consumers), Event API est une abstraction métier haut niveau des événements domaine.",
+    "x-synonymes": "streaming événements, Kafka, topic, consumer, producer, message broker, bus événements, pub-sub, offset, streaming temps réel, événement distribué, consumer group, pipeline streaming, data streaming, event streaming",
+    "x-false-positive-warning": "File d'attente point-à-point → queue-api. Événements métier domaine → event-api. Webhooks sortants → webhook-api.",
+    "x-cas-usage": "je veux créer un topic pour publier des événements de commande | je veux produire un message sur un topic depuis mon service | je veux consommer les messages d'un topic depuis un offset donné | je veux créer un consumer group pour traiter les événements en parallèle | je veux lister tous les topics disponibles et leur configuration"
+  },
+  "paths": {
+    "/v1/streaming/topics": {
+      "get": {
+        "summary": "Lister tous les topics de streaming avec leur configuration (partitions, rétention, nb messages)",
+        "operationId": "listTopics",
+        "tags": ["Topics"],
+        "responses": { "200": { "description": "Topics" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Créer un nouveau topic de streaming avec configuration partitions et politique de rétention",
+        "operationId": "createTopic",
+        "tags": ["Topics"],
+        "responses": { "200": { "description": "Topic créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Supprimer définitivement un topic et tous ses messages",
+        "operationId": "deleteTopic",
+        "tags": ["Topics"],
+        "responses": { "200": { "description": "Topic supprimé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/streaming/topics/{topic}/produce": {
+      "parameters": [
+        { "name": "topic", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "post": {
+        "summary": "Publier un ou plusieurs messages sur un topic (producteur)",
+        "operationId": "produceMessage",
+        "tags": ["Produce"],
+        "responses": { "200": { "description": "Message publié" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/streaming/topics/{topic}/consume": {
+      "parameters": [
+        { "name": "topic", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consommer les messages d'un topic depuis un offset donné (consumer pull)",
+        "operationId": "consumeMessages",
+        "tags": ["Consume"],
+        "responses": { "200": { "description": "Messages consommés" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/streaming/consumers": {
+      "get": {
+        "summary": "Lister les groupes de consumers avec leur lag et offsets par partition",
+        "operationId": "listConsumers",
+        "tags": ["Consumers"],
+        "responses": { "200": { "description": "Consumers" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Créer un nouveau groupe de consumers pour consommer un topic en parallèle",
+        "operationId": "createConsumer",
+        "tags": ["Consumers"],
+        "responses": { "200": { "description": "Consumer créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

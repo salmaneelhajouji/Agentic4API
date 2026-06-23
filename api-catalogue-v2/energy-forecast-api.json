@@ -1,0 +1,78 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Energy Forecast API",
+    "version": "1.0.0",
+    "x-api-id": "energy-forecast-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Cette API supervise la génération et l'analyse de modèles prédictifs de consommation énergétique basés sur des algorithmes de Machine Learning. Elle permet de calculer des courbes de charge prédictives à court et moyen terme pour anticiper les charges des réseaux électriques intelligents (Smart Grids). Elle est principalement exploitée par les opérateurs d'énergie, les gestionnaires de parcs d'équipements connectés et les directeurs de la transition énergétique pour optimiser l'approvisionnement, l'effacement et la répartition des ressources.",
+    "x-synonymes": "prévision énergétique, courbe de charge prédictive, forecast énergie, estimation de consommation, modèle prédictif énergétique, anticipation de charge, smart grid forecasting, intelligence artificielle énergie, profil de charge futur, projection de consommation, planification énergétique, optimisation de charge, tendance énergétique, algorithme prédictif, demande d'énergie future, météo énergétique",
+    "x-false-positive-warning": "Attention : Cette API génère exclusivement des calculs prédictifs et des projections futures de charge basés sur l'apprentissage automatique (Forecast). Ne pas la confondre avec la `energy-consumption-api` (dédiée au suivi des index historiques et relevés de consommations réelles du parc de bâtiments) ni avec la `energy-industry-api` (centrée sur la consommation spécifique des machines d'usinage industriel).",
+    "x-cas-usage": "Comment récupérer les prévisions de courbe de charge à 7 jours pour un site ou un bâtiment ? | Quelle méthode permet d'évaluer la précision, l'erreur quadratique et la fiabilité du modèle prédictif ? | Comment relancer le calcul d'une prévision de consommation d'énergie suite à une modification des prévisions météo ?"
+  },
+  "paths": {
+    "/v1/forecast/{siteId}": {
+      "parameters": [
+        {
+          "name": "siteId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la courbe de charge prédictive et les prévisions de consommation énergétique court terme (24h/7j) d'un site",
+        "operationId": "getEnergyForecast",
+        "tags": [
+          "Forecast"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher l'exécution et le calcul d'un nouveau modèle prédictif de consommation d'énergie pour le site spécifié",
+        "operationId": "requestForecast",
+        "tags": [
+          "Forecast"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/forecast/{siteId}/accuracy": {
+      "parameters": [
+        {
+          "name": "siteId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Calculer et obtenir les métriques de précision, d'erreur et l'indice de fiabilité du modèle de prévision d'énergie",
+        "operationId": "getForecastAccuracy",
+        "tags": [
+          "Accuracy"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

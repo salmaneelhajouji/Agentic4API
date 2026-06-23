@@ -1,0 +1,108 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cargo API",
+    "version": "2.0.0",
+    "x-api-id": "cargo-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "API spécialisée dans la gestion du fret lourd et industriel couvrant les transports maritimes (conteneurs, vrac), aériens (cargo industriel) et routiers (fret CMR). Elle permet de créer et suivre des cargaisons complètes, de générer des manifestes de chargement électroniques (bill of lading, connaissement, LTA) et d'accéder aux documents douaniers associés. Les utilisateurs typiques sont les transitaires, agents maritimes, responsables logistique et opérateurs de fret international. DIFFÉRENCE vs shipping-api-v2 : Cargo = fret lourd et industriel (conteneurs maritimes, vrac, fret aérien cargo). shipping-api-v2 = colis e-commerce et petits envois postaux. DIFFÉRENCE vs cargo-api-v1 : v2 introduit les manifestes électroniques et l'intégration douanière complète absents en v1.",
+    "x-breaking-changes-from-previous": ["Manifestes électroniques", "Douanes intégrées"],
+    "x-synonymes": "fret maritime, fret aérien, fret routier, conteneur cargo, vrac marchandise, manifeste chargement, bill of lading, connaissement, LTA lettre transport aérien, CMR fret routier, douane cargo, dédouanement fret, fret industriel, logistique lourde, chargement cargaison, transport marchandise dangereuse, DGR cargo, poids volumique fret, groupage fret, transitaire",
+    "x-false-positive-warning": "Colis e-commerce et petits envois → shipping-api-v2. Suivi GPS cargaison en temps réel → logistics-tracking-api. Documents douaniers déclaratifs autonomes → customs-api. Version précédente sans manifestes électroniques ni intégration douanière → cargo-api-v1 (deprecated). Gestion d'entrepôt et stock → warehouse-api.",
+    "x-cas-usage": "Comment créer une cargaison de conteneurs pour un transport maritime international ? | Comment générer le manifeste de chargement électronique (bill of lading) pour un envoi ? | Quels documents douaniers sont requis pour une cargaison de fret industriel ? | Comment consulter et mettre à jour le statut d'une cargaison en cours de transport ? | Comment gérer le fret aérien industriel avec les documents réglementaires (LTA, DGR) ?"
+  },
+  "paths": {
+    "/v2/cargo": {
+      "get": {
+        "summary": "Lister les cargaisons actives — conteneurs, vrac et fret industriel avec statuts de transport en cours",
+        "operationId": "listCargoV2",
+        "tags": ["Cargo"],
+        "responses": {
+          "200": {"description": "Cargaisons actives"},
+          "401": {"description": "Non autorisé"},
+          "500": {"description": "Erreur interne du serveur"}
+        }
+      },
+      "post": {
+        "summary": "Créer une nouvelle cargaison — conteneur maritime, vrac ou fret industriel avec poids, dimensions et destination",
+        "operationId": "createCargoV2",
+        "tags": ["Cargo"],
+        "responses": {
+          "200": {"description": "Cargaison créée"},
+          "400": {"description": "Données invalides"},
+          "401": {"description": "Non autorisé"},
+          "500": {"description": "Erreur interne du serveur"}
+        }
+      }
+    },
+    "/v2/cargo/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le détail complet d'une cargaison — contenu, poids, dimensions, mode de transport et statut",
+        "operationId": "getCargoV2",
+        "tags": ["Cargo"],
+        "responses": {
+          "200": {"description": "Détail cargaison"},
+          "401": {"description": "Non autorisé"},
+          "404": {"description": "Ressource non trouvée"},
+          "500": {"description": "Erreur interne du serveur"}
+        }
+      },
+      "put": {
+        "summary": "Modifier une cargaison existante — mise à jour du contenu, de la destination ou du mode de transport",
+        "operationId": "updateCargoV2",
+        "tags": ["Cargo"],
+        "responses": {
+          "200": {"description": "Cargaison modifiée"},
+          "400": {"description": "Données invalides"},
+          "401": {"description": "Non autorisé"},
+          "404": {"description": "Ressource non trouvée"},
+          "500": {"description": "Erreur interne du serveur"}
+        }
+      }
+    },
+    "/v2/cargo/{id}/manifest": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter le manifeste de chargement électronique — bill of lading, LTA ou CMR selon le mode de transport",
+        "operationId": "getManifest",
+        "tags": ["Manifest"],
+        "responses": {
+          "200": {"description": "Manifeste électronique"},
+          "401": {"description": "Non autorisé"},
+          "404": {"description": "Ressource non trouvée"},
+          "500": {"description": "Erreur interne du serveur"}
+        }
+      },
+      "post": {
+        "summary": "Générer le manifeste de chargement électronique — connaissement maritime, CMR routier ou LTA aérien selon le mode",
+        "operationId": "generateManifest",
+        "tags": ["Manifest"],
+        "responses": {
+          "200": {"description": "Manifeste généré"},
+          "400": {"description": "Données invalides"},
+          "401": {"description": "Non autorisé"},
+          "404": {"description": "Ressource non trouvée"},
+          "500": {"description": "Erreur interne du serveur"}
+        }
+      }
+    },
+    "/v2/cargo/{id}/customs": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer les documents douaniers d'une cargaison — déclarations d'exportation, certificats d'origine et autorisations requises",
+        "operationId": "getCustoms",
+        "tags": ["Customs"],
+        "responses": {
+          "200": {"description": "Documents douaniers"},
+          "401": {"description": "Non autorisé"},
+          "404": {"description": "Ressource non trouvée"},
+          "500": {"description": "Erreur interne du serveur"}
+        }
+      }
+    }
+  }
+}

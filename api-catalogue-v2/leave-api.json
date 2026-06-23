@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Leave API",
+    "version": "1.0.0",
+    "x-api-id": "leave-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe RH",
+    "x-domain": "Human Resources",
+    "description": "Gestion des congés et absences des employés. Permet de soumettre des demandes de congés payés, RTT, maladie, maternité et paternité, de les faire approuver ou rejeter par le manager, et de consulter les soldes de congés par type. Utilisé par les portails RH et applications collaborateurs pour la gestion dématérialisée des absences.",
+    "x-synonymes": "congés payés, RTT, arrêt maladie, congé maternité, congé paternité, demande congé, validation congé, solde congés, jours disponibles, absence employé, planning congés, refus congé, approbation manager, compteur RTT, congé sans solde, compte épargne temps CET, congé parental, demande absence, calendrier absence, pose congé",
+    "x-false-positive-warning": "DIFFÉRENCE vs attendance-api : Leave API = gestion des demandes et soldes de congés. attendance-api = pointage et présence au travail au quotidien. DIFFÉRENCE vs payroll-api-v3 : Leave API = gestion administrative des congés. payroll-api-v3 = calcul de la paie incluant les indemnités de congés. DIFFÉRENCE vs calendar-api : Leave API = demandes de congés avec workflow validation. calendar-api = blocage de créneaux dans les plannings internes.",
+    "x-cas-usage": "je veux poser une semaine de congés payés du 14 au 18 juillet | je veux approuver la demande de congé d un de mes collaborateurs | je veux voir le solde de congés restants d un employé avant fin d année | je veux rejeter une demande de RTT avec un motif | je veux lister toutes les absences de mon équipe sur le mois de juillet"
+  },
+  "paths": {
+    "/v1/leaves/request": {
+      "post": {
+        "summary": "Soumettre une demande de congé — payés, RTT, maladie, maternité ou paternité",
+        "operationId": "requestLeave",
+        "tags": ["Leaves"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["employee_id", "type", "start_date", "end_date"],
+                "properties": {
+                  "employee_id": {"type": "string"},
+                  "type": {"type": "string", "enum": ["paid", "unpaid", "sick", "maternity", "paternity", "rtt"]},
+                  "start_date": {"type": "string", "format": "date"},
+                  "end_date": {"type": "string", "format": "date"},
+                  "reason": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Demande de congé créée"}}
+      }
+    },
+    "/v1/leaves/{employeeId}": {
+      "parameters": [{"name": "employeeId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Congés et absences d un employé — historique et demandes en cours",
+        "operationId": "getEmployeeLeaves",
+        "tags": ["Leaves"],
+        "responses": {"200": {"description": "Congés de l employé"}}
+      }
+    },
+    "/v1/leaves/{id}/approve": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Approuver une demande de congé — validation manager avec commentaire optionnel",
+        "operationId": "approveLeave",
+        "tags": ["Leaves"],
+        "responses": {"200": {"description": "Congé approuvé"}}
+      }
+    },
+    "/v1/leaves/{id}/reject": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Rejeter une demande de congé — avec motif obligatoire",
+        "operationId": "rejectLeave",
+        "tags": ["Leaves"],
+        "responses": {"200": {"description": "Congé rejeté"}}
+      }
+    },
+    "/v1/leaves/{employeeId}/balance": {
+      "parameters": [{"name": "employeeId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Solde de congés par type — CP, RTT, ancienneté et jours restants",
+        "operationId": "getLeaveBalance",
+        "tags": ["Leaves"],
+        "responses": {"200": {"description": "Soldes congés par type"}}
+      }
+    }
+  }
+}

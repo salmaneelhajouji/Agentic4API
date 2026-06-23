@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Certification API",
+    "version": "1.0.0",
+    "x-api-id": "certification-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Émission et vérification de certifications et diplômes numériques dans le domaine de l'éducation et de la formation professionnelle. Couvre l'ensemble du cycle de vie d'un justificatif numérique : émission, attribution à un apprenant, consultation du portfolio, révocation et vérification d'authenticité. Prend en charge les badges numériques Open Badge, les attestations de formation, les titres professionnels et les diplômes vérifiables via blockchain ou signature cryptographique. Utilisé par les établissements d'enseignement, les organismes de formation professionnelle, les plateformes e-learning et les services RH pour valoriser et contrôler les acquis des apprenants. DIFFÉRENCE vs grade-api : Certification = diplôme officiel ou badge émis après validation complète d'un parcours. grade-api = note de contrôle continu sur une évaluation ponctuelle. DIFFÉRENCE vs assessment-api : assessment-api gère les évaluations, QCM et examens en cours de formation ; certification-api gère le justificatif final émis à l'issue de la validation.",
+    "x-synonymes": "certificat formation, diplôme numérique, badge numérique, open badge, attestation formation, certificat de réussite, credential numérique, vérification diplôme, authenticité certificat, certification professionnelle, CPF certification, titre professionnel, attestation compétence, micro-certification, certificat blockchain, e-credential, certification reconnaissance, parcours validé, acquis formation, diplôme vérifiable",
+    "x-false-positive-warning": "Note de contrôle continu → grade-api-v2 (cette API concerne les notes individuelles d'évaluation, pas les diplômes finaux). Évaluations, QCM et examens en cours de formation → assessment-api (gère les tests et épreuves, pas les certificats émis). Permis de construire et autorisations urbanisme → building-permit-api (homonymie trompeuse sur le mot 'certification'). Certificats SSL/TLS et PKI → certificate-management-api (certificats de sécurité informatique, sans rapport avec les diplômes). Gestion des compétences RH → skills-api (référentiel de compétences, pas d'émission de justificatifs).",
+    "x-cas-usage": "Comment émettre un badge numérique Open Badge à un étudiant qui a terminé une formation ? | Comment vérifier l'authenticité d'un certificat présenté par un candidat lors d'un recrutement ? | Comment récupérer toutes les certifications obtenues par un apprenant dans son portfolio numérique ? | Comment émettre un diplôme numérique vérifiable et infalsifiable pour un programme certifiant ? | Quels sont les statuts possibles d'une certification (valide, révoquée, expirée) et comment les consulter ?"
+  },
+  "paths": {
+    "/v1/certifications": {
+      "get": {
+        "summary": "Lister l'ensemble des certifications et diplômes numériques émis — badges Open Badge, attestations de formation et titres professionnels avec filtres par statut et période",
+        "operationId": "listCertifications",
+        "tags": ["Certifications"],
+        "responses": {
+          "200": {"description": "Certifications émises"}
+        }
+      },
+      "post": {
+        "summary": "Émettre une nouvelle certification ou badge numérique à un apprenant — diplôme officiel, attestation de réussite ou open badge avec signature cryptographique et métadonnées de parcours",
+        "operationId": "issueCertification",
+        "tags": ["Certifications"],
+        "responses": {
+          "200": {"description": "Certification émise"}
+        }
+      }
+    },
+    "/v1/certifications/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Vérifier l'authenticité et le statut courant d'une certification par son identifiant — retourne si elle est valide, révoquée ou expirée avec détail de l'émetteur et de la date de validité",
+        "operationId": "verifyCertification",
+        "tags": ["Certifications"],
+        "responses": {
+          "200": {"description": "Statut authenticité"}
+        }
+      }
+    },
+    "/v1/certifications/{studentId}/all": {
+      "parameters": [{"name": "studentId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer l'intégralité du portfolio de certifications d'un apprenant — tous les badges, diplômes et attestations obtenus classés par date et domaine de compétence",
+        "operationId": "getAllCertifications",
+        "tags": ["All"],
+        "responses": {
+          "200": {"description": "Portfolio certifications"}
+        }
+      }
+    }
+  }
+}

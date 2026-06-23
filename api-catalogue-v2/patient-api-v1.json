@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Patient API",
+    "version": "1.0.0",
+    "x-api-id": "patient-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "x-successor": "patient-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS patient-api-v3] Cette API gérait historiquement l'indexation de base et la consultation des données d'identité civile élémentaires des patients (v1). Elle est gelée et obsolète. Toutes les applications de santé et connecteurs hospitaliers doivent migrer vers la version 3 (patient-api-v3) pour assurer la conformité avec le modèle de données de santé international HL7 FHIR et intégrer la gestion fine des consentements RGPD.",
+    "x-synonymes": "référentiel patient v1, dossier d'identité civil ancien, index patient obsolète, fiche patient de base, identité de malade v1, base patients historique",
+    "x-false-positive-warning": "Attention : Cette API de première génération est dépréciée et ses fonctionnalités sont gelées. Veiller à rediriger l'intégralité des flux applicatifs vers la version cible active `patient-api-v3`."
+  },
+  "paths": {
+    "/v1/patients": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS patient-api-v3 - Consulter l'index nominatif historique des fiches patients de la version v1",
+        "operationId": "listPatientsV1",
+        "tags": [
+          "Patients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS patient-api-v3 - Créer une fiche d'identité basique dans l'ancien référentiel v1 (opération dépréciée)",
+        "operationId": "createPatientV1",
+        "tags": [
+          "Patients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/patients/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS patient-api-v3 - Consulter le détail d'identité civil tel que consigné dans l'ancienne base v1",
+        "operationId": "getPatientV1",
+        "tags": [
+          "Patients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS patient-api-v3 - Modifier les coordonnées ou propriétés d'une fiche de l'ancienne version v1",
+        "operationId": "updatePatientV1",
+        "tags": [
+          "Patients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

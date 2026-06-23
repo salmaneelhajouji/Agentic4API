@@ -1,0 +1,108 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Enrollment API",
+    "version": "2.0.0",
+    "x-api-id": "enrollment-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Cette API orchestre l'inscription des étudiants aux cours, cycles universitaires et programmes de formation au sein de l'établissement (v2). Elle intègre un moteur de contrôle de conformité pour valider automatiquement les prérequis académiques et gère de manière dynamique l'attribution des places et les listes d'attente pour les cours complets. Elle est l'outil pivot des portails étudiants, des plateformes e-learning et des applications de gestion de la scolarité.",
+    "x-synonymes": "inscription aux cours, inscription pédagogique, validation des prérequis, liste d'attente dynamique, cursus universitaire, admission académique, parcours d'apprentissage, attribution de place de cours, suivi de scolarité v2, choix de modules de formation, désinscription de cours, progression pédagogique, crédits académiques, planification de rentrée, enregistrement de formation",
+    "x-false-positive-warning": "Attention : Cette API gère le positionnement pédagogique et l'inscription active à des formations (Education). Ne pas la confondre avec la `enrollment-api-v1` (version obsolète et dépréciée), ni avec la `device-registry-api` (dédiée au provisioning d'équipements IoT), bien que le terme 'enrollment' puisse prêter à confusion en anglais.",
+    "x-cas-usage": "Comment inscrire un étudiant à un module de spécialité après vérification automatisée de ses validations antérieures ? | Où consulter le rang et la position d'un élève sur la liste d'attente d'un cours complet ? | Comment suivre l'état d'assiduité, d'avancement et de progression pédagogique d'un inscrit ? | Quelle méthode appeler pour annuler formellement une inscription pédagogique ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "Prérequis automatiques",
+    "Listes attente"
+  ],
+  "paths": {
+    "/v2/enrollments": {
+      "get": {
+        "summary": "Lister, filtrer et auditer l'ensemble des inscriptions pédagogiques actives, validées ou en attente",
+        "operationId": "listEnrollmentsV2",
+        "tags": [
+          "Enrollments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer une nouvelle inscription à un cours ou programme après vérification automatisée des prérequis réglementaires",
+        "operationId": "createEnrollmentV2",
+        "tags": [
+          "Enrollments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/enrollments/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche détaillée d'une inscription, incluant le statut de validation et la date d'enregistrement",
+        "operationId": "getEnrollmentV2",
+        "tags": [
+          "Enrollments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Annuler une inscription pédagogique existante pour libérer la place ou réaffecter l'étudiant",
+        "operationId": "cancelEnrollment",
+        "tags": [
+          "Enrollments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/enrollments/{id}/progress": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le taux de progression, l'assiduité et l'état d'avancement de l'étudiant dans le cours associé",
+        "operationId": "getEnrollmentProgress",
+        "tags": [
+          "Progress"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

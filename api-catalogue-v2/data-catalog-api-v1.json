@@ -1,0 +1,33 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Data Catalog API",
+    "version": "1.0.0",
+    "x-api-id": "data-catalog-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "x-successor": "data-catalog-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS data-catalog-api-v3] Cette API gérait historiquement l'inventaire, le dictionnaire de données et le référentiel des métadonnées (v1) du patrimoine informationnel. Elle permettait aux Data Scientists, Data Analysts et aux outils de gouvernance de découvrir les jeux de données disponibles, d'en comprendre les schémas et d'identifier la propriété des tables. Cette version est désormais obsolète ; toutes les intégrations et nouveaux flux doivent obligatoirement migrer vers la version 3 (data-catalog-api-v3) pour bénéficier de la cartographie automatisée et du lignage de données (lineage).",
+    "x-synonymes": "catalogue de données, data catalog, dictionnaire de données, métadonnées, référentiel de données, jeu de données, dataset, cartographie des données, data discovery, glossaire métier, gouvernance des données, data governance, patrimoine des données, source de données, schéma de table, lignage de données, data lineage, inventaire des données",
+    "x-false-positive-warning": "Attention : Cette API obsolète ne sert qu'à l'indexation, la recherche documentaire et la consultation des métadonnées (inventaire). Ne pas la confondre avec la `data-access-control-api` (qui gère l'attribution des droits et habilitations sur les tables), ni avec la `data-api-gateway-api` (qui exécute et route physiquement les requêtes de données et la mise en cache), ni avec la nouvelle API cible (`data-catalog-api-v3`).",
+    "x-cas-usage": "Comment lister l'inventaire historique des jeux de données indexés dans la v1 pour planifier notre migration ? | Où trouver le dictionnaire des données et la définition des attributs de l'ancienne table des ventes ? | Quel était le schéma de table d'origine déclaré pour ce dataset avant la bascule vers la version 3 ? | Comment adapter mes scripts de découverte de données pour abandonner cette API v1 au profit de data-catalog-api-v3 ?"
+  },
+  "paths": {
+    "/v1/datasets": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS data-catalog-api-v3 - Consulter l'inventaire historique et l'index des jeux de données (datasets) de la plateforme de données v1.",
+        "operationId": "listDatasetsV1",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

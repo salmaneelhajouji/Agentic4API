@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Trip API",
+    "version": "1.0.0",
+    "x-api-id": "trip-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "DEPRECATED — Version 1 de l'API de gestion des trajets. Ne plus utiliser. Migrer vers trip-api-v2 qui apporte le suivi temps réel et le bilan CO2.",
+    "x-successor": "trip-api-v2",
+    "x-synonymes": "trajet v1 deprecated",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser trip-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers trip-api-v2."
+  },
+  "paths": {
+    "/v1/trips": {
+      "get": {
+        "summary": "[DEPRECATED] Lister les trajets — utiliser trip-api-v2",
+        "operationId": "listTripsV1",
+        "tags": ["Trips"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

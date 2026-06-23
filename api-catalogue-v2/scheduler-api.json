@@ -1,0 +1,82 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Scheduler API",
+    "version": "1.0.0",
+    "x-api-id": "scheduler-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Divers",
+    "x-domain": "Cross",
+    "description": "Planification et ordonnancement de tâches techniques. Supporte les jobs CRON récurrents (expression cron standard), les jobs one-shot (exécution unique à une date donnée), le déclenchement manuel immédiat, la gestion des erreurs et relances, et la consultation de l'historique d'exécution. DIFFÉRENCE vs workflow-api : Scheduler gère l'ordonnancement temporel de jobs unitaires, Workflow orchestre des pipelines de tâches séquentielles avec dépendances. DIFFÉRENCE vs queue-api : Scheduler déclenche selon un calendrier, Queue déclenche selon des événements ou messages entrants.",
+    "x-synonymes": "planification tâche, CRON job, job schedulé, tâche planifiée, ordonnancement, exécution programmée, job récurrent, one-shot job, historique exécutions, relance erreur, batch scheduling, trigger temporel, planificateur, job runner, tâche automatique",
+    "x-false-positive-warning": "Orchestration de pipelines avec dépendances → workflow-api. Traitement de messages asynchrones → queue-api. Alertes et notifications programmées → notification-api.",
+    "x-cas-usage": "je veux planifier une tâche qui s'exécute tous les jours à minuit | je veux déclencher un job immédiatement sans attendre l'heure planifiée | je veux voir l'historique des exécutions d'un job et les erreurs | je veux modifier la fréquence CRON d'un job existant | je veux créer un job one-shot qui s'exécute une seule fois à une date précise"
+  },
+  "paths": {
+    "/v1/scheduler/jobs": {
+      "get": {
+        "summary": "Lister tous les jobs planifiés avec leur expression CRON, statut et prochaine exécution",
+        "operationId": "listScheduledJobs",
+        "tags": ["Jobs"],
+        "responses": { "200": { "description": "Jobs planifiés" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Créer un nouveau job planifié (CRON ou one-shot) avec URL cible et paramètres",
+        "operationId": "createScheduledJob",
+        "tags": ["Jobs"],
+        "responses": { "200": { "description": "Job créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/scheduler/jobs/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le détail d'un job planifié (configuration, statut, dernière exécution)",
+        "operationId": "getScheduledJob",
+        "tags": ["Jobs"],
+        "responses": { "200": { "description": "Détail du job" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Modifier la configuration d'un job planifié (fréquence CRON, URL, paramètres)",
+        "operationId": "updateScheduledJob",
+        "tags": ["Jobs"],
+        "responses": { "200": { "description": "Job modifié" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Supprimer définitivement un job planifié",
+        "operationId": "deleteScheduledJob",
+        "tags": ["Jobs"],
+        "responses": { "200": { "description": "Job supprimé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Déclencher l'exécution immédiate d'un job sans attendre sa prochaine échéance planifiée",
+        "operationId": "triggerJobNow",
+        "tags": ["Jobs"],
+        "responses": { "200": { "description": "Job déclenché" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/scheduler/jobs/{id}/history": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter l'historique des exécutions d'un job (statut, durée, erreurs, logs)",
+        "operationId": "getJobHistory",
+        "tags": ["History"],
+        "responses": { "200": { "description": "Historique d'exécutions" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

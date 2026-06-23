@@ -1,0 +1,189 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DNS API",
+    "version": "1.0.0",
+    "x-api-id": "dns-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "Cette API orchestre l'administration et la configuration automatisée des zones et enregistrements DNS (Domain Name System) sur l'infrastructure réseau. Elle permet de provisionner dynamiquement des zones de noms de domaine et de gérer l'ensemble des types d'enregistrements officiels (A, AAAA, CNAME, MX, TXT, NS) ainsi que l'ajustement de leur Time-To-Live (TTL). Elle est principalement exploitée par les outils d'automatisation des infrastructures (IaC), les pipelines CI/CD pour le déploiement d'environnements éphémères et les consoles de supervision Cloud.",
+    "x-synonymes": "serveur de noms, enregistrement DNS, zone DNS, enregistrement A, CNAME, enregistrement MX, champ TXT, Time To Live, TTL, propagation DNS, résolution de nom, routage de domaine, sous-domaine, enregistrement AAAA, enregistrement NS, infrastructure réseau, configuration de zone",
+    "x-false-positive-warning": "Attention : Cette API configure exclusivement la résolution de noms techniques et le routage réseau des domaines (DNS). Ne pas la confondre avec la `domain-registration-api` (qui gère l'achat, le renouvellement de propriété juridique et la réservation de domaines auprès de registrars), ni avec une API de gestion de certificats de sécurité SSL/TLS.",
+    "x-cas-usage": "Comment provisionner automatiquement une nouvelle zone DNS pour un nouveau sous-domaine de projet ? | Comment configurer un enregistrement CNAME pour faire pointer une URL éphémère vers notre passerelle API ? | Quelle est la procédure pour ajuster le TTL d'un enregistrement MX avant une migration de messagerie ? | Comment supprimer un enregistrement A devenu obsolète pour éviter les pointages erronés ?"
+  },
+  "paths": {
+    "/v1/dns/zones": {
+      "get": {
+        "summary": "Lister l'ensemble des zones de noms de domaine actuellement configurées et hébergées sur l'infrastructure",
+        "operationId": "listDNSZones",
+        "tags": [
+          "DNS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Zones"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et provisionner une nouvelle zone DNS racine pour prendre en charge la configuration d'un domaine ou sous-domaine",
+        "operationId": "createDNSZone",
+        "tags": [
+          "DNS"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "domain"
+                ],
+                "properties": {
+                  "domain": {
+                    "type": "string",
+                    "example": "api.devoteam.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Zone créée"
+          }
+        }
+      }
+    },
+    "/v1/dns/zones/{zone}/records": {
+      "parameters": [
+        {
+          "name": "zone",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le fichier de zone et lister l'intégralité des enregistrements réseau (A, CNAME, MX) actifs pour la zone spécifiée",
+        "operationId": "getDNSRecords",
+        "tags": [
+          "DNS"
+        ],
+        "responses": {
+          "200": {
+            "description": "Enregistrements"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter un nouvel enregistrement réseau (A, CNAME, MX, TXT) avec sa valeur de pointage et sa configuration de TTL",
+        "operationId": "createDNSRecord",
+        "tags": [
+          "DNS"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "name",
+                  "value",
+                  "ttl"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "A",
+                      "AAAA",
+                      "CNAME",
+                      "MX",
+                      "TXT",
+                      "NS"
+                    ]
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  },
+                  "ttl": {
+                    "type": "integer",
+                    "default": 3600
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Enregistrement ajouté"
+          }
+        }
+      }
+    },
+    "/v1/dns/zones/{zone}/records/{id}": {
+      "parameters": [
+        {
+          "name": "zone",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Modifier la valeur de pointage, l'intitulé ou le paramètre de TTL d'un enregistrement DNS existant",
+        "operationId": "updateDNSRecord",
+        "tags": [
+          "DNS"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Modifié"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer définitivement un enregistrement DNS pour interrompre la résolution de nom associée",
+        "operationId": "deleteDNSRecord",
+        "tags": [
+          "DNS"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimé"
+          }
+        }
+      }
+    }
+  }
+}

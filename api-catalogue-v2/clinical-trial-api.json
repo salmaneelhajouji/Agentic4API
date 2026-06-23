@@ -1,0 +1,79 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Clinical Trial API",
+    "version": "1.0.0",
+    "x-api-id": "clinical-trial-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "API dédiée à la gestion complète des essais cliniques réglementés pour médicaments et dispositifs médicaux, couvrant la création de protocoles, le recrutement et l'inscription de patients selon des critères d'inclusion stricts, ainsi que le suivi longitudinal des cohortes de participants. Elle orchestre la production de rapports réglementaires conformes aux exigences de l'EMA (Europe) et de la FDA (États-Unis), dans le respect des Bonnes Pratiques Cliniques (BPC/GCP). Les utilisateurs typiques sont les équipes de recherche clinique, les Contract Research Organizations (CRO), les investigateurs et les équipes de pharmacovigilance. DIFFÉRENCE vs cohort-api : Clinical Trial API = essai clinique réglementé avec protocole EMA/FDA ; cohort-api = analyse de cohortes marketing clients pour rétention et LTV. DIFFÉRENCE vs patient-admission-api : Clinical Trial API = inscription à un essai de recherche ; patient-admission-api = admission hospitalière pour soins. DIFFÉRENCE vs medical-record-api : Clinical Trial API = données spécifiques à un essai clinique ; medical-record-api = dossier médical complet du patient.",
+    "x-synonymes": "essai clinique, protocole essai clinique, recrutement patient essai, phase I II III IV, bras de traitement, groupe contrôle, placebo, randomisation essai, critères inclusion exclusion, consentement éclairé, investigateur essai clinique, CRO contract research organization, rapport EMA, rapport FDA, pharmacovigilance, étude clinique, cohorte essai, participant essai, monitoring essai clinique, bonne pratique clinique BPC",
+    "x-false-positive-warning": "DIFFÉRENCE vs cohort-api : Clinical Trial API = essai clinique réglementé avec protocole EMA/FDA et obligations légales ; cohort-api = analyse de cohortes marketing clients pour rétention et LTV, sans cadre réglementaire médical. DIFFÉRENCE vs patient-admission-api : Clinical Trial API = inscription d'un patient à un essai de recherche clinique selon des critères scientifiques ; patient-admission-api = admission hospitalière administrative pour soins courants. DIFFÉRENCE vs medical-record-api : Clinical Trial API = données spécifiques à un essai clinique (protocole, bras, randomisation) ; medical-record-api = dossier médical complet et historique de santé du patient. DIFFÉRENCE vs drug-api : Clinical Trial API = gestion des essais sur un médicament en développement ; drug-api = catalogue et gestion des médicaments commercialisés.",
+    "x-cas-usage": "Comment créer le protocole d'un essai clinique de phase III avec ses critères d'inclusion et ses bras de traitement ? | Comment inscrire un patient qui correspond aux critères d'inclusion de notre essai clinique ? | Quels sont les participants actifs dans notre essai clinique et quel est leur statut de suivi ? | Comment générer le rapport réglementaire pour l'EMA sur l'avancement de l'essai ? | Comment modifier le protocole d'essai suite à un amendement réglementaire ?"
+  },
+  "paths": {
+    "/v1/trials": {
+      "get": {
+        "summary": "Lister les essais cliniques en cours avec leur phase, statut réglementaire et nombre de participants inscrits",
+        "operationId": "listTrials",
+        "tags": ["Trials"],
+        "responses": {
+          "200": {"description": "Liste des essais cliniques actifs avec leurs métadonnées de phase et de recrutement"}
+        }
+      },
+      "post": {
+        "summary": "Créer un nouveau protocole d'essai clinique avec définition de la phase, des critères d'éligibilité et des objectifs thérapeutiques primaires et secondaires",
+        "operationId": "createTrial",
+        "tags": ["Trials"],
+        "responses": {
+          "200": {"description": "Protocole d'essai clinique créé avec identifiant unique et statut initial"}
+        }
+      }
+    },
+    "/v1/trials/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le protocole complet d'un essai clinique avec critères d'inclusion/exclusion, bras de traitement, randomisation et statistiques de recrutement",
+        "operationId": "getTrial",
+        "tags": ["Trials"],
+        "responses": {
+          "200": {"description": "Protocole complet de l'essai clinique incluant tous les bras et paramètres réglementaires"},
+          "404": {"description": "Essai clinique introuvable pour l'identifiant fourni"}
+        }
+      },
+      "put": {
+        "summary": "Modifier le protocole d'un essai clinique existant suite à un amendement réglementaire ou une mise à jour des critères d'éligibilité",
+        "operationId": "updateTrial",
+        "tags": ["Trials"],
+        "responses": {
+          "200": {"description": "Protocole d'essai mis à jour avec traçabilité de l'amendement"},
+          "404": {"description": "Essai clinique introuvable pour l'identifiant fourni"}
+        }
+      }
+    },
+    "/v1/trials/{id}/enroll": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Inscrire un patient dans un essai clinique après vérification automatique des critères d'inclusion/exclusion et validation du consentement éclairé signé",
+        "operationId": "enrollPatient",
+        "tags": ["Enrollment"],
+        "responses": {
+          "200": {"description": "Patient inscrit dans l'essai clinique avec attribution au bras de traitement par randomisation"},
+          "400": {"description": "Données invalides ou critères d'inclusion non satisfaits"},
+          "404": {"description": "Essai clinique introuvable pour l'identifiant fourni"}
+        }
+      },
+      "get": {
+        "summary": "Lister tous les participants inscrits dans un essai clinique avec leur cohorte, statut de participation et données de suivi longitudinal",
+        "operationId": "getEnrollments",
+        "tags": ["Enrollment"],
+        "responses": {
+          "200": {"description": "Liste des participants de l'essai avec statut, bras assigné et indicateurs de suivi"},
+          "404": {"description": "Essai clinique introuvable pour l'identifiant fourni"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Commodity Price API",
+    "version": "1.0.0",
+    "x-api-id": "commodity-price-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "API spécialisée dans les cours des matières premières agricoles sur les marchés financiers (MATIF, CME). Couvre les processus de consultation de prix en temps réel, d'accès à l'historique des cotations et de gestion d'alertes de prix pour les principales commodités agricoles : blé, maïs, colza, soja, sucre et huile de palme. Utilisée par les négociants agricoles, coopératives, traders et responsables achats pour suivre les marchés, anticiper les mouvements de prix et déclencher des transactions au bon moment. DIFFÉRENCE vs agri-marketplace-api : Commodity Price API = cours des matières premières sur les marchés financiers ; agri-marketplace-api = place de marché peer-to-peer entre agriculteurs pour vente directe. DIFFÉRENCE vs harvest-api : Commodity Price API = prix marché des commodités ; harvest-api = enregistrement des récoltes sur les parcelles. DIFFÉRENCE vs financial-market-api : Commodity Price API = spécialisée matières premières agricoles ; financial-market-api = marchés financiers génériques actions et obligations.",
+    "x-synonymes": "cours matières premières, prix blé marché, cours maïs, cours colza, cours soja, prix commodités agricoles, marché agricole, MATIF, CME commodité, cours céréales, prix spot agricole, historique cours matières premières, trading agricole, négoce grain, bourse agricole cours, prix huile palme, prix sucre marché, cotation agricole, alerte prix commodité, cours journalier céréales",
+    "x-false-positive-warning": "DIFFÉRENCE vs agri-marketplace-api : Commodity Price API = cours des matières premières sur les marchés financiers. agri-marketplace-api = place de marché peer-to-peer entre agriculteurs pour vente directe. DIFFÉRENCE vs harvest-api : Commodity Price API = prix marché des commodités. harvest-api = enregistrement des récoltes sur les parcelles. DIFFÉRENCE vs financial-market-api : Commodity Price API = spécialisée matières premières agricoles. financial-market-api = marchés financiers génériques actions et obligations. DIFFÉRENCE vs weather-agri-api : Commodity Price API = cotations financières des commodités. weather-agri-api = données météorologiques influençant les rendements agricoles.",
+    "x-cas-usage": "Comment consulter le cours du blé et du maïs en temps réel sur le MATIF ? | Comment récupérer l'historique du cours du colza sur les 12 derniers mois ? | Comment créer une alerte quand le prix du blé dépasse 250 euros la tonne ? | Quels sont les cours journaliers disponibles pour les céréales et oléagineux ? | Comment comparer l'évolution du prix du soja et du colza sur 6 mois ?"
+  },
+  "paths": {
+    "/v1/commodities": {
+      "get": {
+        "summary": "Lister les matières premières agricoles disponibles — blé, maïs, colza, soja, sucre et huile de palme avec leurs identifiants de cotation",
+        "operationId": "listCommodities",
+        "tags": ["Commodities"],
+        "responses": {
+          "200": {"description": "Liste des commodités agricoles"}
+        }
+      }
+    },
+    "/v1/commodities/{id}/price": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer l'historique des cours d'une matière première — prix spot journaliers, tendances et variations sur une période donnée",
+        "operationId": "getPriceHistory",
+        "tags": ["Price"],
+        "responses": {
+          "200": {"description": "Historique des cours"},
+          "404": {"description": "Matière première introuvable"}
+        }
+      }
+    },
+    "/v1/commodities/alerts": {
+      "get": {
+        "summary": "Lister les alertes de prix configurées — seuils déclencheurs, commodités surveillées et statuts d'activation",
+        "operationId": "getPriceAlerts",
+        "tags": ["Alerts"],
+        "responses": {
+          "200": {"description": "Alertes prix actives"}
+        }
+      },
+      "post": {
+        "summary": "Créer une alerte de prix — notification automatique par email ou webhook quand le cours d'une commodité dépasse un seuil défini",
+        "operationId": "createPriceAlert",
+        "tags": ["Alerts"],
+        "responses": {
+          "200": {"description": "Alerte créée"},
+          "400": {"description": "Données invalides"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] EV Charging API",
+    "version": "1.0.0",
+    "x-api-id": "ev-charging-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "x-successor": "ev-charging-api-v2",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS ev-charging-api-v2] Cette API gérait historiquement la supervision élémentaire et le référencement des bornes de recharge pour véhicules électriques (v1). Cette version est obsolète et gelée. Toutes les intégrations d'infrastructure et applications clientes doivent obligatoirement migrer vers la version 2 (ev-charging-api-v2) pour bénéficier des services de disponibilité en temps réel, de réservation de bornes, de facturation automatisée et de la conformité avec le protocole OCPP 2.0.",
+    "x-synonymes": "borne de recharge, véhicule électrique, recharge VE, station de recharge, infrastructure de recharge, session de charge, mobilité électrique, recharge électrique, IRVE, superchargeur, point de charge",
+    "x-false-positive-warning": "Attention : Cette API obsolète concernait l'inventaire des stations de recharge électrique. Veiller à rediriger l'intégralité des flux vers la nouvelle version cible ev-charging-api-v2 et ne pas la confondre avec la parking-api gérant le stationnement générique."
+  },
+  "paths": {
+    "/v1/stations": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS ev-charging-api-v2 - Consulter l'inventaire historique des bornes de recharge référencées dans la v1",
+        "operationId": "listStationsV1",
+        "tags": [
+          "Stations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

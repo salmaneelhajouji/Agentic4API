@@ -1,0 +1,74 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Notification API",
+    "version": "3.0.0",
+    "x-api-id": "notification-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Communication",
+    "description": "Version actuelle et recommandée — WhatsApp, notifications in-app, triggers événementiels, personnalisation IA et rate-limiting par utilisateur. Permet de créer des règles de déclenchement automatique sur événements (order.delivered, payment.failed), d envoyer via WhatsApp et d afficher des notifications dans l application. DIFFÉRENCE vs notification-api-v2 : v3 = WhatsApp, triggers et personnalisation IA. v2 = templates multilingues et multi-canal email/SMS/push.",
+    "x-breaking-changes-from-previous": ["channel +whatsapp +in_app", "triggers événementiels", "ai_personalize personnalisation IA", "user_rate_limit par canal/jour", "delivery_window plage horaire", "template_version versionning"],
+    "x-synonymes": "notification WhatsApp, notification in-app, trigger événementiel, déclenchement automatique, personnalisation IA notification, rate limit notification, plage horaire envoi, notification centre, cloche notification in-app, marquer lu notification, règle déclenchement, event driven notification, notification order delivered, notification payment failed, AI personalized notification, delivery window timezone",
+    "x-false-positive-warning": "Version sans WhatsApp → notification-api-v2. Messagerie bidirectionnelle → messaging-api. Alertes ops monitoring → alert-api. Chat support → chatbot-api.",
+    "x-cas-usage": "je veux envoyer une notification WhatsApp quand une commande est livrée | je veux créer un trigger automatique qui notifie le client 1h après la livraison | je veux afficher les notifications non lues dans la cloche de notre app | je veux activer la personnalisation IA du message selon le profil utilisateur | je veux limiter à 3 notifications push par utilisateur par jour"
+  },
+  "paths": {
+    "/v3/notifications/send": {
+      "post": {
+        "summary": "Envoyer via email, SMS, push, WhatsApp ou in-app avec personnalisation IA optionnelle",
+        "operationId": "sendNotifV3",
+        "tags": ["Notifications"],
+        "responses": {
+          "201": {"description": "Notification envoyée"},
+          "429": {"description": "Rate limit utilisateur atteint"}
+        }
+      }
+    },
+    "/v3/notifications/triggers": {
+      "post": {
+        "summary": "Créer une règle de déclenchement événementielle — envoi automatique sur un event",
+        "operationId": "createTrigger",
+        "tags": ["Triggers"],
+        "responses": {"201": {"description": "Trigger créé"}}
+      },
+      "get": {
+        "summary": "Lister les règles de déclenchement — triggers actifs et conditions",
+        "operationId": "listTriggers",
+        "tags": ["Triggers"],
+        "responses": {"200": {"description": "Triggers configurés"}}
+      }
+    },
+    "/v3/notifications/in-app/{userId}": {
+      "parameters": [{"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Notifications in-app non lues d un utilisateur — centre de notifications",
+        "operationId": "getInAppNotifs",
+        "tags": ["InApp"],
+        "responses": {"200": {"description": "Notifications in-app non lues"}}
+      },
+      "patch": {
+        "summary": "Marquer des notifications in-app comme lues",
+        "operationId": "markInAppRead",
+        "tags": ["InApp"],
+        "responses": {"200": {"description": "Notifications marquées lues"}}
+      }
+    },
+    "/v3/notifications/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut et logs de livraison d une notification",
+        "operationId": "getNotifV3",
+        "tags": ["Notifications"],
+        "responses": {"200": {"description": "Statut notification"}}
+      },
+      "delete": {
+        "summary": "Annuler une notification si statut pending",
+        "operationId": "cancelNotifV3",
+        "tags": ["Notifications"],
+        "responses": {"204": {"description": "Annulée"}}
+      }
+    }
+  }
+}

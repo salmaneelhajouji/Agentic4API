@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Building Automation API",
+    "version": "1.0.0",
+    "x-api-id": "building-automation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "API de pilotage et d'automatisation des bâtiments intelligents via GTB (Gestion Technique du Bâtiment), couvrant les systèmes HVAC (chauffage, ventilation, climatisation), l'éclairage automatique, le contrôle d'accès et la surveillance des équipements techniques. Permet de définir des modes de fonctionnement par zone (éco, confort, nuit, vacances), de surveiller la consommation énergétique en temps réel et de recevoir des alertes en cas de panne ou d'anomalie. Utilisée par les facility managers, gestionnaires d'immeubles tertiaires, intégrateurs smart building et équipes de maintenance technique. DIFFÉRENCE vs energy-consumption-api : Building Automation API = pilotage actif des systèmes HVAC et éclairage pour optimiser l'énergie. energy-consumption-api = mesure passive de la consommation électrique. DIFFÉRENCE vs access-control-api : Building Automation API = contrôle d'accès intégré dans la GTB globale du bâtiment. access-control-api = gestion des badges et droits d'accès physiques. DIFFÉRENCE vs facility-management-api : Building Automation API = automatisation technique des équipements. facility-management-api = gestion opérationnelle des interventions et maintenances.",
+    "x-synonymes": "GTB, gestion technique bâtiment, HVAC, chauffage climatisation ventilation, smart building, bâtiment intelligent, éclairage automatique, contrôle accès bâtiment, mode éco, mode confort, consommation énergie bâtiment, température zone, building management system, BMS, KNX, domotique industrielle, capteur bâtiment, automatisation immeuble, gestion énergie bâtiment, alarme bâtiment",
+    "x-false-positive-warning": "DIFFÉRENCE vs energy-consumption-api : Building Automation API = pilotage actif des systèmes HVAC et éclairage pour optimiser l'énergie. energy-consumption-api = mesure passive de la consommation électrique sans action sur les équipements. DIFFÉRENCE vs access-control-api : Building Automation API = contrôle d'accès intégré dans la GTB globale du bâtiment. access-control-api = gestion des badges, profils et droits d'accès physiques indépendamment de l'automatisation. DIFFÉRENCE vs facility-management-api : Building Automation API = automatisation technique des équipements (HVAC, éclairage, capteurs). facility-management-api = gestion opérationnelle des interventions, maintenances et tickets terrain. DIFFÉRENCE vs iot-api : Building Automation API = spécifique aux équipements de bâtiment tertiaire et résidentiel. iot-api = gestion générique de dispositifs IoT tous secteurs confondus.",
+    "x-cas-usage": "Comment passer automatiquement tous les bâtiments en mode éco pendant la nuit ? | Comment surveiller la température et la consommation énergétique de chaque zone d'un bâtiment ? | Comment recevoir une alerte en temps réel si le système HVAC tombe en panne ? | Comment ajouter et configurer une nouvelle zone de climatisation dans un bâtiment existant ? | Quels indicateurs de consommation énergétique (électricité, gaz, eau) sont disponibles par période ?"
+  },
+  "paths": {
+    "/v1/buildings/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le statut global d'un bâtiment — état HVAC, éclairage, contrôle d'accès et consommation énergétique en temps réel",
+        "operationId": "getBuildingStatus",
+        "tags": ["Buildings"],
+        "responses": {"200": {"description": "Statut bâtiment"}}
+      },
+      "put": {
+        "summary": "Configurer le mode de fonctionnement d'un bâtiment — éco, confort, nuit ou vacances avec application immédiate sur tous les équipements",
+        "operationId": "setBuildingMode",
+        "tags": ["Buildings"],
+        "responses": {"200": {"description": "Mode configuré"}}
+      }
+    },
+    "/v1/buildings/{id}/zones": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Lister toutes les zones d'un bâtiment avec leur état — température, niveau d'éclairage et taux d'occupation par zone",
+        "operationId": "getZones",
+        "tags": ["Zones"],
+        "responses": {"200": {"description": "Zones du bâtiment"}}
+      },
+      "post": {
+        "summary": "Ajouter une nouvelle zone technique dans le bâtiment — salle, étage ou secteur avec paramètres HVAC et éclairage associés",
+        "operationId": "addZone",
+        "tags": ["Zones"],
+        "responses": {"200": {"description": "Zone ajoutée"}}
+      }
+    },
+    "/v1/buildings/{id}/energy": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter la consommation énergétique détaillée du bâtiment — électricité, gaz et eau agrégés par période et par zone",
+        "operationId": "getBuildingEnergy",
+        "tags": ["Energy"],
+        "responses": {"200": {"description": "Consommation énergétique"}}
+      }
+    },
+    "/v1/buildings/{id}/alerts": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer les alertes techniques actives d'un bâtiment — pannes HVAC, tentatives d'intrusion et anomalies de capteurs détectées",
+        "operationId": "getBuildingAlerts",
+        "tags": ["Alerts"],
+        "responses": {"200": {"description": "Alertes actives"}}
+      }
+    }
+  }
+}

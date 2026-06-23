@@ -1,0 +1,311 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Product API",
+    "version": "2.0.0",
+    "x-api-id": "product-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Catalog",
+    "x-domain": "E-Commerce",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS product-api-v4] Cette API gérait la version 2 du référentiel produits, introduisant les identifiants textuels préfixés PROD-, les galeries d'images multiples, les structures complexes de pricing et la prise en charge initiale des variantes d'articles (tailles, couleurs). Cette version intermédiaire est dépréciée ; toutes les intégrations applicatives doivent obligatoirement migrer vers la version 4 active (product-api-v4) pour s'appuyer sur la conformité PIM complète, le multi-catalogue et le moteur d'IA.",
+    "x-breaking-changes-from-previous": [
+      "id integer→string PROD-XXXX",
+      "image string→tableau images[]",
+      "price→pricing.base_price",
+      "Ajout variants (optionnel)"
+    ],
+    "x-breaking-changes-in-next": [
+      "variants déplacés dans sous-ressource /variants",
+      "pricing.base_price→pricing.currency requis",
+      "categories remplacée par category_id référençant Catalog API",
+      "Ajout SEO metadata obligatoire pour publication"
+    ],
+    "x-successor": "product-api-v3",
+    "x-synonymes": "catalogue produits v2, fiche produit avec variantes, identifiant PROD-XXXX, structure pricing v2, galerie d'images article, variantes de taille couleur, archivage produit logique",
+    "x-false-positive-warning": "Attention : Cette API intermédiaire v2 est obsolète et gelée. Veiller à rediriger l'intégralité des flux applicatifs vers la version cible active `product-api-v4`."
+  },
+  "paths": {
+    "/v2/products": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS product-api-v4 - Parcourir et lister l'inventaire historique des produits de la v2 avec leurs variantes",
+        "operationId": "listProductsV2",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductV2List"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS product-api-v4 - Créer un produit avec ses variantes de déclinaisons dans l'ancien format v2",
+        "operationId": "createProductV2",
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductV2Create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductV2"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/products/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^PROD-[0-9]{3}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS product-api-v4 - Consulter la fiche technique, le prix de base et les déclinaisons d'un produit v2",
+        "operationId": "getProductV2",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductV2"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Identifiant produit introuvable sur la base v2"
+          }
+        }
+      },
+      "put": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS product-api-v4 - Mettre à jour globalement la configuration, les tarifs ou les images d'un article v2",
+        "operationId": "updateProductV2",
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductV2Create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      },
+      "delete": {
+        "summary": "⚠️ [DEPRECATED] Archiver et désactiver logiquement (soft delete) un produit pour restreindre sa visibilité commerciale",
+        "operationId": "archiveProductV2",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "Archivé"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProductV2Create": {
+        "type": "object",
+        "required": [
+          "name",
+          "sku",
+          "pricing",
+          "category"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "description": "BREAKING v3: remplacé par category_id"
+          },
+          "description": {
+            "type": "string"
+          },
+          "pricing": {
+            "type": "object",
+            "required": [
+              "base_price"
+            ],
+            "properties": {
+              "base_price": {
+                "type": "number"
+              },
+              "sale_price": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string",
+                "default": "EUR",
+                "description": "BREAKING v3: obligatoire"
+              }
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uri"
+            }
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sku": {
+                  "type": "string"
+                },
+                "attributes": {
+                  "type": "object"
+                },
+                "stock": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "ProductV2": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "PROD-001"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "pricing": {
+            "type": "object"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "draft",
+              "archived"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ProductV2List": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductV2"
+            }
+          },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "total": {
+                "type": "integer"
+              },
+              "page": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

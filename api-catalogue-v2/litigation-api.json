@@ -1,0 +1,152 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Litigation API",
+    "version": "1.0.0",
+    "x-api-id": "litigation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Cette API centralise l'ouverture, l'instruction et le suivi juridique des dossiers de litiges et de contentieux judiciaires de l'entreprise. Elle structure le suivi des étapes de procédures devant les tribunaux, planifie le calendrier des audiences judiciaires, indexe les mémoires et pièces de procédure produits par les avocats conseils, et calcule l'état des risques financiers ou provisions pour risques juridiques associés.",
+    "x-synonymes": "gestion des litiges, contentieux judiciaire, dossier juridique, procédure légale, audience devant le tribunal, pièce de procédure, assignation en justice, avocat conseil, suivi judiciaire, risque juridique, provision pour litige, mémoire d'avocat, contentieux commercial, phase contentieuse",
+    "x-false-positive-warning": "Attention : Cette API régit exclusivement les affaires judiciaires portées devant les tribunaux, les contentieux formels et les assignations (Litigation). Ne pas la confondre avec la `dispute-resolution-api` (réservée au règlement amiable des conflits, à la conciliation et aux médiations pré-contentieuses).",
+    "x-cas-usage": "Comment ouvrir un nouveau dossier contentieux suite à la réception d'une assignation en justice d'un tiers ? | Où planifier et dater la prochaine audience de plaidoirie pour un dossier de litige en cours ? | Comment verser et indexer un mémoire juridique ou une pièce de preuve au dossier d'instruction ? | Comment suivre l'évolution du statut légal et réévaluer la provision financière du risque ?"
+  },
+  "paths": {
+    "/v1/litigation": {
+      "get": {
+        "summary": "Lister, trier et filtrer l'ensemble des dossiers de contentieux et litiges judiciaires suivis par le service juridique",
+        "operationId": "listLitigationCases",
+        "tags": [
+          "Litigation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ouvrir formellement un nouveau dossier de contentieux en spécifiant la juridiction saisie et l'objet de la demande",
+        "operationId": "createCase",
+        "tags": [
+          "Litigation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/litigation/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique complet des actes, les risques financiers provisionnés et l'état d'avancement du dossier contentieux",
+        "operationId": "getLitigationCase",
+        "tags": [
+          "Litigation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour l'état de la procédure, les arguments des conseils ou modifier la provision du dossier juridique",
+        "operationId": "updateCase",
+        "tags": [
+          "Litigation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/litigation/{id}/hearings": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le calendrier, le lieu de la juridiction et l'historique des audiences pour ce dossier de contentieux",
+        "operationId": "getHearings",
+        "tags": [
+          "Hearings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et planifier une nouvelle date d'audience (plaidoirie, mise en état) devant la cour saisie",
+        "operationId": "scheduleHearing",
+        "tags": [
+          "Hearings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/litigation/{id}/documents": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister l'ensemble des conclusions, pièces de preuves et mémoires légaux indexés au dossier d'instruction",
+        "operationId": "getLitigationDocs",
+        "tags": [
+          "Docs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Téléverser et verser formellement une nouvelle pièce juridique ou une preuve numérique certifiée au dossier",
+        "operationId": "addLitigationDoc",
+        "tags": [
+          "Docs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

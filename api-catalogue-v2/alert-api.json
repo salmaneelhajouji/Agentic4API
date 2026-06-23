@@ -1,0 +1,150 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Alert API",
+    "version": "1.0.0",
+    "x-api-id": "alert-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Communication",
+    "description": "Alertes système et gestion des incidents techniques pour les équipes opérationnelles. Couvre la création d'alertes manuelles ou automatiques basées sur des règles (seuil d'erreur dépassé, latence élevée, panne service), l'acquittement et la résolution des incidents, ainsi que l'escalade vers les équipes OPS via Slack, PagerDuty ou email. Destiné aux ingénieurs SRE, équipes DevOps et responsables on-call pour le monitoring opérationnel et la gestion des incidents en production. DIFFÉRENCE vs notification-api : Alert cible les équipes techniques internes (PagerDuty, Slack ops), Notification cible les clients finaux. DIFFÉRENCE vs messaging-api : Alert est automatisé par des règles, Messaging est initié par un humain. DIFFÉRENCE vs email-api : Alert peut notifier par email mais son rôle est l'incident management. DIFFÉRENCE vs health-api : Alert déclenche des actions et notifie, Health expose uniquement l'état de santé passif des services.",
+    "x-synonymes": "alerte système, incident technique, panne service, monitoring ops, on-call, astreinte, PagerDuty, escalade incident, acquittement alerte, résolution incident, seuil dépassé, taux erreur, latence élevée, règle alerte, alerte critique, alerte haute, ops alerting, incident management, runbook, post-mortem",
+    "x-false-positive-warning": "Notifier un client final (email, push, SMS) → notification-api. Chat ou messagerie initiée par un humain → messaging-api. Envoi d'email marketing ou transactionnel → email-api. Surveillance passive de la santé des microservices → health-api. Logs, traces et traçabilité des actions → audit-log-api. Tableaux de bord et métriques de performance → analytics-api.",
+    "x-cas-usage": "Comment créer une alerte automatique quand le taux d'erreur dépasse 5% ? | Comment notifier l'équipe ops sur Slack et PagerDuty quand un service tombe ? | Comment acquitter une alerte en cours de traitement et enregistrer le responsable ? | Comment configurer une règle d'escalade avec cooldown pour les alertes critiques en production ? | Comment récupérer la liste de toutes les alertes actives filtrées par sévérité et service ?"
+  },
+  "paths": {
+    "/v1/alerts": {
+      "post": {
+        "summary": "Créer une alerte manuelle pour un incident, une panne service ou un dépassement de seuil avec canal de notification",
+        "operationId": "createAlert",
+        "tags": ["Alerts"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "severity", "service"],
+                "properties": {
+                  "title": {"type": "string"},
+                  "severity": {
+                    "type": "string",
+                    "enum": ["critical", "high", "medium", "low"]
+                  },
+                  "service": {"type": "string", "example": "payment-api"},
+                  "description": {"type": "string"},
+                  "notify_channels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["slack", "pagerduty", "email"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Alerte créée"}}
+      },
+      "get": {
+        "summary": "Lister les alertes actives en production avec filtre par statut, sévérité et service concerné",
+        "operationId": "listAlerts",
+        "tags": ["Alerts"],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {"type": "string", "enum": ["active", "acknowledged", "resolved"]}
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "schema": {"type": "string", "enum": ["critical", "high", "medium", "low"]}
+          },
+          {
+            "name": "service",
+            "in": "query",
+            "schema": {"type": "string"}
+          }
+        ],
+        "responses": {"200": {"description": "Liste des alertes"}}
+      }
+    },
+    "/v1/alerts/{id}/acknowledge": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Acquitter une alerte active pour confirmer la prise en charge par un opérateur on-call avec commentaire",
+        "operationId": "ackAlert",
+        "tags": ["Alerts"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "acknowledged_by": {"type": "string"},
+                  "comment": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Alerte acquittée"}}
+      }
+    },
+    "/v1/alerts/{id}/resolve": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Résoudre et clôturer une alerte en enregistrant la cause racine de l'incident et le responsable",
+        "operationId": "resolveAlert",
+        "tags": ["Alerts"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "resolved_by": {"type": "string"},
+                  "root_cause": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Alerte résolue"}}
+      }
+    },
+    "/v1/alerts/rules": {
+      "get": {
+        "summary": "Lister toutes les règles d'alerte automatique configurées avec leurs seuils et conditions de déclenchement",
+        "operationId": "getRules",
+        "tags": ["Rules"],
+        "responses": {"200": {"description": "Règles d'alerte"}}
+      },
+      "post": {
+        "summary": "Créer une règle d'alerte automatique basée sur une condition métrique avec sévérité, cooldown et canaux de notification",
+        "operationId": "createRule",
+        "tags": ["Rules"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "condition", "severity"],
+                "properties": {
+                  "name": {"type": "string"},
+                  "condition": {"type": "string", "example": "error_rate > 5%"},
+                  "severity": {"type": "string"},
+                  "cooldown_minutes": {"type": "integer", "default": 15}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Règle créée"}}
+      }
+    }
+  }
+}

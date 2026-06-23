@@ -1,0 +1,227 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Expense API",
+    "version": "1.0.0",
+    "x-api-id": "expense-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Human Resources",
+    "description": "Cette API régit la soumission, le contrôle et le circuit d'approbation réglementaire des notes de frais professionnels des collaborateurs de l'entreprise. Elle permet aux salariés de déclarer des dépenses par catégorie (déplacements, repas, hébergement), d'y attacher des justificatifs dématérialisés, et d'exécuter les workflows de validation hiérarchique et budgétaire jusqu'à la transmission de l'ordre de remboursement comptable.",
+    "x-synonymes": "note de frais, remboursement de frais, dépense professionnelle, frais de déplacement, justificatif de paiement, reçu numérisé, approbation de dépenses, comptabilisation des frais, indemnité kilométrique, frais professionnels, avance de frais, ordre de virement comptable",
+    "x-false-positive-warning": "Attention : Cette API encadre exclusivement les demandes de remboursement des frais de mission et notes de frais des collaborateurs internes (Expenses). Ne pas la confondre avec la `invoice-api` (microservice gérant la facturation client directe et les encaissements e-commerce), ni avec le calcul standard des salaires (payroll).",
+    "x-cas-usage": "Comment soumettre une note de frais de repas d'affaires en y joignant l'URL du reçu fiscal numérisé ? | Où consulter l'historique et filtrer les notes de frais en attente d'approbation pour mon équipe ? | Quelle méthode appeler pour valider hiérarchiquement une dépense ou spécifier un motif de rejet ?"
+  },
+  "paths": {
+    "/v1/expenses": {
+      "post": {
+        "summary": "Soumettre et déclarer une nouvelle note de frais professionnel en y associant sa catégorie et ses justificatifs",
+        "operationId": "createExpense",
+        "tags": [
+          "Expenses"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpenseCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Soumise"
+          }
+        }
+      },
+      "get": {
+        "summary": "Lister, trier et filtrer les notes de frais de l'organisation selon le collaborateur, la période ou le statut comptable",
+        "operationId": "listExpenses",
+        "tags": [
+          "Expenses"
+        ],
+        "parameters": [
+          {
+            "name": "employee_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "submitted",
+                "approved",
+                "rejected",
+                "paid"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notes de frais"
+          }
+        }
+      }
+    },
+    "/v1/expenses/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les détails analytiques, les devises, la catégorie et les pièces jointes d'une note de frais",
+        "operationId": "getExpense",
+        "tags": [
+          "Expenses"
+        ],
+        "responses": {
+          "200": {
+            "description": "Note de frais"
+          }
+        }
+      }
+    },
+    "/v1/expenses/{id}/approve": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Enregistrer l'approbation managériale ou financière d'une note de frais pour autoriser son remboursement",
+        "operationId": "approveExpense",
+        "tags": [
+          "Expenses"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Approuvée"
+          }
+        }
+      }
+    },
+    "/v1/expenses/{id}/reject": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Rejeter une note de frais de mission en spécifiant obligatoirement un motif d'invalidité pour le salarié",
+        "operationId": "rejectExpense",
+        "tags": [
+          "Expenses"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "reason"
+                ],
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rejetée"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ExpenseCreate": {
+        "type": "object",
+        "required": [
+          "employee_id",
+          "amount",
+          "currency",
+          "category",
+          "date"
+        ],
+        "properties": {
+          "employee_id": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string",
+            "default": "EUR"
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "travel",
+              "meals",
+              "accommodation",
+              "equipment",
+              "other"
+            ]
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "description": {
+            "type": "string"
+          },
+          "receipt_url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    }
+  }
+}

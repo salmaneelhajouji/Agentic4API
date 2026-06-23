@@ -1,0 +1,73 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Bank Account API",
+    "version": "2.0.0",
+    "x-api-id": "bank-account-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "⚠️ DEPRECATED — Ne pas utiliser pour les nouveaux développements. Migrer vers bank-account-api-v3. API bancaire de gestion des comptes couvrant l'ouverture, la consultation et la clôture de comptes bancaires pour des clients particuliers et professionnels. Destinée aux développeurs d'applications bancaires internes et aux intégrateurs de systèmes financiers. DIFFÉRENCE vs bank-account-api-v1 : ajout de la clôture de compte (DELETE /accounts/{id}). DIFFÉRENCE vs bank-account-api-v3 : absence de conformité PSD2, de solde temps réel et de relevé de transactions complet — utiliser v3 pour ces fonctionnalités.",
+    "x-breaking-changes-from-previous": ["Clôture de compte"],
+    "x-successor": "bank-account-api-v3",
+    "x-synonymes": "compte bancaire, compte courant, compte épargne, ouverture de compte, clôture de compte, gestion de compte, solde bancaire, relevé bancaire, RIB, IBAN, titulaire de compte, domiciliation bancaire, virement bancaire, compte dépôt, compte professionnel, banque en ligne, espace bancaire client, account management",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser bank-account-api-v3 pour tout nouveau développement. Ne pas confondre avec bank-account-api-v1 (sans clôture de compte) ni avec bank-account-api-v3 (version complète PSD2 avec solde temps réel et relevés). Ne pas confondre non plus avec billing-api (facturation et paiements commerciaux) ou payment-api (exécution de virements et paiements), qui couvrent des flux transactionnels distincts de la gestion des comptes.",
+    "x-cas-usage": "Comment lister tous les comptes bancaires d'un client via l'API v2 ? | Comment ouvrir un nouveau compte bancaire pour un client existant ? | Comment récupérer le détail d'un compte bancaire par son identifiant ? | Comment clôturer un compte bancaire et quelles sont les conditions requises ? | Quels sont les champs retournés lors de la consultation d'un compte en v2 ?"
+  },
+  "paths": {
+    "/v2/accounts": {
+      "get": {
+        "summary": "⚠️ DEPRECATED — Lister tous les comptes bancaires d'un client sans filtrage PSD2 ni solde temps réel",
+        "operationId": "listAccountsV2",
+        "tags": ["Accounts"],
+        "responses": {
+          "200": {"description": "Liste des comptes bancaires du client retournée avec succès"},
+          "401": {"description": "Non autorisé — authentification requise"},
+          "403": {"description": "Accès interdit — droits insuffisants pour consulter ces comptes"},
+          "500": {"description": "Erreur interne du serveur"}
+        }
+      },
+      "post": {
+        "summary": "⚠️ DEPRECATED — Ouvrir un nouveau compte bancaire pour un client avec paramétrage du type de compte et des conditions initiales",
+        "operationId": "createAccountV2",
+        "tags": ["Accounts"],
+        "responses": {
+          "200": {"description": "Compte bancaire ouvert avec succès"},
+          "400": {"description": "Données invalides — vérifier les paramètres de création du compte"},
+          "401": {"description": "Non autorisé — authentification requise"},
+          "403": {"description": "Accès interdit — droits insuffisants pour ouvrir un compte"},
+          "500": {"description": "Erreur interne du serveur"}
+        }
+      }
+    },
+    "/v2/accounts/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "⚠️ DEPRECATED — Consulter le détail d'un compte bancaire par son identifiant, incluant type, statut et informations du titulaire",
+        "operationId": "getAccountV2",
+        "tags": ["Accounts"],
+        "responses": {
+          "200": {"description": "Détail du compte bancaire retourné avec succès"},
+          "401": {"description": "Non autorisé — authentification requise"},
+          "403": {"description": "Accès interdit — droits insuffisants pour consulter ce compte"},
+          "404": {"description": "Ressource non trouvée — compte bancaire introuvable pour cet identifiant"},
+          "500": {"description": "Erreur interne du serveur"}
+        }
+      },
+      "delete": {
+        "summary": "⚠️ DEPRECATED — Clôturer définitivement un compte bancaire existant après vérification du solde et des opérations en cours",
+        "operationId": "closeAccountV2",
+        "tags": ["Accounts"],
+        "responses": {
+          "200": {"description": "Compte bancaire clôturé avec succès"},
+          "400": {"description": "Données invalides — clôture impossible, vérifier le solde ou les opérations en attente"},
+          "401": {"description": "Non autorisé — authentification requise"},
+          "403": {"description": "Accès interdit — droits insuffisants pour clôturer ce compte"},
+          "404": {"description": "Ressource non trouvée — compte bancaire introuvable pour cet identifiant"},
+          "500": {"description": "Erreur interne du serveur"}
+        }
+      }
+    }
+  }
+}

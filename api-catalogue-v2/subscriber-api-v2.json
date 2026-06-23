@@ -1,0 +1,50 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Subscriber API",
+    "version": "2.0.0",
+    "x-api-id": "subscriber-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "DEPRECATED — Version 2 de l'API de gestion des abonnés télécom avec portabilité de numéro. Ne plus utiliser. Migrer vers subscriber-api-v3 qui apporte la gestion multi-lignes et l'eSIM.",
+    "x-successor": "subscriber-api-v3",
+    "x-synonymes": "abonné télécom v2 deprecated portabilité",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser subscriber-api-v3.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers subscriber-api-v3."
+  },
+  "paths": {
+    "/v2/subscribers": {
+      "get": {
+        "summary": "[DEPRECATED] Lister les abonnés — utiliser subscriber-api-v3",
+        "operationId": "listSubscribersV2",
+        "tags": ["Subscribers"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "[DEPRECATED] Créer un abonné — utiliser subscriber-api-v3",
+        "operationId": "createSubscriberV2",
+        "tags": ["Subscribers"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/subscribers/{id}/portability": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "post": {
+        "summary": "[DEPRECATED] Porter un numéro — utiliser subscriber-api-v3",
+        "operationId": "portNumberV2",
+        "tags": ["Portability"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

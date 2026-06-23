@@ -1,0 +1,74 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Battery Storage API",
+    "version": "1.0.0",
+    "x-api-id": "battery-storage-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "API de gestion des systèmes de stockage d'énergie par batterie, couvrant les processus de surveillance en temps réel, de contrôle des modes opératoires et d'analyse de l'historique des cycles. Permet aux opérateurs industriels, gestionnaires de sites solaires résidentiels et commerciaux, et équipes de maintenance IoT de piloter leur parc de batteries (BESS, lithium-ion, UPS). Les cas d'usage principaux incluent l'optimisation de la charge/décharge pour réduire les coûts électriques en heures de pointe, la prévision de remplacement des batteries via l'analyse du SOH, et l'intégration des batteries dans des systèmes de gestion d'énergie (EMS). DIFFÉRENCE vs energy-consumption-api : Battery Storage API = surveillance et contrôle des batteries de stockage ; energy-consumption-api = suivi de la consommation électrique du réseau. DIFFÉRENCE vs solar-panel-api : Battery Storage API = gestion du stockage de l'énergie produite ; solar-panel-api = monitoring de la production photovoltaïque des panneaux. DIFFÉRENCE vs vehicle-api-v2 : Battery Storage API = batteries de stockage stationnaire industriel ou résidentiel ; vehicle-api-v2 = données véhicule dont batterie embarquée.",
+    "x-synonymes": "batterie industrielle, stockage énergie, état de charge, SOC, DOD, profondeur décharge, cycle batterie, durée vie batterie, charge batterie, décharge batterie, batterie solaire, stockage solaire, BESS, battery energy storage system, UPS batterie, batterie de secours, lithium-ion monitoring, capacité batterie, santé batterie, SOH",
+    "x-false-positive-warning": "DIFFÉRENCE vs energy-consumption-api : Battery Storage API = surveillance et contrôle des batteries de stockage ; energy-consumption-api = suivi de la consommation électrique du réseau global, sans gestion du stockage. DIFFÉRENCE vs solar-panel-api : Battery Storage API = gestion du stockage de l'énergie produite par les panneaux ; solar-panel-api = monitoring de la production photovoltaïque des panneaux solaires uniquement. DIFFÉRENCE vs vehicle-api-v2 : Battery Storage API = batteries de stockage stationnaire industriel ou résidentiel ; vehicle-api-v2 = données complètes du véhicule dont la batterie embarquée mobile. DIFFÉRENCE vs iot-sensor-api : Battery Storage API = gestion métier spécifique aux batteries (SOC, SOH, cycles) ; iot-sensor-api = collecte générique de données capteurs sans logique métier batterie.",
+    "x-cas-usage": "Comment surveiller l'état de charge (SOC) et la santé (SOH) de nos batteries de stockage solaire en temps réel ? | Comment passer une batterie en mode décharge pour alimenter le site pendant les heures de pointe tarifaire ? | Comment consulter l'historique des cycles charge/décharge pour anticiper le remplacement d'une batterie ? | Comment enregistrer un nouveau système de stockage batterie dans notre parc IoT et le configurer ? | Quels paramètres consulter pour optimiser la charge et décharge de nos batteries et réduire la facture électrique ?"
+  },
+  "paths": {
+    "/v1/batteries": {
+      "get": {
+        "summary": "Lister tous les systèmes de stockage batterie du parc IoT avec leur état de charge, statut opérationnel et capacité disponible",
+        "operationId": "listBatteries",
+        "tags": ["Batteries"],
+        "responses": {
+          "200": {"description": "Liste des batteries avec état de charge"}
+        }
+      },
+      "post": {
+        "summary": "Enregistrer un nouveau système de stockage batterie dans le parc IoT en spécifiant sa capacité, son type chimique et ses seuils de charge",
+        "operationId": "registerBattery",
+        "tags": ["Batteries"],
+        "responses": {
+          "200": {"description": "Batterie enregistrée"}
+        }
+      }
+    },
+    "/v1/batteries/{id}": {
+      "parameters": [
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Consulter l'état complet d'une batterie identifiée — SOC, SOH, température, tension, courant et capacité restante en temps réel",
+        "operationId": "getBatteryStatus",
+        "tags": ["Batteries"],
+        "responses": {
+          "200": {"description": "État complet de la batterie"},
+          "404": {"description": "Batterie non trouvée"}
+        }
+      },
+      "put": {
+        "summary": "Configurer le mode opératoire charge ou décharge d'une batterie pour optimiser la gestion énergétique selon les plages horaires et tarifs",
+        "operationId": "setBatteryMode",
+        "tags": ["Batteries"],
+        "responses": {
+          "200": {"description": "Mode batterie configuré"},
+          "404": {"description": "Batterie non trouvée"},
+          "400": {"description": "Données invalides"}
+        }
+      }
+    },
+    "/v1/batteries/{id}/cycles": {
+      "parameters": [
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Récupérer l'historique complet des cycles charge/décharge d'une batterie — nombre de cycles, usure accumulée et durée de vie estimée restante",
+        "operationId": "getCycles",
+        "tags": ["Cycles"],
+        "responses": {
+          "200": {"description": "Historique des cycles et état de santé"},
+          "404": {"description": "Batterie non trouvée"}
+        }
+      }
+    }
+  }
+}

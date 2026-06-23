@@ -1,0 +1,171 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GDPR API",
+    "version": "1.0.0",
+    "x-api-id": "gdpr-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Security",
+    "x-domain": "Security & Compliance",
+    "description": "Cette API automatise l'application opérationnelle de la conformité au Règlement Général sur la Protection des Données (RGPD). Elle formalise et traite les demandes d'exercice des droits des personnes concernées : l'exécution sécurisée du droit à l'oubli (suppression définitive des données personnelles), la génération structurée d'archives pour le droit à la portabilité (formats JSON/CSV), ainsi que la gestion et la mise à jour centralisée du registre des consentements (marketing, analytics, partages tiers) de l'utilisateur.",
+    "x-synonymes": "conformité RGPD, droit à l'oubli, portabilité des données, registre des consentements, données à caractère personnel, PII, suppression de données utilisateur, consentement marketing, droit d'accès, demande d'effacement, anonymisation RGPD, opt-in opt-out, export de données personnelles, conformité vie privée",
+    "x-false-positive-warning": "Attention : Cette API exécute de manière opérationnelle les droits des utilisateurs (effacement, export, consentements applicatifs directs). Ne pas la confondre avec la `data-processing-agreement-api` (qui administre uniquement les contrats, clauses juridiques et avenants signés avec les sous-traitants externes).",
+    "x-cas-usage": "Comment soumettre une demande de suppression définitive (droit à l'oubli) pour un utilisateur se désinscrivant de nos services ? | Comment déclencher la génération d'un fichier d'export JSON (portabilité) regroupant l'ensemble des données personnelles collectées ? | Où interroger le registre pour auditer l'état des consentements (opt-in marketing) accordés par un utilisateur ? | Comment mettre à jour les préférences de consentement suite au choix de l'usager sur la bannière de cookies ?"
+  },
+  "paths": {
+    "/v1/gdpr/delete-request": {
+      "post": {
+        "summary": "Soumettre et enregistrer une demande d'effacement définitif et de droit à l'oubli pour un identifiant utilisateur",
+        "operationId": "gdprDeleteRequest",
+        "tags": [
+          "RGPD"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_id"
+                ],
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Traitement sous 30 jours conformément au RGPD"
+          }
+        }
+      }
+    },
+    "/v1/gdpr/export-request": {
+      "post": {
+        "summary": "Initier une procédure d'extraction et de portabilité des données à caractère personnel au format spécifié (JSON/CSV)",
+        "operationId": "gdprExportRequest",
+        "tags": [
+          "RGPD"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_id"
+                ],
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "json",
+                      "csv"
+                    ],
+                    "default": "json"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Export préparé — lien envoyé par email"
+          }
+        }
+      }
+    },
+    "/v1/gdpr/consents/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état, l'historique et le registre des consentements actifs (marketing, partages tiers) d'un utilisateur",
+        "operationId": "getConsents",
+        "tags": [
+          "Consentements"
+        ],
+        "responses": {
+          "200": {
+            "description": "Consentements"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour, modifier ou révoquer les autorisations et préférences de consentement d'un utilisateur",
+        "operationId": "updateConsents",
+        "tags": [
+          "Consentements"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "marketing": {
+                    "type": "boolean"
+                  },
+                  "analytics": {
+                    "type": "boolean"
+                  },
+                  "third_party": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      }
+    },
+    "/v1/gdpr/requests/{id}/status": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Suivre l'état d'avancement, le traitement et l'audit légal d'une demande d'exercice de droit RGPD",
+        "operationId": "getGDPRStatus",
+        "tags": [
+          "RGPD"
+        ],
+        "responses": {
+          "200": {
+            "description": "Statut"
+          }
+        }
+      }
+    }
+  }
+}

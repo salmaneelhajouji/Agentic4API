@@ -1,0 +1,77 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Renovation API",
+    "version": "1.0.0",
+    "x-api-id": "renovation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Gestion des travaux de rénovation immobilière. Permet de créer et suivre des projets de rénovation, de gérer les devis d artisans, et de mettre à jour l avancement du chantier. Utilisé par les gestionnaires immobiliers, property managers et promoteurs pour piloter les travaux de rénovation.",
+    "x-synonymes": "travaux rénovation, projet travaux, chantier rénovation, devis artisan, maîtrise d oeuvre, rénovation appartement maison, avancement chantier, planning travaux, rénovation énergétique, DPE rénovation, isolation travaux, ravalement façade, réfection toiture, rénovation intérieure, budget travaux, suivi chantier, devis comparatif, entreprise travaux, remise à neuf bien, valorisation travaux rénovation",
+    "x-false-positive-warning": "DIFFÉRENCE vs maintenance-request-api : Renovation API = projets de rénovation lourds avec devis et chantier. maintenance-request-api = demandes de maintenance courante et réparations légères. DIFFÉRENCE vs property-api-v3 : Renovation API = travaux sur un bien. property-api-v3 = données descriptives du bien immobilier.",
+    "x-cas-usage": "je veux créer un projet de rénovation pour un appartement vide entre deux locataires | je veux ajouter un devis de peintre à notre projet de rénovation | je veux voir l avancement du chantier de rénovation de notre immeuble | je veux mettre à jour la progression d un projet de rénovation à 60% | je veux lister tous nos projets de rénovation en cours"
+  },
+  "paths": {
+    "/v1/renovations": {
+      "get": {
+        "summary": "Projets de rénovation en cours — bien, budget et avancement",
+        "operationId": "listRenovations",
+        "tags": ["Renovations"],
+        "responses": {"200": {"description": "Projets rénovation"}}
+      },
+      "post": {
+        "summary": "Créer un projet de rénovation — bien, description et budget prévisionnel",
+        "operationId": "createRenovation",
+        "tags": ["Renovations"],
+        "responses": {"200": {"description": "Projet créé"}}
+      }
+    },
+    "/v1/renovations/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un projet de rénovation — devis, planning et avancement",
+        "operationId": "getRenovation",
+        "tags": ["Renovations"],
+        "responses": {"200": {"description": "Détail projet"}}
+      },
+      "put": {
+        "summary": "Modifier un projet de rénovation — budget ou planning",
+        "operationId": "updateRenovation",
+        "tags": ["Renovations"],
+        "responses": {"200": {"description": "Projet modifié"}}
+      }
+    },
+    "/v1/renovations/{id}/quotes": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Devis d un projet de rénovation — artisans, montants et statuts",
+        "operationId": "getQuotes",
+        "tags": ["Quotes"],
+        "responses": {"200": {"description": "Devis"}}
+      },
+      "post": {
+        "summary": "Ajouter un devis d artisan à un projet de rénovation",
+        "operationId": "addQuote",
+        "tags": ["Quotes"],
+        "responses": {"200": {"description": "Devis ajouté"}}
+      }
+    },
+    "/v1/renovations/{id}/progress": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Avancement d un chantier de rénovation — pourcentage et étapes",
+        "operationId": "getProgress",
+        "tags": ["Progress"],
+        "responses": {"200": {"description": "Avancement chantier"}}
+      },
+      "post": {
+        "summary": "Mettre à jour l avancement du chantier — étape complétée et observations",
+        "operationId": "updateProgress",
+        "tags": ["Progress"],
+        "responses": {"200": {"description": "Avancement mis à jour"}}
+      }
+    }
+  }
+}

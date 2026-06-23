@@ -1,0 +1,366 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Project API",
+    "version": "1.0.0",
+    "x-api-id": "project-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Operations",
+    "description": "Cette API orchestre la gestion macroscopique des projets, des cycles de développement (sprints) et de la planification stratégique (roadmaps, jalons) au sein de la direction des opérations. Conçue pour les Product Owners, Scrum Masters et directeurs de programmes, son rôle est de centraliser la structure globale du delivery, d'assurer le suivi des enveloppes budgétaires et de consolider les indicateurs d'avancement au niveau des équipes.",
+    "x-synonymes": "Gestion de projet, Planification de sprint, Suivi de roadmap, Jalons de livraison, Suivi budgétaire, Méthodologie Agile, Tableau Kanban, Cycle de delivery, Allocation d'équipe, KPIs de projet, Échéancier opérationnel, Avancement des livrables, Gouvernance de projet, Plan de charge, Sprint backlog, Clôture de jalon",
+    "x-false-positive-warning": "Attention : Cette API régit uniquement la structure macro des projets et des sprints. Pour la gestion fine et l'exécution des unités de travail individuelles (tickets, tâches), utilisez task-api. Pour l'orchestration technique d'automatisations logicielles, utilisez workflow-api. Pour le support et les réclamations clients, référez-vous à ticket-api.",
+    "x-cas-usage": "Comment faire pour initialiser un nouveau projet d'entreprise avec une méthodologie Agile et définir son enveloppe budgétaire ? | Comment faire pour planifier un nouveau sprint en y associant une date de début, de fin et un objectif métier ? | Comment faire pour affecter un collaborateur avec un rôle spécifique (ex: developer) au sein d'une équipe projet active ? | Comment faire pour suivre l'avancement global et récupérer les indicateurs clés de performance (KPIs) d'un projet spécifique ?"
+  },
+  "paths": {
+    "/v1/projects": {
+      "post": {
+        "summary": "Initialiser un nouveau projet d'entreprise en définissant sa méthodologie, son enveloppe budgétaire et sa gouvernance",
+        "operationId": "createProject",
+        "tags": [
+          "Projects"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProjectCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Projet créé"
+          }
+        }
+      },
+      "get": {
+        "summary": "Lister et filtrer le catalogue des projets en cours, planifiés ou archivés selon leur statut ou l'équipe assignée",
+        "operationId": "listProjects",
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "planning",
+                "active",
+                "on_hold",
+                "completed",
+                "cancelled"
+              ]
+            }
+          },
+          {
+            "name": "team_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Projets"
+          }
+        }
+      }
+    },
+    "/v1/projects/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Extraire la fiche détaillée d'un projet incluant ses indicateurs clés de performance (KPIs) et son état d'avancement global",
+        "operationId": "getProject",
+        "tags": [
+          "Projects"
+        ],
+        "responses": {
+          "200": {
+            "description": "Projet"
+          },
+          "404": {
+            "description": "Ressource non trouvée - Le projet spécifié est introuvable au sein du référentiel"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les informations structurelles, les métadonnées et la planification financière d'un projet existant",
+        "operationId": "updateProject",
+        "tags": [
+          "Projects"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      }
+    },
+    "/v1/projects/{id}/sprints": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le calendrier et l'historique de l'ensemble des sprints temporels rattachés à un projet",
+        "operationId": "getSprints",
+        "tags": [
+          "Sprints"
+        ],
+        "responses": {
+          "200": {
+            "description": "Sprints"
+          }
+        }
+      },
+      "post": {
+        "summary": "Planifier et ouvrir une nouvelle itération de développement (sprint) avec un objectif de livraison dédié",
+        "operationId": "createSprint",
+        "tags": [
+          "Sprints"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "start_date",
+                  "end_date"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "start_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "end_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "goal": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sprint créé"
+          }
+        }
+      }
+    },
+    "/v1/projects/{id}/milestones": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'échéancier des jalons stratégiques, des comités de validation et des livrables clés du projet",
+        "operationId": "getMilestones",
+        "tags": [
+          "Milestones"
+        ],
+        "responses": {
+          "200": {
+            "description": "Jalons"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ancrer une nouvelle échéance contractuelle ou un jalon critique dans la roadmap macro du projet",
+        "operationId": "createMilestone",
+        "tags": [
+          "Milestones"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "due_date"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "due_date": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Jalon créé"
+          }
+        }
+      }
+    },
+    "/v1/projects/{id}/members": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'organigramme opérationnel et la liste des collaborateurs affectés à l'équipe projet",
+        "operationId": "getProjectMembers",
+        "tags": [
+          "Members"
+        ],
+        "responses": {
+          "200": {
+            "description": "Membres"
+          }
+        }
+      },
+      "post": {
+        "summary": "Affecter un nouveau collaborateur à l'équipe projet en lui attribuant des droits de gouvernance spécifiques",
+        "operationId": "addProjectMember",
+        "tags": [
+          "Members"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_id",
+                  "role"
+                ],
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "owner",
+                      "manager",
+                      "developer",
+                      "viewer"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ajouté"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProjectCreate": {
+        "type": "object",
+        "required": [
+          "name",
+          "methodology"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "methodology": {
+            "type": "string",
+            "enum": [
+              "scrum",
+              "kanban",
+              "waterfall",
+              "hybrid"
+            ]
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "budget": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string",
+            "default": "EUR"
+          },
+          "team_id": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Clé API Kong Gateway — Devoteam nexDigital"
+      }
+    }
+  }
+}

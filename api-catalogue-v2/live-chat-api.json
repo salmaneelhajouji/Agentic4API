@@ -1,0 +1,224 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Live Chat API",
+    "version": "1.0.0",
+    "x-api-id": "live-chat-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Support",
+    "x-domain": "Customer Support",
+    "description": "Cette API orchestre l'ensemble de la messagerie instantanée en direct (Live Chat) pour le service de support client. Elle permet d'ouvrir des sessions de clavardage, de router et de distribuer les flux de messages en temps réel entre les internautes et les agents du helpdesk selon des règles de compétences ou d'engagements de service (SLA). Elle gère le transfert de chat de conseiller à conseiller, et automatise la clôture des conversations en générant des transcriptions textuelles auditables et des enquêtes de satisfaction.",
+    "x-synonymes": "messagerie instantanée support, live chat, clavardage en direct, session de chat, routage de conseiller, helpdesk temps réel, transcription de chat, historique de conversation, transfert de session support, score d'évaluation client, agent de support chat, boîte de dialogue client, file de chat",
+    "x-false-positive-warning": "Attention : Cette API régit le flux synchrone et de helpdesk des conversations clients/conseillers avec gestion de files d'attente métiers et de SLA (Live Chat). Ne pas la confondre avec la `messaging-api` (chat libre et social de pair-à-pair entre utilisateurs finaux) ni avec la `ticket-api` qui traite des demandes de support asynchrones par e-mail.",
+    "x-cas-usage": "Comment initier une session de live chat pour un internaute en détresse sur le tunnel de commande ? | Comment pousser un message de texte unitaire dans la boîte de dialogue en direct ? | Quelle méthode appeler pour transférer un flux de chat actif du bot de premier niveau vers l'équipe d'experts de second niveau ? | Comment clore formellement la conversation pour archiver sa transcription et collecter la note de satisfaction ?"
+  },
+  "paths": {
+    "/v1/chat/sessions": {
+      "post": {
+        "summary": "Ouvrir et initialiser une nouvelle session de live chat pour un client et l'affecter à la file de routage",
+        "operationId": "startChatSession",
+        "tags": [
+          "Sessions"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "customer_id"
+                ],
+                "properties": {
+                  "customer_id": {
+                    "type": "string"
+                  },
+                  "topic": {
+                    "type": "string"
+                  },
+                  "initial_message": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session créée — agent assigné"
+          }
+        }
+      }
+    },
+    "/v1/chat/sessions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état, le conseiller affecté et le temps d'attente d'une session de chat active",
+        "operationId": "getChatSession",
+        "tags": [
+          "Sessions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Session"
+          }
+        }
+      }
+    },
+    "/v1/chat/sessions/{id}/messages": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Envoyer un nouveau message textuel (client, conseiller ou chatbot) au sein du canal de conversation synchrone",
+        "operationId": "sendChatMessage",
+        "tags": [
+          "Messages"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "content"
+                ],
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  },
+                  "sender": {
+                    "type": "string",
+                    "enum": [
+                      "customer",
+                      "agent",
+                      "bot"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Envoyé"
+          }
+        }
+      },
+      "get": {
+        "summary": "Récupérer la chronologie complète et l'historique des messages échangés au cours de la session",
+        "operationId": "getChatHistory",
+        "tags": [
+          "Messages"
+        ],
+        "responses": {
+          "200": {
+            "description": "Messages"
+          }
+        }
+      }
+    },
+    "/v1/chat/sessions/{id}/transfer": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Transférer et rediriger dynamiquement la conversation active vers un autre conseiller qualifié ou un département expert",
+        "operationId": "transferChat",
+        "tags": [
+          "Sessions"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "agent_id": {
+                    "type": "string"
+                  },
+                  "department": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transféré"
+          }
+        }
+      }
+    },
+    "/v1/chat/sessions/{id}/close": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Clôturer la conversation, figer la transcription de l'historique et enregistrer l'évaluation de satisfaction du client",
+        "operationId": "closeChatSession",
+        "tags": [
+          "Sessions"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "resolution": {
+                    "type": "string"
+                  },
+                  "satisfaction_score": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Session fermée — transcription disponible"
+          }
+        }
+      }
+    }
+  }
+}

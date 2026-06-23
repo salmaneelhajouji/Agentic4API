@@ -1,0 +1,169 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Document Management API",
+    "version": "2.0.0",
+    "x-api-id": "document-management-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Divers",
+    "x-domain": "Cross",
+    "description": "Cette API régit le système central de Gestion Électronique des Documents (GED) de l'entreprise dans sa version 2. Elle prend en charge le cycle de vie complet des fichiers corporatifs : le téléversement sécurisé, le versionnement automatique pour éviter les pertes de données, l'indexation avancée pour la recherche plein texte (Full-Text Search), ainsi que l'orchestration des workflows de validation et d'approbation réglementaires avant la mise à disposition des documents.",
+    "x-breaking-changes-from-previous": [
+      "Versioning",
+      "Workflow validation",
+      "Full-text search"
+    ],
+    "x-synonymes": "gestion électronique des documents, GED, archivage de fichiers, versionnement de document, workflow de validation, recherche plein texte, full-text search, indexation documentaire, métadonnées de document, approbation de fichier, cycle de vie du document, coffre-fort numérique, téléversement de document, historique de version, partage documentaire, classement de fichiers, document archivé",
+    "x-false-positive-warning": "Attention : Cette API fait office de système de Gestion Électronique des Documents (GED) pour le stockage structuré, le suivi de versions et l'approbation de fichiers existants. Ne pas la confondre avec la `document-api` (qui génère dynamiquement des documents de vente ou contrats à partir de templates), ni avec la `file-storage-api` (réservée au stockage de blobs bruts d'infrastructure).",
+    "x-cas-usage": "Comment téléverser et indexer une nouvelle notice technique pour la rendre disponible via la recherche plein texte ? | Comment soumettre un document contractuel à un circuit de validation et d'approbation hiérarchique ? | Où consulter l'historique complet des versions successives d'un document de spécification ? | Comment archiver définitivement un dossier documentaire obsolète pour restreindre sa visibilité ?"
+  },
+  "paths": {
+    "/v2/documents": {
+      "get": {
+        "summary": "Rechercher, filtrer et lister les documents archivés dans le catalogue de la GED via des critères ou par recherche plein texte",
+        "operationId": "listDocumentsV2",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Téléverser, classifier et indexer un nouveau document avec ses métadonnées dans le coffre-fort numérique",
+        "operationId": "uploadDocumentV2",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/documents/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive, les métadonnées d'indexation et le statut de validation d'un document spécifique",
+        "operationId": "getDocumentV2",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier les propriétés, l'arborescence de classement ou les tags d'indexation attachés au document",
+        "operationId": "updateDocumentV2",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Archiver ou placer un document dans la corbeille de sécurité pour restreindre ses accès avant destruction définitive",
+        "operationId": "archiveDocument",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/documents/{id}/versions": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Parcourir la chronologie et récupérer l'historique complet des versions et révisions successives d'un document",
+        "operationId": "getDocumentVersions",
+        "tags": [
+          "Versions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et écraser l'état actuel en chargeant une nouvelle révision (nouvelle version logique) pour le document spécifié",
+        "operationId": "addDocumentVersion",
+        "tags": [
+          "Versions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/documents/{id}/workflow": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Soumettre un document à un circuit de validation et notifier les relecteurs ou responsables désignés",
+        "operationId": "submitForApproval",
+        "tags": [
+          "Workflow"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Enregistrer l'approbation officielle ou le refus motivé d'un document par un valideur habilité du workflow",
+        "operationId": "approveDocument",
+        "tags": [
+          "Workflow"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

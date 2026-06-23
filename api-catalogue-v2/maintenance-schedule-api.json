@@ -1,0 +1,50 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Maintenance Schedule API",
+    "version": "1.0.0",
+    "x-api-id": "maintenance-schedule-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Planification de la maintenance préventive des véhicules. Permet de consulter et planifier les entretiens selon le kilométrage ou le temps écoulé, de voir les maintenances à venir et de recevoir des alertes avant échéance. Utilisé par les gestionnaires de flotte et garages pour anticiper les entretiens et éviter les pannes.",
+    "x-synonymes": "maintenance préventive véhicule, entretien planifié, révision véhicule, planning entretien, kilométrage révision, contrôle technique, vidange planifiée, maintenance flotte, alerte révision, prochaine maintenance, entretien périodique, service véhicule, calendrier maintenance, échéance révision, preventive maintenance, planning garage, entretien préventif, maintenance programmée, suivi entretien, révision courroie distribution",
+    "x-false-positive-warning": "DIFFÉRENCE vs maintenance-request-api : Maintenance Schedule API = maintenance préventive planifiée vehicules. maintenance-request-api = demandes correctives locataires immobilier. DIFFÉRENCE vs maintenance-work-order-api : Maintenance Schedule API = planning des entretiens à venir. maintenance-work-order-api = ordres de travail maintenance industrielle en cours. DIFFÉRENCE vs fleet-api-v4 : Maintenance Schedule API = planning des entretiens des véhicules. fleet-api-v4 = gestion opérationnelle de la flotte missions et conducteurs.",
+    "x-cas-usage": "je veux voir quelles révisions sont prévues pour nos véhicules ce mois-ci | je veux ajouter une vidange planifiée à 150 000 km pour un véhicule | je veux voir les maintenances à venir dans les 30 prochains jours pour toute notre flotte | je veux recevoir une alerte 15 jours avant chaque échéance de révision | je veux consulter le planning d entretien complet d un véhicule"
+  },
+  "paths": {
+    "/v1/schedule/{vehicleId}": {
+      "parameters": [{"name": "vehicleId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Planning de maintenance d un véhicule — entretiens passés et futurs",
+        "operationId": "getMaintenanceSchedule",
+        "tags": ["Schedule"],
+        "responses": {"200": {"description": "Planning maintenance véhicule"}}
+      },
+      "post": {
+        "summary": "Ajouter une tâche de maintenance préventive — kilométrage ou date limite",
+        "operationId": "addMaintenanceTask",
+        "tags": ["Schedule"],
+        "responses": {"200": {"description": "Tâche maintenance ajoutée"}}
+      }
+    },
+    "/v1/schedule/{vehicleId}/upcoming": {
+      "parameters": [{"name": "vehicleId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Maintenances à venir pour un véhicule — révisions et entretiens prochains",
+        "operationId": "getUpcomingMaintenance",
+        "tags": ["Upcoming"],
+        "responses": {"200": {"description": "Maintenances à venir"}}
+      }
+    },
+    "/v1/schedule/alerts": {
+      "get": {
+        "summary": "Alertes maintenance imminentes — véhicules approchant une échéance d entretien",
+        "operationId": "getMaintenanceAlerts",
+        "tags": ["Alerts"],
+        "responses": {"200": {"description": "Alertes maintenance"}}
+      }
+    }
+  }
+}

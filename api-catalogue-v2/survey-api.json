@@ -1,0 +1,244 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Survey API",
+    "version": "1.0.0",
+    "x-api-id": "survey-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Support",
+    "x-domain": "Customer Support",
+    "description": "Enquêtes de satisfaction client. Moteur d'envoi et d'analyse de questionnaires standardisés (Net Promoter Score, Customer Satisfaction Score) permettant de mesurer la voix du client. DIFFÉRENCE vs review-api : Survey API crée des questionnaires structurés poussés par la marque pour mesurer des indicateurs (NPS/CSAT), alors que review-api héberge les avis textuels et notes produits spontanément laissés en ligne par les internautes.",
+    "x-synonymes": "enquête, satisfaction, nps, csat, questionnaire, sondage, avis, client, feedback, formulaire, vote, support, statistiques, recommandation, promoteur, expérience client, évaluation, réponse",
+    "x-false-positive-warning": "Pour intégrer les témoignages et évaluations d'étoiles affichés publiquement sur vos fiches produits e-commerce, utilisez review-api.",
+    "x-cas-usage": "je veux concevoir un nouveau modèle d'enquête de satisfaction csat | je veux envoyer une campagne de sondage nps par mail à une cohorte de clients | je veux soumettre les notes fournies par un consommateur | je veux extraire le score nps global de l'entreprise"
+  },
+  "paths": {
+    "/v1/surveys": {
+      "post": {
+        "summary": "Créer un nouveau formulaire d'enquête (NPS, CSAT ou sur-mesure) avec sa structure de questions",
+        "operationId": "createSurvey",
+        "tags": [
+          "Surveys"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "type"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "nps",
+                      "csat",
+                      "custom"
+                    ]
+                  },
+                  "questions": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "text": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "rating",
+                            "text",
+                            "multiple_choice"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créée"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/surveys/{id}/send": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Diffuser et distribuer l'enquête de satisfaction par e-mail ou SMS à un panel de clients ciblés",
+        "operationId": "sendSurvey",
+        "tags": [
+          "Surveys"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "customer_ids"
+                ],
+                "properties": {
+                  "customer_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "channel": {
+                    "type": "string",
+                    "enum": [
+                      "email",
+                      "sms"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Envoyée"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/surveys/{id}/respond": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Enregistrer et archiver les réponses individuelles et notes soumises par un utilisateur",
+        "operationId": "respondSurvey",
+        "tags": [
+          "Surveys"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "customer_id",
+                  "answers"
+                ],
+                "properties": {
+                  "customer_id": {
+                    "type": "string"
+                  },
+                  "answers": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "question_id": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Réponse enregistrée"
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/surveys/{id}/results": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Extraire les statistiques consolidées, verbatims et taux de complétion d'une campagne d'enquête",
+        "operationId": "getSurveyResults",
+        "tags": [
+          "Surveys"
+        ],
+        "responses": {
+          "200": {
+            "description": "Résultats"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/surveys/nps": {
+      "get": {
+        "summary": "Calculer l'indice de recommandation Net Promoter Score (NPS) global et consolidé au niveau de l'entreprise",
+        "operationId": "getNPS",
+        "tags": [
+          "Surveys"
+        ],
+        "responses": {
+          "200": {
+            "description": "NPS"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

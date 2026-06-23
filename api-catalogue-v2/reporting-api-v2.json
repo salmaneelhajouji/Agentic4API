@@ -1,0 +1,45 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Reporting API",
+    "version": "2.0.0",
+    "x-api-id": "reporting-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "Version 2 — Rapports interactifs HTML, white-labeling et collaboration. Ajoute le format HTML interactif, la personnalisation logo et couleurs pour les clients, les commentaires collaboratifs sur rapports et le partage par lien externe. DIFFÉRENCE vs reporting-api (v1) : v2 = HTML interactif, white-labeling et commentaires. v1 = PDF/Excel/CSV uniquement.",
+    "x-breaking-changes-from-previous": ["Format HTML interactif ajouté", "White-labeling logo et couleurs", "Commentaires collaboratifs", "Rapports récurrents avec diff depuis dernier"],
+    "x-synonymes": "rapport HTML interactif, white-label rapport, rapport personnalisé logo, rapport client branded, commentaire rapport collaboratif, partage rapport lien, rapport marque blanche, rapport personnalisé couleurs, rapport différentiel, rapport partageable, lien rapport externe, rapport co-édition, rapport commenté, rapport couleurs personnalisées, tableau de bord branded, rapport client final, rapport personnalisé entreprise, rapport format HTML, rapport interactif embedded, rapport partagé",
+    "x-false-positive-warning": "Rapports PDF/Excel/CSV simples sans white-labeling → reporting-api (v1). Rapport contextuel entité unique → report-api. Métriques temps réel → analytics-api-v3.",
+    "x-cas-usage": "je veux générer un rapport HTML interactif avec le logo de mon client | je veux partager un rapport par lien externe avec un client | je veux ajouter un commentaire sur un rapport pour expliquer une anomalie | je veux personnaliser les couleurs d un rapport aux couleurs de notre marque | je veux générer des rapports en marque blanche pour nos clients"
+  },
+  "paths": {
+    "/v2/reports/generate": {
+      "post": {
+        "summary": "Générer un rapport avec white-labeling — HTML interactif, PDF ou Excel avec logo",
+        "operationId": "generateReportV2",
+        "tags": ["Reports"],
+        "responses": {"202": {"description": "Génération lancée"}}
+      }
+    },
+    "/v2/reports/{id}/comments": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Ajouter un commentaire collaboratif sur un rapport",
+        "operationId": "addReportComment",
+        "tags": ["Reports"],
+        "responses": {"201": {"description": "Commentaire ajouté"}}
+      }
+    },
+    "/v2/reports/{id}/share": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Partager un rapport par lien externe — accessible sans authentification",
+        "operationId": "shareReport",
+        "tags": ["Reports"],
+        "responses": {"200": {"description": "Lien de partage généré"}}
+      }
+    }
+  }
+}

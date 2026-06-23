@@ -1,0 +1,39 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tenant API",
+    "version": "1.0.0",
+    "x-api-id": "tenant-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Locataires v1. DEPRECATED. Remplacé par tenant-api-v2.",
+    "x-successor": "tenant-api-v2",
+    "x-synonymes": "locataire, immobilier, logement, bail, location, v1, obsolète, deprecated, gestion locative",
+    "x-false-positive-warning": "API obsolète. Utiliser tenant-api-v2 pour accéder au système de scoring de solvabilité et à la gestion des garants.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers tenant-api-v2."
+  },
+  "paths": {
+    "/v1/tenants": {
+      "get": {
+        "summary": "DEPRECATED - Lister les dossiers locataires (Ancienne version, migrer vers la v2)",
+        "operationId": "listTenantsV1",
+        "tags": [
+          "Tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

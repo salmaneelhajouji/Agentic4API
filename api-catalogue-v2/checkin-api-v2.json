@@ -1,0 +1,51 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Check-in API",
+    "version": "2.0.0",
+    "x-api-id": "checkin-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "API de check-in et check-out hôteliers dématérialisés couvrant l'ensemble du parcours d'arrivée et de départ d'un client. Permet l'enregistrement mobile avant l'arrivée, la génération d'une clé digitale smartphone pour ouvrir la chambre sans passer à la réception, et la récupération automatique des documents de séjour. Destinée aux développeurs d'applications hôtelières, aux Property Management Systems (PMS) et aux plateformes de gestion de résidences et appart-hôtels souhaitant offrir une expérience sans contact et réduire les files d'attente à la réception. DIFFÉRENCE vs patient-admission-api : Checkin = accueil hôtel touristique. patient-admission-api = admission hospitalière médicale. DIFFÉRENCE vs flight-checkin-api : Checkin = enregistrement hôtelier avec clé de chambre. flight-checkin-api = enregistrement vol aérien avec carte d'embarquement. DIFFÉRENCE vs room-booking-api-v3 : checkin-api-v2 gère l'arrivée/départ physique du client. room-booking-api-v3 gère la réservation de chambre en amont.",
+    "x-breaking-changes-from-previous": ["Check-in mobile", "Clé digitale smartphone", "Documents automatiques"],
+    "x-synonymes": "check-in hôtel, check-in mobile, enregistrement hôtel, arrivée hôtel, clé digitale chambre, clé smartphone hôtel, check-in sans contact, check-in en ligne, départ hôtel check-out, réservation check-in, pré-enregistrement hôtel, keyless entry hôtel, self check-in, accueil dématérialisé, documents séjour, facture hôtel automatique, NFC clé chambre, QR code chambre, mobile key hôtel, check-in rapide",
+    "x-false-positive-warning": "Admission hospitalière médicale → patient-admission-api (processus médical avec dossier patient, pas d'accueil hôtelier). Réservation de chambre en amont du séjour → room-booking-api-v3 (création et gestion de la réservation, pas l'enregistrement à l'arrivée). Enregistrement vol aérien avec carte d'embarquement → flight-checkin-api (domaine aérien, bagages, siège avion). Gestion des accès bâtiment en entreprise → access-control-api (contrôle d'accès professionnel, pas séjour hôtelier).",
+    "x-cas-usage": "Comment permettre aux clients de faire leur check-in sur mobile avant d'arriver à l'hôtel ? | Comment générer une clé digitale pour ouvrir la chambre avec le smartphone sans passer à la réception ? | Comment récupérer le statut de check-in d'une réservation spécifique ? | Comment automatiser l'envoi des documents de séjour et de la facture lors du check-out ? | Comment offrir un parcours d'arrivée sans contact et sans file d'attente à la réception ?"
+  },
+  "paths": {
+    "/v2/checkin": {
+      "post": {
+        "summary": "Effectuer un check-in ou check-out hôtelier via mobile ou à la réception avec enregistrement complet du client",
+        "operationId": "checkoutV2",
+        "tags": ["Checkin"],
+        "responses": {
+          "200": {"description": "Check-in ou check-out effectué"}
+        }
+      }
+    },
+    "/v2/checkin/{bookingId}": {
+      "parameters": [{"name": "bookingId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter le statut du check-in d'une réservation donnée — en attente, enregistré ou check-out effectué",
+        "operationId": "getCheckinStatus",
+        "tags": ["Checkin"],
+        "responses": {
+          "200": {"description": "Statut check-in"},
+          "404": {"description": "Réservation non trouvée"}
+        }
+      },
+      "post": {
+        "summary": "Générer une clé digitale smartphone via NFC ou QR code pour ouvrir la chambre sans contact ni clé physique",
+        "operationId": "digitalKey",
+        "tags": ["Checkin"],
+        "responses": {
+          "200": {"description": "Clé digitale générée"},
+          "404": {"description": "Réservation non trouvée"},
+          "422": {"description": "Données invalides ou check-in non encore effectué"}
+        }
+      }
+    }
+  }
+}

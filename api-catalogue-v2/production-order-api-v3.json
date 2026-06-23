@@ -1,0 +1,178 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Production Order API",
+    "version": "3.0.0",
+    "x-api-id": "production-order-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "x-breaking-changes-from-previous": [
+      "Tracing temps reel",
+      "Nomenclatures",
+      "Declenchement automatique"
+    ],
+    "description": "Cette API (Version 3) pilote l'exécution opérationnelle de l'outil industriel à travers la gestion des Ordres de Fabrication (OF). Destinée aux systèmes d'exécution de la production (MES), aux directeurs d'usines et aux opérateurs de lignes, elle permet de superviser le déroulement des gammes opératoires, de contrôler la conformité des nomenclatures de matières et de tracer en temps réel la consommation des composants et intrants de production.",
+    "x-synonymes": "Ordre de Fabrication, OF industriel, Gamme de fabrication, Nomenclature matières, Suivi de production, Consommation composants, Ligne de production, Poste de travail industriel, Clôture d'ordre, Suivi d'exécution usine, Bon de travail, Traçabilité des lots, Ordre de lancement, Composants consommés, Rapport d'opération, Bilan de fabrication",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement de la fabrication physique et industrielle au sein des usines (Ordres de Fabrication). Pour le traitement des commandes commerciales de vente passées par les clients finaux, utilisez impérativement l'Order Management API.",
+    "x-cas-usage": "Comment faire pour lancer l'exécution d'un nouvel ordre de fabrication (OF) sur une ligne de montage spécifique ? | Comment faire pour déclarer en temps réel la quantité de matières premières consommée lors d'une phase de production ? | Comment faire pour valider et clôturer techniquement un ordre de fabrication terminé afin de libérer la capacité de la machine ?"
+  },
+  "paths": {
+    "/v3/orders": {
+      "get": {
+        "summary": "Lister et filtrer les ordres de fabrication actifs, planifiés ou clôturés sur l'ensemble des sites industriels",
+        "operationId": "listOrdersV3",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et injecter un nouvel Ordre de Fabrication (OF) dans le plan de charge de l'atelier",
+        "operationId": "createOrderV3",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/orders/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état détaillé d'un ordre de fabrication, son taux d'avancement et ses indicateurs de conformité",
+        "operationId": "getOrderV3",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier les priorités, les volumes cibles ou les dates planifiées d'un ordre de fabrication en attente",
+        "operationId": "updateOrderV3",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Prononcer la clôture technique et comptable d'un ordre de fabrication après validation des quantités produites",
+        "operationId": "closeOrder",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/orders/{id}/operations": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la gamme opératoire séquentielle et l'état des différentes phases de traitement de l'ordre",
+        "operationId": "getOperationsV3",
+        "tags": [
+          "Operations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter ou intercaler une opération technique ou un point de contrôle qualité au sein de la gamme active",
+        "operationId": "addOperation",
+        "tags": [
+          "Operations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/orders/{id}/materials": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la nomenclature des matières premières et des composants requis pour la réalisation de l'ordre",
+        "operationId": "getMaterials",
+        "tags": [
+          "Materials"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer la consommation réelle de composants ou d'ingrédients issus des stocks pour cet ordre de fabrication",
+        "operationId": "consumeMaterial",
+        "tags": [
+          "Materials"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

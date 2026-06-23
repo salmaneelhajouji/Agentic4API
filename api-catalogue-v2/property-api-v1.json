@@ -1,0 +1,42 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Property API",
+    "version": "1.0.0",
+    "x-api-id": "property-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "x-successor": "property-api-v3",
+    "description": "Cette API (Version 1 - Obsolète) permet d'accéder au catalogue historique des biens immobiliers de l'entreprise. Ce service est maintenu exclusivement pour assurer la continuité des applications legacy en cours de dépréciation. Son rôle se limite à l'interrogation de base du parc d'actifs immobiliers sans support des fonctionnalités enrichies modernes.",
+    "x-synonymes": "Bien immobilier, Annonce immobilière, Patrimoine immobilier, Logement, Appartement, Maison, Fonds de commerce, Propriété, Local commercial, Référentiel immobilier, Mandat de vente, Fiche bien, Actif immobilier, Parc immobilier, Gestion des biens, Fiche descriptive",
+    "x-false-positive-warning": "Attention : Cette version est dépréciée. Pour toute nouvelle intégration ou pour accéder aux diagnostics réglementaires (DPE), aux photos 3D et aux services d'estimation par IA, vous devez obligatoirement utiliser la Property API v3. Pour la gestion des baux et des contrats de location, utilisez la Lease API.",
+    "x-cas-usage": "Comment faire pour lister les biens immobiliers via l'ancienne structure de données v1 pour maintenir la compatibilité d'une application existante ?"
+  },
+  "paths": {
+    "/v1/properties": {
+      "get": {
+        "summary": "Lister l'ensemble du parc de biens immobiliers via le format de données historique v1 (déprécié)",
+        "operationId": "listPropertiesV1",
+        "tags": [
+          "Properties"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

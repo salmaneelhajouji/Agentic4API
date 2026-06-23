@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Calendar API",
+    "version": "1.0.0",
+    "x-api-id": "calendar-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Operations",
+    "description": "Gestion des calendriers et disponibilités internes des ressources de l'organisation — conseillers, techniciens, salles de réunion et équipements partagés. Couvre les processus de consultation des plannings, la recherche de créneaux libres sur une période donnée, l'ajout d'événements (rendez-vous, congés, réunions, blocages) et la synchronisation des agendas entre systèmes. Utilisé principalement par les systèmes de prise de rendez-vous, les outils de planification d'interventions terrain et les portails RH pour vérifier et bloquer les disponibilités en temps réel. Utilisateurs typiques : équipes opérationnelles, planificateurs d'interventions, développeurs d'applications de prise de RDV et systèmes de dispatch. DIFFÉRENCE vs appointment-api : Calendar = gestion des disponibilités et plannings côté équipes internes. appointment-api = réservation d'un créneau côté client. DIFFÉRENCE vs campus-api : Calendar = plannings de ressources internes génériques. campus-api = calendriers d'événements académiques et salles de cours.",
+    "x-synonymes": "calendrier interne, planning conseiller, disponibilités technicien, créneau disponible, agenda ressource, salle réunion calendrier, planning équipe, blocage créneau, congé calendrier, événement planning, disponibilité ressource, slot libre, planning journée, agenda employé, réservation salle, calendrier partagé, planning intervention, indisponibilité ressource, planning tournée, calendrier opérationnel",
+    "x-false-positive-warning": "Réservation côté client (prise de RDV par un client final) → appointment-api, qui gère le cycle complet du rendez-vous côté customer-facing. Créneau livraison colis ou tournées logistiques → delivery-api. Synchronisation avec Google Calendar ou Outlook personnel → calendar-integration-api. Événements campus, salles de cours et calendriers académiques → campus-api. Plannings de congés et absences RH → peut aussi relever de benefits-api ou attendance-api selon le contexte.",
+    "x-cas-usage": "Comment vérifier les créneaux disponibles d'un conseiller avant de proposer un rendez-vous à un client ? | Comment bloquer un créneau dans le planning d'un technicien pour une intervention planifiée ? | Comment récupérer le planning complet d'une salle de réunion sur une semaine donnée ? | Comment ajouter un congé ou une indisponibilité dans l'agenda d'un employé ? | Comment synchroniser les disponibilités des conseillers avec le système de prise de rendez-vous en ligne ?"
+  },
+  "paths": {
+    "/v1/calendars/{resourceId}": {
+      "parameters": [
+        {
+          "name": "resourceId",
+          "in": "path",
+          "required": true,
+          "schema": {"type": "string"},
+          "description": "ID d'un employé ou d'une salle"
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le calendrier complet d'une ressource interne avec tous ses événements planifiés sur la période",
+        "operationId": "getCalendar",
+        "tags": ["Calendar"],
+        "responses": {
+          "200": {"description": "Calendrier de la ressource"}
+        }
+      }
+    },
+    "/v1/calendars/{resourceId}/availability": {
+      "parameters": [
+        {
+          "name": "resourceId",
+          "in": "path",
+          "required": true,
+          "schema": {"type": "string"}
+        }
+      ],
+      "get": {
+        "summary": "Consulter les créneaux disponibles d'une ressource sur une période donnée pour faciliter la prise de rendez-vous",
+        "operationId": "getAvailability",
+        "tags": ["Calendar"],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string", "format": "date"}
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string", "format": "date"}
+          }
+        ],
+        "responses": {
+          "200": {"description": "Créneaux disponibles"}
+        }
+      }
+    },
+    "/v1/calendars/{resourceId}/events": {
+      "parameters": [
+        {
+          "name": "resourceId",
+          "in": "path",
+          "required": true,
+          "schema": {"type": "string"}
+        }
+      ],
+      "post": {
+        "summary": "Ajouter un événement au calendrier d'une ressource — rendez-vous, réunion, congé ou blocage de créneau avec titre et plage horaire",
+        "operationId": "createCalendarEvent",
+        "tags": ["Calendar"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["title", "start", "end"],
+                "properties": {
+                  "title": {"type": "string"},
+                  "start": {"type": "string", "format": "date-time"},
+                  "end": {"type": "string", "format": "date-time"},
+                  "all_day": {"type": "boolean", "default": false},
+                  "type": {"type": "string", "enum": ["appointment", "meeting", "leave", "blocked"]}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {"description": "Événement créé"}
+        }
+      }
+    }
+  }
+}

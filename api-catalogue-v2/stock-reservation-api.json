@@ -1,0 +1,103 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Stock Reservation API",
+    "version": "1.0.0",
+    "x-api-id": "stock-reservation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Logistique",
+    "x-domain": "Supply Chain",
+    "description": "Réservation temporaire de stock pendant le processus de checkout e-commerce pour éviter les surventes. Crée un verrou temporaire (TTL configurable, défaut 15 min) sur les articles d'un panier, libère automatiquement si la commande n'est pas confirmée, et déduit définitivement le stock à la confirmation de commande. DIFFÉRENCE vs inventory-api : Stock Reservation gère le verrouillage temporaire pendant la session panier (anti-surcharge), Inventory gère les stocks globaux, les mouvements et l'historique. DIFFÉRENCE vs warehouse-api : Stock Reservation est côté commande client, Warehouse gère la gestion physique des entrepôts.",
+    "x-synonymes": "réservation stock, verrouillage stock, anti-survente, checkout stock, TTL stock, panier stock, stock temporaire, hold stock, confirmer réservation, libérer stock, disponibilité checkout, stock e-commerce, commande stock, réservation temporaire, overselling",
+    "x-false-positive-warning": "Stocks globaux et mouvements → inventory-api. Gestion physique entrepôts → warehouse-api. Gestion des commandes → order-api.",
+    "x-cas-usage": "je veux réserver du stock pour les articles d'un panier pendant 15 minutes | je veux confirmer la réservation de stock après validation du paiement | je veux libérer manuellement une réservation si le client abandonne son panier | je veux vérifier si une réservation de stock est toujours active | je veux éviter les surventes en verrouillant le stock au moment du checkout"
+  },
+  "paths": {
+    "/v1/stock/reserve": {
+      "post": {
+        "summary": "Créer une réservation temporaire de stock pour une liste d'articles (TTL 15 min par défaut, libération automatique à expiration)",
+        "operationId": "reserveStock",
+        "tags": ["Reservations"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/StockReservationCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Stock réservé" },
+          "409": { "description": "Stock insuffisant" }
+        },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/stock/reservations/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le statut d'une réservation de stock (active, expirée, confirmée) et le TTL restant",
+        "operationId": "getReservation",
+        "tags": ["Reservations"],
+        "responses": { "200": { "description": "Réservation" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Libérer manuellement une réservation de stock avant expiration du TTL",
+        "operationId": "releaseReservation",
+        "tags": ["Reservations"],
+        "responses": { "204": { "description": "Réservation libérée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/stock/confirm/{reservationId}": {
+      "parameters": [
+        { "name": "reservationId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "post": {
+        "summary": "Confirmer une réservation de stock après paiement validé — déduit définitivement du stock disponible",
+        "operationId": "confirmReservation",
+        "tags": ["Reservations"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["order_id"],
+                "properties": { "order_id": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Confirmée — stock déduit" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "StockReservationCreate": {
+        "type": "object",
+        "required": ["items", "session_id"],
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["product_id", "quantity"],
+              "properties": {
+                "product_id": { "type": "string" },
+                "quantity": { "type": "integer", "minimum": 1 }
+              }
+            }
+          },
+          "session_id": { "type": "string" },
+          "ttl_minutes": { "type": "integer", "default": 15, "description": "Durée de réservation avant libération automatique" }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,268 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Promotion API",
+    "version": "1.0.0",
+    "x-api-id": "promotion-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Marketing",
+    "x-domain": "E-Commerce",
+    "description": "Cette API constitue le moteur centralisé de gestion des promotions et des démarques commerciales automatiques. Elle s'applique de manière transparente au catalogue ou au panier d'achat sans saisie de code par l'utilisateur (ex: soldes, ventes privées, gratuité des frais de port). Elle est exploitée par les équipes Marketing pour planifier l'animation commerciale et par la plateforme e-commerce pour dynamiser le parcours de vente selon des critères produits ou des segments clients spécifiques.",
+    "x-synonymes": "Promotion commerciale, Remise automatique, Rabais catalogue, Règle de prix, Campagne promotionnelle, Réduction panier, Offre marketing, Avantage client, Geste commercial automatique, Promotion produit, Remise sur segment, Seuil de gratuité, Frais de port offerts, Mécanique promotionnelle, Avantage tarifaire, Plan d'animation commerciale",
+    "x-false-positive-warning": "Attention : Cette API gère exclusivement les remises automatiques déclenchées par des règles système. Pour les codes promotionnels saisis manuellement par l'utilisateur lors du checkout, utilisez obligatoirement la Discount API. Pour le calcul final des prix, l'application des taxes et la facturation, utilisez la Pricing API.",
+    "x-cas-usage": "Comment faire pour créer une campagne de réduction de 20% s'appliquant automatiquement sur une catégorie spécifique de produits ? | Comment faire pour accorder les frais de port gratuits dès qu'un panier atteint un montant minimum d'achat ? | Comment faire pour évaluer et lister toutes les promotions actives applicables à un panier client donné lors de sa navigation ?"
+  },
+  "paths": {
+    "/v1/promotions": {
+      "post": {
+        "summary": "Créer et configurer une nouvelle règle de promotion automatique avec ses critères d'éligibilité et ses canaux cibles",
+        "operationId": "createPromotion",
+        "tags": [
+          "Promotions"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PromotionCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créée"
+          }
+        }
+      },
+      "get": {
+        "summary": "Lister et filtrer les campagnes promotionnelles selon leur état de cycle de vie (brouillon, active, expirée, suspendue)",
+        "operationId": "listPromotions",
+        "tags": [
+          "Promotions"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "active",
+                "expired",
+                "paused"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Promotions"
+          }
+        }
+      }
+    },
+    "/v1/promotions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la configuration complète, la valeur faciale et les critères de ciblage d'une promotion spécifique",
+        "operationId": "getPromotion",
+        "tags": [
+          "Promotions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier les modalités d'application, les seuils financiers ou les conditions de validité d'une promotion existante",
+        "operationId": "updatePromotion",
+        "tags": [
+          "Promotions"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Modifiée"
+          }
+        }
+      }
+    },
+    "/v1/promotions/{id}/activate": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Activer immédiatement ou planifier l'entrée en vigueur d'une campagne promotionnelle sur le catalogue en ligne",
+        "operationId": "activatePromotion",
+        "tags": [
+          "Promotions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Activée"
+          }
+        }
+      }
+    },
+    "/v1/promotions/{id}/deactivate": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Désactiver ou suspendre prématurément une offre promotionnelle en cours pour l'exclure des calculs de paniers",
+        "operationId": "deactivatePromotion",
+        "tags": [
+          "Promotions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Désactivée"
+          }
+        }
+      }
+    },
+    "/v1/promotions/eligible": {
+      "post": {
+        "summary": "Calculer et restituer la liste des remises automatiques éligibles et applicables pour un panier et un segment client donnés",
+        "operationId": "getEligiblePromotions",
+        "tags": [
+          "Promotions"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "cart_id",
+                  "customer_id"
+                ],
+                "properties": {
+                  "cart_id": {
+                    "type": "string"
+                  },
+                  "customer_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Promotions éligibles"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PromotionCreate": {
+        "type": "object",
+        "required": [
+          "name",
+          "type",
+          "value"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "percent",
+              "fixed",
+              "buy_x_get_y",
+              "free_shipping"
+            ]
+          },
+          "value": {
+            "type": "number"
+          },
+          "applies_to": {
+            "type": "object",
+            "properties": {
+              "categories": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "products": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "segments": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "min_order_amount": {
+            "type": "number"
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Clé API Kong Gateway — contacter votre équipe platform"
+      }
+    }
+  }
+}

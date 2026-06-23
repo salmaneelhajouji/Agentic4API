@@ -1,0 +1,146 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Curriculum API",
+    "version": "1.0.0",
+    "x-api-id": "curriculum-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Cette API est le référentiel central de l'architecture de formation. Elle gère la structure globale des programmes d'études, des diplômes et des cursus (curricula), faisant le lien entre les maquettes pédagogiques et les référentiels de compétences (blocs de compétences requis). Elle est principalement intégrée par les outils de gestion de la vie scolaire, les ERP académiques et les directions de l'ingénierie pédagogique pour modéliser les parcours d'apprentissage avant leur mise en œuvre opérationnelle.",
+    "x-synonymes": "programme d'études, curriculum, maquette pédagogique, référentiel de compétences, parcours académique, plan de formation, offre de formation, bloc de compétences, structure de diplôme, cursus universitaire, architecture de formation, ingénierie pédagogique, exigences de diplôme, cheminement d'apprentissage, tronc commun, filière d'études",
+    "x-false-positive-warning": "Attention : Cette API gère la structure macro et réglementaire de la formation (diplômes, compétences requises, maquettes). Ne pas la confondre avec la `course-api` (qui gère le contenu vivant d'un cours spécifique : vidéos, modules, quiz), ni avec l'API d'Inscription / Enrolment (dédiée à l'affectation des étudiants dans les classes).",
+    "x-cas-usage": "Quelles sont les compétences cibles et les blocs requis pour valider le diplôme de Licence Informatique ? | Comment modéliser et créer la maquette pédagogique du nouveau Master Data Science ? | Où trouver la liste complète des parcours et options disponibles pour la filière Ingénieur ? | Comment ajouter un nouveau bloc de compétences transversales à un cursus existant ? | De quelles unités d'enseignement (UE) structurelles est composé ce tronc commun ?"
+  },
+  "paths": {
+    "/v1/curricula": {
+      "get": {
+        "summary": "Lister l'ensemble des programmes d'études, cursus académiques et maquettes pédagogiques référencés",
+        "operationId": "listCurricula",
+        "tags": [
+          "Curricula"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer un nouveau programme d'études ou une nouvelle architecture de diplôme dans le référentiel de formation",
+        "operationId": "createCurriculum",
+        "tags": [
+          "Curricula"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/curricula/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'architecture détaillée, les objectifs globaux et les métadonnées d'un programme d'études spécifique",
+        "operationId": "getCurriculum",
+        "tags": [
+          "Curricula"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Modifier la configuration générale, l'intitulé ou les paramètres structurels d'une maquette pédagogique",
+        "operationId": "updateCurriculum",
+        "tags": [
+          "Curricula"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/curricula/{id}/competencies": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le référentiel complet et les blocs de compétences rattachés et indispensables à la validation du cursus",
+        "operationId": "getCompetencies",
+        "tags": [
+          "Competencies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Associer ou ajouter une nouvelle exigence de compétence (ou un sous-bloc) à la structure d'un programme existant",
+        "operationId": "addCompetency",
+        "tags": [
+          "Competencies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

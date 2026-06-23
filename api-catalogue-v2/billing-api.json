@@ -1,0 +1,97 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Billing API",
+    "version": "1.0.0",
+    "x-api-id": "billing-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "API de facturation récurrente couvrant les cycles d'abonnement mensuel, trimestriel et annuel ainsi que les prélèvements automatiques SEPA ou carte. Gère l'ensemble du processus de billing : création d'abonnements avec période d'essai, suivi des échéances, relances automatiques (dunning) en cas d'impayé et résiliation en fin de période. Destinée aux équipes produit et finance des plateformes SaaS, services en ligne et toute offre à revenus récurrents. DIFFÉRENCE vs payment-api : Billing orchestre des paiements récurrents dans le temps, Payment traite une transaction ponctuelle. DIFFÉRENCE vs invoice-api : Billing déclenche les cycles, Invoice génère les PDFs. DIFFÉRENCE vs subscription-api : Billing gère le paiement, Subscription gère les droits d'accès.",
+    "x-synonymes": "facturation récurrente, abonnement récurrent, prélèvement automatique, SEPA récurrent, relance impayé, résiliation abonnement, cycle de facturation, billing mensuel, billing annuel, renouvellement automatique, échéance paiement, facture récurrente, plan tarifaire, période d'essai, churn résiliation, recouvrement impayé, facturation SaaS, abonnement carte, dunning impayé, période de facturation",
+    "x-false-positive-warning": "Transaction unique ponctuelle → payment-api (Billing gère des cycles récurrents, pas des paiements one-shot). Facture PDF légale ou comptable → invoice-api (Billing déclenche les cycles mais ne génère pas les documents). Droits d'accès, fonctionnalités et niveaux de service → subscription-api (Billing s'occupe du volet financier, pas des entitlements). Facturation à l'usage (metered billing) ou intégration ERP → billing-api-v2 ou billing-api-v3.",
+    "x-cas-usage": "Comment mettre en place un prélèvement mensuel automatique pour mes abonnés ? | Comment relancer automatiquement un paiement refusé ou impayé ? | Comment résilier un abonnement en fin de période sans couper l'accès immédiatement ? | Comment récupérer l'historique des factures récurrentes d'un client ? | Comment créer un abonnement avec une période d'essai gratuite de 14 jours ?"
+  },
+  "paths": {
+    "/v1/billing/subscriptions": {
+      "post": {
+        "summary": "Créer un abonnement récurrent avec cycle mensuel, trimestriel ou annuel, prélèvement SEPA ou carte et période d'essai optionnelle",
+        "operationId": "createBillingSubscription",
+        "tags": ["Subscriptions"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["customer_id", "plan_id", "payment_method"],
+                "properties": {
+                  "customer_id": {"type": "string"},
+                  "plan_id": {"type": "string", "example": "PLAN-PRO-MONTHLY"},
+                  "payment_method": {"type": "string", "enum": ["card", "sepa"]},
+                  "card_token": {"type": "string"},
+                  "trial_days": {"type": "integer", "default": 0},
+                  "billing_cycle": {"type": "string", "enum": ["monthly", "quarterly", "annually"], "default": "monthly"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Abonnement créé"}}
+      }
+    },
+    "/v1/billing/subscriptions/{customerId}": {
+      "parameters": [{"name": "customerId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter tous les abonnements actifs d'un client avec leur statut, plan souscrit et date de prochaine échéance de prélèvement",
+        "operationId": "getBillingSubscriptions",
+        "tags": ["Subscriptions"],
+        "responses": {"200": {"description": "Abonnements du client"}}
+      }
+    },
+    "/v1/billing/subscriptions/{id}/cancel": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Résilier un abonnement immédiatement ou en fin de période payée en conservant l'accès jusqu'à l'échéance",
+        "operationId": "cancelBillingSubscription",
+        "tags": ["Subscriptions"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "end_of_period": {"type": "boolean", "default": true},
+                  "reason": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Abonnement résilié"}}
+      }
+    },
+    "/v1/billing/invoices/{customerId}": {
+      "parameters": [{"name": "customerId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer l'historique complet des factures récurrentes d'un client avec statut payé, impayé ou en attente de prélèvement",
+        "operationId": "getBillingInvoices",
+        "tags": ["Invoices"],
+        "responses": {"200": {"description": "Historique factures"}}
+      }
+    },
+    "/v1/billing/retry/{invoiceId}": {
+      "parameters": [{"name": "invoiceId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Relancer manuellement une nouvelle tentative de prélèvement sur une facture impayée après un échec de paiement",
+        "operationId": "retryBillingPayment",
+        "tags": ["Invoices"],
+        "responses": {
+          "200": {"description": "Relance initiée"},
+          "402": {"description": "Paiement refusé à nouveau"}
+        }
+      }
+    }
+  }
+}

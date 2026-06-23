@@ -1,0 +1,130 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Firmware API",
+    "version": "1.0.0",
+    "x-api-id": "firmware-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Cette API pilote la distribution et le déploiement automatisé à distance (Over-The-Air - OTA) des micrologiciels (firmwares) de la flotte d'objets connectés (IoT). Elle permet de publier de nouvelles releases, d'organiser des campagnes de déploiement progressif (canary rollouts) pour minimiser l'impact opérationnel, de suivre en temps réel le statut d'application des correctifs par appareil, et d'exécuter des procédures de restauration rapide (rollback) en cas d'échec sur le terrain.",
+    "x-synonymes": "mise à jour firmware, micrologiciel IoT, déploiement over-the-air, mise à jour OTA, canary rollout logiciel, release de firmware, restauration firmware, rollback logiciel, flotte d'objets connectés, correctif matériel, campagne de mise à jour, version de micrologiciel",
+    "x-false-positive-warning": "Attention : Cette API administre uniquement les paquets logiciels, les déploiements de patches et le versionnement du code embarqué (Firmware). Ne pas la confondre avec la `device-registry-api` (qui gère l'inventaire physique des machines, les profils d'appairage et le cycle de vie matériel des capteurs).",
+    "x-cas-usage": "Comment publier et pousser une nouvelle release de micrologiciel pour corriger une anomalie sur nos automates ? | Comment lancer une campagne de mise à jour OTA progressive ciblant initialement 5% du parc d'objets ? | Où consulter l'état d'application et le statut d'avancement d'un déploiement logiciel connecté ? | Quelle méthode appeler pour interrompre une campagne défaillante et forcer un rollback immédiat du firmware ?"
+  },
+  "paths": {
+    "/v1/firmware/releases": {
+      "get": {
+        "summary": "Lister l'ensemble des versions (releases) de micrologiciels enregistrées et prêtes au déploiement",
+        "operationId": "listReleases",
+        "tags": [
+          "Releases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et publier une nouvelle version officielle de firmware en téléversant son empreinte ou binaire",
+        "operationId": "publishRelease",
+        "tags": [
+          "Releases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/firmware/releases/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les notes de version, les compatibilités matérielles et le détail technique d'une release spécifique",
+        "operationId": "getRelease",
+        "tags": [
+          "Releases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/firmware/deployments": {
+      "get": {
+        "summary": "Lister et suivre les campagnes de déploiement progressif ou vagues de mises à jour actuellement actives",
+        "operationId": "listDeployments",
+        "tags": [
+          "Deployments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Lancer et planifier une nouvelle campagne de déploiement (OTA) sur un échantillon ou l'intégralité d'un parc de terminaux",
+        "operationId": "createDeployment",
+        "tags": [
+          "Deployments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/firmware/deployments/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le taux de succès, le nombre d'appareils mis à jour et le statut d'une campagne de déploiement",
+        "operationId": "getDeploymentStatus",
+        "tags": [
+          "Deployments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Interrompre d'urgence une campagne et déclencher la restauration (rollback) automatique vers la version logicielle stable précédente",
+        "operationId": "rollbackDeployment",
+        "tags": [
+          "Deployments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

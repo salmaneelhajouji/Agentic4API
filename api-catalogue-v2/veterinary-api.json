@@ -1,0 +1,111 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Veterinary API",
+    "version": "1.0.0",
+    "x-api-id": "veterinary-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Services veterinaires elevage. Visites, vaccinations et prescriptions pour le suivi de la santé animale. DIFFERENCE vs allergy-api : Veterinary = soins animaux d'elevage, Allergy = allergies patients humains. DIFFERENCE vs vaccination-api : Veterinary API gère le calendrier de soin des animaux de ferme, alors que vaccination-api est strictement réservée au carnet de santé humain.",
+    "x-synonymes": "vétérinaire, élevage, animal, bétail, soin animal, traitement, ordonnance, prescription, troupeau, ferme, bovin, ovin, vaccin animal, éleveur, consultation veto, santé animale, cheptel, bête",
+    "x-false-positive-warning": "Pour le carnet vaccinal, le suivi médical ou les allergies chez l'être humain, utilisez vaccination-api ou allergy-api.",
+    "x-cas-usage": "je veux consulter l'historique vétérinaire d'un animal d'élevage | je veux consigner une nouvelle visite médicale à la ferme | je veux lister les traitements et ordonnances prescrits pour mon bétail | je veux enregistrer une ordonnance ou prescrire un soin pour un animal"
+  },
+  "paths": {
+    "/v1/veterinary/{animalId}": {
+      "parameters": [
+        {
+          "name": "animalId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique complet des soins, examens et visites vétérinaires d'un animal d'élevage",
+        "operationId": "getVetHistory",
+        "tags": [
+          "Vet"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Consigner une nouvelle visite ou consultation médicale vétérinaire pour un animal",
+        "operationId": "addVetVisit",
+        "tags": [
+          "Vet"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/veterinary/{animalId}/treatments": {
+      "parameters": [
+        {
+          "name": "animalId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister les traitements médicaux, ordonnances et soins pharmaceutiques en cours pour cet animal",
+        "operationId": "getTreatments",
+        "tags": [
+          "Treatments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Rédiger et valider une nouvelle prescription médicale ou traitement vétérinaire sur l'animal",
+        "operationId": "prescribeTreatment",
+        "tags": [
+          "Treatments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

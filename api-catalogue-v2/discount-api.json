@@ -1,0 +1,177 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Discount API",
+    "version": "1.0.0",
+    "x-api-id": "discount-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Marketing",
+    "x-domain": "E-Commerce",
+    "description": "Cette API administre le cycle de vie des campagnes promotionnelles, des bons d'achat et des codes de réduction (coupons) sur les plateformes e-commerce. Elle permet aux équipes marketing de créer des règles de remise complexes (remises en pourcentage, montants fixes, seuils de panier minimum, exclusions), d'activer ou désactiver des offres, et d'affecter des promotions à des produits spécifiques. Elle sert de moteur d'animation commerciale en amont de la facturation.",
+    "x-synonymes": "code promotionnel, code de réduction, coupon de remise, bon d'achat, campagne promotionnelle, réduction commerciale, offre de remise, panier minimum, remise en pourcentage, couponing, démarque, avantage client, code promo, animation commerciale, réduction produit, période de validité, remise fixe",
+    "x-false-positive-warning": "Attention : Cette API gère la configuration, la création et la validité des campagnes et codes promotionnels (Discount). Ne pas la confondre avec la `pricing-api` qui est seule responsable du calcul mathématique en temps réel du prix final facturé dans le panier en agrégeant l'ensemble des taxes, des frais de port et des remises applicables.",
+    "x-cas-usage": "Comment configurer un nouveau code promo offrant 20% de réduction pour une campagne saisonnière ? | Où consulter les conditions de validité, la date d'expiration et le montant minimum requis pour ce coupon ? | Comment désactiver ou suspendre immédiatement la validité d'un code de réduction suite à un arbitrage commercial ? | Comment lister l'ensemble des campagnes d'animation commerciale actuellement programmées ?"
+  },
+  "paths": {
+    "/v1/discounts": {
+      "post": {
+        "summary": "Créer et enregistrer un nouveau code de réduction ou coupon promotionnel avec ses critères d'éligibilité",
+        "operationId": "createDiscount",
+        "tags": [
+          "Discounts"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscountCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        }
+      }
+    },
+    "/v1/discounts/{code}": {
+      "parameters": [
+        {
+          "name": "code",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la configuration, le type de remise, les restrictions et l'état de validité d'un code promo via son libellé",
+        "operationId": "getDiscount",
+        "tags": [
+          "Discounts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/discounts/{id}/activate": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Activer officiellement un coupon ou une offre promotionnelle pour la rendre utilisable par les clients sur le site",
+        "operationId": "activateDiscount",
+        "tags": [
+          "Discounts"
+        ],
+        "responses": {
+          "200": {
+            "description": "Activé"
+          }
+        }
+      }
+    },
+    "/v1/discounts/{id}/deactivate": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Désactiver ou suspendre immédiatement la validité d'un code de réduction ou d'une campagne marketing",
+        "operationId": "deactivateDiscount",
+        "tags": [
+          "Discounts"
+        ],
+        "responses": {
+          "200": {
+            "description": "Désactivé"
+          }
+        }
+      }
+    },
+    "/v1/discounts/campaigns": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des campagnes d'animation marketing et de promotion configurées",
+        "operationId": "getCampaigns",
+        "tags": [
+          "Campaigns"
+        ],
+        "responses": {
+          "200": {
+            "description": "Campagnes"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DiscountCreate": {
+        "type": "object",
+        "required": [
+          "code",
+          "type",
+          "value"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "SUMMER20"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "percent",
+              "fixed"
+            ]
+          },
+          "value": {
+            "type": "number",
+            "example": 20
+          },
+          "min_order_amount": {
+            "type": "number"
+          },
+          "max_uses": {
+            "type": "integer"
+          },
+          "valid_from": {
+            "type": "string",
+            "format": "date"
+          },
+          "valid_until": {
+            "type": "string",
+            "format": "date"
+          },
+          "applicable_products": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

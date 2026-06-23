@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Rating API",
+    "version": "1.0.0",
+    "x-api-id": "rating-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Catalog",
+    "x-domain": "E-Commerce",
+    "description": "Notations numériques produits de 1 à 5 étoiles. Permet de soumettre une note, de consulter toutes les notes d un produit, d obtenir sa moyenne et la distribution des étoiles. Utilisé pour afficher les étoiles sur les fiches produit e-commerce. DIFFÉRENCE vs review-api : Rating = note numérique seule (5 étoiles) sans texte. review-api = avis texte complet avec note — pour rédiger un commentaire.",
+    "x-synonymes": "note produit, étoiles produit, notation 1 à 5, score produit, moyenne notes, distribution étoiles, vote produit, évaluation produit, star rating, note moyenne, noter produit, 5 étoiles, 4 étoiles, rating score, score moyen produit, note client produit, vote rapide, évaluation rapide produit, satisfaction produit, popularité produit",
+    "x-false-positive-warning": "Avis textuels avec commentaire → review-api. Note de service ou vendeur → seller-rating-api. Évaluation application mobile → app-store-rating. Notation crédit → credit-scoring-api.",
+    "x-cas-usage": "je veux afficher la note moyenne en étoiles sur la fiche d un produit | je veux enregistrer la note d un client après un achat | je veux voir la distribution des notes (combien de 5 étoiles, 4 étoiles...) d un produit | je veux voir toutes les notes soumises pour un produit | je veux calculer la note moyenne d un produit pour le trier dans le catalogue"
+  },
+  "paths": {
+    "/v1/ratings": {
+      "post": {
+        "summary": "Soumettre une note de 1 à 5 étoiles pour un produit",
+        "operationId": "createRating",
+        "tags": ["Ratings"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["product_id", "score", "user_id"],
+                "properties": {
+                  "product_id": {"type": "string"},
+                  "score": {"type": "integer", "minimum": 1, "maximum": 5},
+                  "user_id": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Note enregistrée"}}
+      }
+    },
+    "/v1/ratings/product/{productId}": {
+      "parameters": [{"name": "productId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Toutes les notes d un produit — scores et utilisateurs",
+        "operationId": "getProductRatings",
+        "tags": ["Ratings"],
+        "responses": {"200": {"description": "Notes du produit"}}
+      }
+    },
+    "/v1/ratings/average/{productId}": {
+      "parameters": [{"name": "productId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Note moyenne d un produit — score moyen sur 5 et nombre de votes",
+        "operationId": "getAverageRating",
+        "tags": ["Ratings"],
+        "responses": {"200": {"description": "Note moyenne"}}
+      }
+    },
+    "/v1/ratings/distribution/{productId}": {
+      "parameters": [{"name": "productId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Distribution des notes — pourcentage de 1, 2, 3, 4 et 5 étoiles",
+        "operationId": "getRatingDistribution",
+        "tags": ["Ratings"],
+        "responses": {"200": {"description": "Distribution étoiles"}}
+      }
+    }
+  }
+}

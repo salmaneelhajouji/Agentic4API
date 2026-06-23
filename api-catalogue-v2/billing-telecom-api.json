@@ -1,0 +1,45 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Billing Telecom API",
+    "version": "1.0.0",
+    "x-api-id": "billing-telecom-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "API de facturation télécom spécialisée pour opérateurs mobiles, fixes et MVNOs, couvrant l'ensemble du cycle de facturation des abonnés. Gère les factures mensuelles d'abonnés, les CDR (Call Detail Records) avec le détail unitaire des communications voix, SMS, data et services premium, ainsi que les litiges et contestations de facturation. Utilisée par les équipes facturation, support client et conformité réglementaire pour analyser les consommations, détecter des anomalies et traiter les réclamations. Prend en charge la facturation roaming international, les dépassements de forfait et les services à valeur ajoutée. DIFFÉRENCE vs billing-api : Billing Telecom = usage télécom CDR, roaming et services à valeur ajoutée ; billing-api = facturation générique SaaS et abonnements. DIFFÉRENCE vs billing-api-v2 : billing-api-v2 = metered billing générique avec compteurs personnalisables ; billing-telecom-api = CDR et métriques télécom normalisées.",
+    "x-synonymes": "facturation télécom, CDR, call detail record, détail communications, facture opérateur, facture mobile, facture ADSL, facture fibre, roaming facturation, hors forfait, dépassement forfait, litige facturation, contestation facture, facture abonné, relevé communications, appels facturés, SMS facturés, data facturée, MVNO facturation, opérateur mobile facturation",
+    "x-false-positive-warning": "Facturation générique SaaS et abonnements → billing-api (pas de CDR ni roaming). Facturation avec metered billing personnalisable → billing-api-v2 (compteurs génériques, pas télécom). Contrat et offre commerciale télécom → telecom-contract-api (gestion des offres, pas de la facturation). Consommation data en temps réel → data-usage-api (monitoring temps réel, pas historique facturé). Facturation entreprise multi-lignes → billing-api-v3 (facturation B2B groupée, pas CDR individuels).",
+    "x-cas-usage": "Comment consulter l'historique des factures mensuelles d'un abonné télécom sur les 12 derniers mois ? | Comment récupérer le détail des appels, SMS et données facturés pour un abonné ce mois-ci ? | Comment ouvrir un litige pour contester une ligne incorrecte sur la facture d'un abonné ? | Quels sont les frais de roaming international facturés à un abonné en déplacement à l'étranger ? | Comment analyser les CDR d'un abonné pour détecter des anomalies ou des fraudes de facturation ?"
+  },
+  "paths": {
+    "/v1/billing-telecom/{subscriberId}": {
+      "parameters": [{"name": "subscriberId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer l'historique des factures télécom d'un abonné avec totaux mensuels voix, data, SMS et roaming",
+        "operationId": "getBillHistory",
+        "tags": ["Billing"],
+        "responses": {"200": {"description": "Historique factures télécom"}}
+      }
+    },
+    "/v1/billing-telecom/{subscriberId}/cdr": {
+      "parameters": [{"name": "subscriberId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le détail des communications facturées — appels voix, SMS, data et roaming avec durées, destinations et coûts unitaires",
+        "operationId": "getCDR",
+        "tags": ["CDR"],
+        "responses": {"200": {"description": "CDR détaillés"}}
+      }
+    },
+    "/v1/billing-telecom/{subscriberId}/disputes": {
+      "parameters": [{"name": "subscriberId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Ouvrir un litige de facturation pour contester une ligne, un montant incorrect ou un service non consommé sur la facture d'un abonné",
+        "operationId": "openBillingDispute",
+        "tags": ["Disputes"],
+        "responses": {"200": {"description": "Litige ouvert"}}
+      }
+    }
+  }
+}

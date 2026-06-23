@@ -1,0 +1,92 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sensor Data API",
+    "version": "2.0.0",
+    "x-api-id": "sensor-data-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Collecte, ingestion et consultation des données brutes de capteurs IoT physiques. Gestion du parc de capteurs (enregistrement, configuration), lecture des mesures en temps réel (température, pression, humidité, vibrations), ingestion de nouvelles mesures, et streaming continu par SSE. Support multi-protocoles (MQTT, HTTP, CoAP). DIFFÉRENCE vs telemetry-api : Sensor Data = données brutes de capteurs physiques individuels avec calibration, Telemetry = données agrégées et métriques au niveau équipement. DIFFÉRENCE vs scada-api : Sensor Data collecte passivement les mesures IoT, SCADA supervise les automates industriels avec télécommande bidirectionnelle.",
+    "x-synonymes": "capteur IoT, données capteur, température humidité pression, mesure temps réel, ingestion données, MQTT, streaming capteur, SSE IoT, calibration capteur, parc capteurs, télémétrie capteur, données terrain IoT, enregistrement capteur, flux mesures, monitoring capteur",
+    "x-false-positive-warning": "Données agrégées équipements → telemetry-api. Supervision industrielle avec télécommande → scada-api. Alertes seuil dépassé → alert-api.",
+    "x-cas-usage": "je veux lire la dernière mesure de température d'un capteur | je veux enregistrer un nouveau capteur dans le parc IoT | je veux recevoir en temps réel le flux de données d'un capteur via SSE | je veux ingérer une mesure depuis un capteur physique | je veux lister tous les capteurs actifs de mon site",
+    "x-breaking-changes-from-previous": [
+      "Stream SSE",
+      "Multi-protocoles",
+      "Calibration auto"
+    ]
+  },
+  "paths": {
+    "/v2/sensors": {
+      "get": {
+        "summary": "Lister tous les capteurs enregistrés avec type, localisation, statut et dernière mesure",
+        "operationId": "listSensorsV2",
+        "tags": ["Sensors"],
+        "responses": { "200": { "description": "Liste des capteurs" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Enregistrer un nouveau capteur IoT dans le parc avec ses métadonnées et protocole de communication",
+        "operationId": "registerSensor",
+        "tags": ["Sensors"],
+        "responses": { "200": { "description": "Capteur enregistré" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/sensors/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le détail d'un capteur (configuration, calibration, statut de connexion)",
+        "operationId": "getSensorV2",
+        "tags": ["Sensors"],
+        "responses": { "200": { "description": "Détail capteur" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Modifier la configuration d'un capteur (seuils, fréquence d'échantillonnage, localisation)",
+        "operationId": "updateSensor",
+        "tags": ["Sensors"],
+        "responses": { "200": { "description": "Capteur mis à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/sensors/{id}/data": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lire la dernière mesure temps réel d'un capteur (valeur, unité, horodatage, qualité)",
+        "operationId": "getSensorData",
+        "tags": ["Data"],
+        "responses": { "200": { "description": "Dernière mesure" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Ingérer une nouvelle mesure depuis un capteur physique (push de données terrain)",
+        "operationId": "ingestData",
+        "tags": ["Data"],
+        "responses": { "200": { "description": "Mesure ingérée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/sensors/{id}/stream": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Ouvrir un flux SSE temps réel pour recevoir en continu les mesures d'un capteur (nouveau en v2)",
+        "operationId": "streamSensorData",
+        "tags": ["Stream"],
+        "responses": { "200": { "description": "Flux SSE de mesures" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

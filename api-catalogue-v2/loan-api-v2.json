@@ -1,0 +1,42 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Loan API",
+    "version": "2.0.0",
+    "x-api-id": "loan-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "DEPRECATED — NE PAS UTILISER. Version 2 avec scoring intégré mais sans décision IA ni remboursement anticipé. Migrer vers loan-api-v3 qui intègre la décision IA temps réel et le remboursement anticipé.",
+    "x-breaking-changes-from-previous": ["Scoring intégré"],
+    "x-successor": "loan-api-v3",
+    "x-synonymes": "prêt v2 deprecated, crédit scoring legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser loan-api-v3.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers loan-api-v3."
+  },
+  "paths": {
+    "/v2/loans": {
+      "get": {
+        "summary": "DEPRECATED — Lister les prêts",
+        "operationId": "listLoansV2",
+        "tags": ["Loans"],
+        "responses": {"200": {"description": "Prêts"}}
+      },
+      "post": {
+        "summary": "DEPRECATED — Demander un prêt avec scoring",
+        "operationId": "applyLoanV2",
+        "tags": ["Loans"],
+        "responses": {"200": {"description": "Demande"}}
+      }
+    },
+    "/v2/loans/simulate": {
+      "post": {
+        "summary": "DEPRECATED — Simuler les mensualités d un prêt",
+        "operationId": "simulateLoanV2",
+        "tags": ["Simulation"],
+        "responses": {"200": {"description": "Simulation"}}
+      }
+    }
+  }
+}

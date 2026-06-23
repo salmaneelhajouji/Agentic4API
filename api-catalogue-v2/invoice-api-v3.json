@@ -1,0 +1,86 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Invoice API",
+    "version": "3.0.0",
+    "x-api-id": "invoice-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "Version actuelle et recommandée — Facturation récurrente native, pénalités de retard automatiques J+30 et export comptable ERP (FEC, DATEV, SAGE, CEGID). Gère le statut overdue automatique après échéance dépassée, et la signature eIDAS obligatoire pour les factures B2B supérieures à 10 000 €. DIFFÉRENCE vs billing-api : Invoice génère et archive les documents fiscaux légaux. billing-api orchestre les prélèvements automatiques.",
+    "x-breaking-changes-from-previous": ["recurring remplace billing_subscription_id", "late_payment_penalty automatique J+30", "accounting_export_format FEC/DATEV/SAGE/CEGID", "status overdue automatique", "eIDAS obligatoire B2B > 10 000 €"],
+    "x-synonymes": "facture récurrente, facturation mensuelle automatique, pénalité retard facture, export FEC comptable, export DATEV, export SAGE, export CEGID, facture overdue en retard, intégration comptable ERP, facturation abonnement, facture B2B signée, facture enterprise, récurrence facture, pénalité J+30, export journal comptable, facturation SaaS, facture internationale signée, archive comptable factures, facturation récurrente native, conformité fiscale avancée",
+    "x-false-positive-warning": "Version simple sans ERP → invoice-api (v1). Version sans récurrence → invoice-api-v2. Prélèvements automatiques récurrents → billing-api-v3. Contrat juridique → contract-api.",
+    "x-cas-usage": "je veux générer des factures mensuelles récurrentes automatiquement | je veux exporter mes factures au format FEC pour ma comptabilité | je veux voir toutes les factures en retard de paiement | je veux appliquer une pénalité de retard sur une facture impayée | je veux synchroniser mes factures avec SAP via export DATEV"
+  },
+  "paths": {
+    "/v3/invoices": {
+      "post": {
+        "summary": "Générer une facture avec récurrence native et export comptable ERP configurable",
+        "operationId": "createInvoiceV3",
+        "tags": ["Invoices"],
+        "responses": {"201": {"description": "Facture générée"}}
+      },
+      "get": {
+        "summary": "Lister les factures — filtre par statut draft/sent/paid/void/overdue et période",
+        "operationId": "listInvoicesV3",
+        "tags": ["Invoices"],
+        "parameters": [
+          {"name": "status", "in": "query", "schema": {"type": "string", "enum": ["draft", "sent", "paid", "void", "overdue"]}},
+          {"name": "overdue_only", "in": "query", "schema": {"type": "boolean"}},
+          {"name": "from_date", "in": "query", "schema": {"type": "string", "format": "date"}},
+          {"name": "to_date", "in": "query", "schema": {"type": "string", "format": "date"}}
+        ],
+        "responses": {"200": {"description": "Factures filtrées"}}
+      }
+    },
+    "/v3/invoices/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Facture complète — statut overdue, pénalités et récurrence",
+        "operationId": "getInvoiceV3",
+        "tags": ["Invoices"],
+        "responses": {"200": {"description": "Facture v3 complète"}}
+      }
+    },
+    "/v3/invoices/{id}/pdf": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "PDF multilingue signé eIDAS automatiquement si B2B supérieur à 10 000 €",
+        "operationId": "downloadInvoiceV3PDF",
+        "tags": ["Invoices"],
+        "parameters": [{"name": "locale", "in": "query", "schema": {"type": "string", "default": "fr"}}],
+        "responses": {"200": {"description": "PDF facture v3"}}
+      }
+    },
+    "/v3/invoices/{id}/accounting-export": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Export comptable ERP — FEC, DATEV, SAGE ou CEGID pour intégration comptabilité",
+        "operationId": "exportAccountingV3",
+        "tags": ["Accounting"],
+        "parameters": [{"name": "format", "in": "query", "required": true, "schema": {"type": "string", "enum": ["FEC", "DATEV", "SAGE", "CEGID"]}}],
+        "responses": {"200": {"description": "Fichier export comptable"}}
+      }
+    },
+    "/v3/invoices/{id}/penalty": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Appliquer une pénalité de retard — calcul automatique ou taux manuel",
+        "operationId": "applyPenaltyV3",
+        "tags": ["Invoices"],
+        "responses": {"200": {"description": "Pénalité appliquée"}}
+      }
+    },
+    "/v3/invoices/{id}/void": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Annuler une facture — génère avoir et réverse les pénalités si applicable",
+        "operationId": "voidInvoiceV3",
+        "tags": ["Invoices"],
+        "responses": {"200": {"description": "Annulée — avoir généré"}}
+      }
+    }
+  }
+}

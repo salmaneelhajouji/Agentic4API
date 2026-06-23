@@ -1,0 +1,79 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Bundle API",
+    "version": "1.0.0",
+    "x-api-id": "bundle-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "API dédiée à la création et à la gestion des packs et bundles de produits dans un contexte e-commerce. Couvre l'ensemble du cycle de vie d'un bundle : composition de produits, calcul automatique des prix groupés avec remise, suivi des stocks des composants et activation/désactivation des offres. Utilisée par les équipes merchandising, les développeurs front-end boutique et les systèmes de caisse pour proposer des offres promotionnelles, coffrets cadeaux, kits produits et ventes groupées. DIFFÉRENCE vs product-api : Bundle API = groupement de plusieurs produits avec tarification spéciale ; product-api = gestion d'un produit unitaire. DIFFÉRENCE vs discount-api : Bundle API = remise automatique calculée sur lot de produits ; discount-api = codes promo et remises individuelles sur produits. DIFFÉRENCE vs kit-api : Bundle API = bundle e-commerce avec prix calculé en ligne ; kit-api = nomenclature de fabrication industrielle.",
+    "x-synonymes": "bundle produit, pack produit, lot produit, offre groupée, coffret cadeau, kit produit, produits associés, remise bundle, promotion lot, prix pack, tarification bundle, bundle e-commerce, set produit, pack découverte, offre combinée, produit composite, vente croisée bundle, multi-produit, assortiment produit, prix groupé",
+    "x-false-positive-warning": "DIFFÉRENCE vs product-api : Bundle API = groupement de plusieurs produits avec tarification spéciale et remise automatique ; product-api = gestion d'un produit unitaire sans logique de lot. DIFFÉRENCE vs discount-api : Bundle API = remise calculée automatiquement sur la composition du lot ; discount-api = codes promo et remises individuelles appliquées à la commande. DIFFÉRENCE vs kit-api : Bundle API = bundle e-commerce avec prix affiché en boutique en ligne ; kit-api = nomenclature de fabrication ou d'assemblage industrielle. DIFFÉRENCE vs promotion-api : Bundle API = structure de produits groupés avec prix dédié ; promotion-api = règles promotionnelles temporaires applicables à tout type de produit.",
+    "x-cas-usage": "Comment créer un pack téléphone avec accessoires et appliquer une remise automatique sur le lot ? | Comment récupérer le prix total d'un bundle avec la remise calculée par rapport aux prix unitaires ? | Quels bundles actifs sont disponibles dans ma boutique pour une campagne promotionnelle ? | Comment modifier la composition d'un bundle existant en ajoutant ou retirant des produits ? | Comment créer un coffret cadeau regroupant 3 produits à prix réduit pour les fêtes ?"
+  },
+  "paths": {
+    "/v1/bundles": {
+      "post": {
+        "summary": "Créer un bundle de produits e-commerce en définissant sa composition, son nom et la remise automatique appliquée au lot",
+        "operationId": "createBundle",
+        "tags": ["Bundles"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "products"],
+                "properties": {
+                  "name": {"type": "string"},
+                  "products": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {"type": "string"},
+                        "quantity": {"type": "integer"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Bundle créé avec succès"}}
+      },
+      "get": {
+        "summary": "Lister tous les bundles disponibles — packs, coffrets cadeaux et offres groupées actives dans la boutique",
+        "operationId": "listBundles",
+        "tags": ["Bundles"],
+        "responses": {"200": {"description": "Liste des bundles disponibles"}}
+      }
+    },
+    "/v1/bundles/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le détail complet d'un bundle — composition des produits, quantités, prix unitaires et remise groupée appliquée",
+        "operationId": "getBundle",
+        "tags": ["Bundles"],
+        "responses": {"200": {"description": "Détail du bundle avec composition et tarification"}}
+      },
+      "put": {
+        "summary": "Modifier un bundle existant — mettre à jour la composition des produits, le nom ou le taux de remise groupée",
+        "operationId": "updateBundle",
+        "tags": ["Bundles"],
+        "responses": {"200": {"description": "Bundle mis à jour avec succès"}}
+      }
+    },
+    "/v1/bundles/{id}/price": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Calculer le prix total d'un bundle avec remise automatique — comparaison entre somme des prix unitaires et prix pack final",
+        "operationId": "getBundlePrice",
+        "tags": ["Bundles"],
+        "responses": {"200": {"description": "Prix du bundle avec détail de la remise appliquée"}}
+      }
+    }
+  }
+}

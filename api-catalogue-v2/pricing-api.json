@@ -1,0 +1,229 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pricing API",
+    "version": "1.0.0",
+    "x-api-id": "pricing-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "Cette API assure le calcul dynamique en temps réel du prix final des produits et des paniers d'achat au sein de la plateforme e-commerce. Elle applique automatiquement les règles tarifaires combinées basées sur les volumes, le segment client (VIP, Standard, Nouveau) ou des critères temporels (soldes, ventes flash), tout en évaluant les remises immédiates et en validant l'impact financier des codes promotionnels.",
+    "x-synonymes": "prix dynamique, calcul de prix e-commerce, règle tarifaire promo, tarification en temps réel, validation de code promo, calcul de remise panier, segment de prix client, remise sur volume, moteur de tarification, calcul de rabais à la volée",
+    "x-false-positive-warning": "Attention : Cette API calcule dynamiquement et en direct le prix final facturé en intégrant l'ensemble des règles de calcul de paniers et promotions (Pricing). Ne pas la confondre avec la `price-list-api` (gestion des grilles de prix fixes et des catalogues tarifaires contractuels statiques par compte B2B) ni avec la `discount-api` gérant les campagnes marketing.",
+    "x-cas-usage": "Comment évaluer instantanément le prix dynamique d'un article pour un client identifié comme VIP ? | Comment calculer le montant total consolidé d'un panier en y appliquant un code de réduction ? | Comment créer une règle tarifaire accordant automatiquement **15%** de rabais lors d'un achat en volume ?"
+  },
+  "paths": {
+    "/v1/pricing/product/{productId}": {
+      "parameters": [
+        {
+          "name": "productId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Calculer et obtenir le prix dynamique actuel d'un produit pour un segment de clientèle cible",
+        "operationId": "getProductPrice",
+        "tags": [
+          "Pricing"
+        ],
+        "parameters": [
+          {
+            "name": "customer_segment",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "VIP",
+                "Standard",
+                "Nouveau"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prix"
+          }
+        }
+      }
+    },
+    "/v1/pricing/calculate": {
+      "post": {
+        "summary": "Calculer le montant total d'un panier d'achat en agrégeant l'ensemble des remises et codes promo éligibles",
+        "operationId": "calculatePrice",
+        "tags": [
+          "Pricing"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string"
+                        },
+                        "quantity": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "discount_code": {
+                    "type": "string"
+                  },
+                  "customer_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prix calculé"
+          }
+        }
+      }
+    },
+    "/v1/pricing/promo/validate": {
+      "post": {
+        "summary": "Vérifier la validité d'un code promotionnel et évaluer le montant exact de la remise générée",
+        "operationId": "validatePromo",
+        "tags": [
+          "Pricing"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "code",
+                  "order_amount"
+                ],
+                "properties": {
+                  "code": {
+                    "type": "string"
+                  },
+                  "order_amount": {
+                    "type": "number"
+                  },
+                  "customer_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Valide — remise calculée"
+          },
+          "400": {
+            "description": "Code invalide ou expiré"
+          }
+        }
+      }
+    },
+    "/v1/pricing/rules": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des règles tarifaires et critères de remises dynamiques déployés sur la plateforme",
+        "operationId": "getPricingRules",
+        "tags": [
+          "Rules"
+        ],
+        "responses": {
+          "200": {
+            "description": "Règles"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et injecter une nouvelle règle tarifaire basée sur des critères de volume, de segment ou temporels",
+        "operationId": "createPricingRule",
+        "tags": [
+          "Rules"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "segment",
+                      "volume",
+                      "time_based"
+                    ]
+                  },
+                  "conditions": {
+                    "type": "object"
+                  },
+                  "discount_percent": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créée"
+          }
+        }
+      }
+    },
+    "/v1/pricing/rules/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Modifier ou réajuster les conditions d'application et les pourcentages d'une règle tarifaire existante",
+        "operationId": "updatePricingRule",
+        "tags": [
+          "Rules"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      }
+    }
+  }
+}

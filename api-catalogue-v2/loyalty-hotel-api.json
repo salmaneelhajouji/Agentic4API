@@ -1,0 +1,42 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Loyalty Hotel API",
+    "version": "1.0.0",
+    "x-api-id": "loyalty-hotel-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Programme de fidélité hôtelier — points nuitées, statuts membres et avantages exclusifs. Permet de consulter le compte fidélité d un membre, de créditer des points après une nuitée, et de consulter les avantages liés au statut (Silver, Gold, Platinum). DIFFÉRENCE vs loyalty-points-api : Loyalty Hotel = programme fidélité spécifique hôtels avec nuitées et upgrades. loyalty-points-api = programme fidélité commerce générique avec points d achat.",
+    "x-synonymes": "fidélité hôtel, points nuitées, programme fidélité hôtel, statut membre hôtel, Silver Gold Platinum hôtel, avantages membre hôtel, upgrade chambre fidélité, nuit gratuite points, carte fidélité hôtel, programme loyalty hôtelier, points séjour, récompense hôtel, statut fidélité voyage, petit déjeuner offert fidélité, late check-out fidélité, accès lounge fidélité, transfert points hôtel, cumul nuitées, tier hôtel, miles hôtel",
+    "x-false-positive-warning": "Fidélité commerce générique points d achat → loyalty-points-api. Conversion points hôtel vers retail → loyalty-points-hotel-api. Programme miles aérien → airline-loyalty-api. Réservation hôtel → room-booking-api-v3.",
+    "x-cas-usage": "je veux créditer des points fidélité après la nuitée d un client | je veux voir le solde de points et le statut fidélité d un membre | je veux afficher les avantages disponibles pour un membre Gold | je veux vérifier si un client est éligible à un upgrade de chambre grâce à son statut | je veux intégrer le programme fidélité dans notre application hôtelière mobile"
+  },
+  "paths": {
+    "/v1/loyalty/hotel/{memberId}": {
+      "parameters": [{"name": "memberId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Compte fidélité hôtelier — solde points, statut et nuitées cumulées",
+        "operationId": "getHotelLoyaltyAccount",
+        "tags": ["Loyalty"],
+        "responses": {"200": {"description": "Compte fidélité hôtel"}}
+      },
+      "post": {
+        "summary": "Créditer des points fidélité après une nuitée — calcul automatique selon tarif",
+        "operationId": "earnHotelPoints",
+        "tags": ["Loyalty"],
+        "responses": {"200": {"description": "Points crédités"}}
+      }
+    },
+    "/v1/loyalty/hotel/{memberId}/status": {
+      "parameters": [{"name": "memberId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Avantages du statut membre — upgrades, petit déjeuner et services inclus",
+        "operationId": "getHotelBenefits",
+        "tags": ["Status"],
+        "responses": {"200": {"description": "Avantages statut membre"}}
+      }
+    }
+  }
+}

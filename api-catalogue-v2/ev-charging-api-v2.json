@@ -1,0 +1,133 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "EV Charging API",
+    "version": "2.0.0",
+    "x-api-id": "ev-charging-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Cette API pilote la gestion opérationnelle et la supervision en temps réel de l'infrastructure de bornes de recharge pour véhicules électriques (VE). Elle permet de cartographier les stations, d'interroger la disponibilité instantanée des points de charge, de réserver des créneaux, d'orchestrer le démarrage et l'arrêt sécurisés des sessions de charge via le protocole OCPP 2.0, et de gérer la facturation automatisée des usagers. Elle est intégrée par les applications de mobilité, les solutions de navigation pour VE et les tableaux de bord de supervision de flotte.",
+    "x-breaking-changes-from-previous": [
+      "Reservation",
+      "Facturation automatique",
+      "OCPP 2.0"
+    ],
+    "x-synonymes": "borne de recharge, véhicule électrique, recharge VE, station de recharge, point de charge, session de charge, protocole OCPP 2.0, disponibilité de borne, facturation de recharge, mobilité durable, IRVE, électromobilité, superchargeur, réservation de borne, historique de recharge, puissance de charge",
+    "x-false-positive-warning": "Attention : Cette API est exclusivement dédiée aux infrastructures de recharge électrique et aux sessions d'alimentation associées (EV Charging). Ne pas la confondre avec la parking-api qui gère le stationnement payant ou générique de véhicules sans service de recharge.",
+    "x-cas-usage": "Comment lister l'ensemble des stations de recharge électrique disponibles autour d'une localisation ? | Où vérifier la disponibilité en temps réel et la puissance maximale d'un point de charge ? | Quelle est la procédure pour démarrer et ouvrir une session de recharge sur la borne via l'application ? | Comment récupérer l'historique complet des sessions de recharge et de facturation d'un usager ?"
+  },
+  "paths": {
+    "/v2/stations": {
+      "get": {
+        "summary": "Rechercher et lister les stations de recharge pour véhicules électriques cartographiées sur le réseau",
+        "operationId": "listStationsV2",
+        "tags": [
+          "Stations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et enregistrer une nouvelle station ou borne de recharge (IRVE) au sein du parc d'infrastructures",
+        "operationId": "registerStation",
+        "tags": [
+          "Stations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/stations/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Interroger la disponibilité instantanée, l'état opérationnel et la puissance disponible de chaque connecteur d'une borne",
+        "operationId": "getAvailability",
+        "tags": [
+          "Stations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/stations/{id}/session": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Initier et démarrer à distance une session de recharge électrique sur le point de charge sélectionné",
+        "operationId": "startChargingSession",
+        "tags": [
+          "Session"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Interrompre et arrêter la session de recharge en cours pour figer la consommation et débloquer le connecteur",
+        "operationId": "stopChargingSession",
+        "tags": [
+          "Session"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/stations/{id}/history": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique complet des sessions de charge exécutées, de l'énergie livrée (kWh) et des coûts de facturation associés",
+        "operationId": "getChargingHistory",
+        "tags": [
+          "History"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

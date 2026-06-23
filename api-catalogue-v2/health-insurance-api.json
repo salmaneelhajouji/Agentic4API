@@ -1,0 +1,114 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Health Insurance API",
+    "version": "1.0.0",
+    "x-api-id": "health-insurance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Cette API gère le cycle de vie des contrats de complémentaire santé, des niveaux de couverture et du traitement des remboursements du côté de la compagnie d'assurance. Elle permet de structurer les grilles de garanties (soins courants, hospitalisation, optique, dentaire), de modifier les fiches de souscription des assurés, d'analyser et de liquider les demandes de remboursement de soins, et de cartographier les professionnels rattachés au réseau de soins.",
+    "x-synonymes": "assurance santé, complémentaire santé, mutuelle, contrat de couverture, grille de garanties, remboursement de soins, liquidation de prestations, tiers payant, réseau de soins, ayant droit, prime d'assurance, prestations de santé, prise en charge mutuelle, frais médicaux, fiche d'assuré",
+    "x-false-positive-warning": "Attention : Cette API pilote l'administration des dossiers, des garanties et de la comptabilisation des remboursements du point de vue de l'assureur (Insurance). Ne pas la confondre avec la `insurance-eligibility-api` qui permet aux professionnels de santé (soignants, hôpitaux) de vérifier en temps réel les droits de tiers payant d'un patient lors de son admission.",
+    "x-cas-usage": "Comment consulter le niveau de couverture et les garanties d'optique pour un contrat d'assurance ? | Comment soumettre une nouvelle demande de remboursement de soins suite à une consultation médicale ? | Où vérifier l'historique complet des prestations financières versées à un assuré ? | Comment mettre à jour les bénéficiaires ou ayants droit rattachés à un contrat de mutuelle ?"
+  },
+  "paths": {
+    "/v1/health-insurance/{contractId}": {
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les informations administratives, la validité et les cotisations d'un contrat d'assurance santé",
+        "operationId": "getHealthContract",
+        "tags": [
+          "Contracts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier les modalités, les bénéficiaires ou les options de souscription d'un contrat de mutuelle existant",
+        "operationId": "updateHealthContract",
+        "tags": [
+          "Contracts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/health-insurance/{contractId}/coverage": {
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le tableau des garanties détaillées, les taux de prise en charge et les plafonds de remboursement",
+        "operationId": "getHealthCoverage",
+        "tags": [
+          "Coverage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/health-insurance/{contractId}/reimbursements": {
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le registre historique des remboursements de soins liquidés et des virements effectués",
+        "operationId": "getReimbursements",
+        "tags": [
+          "Reimbursements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Soumettre et téléverser une nouvelle demande de remboursement de frais médicaux pour étude et liquidation",
+        "operationId": "submitReimbursement",
+        "tags": [
+          "Reimbursements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

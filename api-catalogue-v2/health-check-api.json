@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Health Check API",
+    "version": "1.0.0",
+    "x-api-id": "health-check-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Divers",
+    "x-domain": "Cross",
+    "description": "Cette API fournit les points de terminaison standardisés pour l'orchestration, le routage et la vérification automatique des sondes d'activité (liveness, readiness, startup) au sein du cycle de vie des applications conteneurisées. Elle permet aux orchestrateurs (type Kubernetes) d'interroger l'état interne des services pour automatiser le redémarrage des instances défaillantes, de valider l'aptitude d'un service à recevoir du trafic, et d'enregistrer de nouvelles applications au catalogue de supervision.",
+    "x-synonymes": "sondage d'activité, sonde liveness, sonde readiness, ping de service, statut de démarrage, orchestration de conteneur, état d'aptitude, vérification de cycle de vie, supervision de processus, redémarrage automatique, référencement de service, liveness probe, readiness probe, aiguillage de trafic",
+    "x-false-positive-warning": "Attention : Cette API régit strictement les sondes de bas niveau nécessaires à l'orchestration des conteneurs et au routage réseau des pods (Cross). Ne pas la confondre avec la `health-api` (dédiée au monitoring macro des métriques et dépendances d'infrastructure) ni avec les APIs du domaine de la santé.",
+    "x-cas-usage": "Comment configurer la sonde de liveness pour piloter le redémarrage automatique d'une instance bloquée ? | Où vérifier si un conteneur est prêt (readiness) à absorber les requêtes du répartiteur de charge ? | Comment enregistrer un nouveau composant applicatif dans le registre des sondes de supervision ?"
+  },
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "summary": "Interroger l'état d'activité global et immédiat (ping) du processus applicatif",
+        "operationId": "getHealthStatus",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/health/services": {
+      "get": {
+        "summary": "Lister l'ensemble des statuts de préparation (readiness) des composants logiques surveillés",
+        "operationId": "listServiceHealth",
+        "tags": [
+          "Services"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et déclarer un nouveau service applicatif ou composant au sein du catalogue des sondes",
+        "operationId": "registerService",
+        "tags": [
+          "Services"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/health/services/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive détaillée et l'historique des pings d'un service spécifique",
+        "operationId": "getServiceHealth",
+        "tags": [
+          "Services"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Forcer l'exécution immédiate d'un diagnostic d'intégrité (healthcheck) sur le service ciblé",
+        "operationId": "runHealthCheck",
+        "tags": [
+          "Services"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

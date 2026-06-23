@@ -1,0 +1,55 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pest Detection API",
+    "version": "1.0.0",
+    "x-api-id": "pest-detection-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Détection des ravageurs et maladies agricoles par IA. Permet d identifier un ravageur ou une maladie à partir d une photo de plante, de surveiller les observations en cours sur une parcelle, de signaler une détection et d obtenir des recommandations de traitements phytosanitaires. Utilisé par les agriculteurs et techniciens agricoles pour la protection des cultures.",
+    "x-synonymes": "ravageur plante, maladie plante, détection phytosanitaire, identification insecte plante, mildiou détection, doryphore, pyrale maïs, puceron céréale, botrytis vigne, oïdium détection, traitement phytosanitaire, recommandation pesticide, surveillance parcelle ravageur, phytopathologie, protection culture, photo maladie plante, IA détection plante, diagnostic maladie culture, signal ravageur, IPM lutte intégrée",
+    "x-false-positive-warning": "DIFFÉRENCE vs crop-api-v2 : Pest Detection API = détection et traitement des ravageurs. crop-api-v2 = gestion des cultures et rendements. DIFFÉRENCE vs harvest-api : Pest Detection API = protection pendant la culture. harvest-api = récolte. DIFFÉRENCE vs irrigation-api-v2 : Pest Detection API = phytosanitaire. irrigation-api-v2 = eau et arrosage.",
+    "x-cas-usage": "je veux prendre en photo une feuille malade et identifier la maladie | je veux voir les observations de ravageurs en cours sur ma parcelle de blé | je veux signaler une présence de doryphores dans mon champ de pommes de terre | je veux savoir quel traitement appliquer contre le mildiou de la vigne | je veux lister tous les produits phytosanitaires disponibles pour traiter les pucerons"
+  },
+  "paths": {
+    "/v1/pests/detect": {
+      "post": {
+        "summary": "Identifier un ravageur ou une maladie par photo — IA avec score de confiance",
+        "operationId": "detectPest",
+        "tags": ["Detection"],
+        "responses": {"200": {"description": "Ravageur ou maladie identifié"}}
+      }
+    },
+    "/v1/pests/{fieldId}/monitoring": {
+      "parameters": [{"name": "fieldId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Surveillance active des ravageurs sur une parcelle — observations en cours",
+        "operationId": "getPestMonitoring",
+        "tags": ["Monitoring"],
+        "responses": {"200": {"description": "Surveillance ravageurs"}}
+      },
+      "post": {
+        "summary": "Signaler une observation de ravageur ou maladie sur la parcelle",
+        "operationId": "reportPest",
+        "tags": ["Monitoring"],
+        "responses": {"200": {"description": "Observation signalée"}}
+      }
+    },
+    "/v1/pests/treatments": {
+      "get": {
+        "summary": "Lister les traitements phytosanitaires disponibles",
+        "operationId": "listTreatments",
+        "tags": ["Treatments"],
+        "responses": {"200": {"description": "Traitements disponibles"}}
+      },
+      "post": {
+        "summary": "Recommander un traitement phytosanitaire adapté au ravageur détecté",
+        "operationId": "recommendTreatment",
+        "tags": ["Treatments"],
+        "responses": {"200": {"description": "Traitement recommandé"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tenant API",
+    "version": "2.0.0",
+    "x-api-id": "tenant-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Gestion locataires. Constitution des dossiers de location résidentielle, scoring de solvabilité financière et suivi réglementaire des garants. DIFFERENCE vs customer-profile-api : Tenant = locataire immobilier (dossier location, garants), Customer Profile = client commercial générique. DIFFERENCE vs room-booking-api-v3 : Tenant API s'applique aux baux immobiliers longue durée, tandis que room-booking-api-v3 est dédiée à l'hébergement hôtelier de courte durée.",
+    "x-synonymes": "locataire, immobilier, location, bail, garant, caution, loyer, dossier de location, solvabilité, bailleur, logement, appartement, scoring, revenus, quittance, agence immobilière, résidentiel",
+    "x-false-positive-warning": "Pour la gestion des comptes clients transverses ou profils e-commerce généraux, utilisez customer-profile-api. Pour la réservation de meublés de tourisme courts séjours, utilisez room-booking-api.",
+    "x-cas-usage": "je veux lister les locataires immobiliers enregistrés | je veux créer un dossier de candidature locataire complet | je veux obtenir le score de solvabilité financière d'un candidat | je veux ajouter une caution ou un garant solidaire sur un dossier",
+    "x-breaking-changes-from-previous": [
+      "Scoring solvabilite",
+      "Garants multiples"
+    ]
+  },
+  "paths": {
+    "/v2/tenants": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des dossiers de locataires et candidats immobiliers",
+        "operationId": "listTenantsV2",
+        "tags": [
+          "Tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer un nouveau dossier de location immobilière pour un candidat avec informations de base",
+        "operationId": "createTenantV2",
+        "tags": [
+          "Tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/tenants/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche détaillée, les documents annexes et le statut d'un locataire spécifique",
+        "operationId": "getTenantV2",
+        "tags": [
+          "Tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Modifier les informations contractuelles, les coordonnées ou la situation d'un locataire",
+        "operationId": "updateTenantV2",
+        "tags": [
+          "Tenants"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/tenants/{id}/scoring": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Calculer et extraire l'indice de solvabilité et de risque financier d'un candidat locataire",
+        "operationId": "getTenantScoring",
+        "tags": [
+          "Scoring"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/tenants/{id}/guarantors": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la liste des garants et cautions solidaires associés à un dossier de location",
+        "operationId": "getGuarantors",
+        "tags": [
+          "Guarantors"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Associer et enregistrer un nouveau garant légal pour consolider le dossier d'un locataire",
+        "operationId": "addGuarantor",
+        "tags": [
+          "Guarantors"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

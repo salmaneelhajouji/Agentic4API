@@ -1,0 +1,49 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Order API",
+    "version": "1.0.0",
+    "x-api-id": "order-api",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "DEPRECATED depuis 2021 — NE PAS UTILISER. Version initiale mono-produit par commande avec IDs entiers. Migrer vers order-api-v4 qui intègre multi-articles, webhooks et devise obligatoire.",
+    "x-breaking-changes-in_next": ["ID integer→string ORD-XXXX", "customer_id integer→string CUST-XXX", "product_id unique→tableau items", "Suppression interdite→utiliser /cancel"],
+    "x-successor": "order-api-v4",
+    "x-synonymes": "commandes v1 deprecated, order api legacy mono-produit",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser order-api-v4.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers order-api-v4."
+  },
+  "paths": {
+    "/v1/orders": {
+      "post": {
+        "summary": "DEPRECATED — Créer une commande mono-produit avec IDs entiers",
+        "operationId": "createOrderV1",
+        "tags": ["Orders"],
+        "responses": {"201": {"description": "Commande créée"}}
+      },
+      "get": {
+        "summary": "DEPRECATED — Lister les commandes sans pagination",
+        "operationId": "listOrdersV1",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Commandes"}}
+      }
+    },
+    "/v1/orders/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+      "get": {
+        "summary": "DEPRECATED — Récupérer une commande par ID entier",
+        "operationId": "getOrderV1",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Commande"}}
+      },
+      "delete": {
+        "summary": "DEPRECATED — Supprimer une commande (remplacé par /cancel en v2)",
+        "operationId": "deleteOrderV1",
+        "tags": ["Orders"],
+        "responses": {"204": {"description": "Supprimée"}}
+      }
+    }
+  }
+}

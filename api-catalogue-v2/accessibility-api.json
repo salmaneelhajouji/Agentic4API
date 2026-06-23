@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Accessibility API",
+    "version": "1.0.0",
+    "x-api-id": "accessibility-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "API dédiée à l'accessibilité numérique des interfaces web, couvrant l'analyse automatique de conformité WCAG, la génération de descriptions alt-text par intelligence artificielle pour les images, et la vérification des ratios de contraste couleur. Utilisée par les équipes front-end, QA et conformité pour rendre les applications accessibles aux personnes en situation de handicap visuel, moteur ou cognitif. Les utilisateurs typiques incluent les développeurs web, les responsables qualité et les chefs de projet en charge des audits RGAA ou Section 508. DIFFÉRENCE vs audit-log-api : Accessibility API = audit technique des interfaces pour conformité WCAG. audit-log-api = traçabilité des actions utilisateurs pour sécurité et conformité réglementaire. DIFFÉRENCE vs compliance-check-api : Accessibility API = conformité UX et design pour personnes handicapées. compliance-check-api = conformité réglementaire légale ISO/SOX/RGPD.",
+    "x-synonymes": "WCAG, accessibilité web, conformité accessibilité, handicap numérique, alt-text, texte alternatif image, contraste couleur, ratio contraste, daltonisme, lecteur écran, screen reader, aria, audit accessibilité, rapport accessibilité, violations accessibilité, a11y, inclusion numérique, normes accessibilité, RGAA, section 508",
+    "x-false-positive-warning": "DIFFÉRENCE vs audit-log-api : Accessibility API = audit technique des interfaces pour conformité WCAG. audit-log-api = traçabilité des actions utilisateurs pour sécurité et conformité réglementaire. DIFFÉRENCE vs compliance-check-api : Accessibility API = conformité UX et design pour personnes handicapées. compliance-check-api = conformité réglementaire légale ISO/SOX/RGPD. DIFFÉRENCE vs analytics-api : Accessibility API = analyse de conformité UX pour personnes handicapées. analytics-api = collecte et analyse de données comportementales utilisateurs.",
+    "x-cas-usage": "Comment vérifier que mon site est accessible aux personnes malvoyantes selon WCAG ? | Comment générer automatiquement les alt-text de mes images produit pour les lecteurs d'écran ? | Quels éléments de mes pages web violent les critères WCAG AA ou AAA ? | Comment savoir si mes couleurs respectent le ratio de contraste recommandé par WCAG ? | Comment produire un rapport d'accessibilité complet pour une mise en conformité RGAA ?"
+  },
+  "paths": {
+    "/v1/accessibility/analyze": {
+      "post": {
+        "summary": "Analyser l'accessibilité d'une page web et générer un rapport complet des violations WCAG avec niveaux de criticité",
+        "operationId": "analyzeAccessibility",
+        "tags": ["Accessibility"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["url"],
+                "properties": {
+                  "url": {"type": "string", "format": "uri"},
+                  "standard": {
+                    "type": "string",
+                    "enum": ["WCAG_2.0_AA", "WCAG_2.1_AA", "WCAG_2.2_AA"],
+                    "default": "WCAG_2.1_AA"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Rapport d'accessibilité avec violations"}}
+      }
+    },
+    "/v1/accessibility/alt-text": {
+      "post": {
+        "summary": "Générer par IA un texte alternatif descriptif pour une image afin d'assurer la compatibilité avec les lecteurs d'écran",
+        "operationId": "generateAltText",
+        "tags": ["Accessibility"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["image_url"],
+                "properties": {
+                  "image_url": {"type": "string", "format": "uri"},
+                  "language": {"type": "string", "default": "fr"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Alt-text généré"}}
+      }
+    },
+    "/v1/accessibility/contrast": {
+      "post": {
+        "summary": "Vérifier le ratio de contraste entre deux couleurs foreground/background et déterminer la conformité aux niveaux WCAG AA et AAA",
+        "operationId": "checkContrast",
+        "tags": ["Accessibility"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["foreground", "background"],
+                "properties": {
+                  "foreground": {"type": "string", "example": "#FFFFFF"},
+                  "background": {"type": "string", "example": "#007AFF"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Ratio de contraste et conformité WCAG"}}
+      }
+    }
+  }
+}

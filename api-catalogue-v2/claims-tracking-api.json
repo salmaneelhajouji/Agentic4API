@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Claims Tracking API",
+    "version": "1.0.0",
+    "x-api-id": "claims-tracking-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "API de suivi en temps réel du statut d'un sinistre par l'assuré, couvrant la consultation de la chronologie complète du dossier, le statut actuel, les prochaines étapes et les délais estimés de traitement. Destinée aux espaces clients assurance, applications mobiles et portails selfcare pour offrir une transparence totale sur le traitement des sinistres sans intervention d'un gestionnaire. Les utilisateurs typiques sont les assurés, les courtiers en assurance et les équipes de relation client. DIFFÉRENCE vs insurance-claim-api-v3 : Claims Tracking = vue client en lecture seule du statut et de la progression du dossier. insurance-claim-api-v3 = gestion interne complète du dossier par le gestionnaire (création, instruction, règlement). DIFFÉRENCE vs claims-notification-api : Claims Tracking = consultation à la demande du statut. claims-notification-api = envoi proactif de notifications push ou email à l'assuré.",
+    "x-synonymes": "suivi sinistre, statut sinistre, avancement sinistre, chronologie sinistre, tracker sinistre, où en est mon sinistre, délai traitement sinistre, ETA sinistre, étape sinistre, dossier sinistre statut, suivi dossier assurance, progression sinistre, timeline sinistre, suivi déclaration sinistre, espace client sinistre, sinistre en cours statut, prochaine étape sinistre, sinistre accepté refusé, sinistre en expertise, tableau de bord sinistre",
+    "x-false-positive-warning": "Gestion interne dossier sinistre → insurance-claim-api-v3 (traitement complet par gestionnaire, pas lecture seule). Notifications envoyées à l'assuré → claims-notification-api (push/email proactifs, pas consultation). Règlement et paiement du sinistre → claims-settlement-api (transactions financières, pas suivi statut). Déclaration sinistre initiale → insurance-claim-api-v3 (création du dossier). Gestion des expertises → expertise-api (ordres de mission, rapports experts).",
+    "x-cas-usage": "Comment afficher la progression d'un sinistre dans l'espace client assuré ? | Comment récupérer toutes les étapes par lesquelles est passé un dossier sinistre ? | Comment obtenir le délai estimé avant règlement pour l'afficher à l'assuré ? | Comment intégrer un tracker de sinistre en temps réel dans une application mobile assurance ? | Quels sont les statuts disponibles pour savoir si un sinistre est en attente d'expertise, d'instruction ou clôturé ?"
+  },
+  "paths": {
+    "/v1/claims-tracking/{claimId}": {
+      "parameters": [{"name": "claimId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer la chronologie complète d'un sinistre avec les étapes passées, le statut actuel, les prochaines étapes attendues et le délai estimé de règlement",
+        "operationId": "getClaimTimeline",
+        "tags": ["Tracking"],
+        "responses": {"200": {"description": "Timeline sinistre avec ETA"}}
+      }
+    }
+  }
+}

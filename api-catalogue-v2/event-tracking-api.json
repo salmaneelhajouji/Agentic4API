@@ -1,0 +1,144 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Event Tracking API",
+    "version": "1.0.0",
+    "x-api-id": "event-tracking-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "Cette API gère la collecte, l'ingestion et l'analyse des événements comportementaux des utilisateurs sur les plateformes numériques (sites web, applications mobiles). Elle permet de tracer en temps réel les actions des internautes (clics, pages vues, ajouts au panier), de regrouper ces événements par session utilisateur, et de modéliser des funnels (entonnoirs) de conversion. Elle est indispensable pour alimenter les tableaux de bord de Business Intelligence (BI) et guider les analyses d'optimisation produit (Product Analytics).",
+    "x-synonymes": "suivi comportemental, event tracking, clic-stream, parcours utilisateur, page vue, funnel de conversion, entonnoir de conversion, session utilisateur, analytics produit, collecte de données d'usage, ingestion d'événements web, comportement client, suivi de conversion, data marketing, product analytics",
+    "x-false-positive-warning": "Attention : Cette API collecte et analyse exclusivement les traces comportementales et les parcours des utilisateurs à des fins statistiques et marketing (Event Tracking). Ne pas la confondre avec la event-api ou event-bus-api (qui gèrent les communications techniques asynchrones de système à système entre microservices métiers).",
+    "x-cas-usage": "Comment enregistrer en temps réel un événement de consultation de produit par un utilisateur ? | Comment pousser un lot d'événements comportementaux groupés (batch) collectés sur l'application mobile ? | Où récupérer l'analyse et le taux de complétude d'un funnel de conversion spécifique ? | Comment reconstruire l'historique complet des sessions de navigation d'un utilisateur identifié ?"
+  },
+  "paths": {
+    "/v1/events/track": {
+      "post": {
+        "summary": "Enregistrer en temps réel une action unitaire ou un événement comportemental réalisé par un internaute",
+        "operationId": "trackEvent",
+        "tags": [
+          "Events"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "event",
+                  "user_id"
+                ],
+                "properties": {
+                  "event": {
+                    "type": "string",
+                    "example": "product.viewed"
+                  },
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "properties": {
+                    "type": "object"
+                  },
+                  "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "session_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+          },
+        "responses": {
+          "202": {
+            "description": "Enregistré"
+          }
+        }
+      }
+    },
+    "/v1/events/batch": {
+      "post": {
+        "summary": "Ingestrer et traiter un lot groupé (batch) d'événements comportementaux utilisateurs pour optimiser la bande passante",
+        "operationId": "trackBatchEvents",
+        "tags": [
+          "Events"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "events": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    },
+                    "maxItems": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Traitement asynchrone"
+          }
+        }
+      }
+    },
+    "/v1/events/funnels/{funnelId}": {
+      "parameters": [
+        {
+          "name": "funnelId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les statistiques, l'attrition et l'analyse de performance d'un entonnoir (funnel) de conversion utilisateur",
+        "operationId": "getFunnel",
+        "tags": [
+          "Funnels"
+        ],
+        "responses": {
+          "200": {
+            "description": "Funnel"
+          }
+        }
+      }
+    },
+    "/v1/events/sessions/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la chronologie complète et l'historique des sessions de navigation d'un utilisateur ciblé",
+        "operationId": "getUserSessions",
+        "tags": [
+          "Sessions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Sessions"
+          }
+        }
+      }
+    }
+  }
+}

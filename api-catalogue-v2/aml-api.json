@@ -1,0 +1,74 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "AML API",
+    "version": "1.0.0",
+    "x-api-id": "aml-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Anti-Money Laundering — API de lutte contre le blanchiment d'argent (LCB) et le financement du terrorisme (FT), couvrant le monitoring en temps réel des transactions, la gestion des alertes et des investigations, ainsi que la soumission des déclarations de soupçon à TRACFIN. Permet aux établissements financiers de respecter leurs obligations réglementaires LCB-FT imposées par l'ACPR et les directives européennes AMLD. Utilisée par les compliance officers, cellules anti-fraude et équipes conformité pour surveiller les flux financiers suspects et documenter les actions réglementaires. DIFFÉRENCE vs kyc-api : AML = monitoring continu des transactions après onboarding. KYC = vérification d'identité initiale lors de l'entrée en relation. DIFFÉRENCE vs fraud-detection-api : AML = obligations réglementaires de déclaration à TRACFIN. Fraude = détection d'opérations illicites sans obligation de déclaration spécifique.",
+    "x-synonymes": "blanchiment argent, lutte blanchiment, LCB-FT, financement terrorisme, TRACFIN, déclaration soupçon, transaction suspecte, opération douteuse, compliance bancaire, conformité bancaire, cellule anti-fraude, monitoring transaction, surveillance transaction, alerte AML, investigation fraude, suspicious activity report, SAR, GAFI, FATF, obligation vigilance bancaire",
+    "x-false-positive-warning": "Vérification identité client à l'onboarding → kyc-api-v2 (AML couvre le monitoring post-onboarding, pas la vérification initiale). Détection fraude sur transactions e-commerce → fraud-detection-api (AML est centré sur les obligations réglementaires de déclaration à TRACFIN). Criblage listes sanctions et personnes politiquement exposées → sanctions-screening-api (AML ne gère pas le criblage de référentiels externes). Fraude sur sinistres assurance → fraud-claims-api (AML est limité au secteur bancaire et financier).",
+    "x-cas-usage": "Comment soumettre une déclaration de soupçon à TRACFIN pour une opération suspecte ? | Comment surveiller les transactions en temps réel pour détecter un risque de blanchiment ? | Comment ouvrir et suivre une investigation sur une alerte AML générée par le système ? | Comment consulter l'historique de toutes les déclarations de soupçon soumises à TRACFIN ? | Quels sont les scores de risque et motifs retournés lors de l'analyse AML d'une transaction ?"
+  },
+  "paths": {
+    "/v1/aml/monitor": {
+      "post": {
+        "summary": "Analyser une transaction en temps réel pour calculer son score de risque AML et détecter un risque de blanchiment ou de financement du terrorisme",
+        "operationId": "monitorTransaction",
+        "tags": ["Monitor"],
+        "responses": {
+          "200": {
+            "description": "Résultat analyse AML — score de risque et motifs"
+          }
+        }
+      }
+    },
+    "/v1/aml/alerts": {
+      "get": {
+        "summary": "Consulter la liste des alertes AML actives correspondant à des transactions suspectes en attente d'investigation par l'équipe conformité",
+        "operationId": "getAMLAlerts",
+        "tags": ["Alerts"],
+        "responses": {
+          "200": {
+            "description": "Liste des alertes AML"
+          }
+        }
+      },
+      "put": {
+        "summary": "Ouvrir une investigation sur une alerte AML existante, l'assigner à un compliance officer et démarrer le suivi du dossier de suspicion",
+        "operationId": "investigateAlert",
+        "tags": ["Alerts"],
+        "responses": {
+          "200": {
+            "description": "Investigation ouverte"
+          }
+        }
+      }
+    },
+    "/v1/aml/reports": {
+      "post": {
+        "summary": "Soumettre une déclaration de soupçon officielle à TRACFIN pour respecter les obligations LCB-FT, avec pièces justificatives et contexte de l'opération douteuse",
+        "operationId": "declareTRACFIN",
+        "tags": ["Reports"],
+        "responses": {
+          "200": {
+            "description": "Déclaration TRACFIN soumise"
+          }
+        }
+      },
+      "get": {
+        "summary": "Consulter l'historique complet des déclarations de soupçon soumises à TRACFIN, avec statuts et références pour le suivi réglementaire",
+        "operationId": "getDeclarations",
+        "tags": ["Reports"],
+        "responses": {
+          "200": {
+            "description": "Historique des déclarations"
+          }
+        }
+      }
+    }
+  }
+}

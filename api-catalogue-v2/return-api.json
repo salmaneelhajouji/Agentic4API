@@ -1,0 +1,252 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Return API",
+    "version": "1.0.0",
+    "x-api-id": "return-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "Supply Chain",
+    "description": "Retours produits et remboursements. Gestion réglementaire des flux logistiques inverses, inspection qualité en entrepôt et processus d'approbation B2B. DIFFÉRENCE vs returns-api : Return API (Supply Chain) gère les statuts d'inspection lourde et la conformité logistique industrielle, alors que returns-api (Retail) est centrée sur le front e-commerce B2C et l'impression rapide d'étiquettes de transport.",
+    "x-synonymes": "retour, remboursement, logistique inverse, supply chain, marchandise, colis, commande, défectueux, avoir, reconditionnement, entrepôt, non conforme, bon de retour, réexpédition, échange, sav, litige, conformité",
+    "x-false-positive-warning": "Pour les retours orientés clients particuliers en e-commerce avec génération d'étiquettes transporteurs (Colissimo, etc.), préférez utiliser returns-api.",
+    "x-cas-usage": "je veux enregistrer une demande de retour suite à une marchandise défectueuse | je veux vérifier le statut d'une demande de retour logistique | je veux approuver officiellement un retour de produit pour émettre un avoir | je veux rejeter une demande de retour non conforme aux CGV"
+  },
+  "paths": {
+    "/v1/returns": {
+      "post": {
+        "summary": "Initier formellement une demande de retour produit avec motifs détaillés et choix de résolution",
+        "operationId": "createReturn",
+        "tags": [
+          "Returns"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "order_id",
+                  "items",
+                  "reason"
+                ],
+                "properties": {
+                  "order_id": {
+                    "type": "string"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "line_id": {
+                          "type": "string"
+                        },
+                        "quantity": {
+                          "type": "integer"
+                        },
+                        "condition": {
+                          "type": "string",
+                          "enum": [
+                            "unopened",
+                            "opened",
+                            "damaged"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "defective",
+                      "not_as_described",
+                      "changed_mind",
+                      "wrong_item"
+                    ]
+                  },
+                  "preferred_resolution": {
+                    "type": "string",
+                    "enum": [
+                      "refund",
+                      "exchange",
+                      "store_credit"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Demande créée"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/returns/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état d'avancement, la conformité de l'inspection et le suivi d'un retour produit",
+        "operationId": "getReturn",
+        "tags": [
+          "Returns"
+        ],
+        "responses": {
+          "200": {
+            "description": "Retour"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/returns/{id}/approve": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Valider la conformité du retour après inspection et arbitrer le type de dédommagement (avoir/crédit)",
+        "operationId": "approveReturn",
+        "tags": [
+          "Returns"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "resolution": {
+                    "type": "string",
+                    "enum": [
+                      "refund",
+                      "exchange",
+                      "store_credit"
+                    ]
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Approuvé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/returns/{id}/reject": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Refuser la demande de retour de marchandise en justifiant le non-respect des règles logistiques",
+        "operationId": "rejectReturn",
+        "tags": [
+          "Returns"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "reason"
+                ],
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rejeté"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/returns?orderId={id}": {
+      "get": {
+        "summary": "Lister l'ensemble des flux de retour logistique rattachés à une commande d'origine",
+        "operationId": "getReturnsByOrder",
+        "tags": [
+          "Returns"
+        ],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retours"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

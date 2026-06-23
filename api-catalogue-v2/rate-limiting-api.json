@@ -1,0 +1,55 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Rate Limiting API",
+    "version": "1.0.0",
+    "x-api-id": "rate-limiting-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Divers",
+    "x-domain": "Cross",
+    "description": "Gestion générique des quotas et rate limiting par client, endpoint et période. Permet de créer, consulter et modifier des règles de quota, et de consommer un quota pour vérifier si un appel est autorisé. DIFFÉRENCE vs rate-limit-api : rate-limiting-api = gestion générique cross-domaine. rate-limit-api = quotas spécifiques infrastructure Platform avec blacklist.",
+    "x-synonymes": "quota générique, rate limiting, limite appels API, quota endpoint, quota période, consommation quota, vérification quota, règle quota, throttling générique, quota par clé, quota global, quota utilisateur, quota partagé, quota application, compteur API, limite fréquence, dépassement quota, quota fenêtre glissante, quota fixe, quota dynamique",
+    "x-false-positive-warning": "Quotas infrastructure Platform avec blacklist → rate-limit-api. Quotas notifications par utilisateur → notification-api-v3 (user_rate_limit).",
+    "x-cas-usage": "je veux créer une règle de quota de 100 appels par heure pour un endpoint | je veux voir toutes les règles de quota configurées | je veux vérifier et consommer un quota avant d exécuter une action | je veux modifier la limite d un quota existant | je veux voir le détail d une règle de quota spécifique"
+  },
+  "paths": {
+    "/v1/rate-limits": {
+      "get": {
+        "summary": "Quotas configurés — règles actives par client, endpoint et période",
+        "operationId": "listRateLimits",
+        "tags": ["Limits"],
+        "responses": {"200": {"description": "Quotas configurés"}}
+      },
+      "post": {
+        "summary": "Créer une règle de quota — par client, endpoint ou période",
+        "operationId": "createRateLimit",
+        "tags": ["Limits"],
+        "responses": {"200": {"description": "Règle quota créée"}}
+      }
+    },
+    "/v1/rate-limits/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d une règle de quota — limite, fenêtre et compteur actuel",
+        "operationId": "getRateLimit",
+        "tags": ["Limits"],
+        "responses": {"200": {"description": "Détail quota"}}
+      },
+      "put": {
+        "summary": "Modifier une règle de quota — changer la limite ou la fenêtre temporelle",
+        "operationId": "updateRateLimit",
+        "tags": ["Limits"],
+        "responses": {"200": {"description": "Quota modifié"}}
+      }
+    },
+    "/v1/rate-limits/check": {
+      "post": {
+        "summary": "Consommer un quota et vérifier si l appel est autorisé — retourne allowed/denied",
+        "operationId": "consumeQuota",
+        "tags": ["Check"],
+        "responses": {"200": {"description": "Quota consommé — allowed ou denied"}}
+      }
+    }
+  }
+}

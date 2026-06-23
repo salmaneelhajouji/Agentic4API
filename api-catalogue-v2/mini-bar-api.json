@@ -1,0 +1,90 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mini Bar API",
+    "version": "1.0.0",
+    "x-api-id": "mini-bar-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Cette API régit l'inventaire, le réapprovisionnement et la comptabilisation des consommations des mini-bars au sein des chambres de l'établissement hôtelier. Elle permet aux équipiers d'étages de consulter la dotation théorique des rafraîchissements, d'enregistrer les boissons ou collations consommées par les clients, de planifier les tâches de réassort et d'éditer la note intermédiaire des consommations pour imputation directe sur la facture de la chambre.",
+    "x-synonymes": "mini-bar hôtelier, consommation de chambre, réapprovisionnement mini-bar, réassort de boissons, facturation mini-bar, imputation de chambre, frais annexes hôtel, dotation de rafraîchissements, note de consommations, gestion des frigos de chambres",
+    "x-false-positive-warning": "Attention : Cette API administre uniquement les inventaires et imputations financières spécifiques aux mini-bars des chambres (Mini Bar). Ne pas la confondre avec la `room-booking-api` ou `room-billing-api` qui pilote la facturation globale des nuitées, taxes de séjour et clôtures de comptes de réservations d'hôtels.",
+    "x-cas-usage": "Comment lister les articles et boissons devant composer la dotation théorique du mini-bar d'une chambre ? | Comment consigner une boisson consommée par le client lors du contrôle quotidien des équipes ? | Où extraire la note intermédiaire ou facture des consommations mini-bar pour l'ajouter au grand livre du séjour ?"
+  },
+  "paths": {
+    "/v1/minibar/{roomId}": {
+      "parameters": [
+        {
+          "name": "roomId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'inventaire actuel des boissons et snacks restants et la dotation cible du mini-bar de la chambre",
+        "operationId": "getMiniBarItems",
+        "tags": [
+          "MiniBar"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et imputer une nouvelle boisson ou collation consommée par le client occupant la chambre",
+        "operationId": "recordConsumption",
+        "tags": [
+          "MiniBar"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Valider et enregistrer la remise à niveau (réapprovisionnement complet) de l'inventaire physique du mini-bar",
+        "operationId": "restock",
+        "tags": [
+          "MiniBar"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/minibar/{bookingId}/bill": {
+      "parameters": [
+        {
+          "name": "bookingId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Générer et récupérer la facture ou note intermédiaire des consommations mini-bar rattachée au dossier de réservation",
+        "operationId": "getMiniBarBill",
+        "tags": [
+          "Bill"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

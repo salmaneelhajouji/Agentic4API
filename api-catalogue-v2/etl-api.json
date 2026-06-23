@@ -1,0 +1,124 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ETL API",
+    "version": "1.0.0",
+    "x-api-id": "etl-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API régit l'orchestration, la configuration et la supervision des flux d'intégration de données de type ETL (Extract, Transform, Load). Elle permet de déclarer des jobs de transformation, d'en planifier ou d'en déclencher l'exécution (runs), et de collecter les journaux de logs techniques pour auditer le bon acheminement et le nettoyage des données entre les systèmes opérationnels et les architectures de stockage (Data Lake, Data Warehouse). Elle est principalement exploitée par les Data Engineers et les équipes DevOps.",
+    "x-synonymes": "intégration de données, pipeline ETL, extract transform load, job de transformation, run de pipeline, ordonnancement data, chargement de données, extraction de données, nettoyage de données, flux d'alimentation, logs de pipeline, data pipelining, flux de données batch, orchestration de données, transformation de données",
+    "x-false-positive-warning": "Attention : Cette API pilote l'orchestration technique des pipelines d'intégration et d'alimentation batch (ETL). Ne pas la confondre avec la streaming-api (flux d'ingestion en temps réel à haute fréquence), la data-factory-api, ou avec les APIs d'accès direct aux données stockées comme la data-warehouse-api ou la data-lake-api.",
+    "x-cas-usage": "Comment créer et configurer un nouveau job d'alimentation de données de facturation ? | Quelle méthode permet de déclencher manuellement l'exécution d'un pipeline ETL ? | Où puis-je récupérer l'historique complet et les logs techniques d'un run spécifique pour diagnostiquer un échec ? | Comment mettre à jour les paramètres d'un job de transformation existant ?"
+  },
+  "paths": {
+    "/v1/etl/jobs": {
+      "get": {
+        "summary": "Lister, filtrer et auditer l'ensemble des processus et jobs d'intégration de données (ETL) déclarés dans le catalogue",
+        "operationId": "listETLJobs",
+        "tags": [
+          "Jobs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et enregistrer un nouveau job de transformation ou pipeline ETL d'alimentation",
+        "operationId": "createETLJob",
+        "tags": [
+          "Jobs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/etl/jobs/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les paramètres, la configuration d'origine, les sources et cibles d'un job ETL spécifique",
+        "operationId": "getETLJob",
+        "tags": [
+          "Jobs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier la configuration, les variables d'environnement ou la planification d'un job ETL existant",
+        "operationId": "updateETLJob",
+        "tags": [
+          "Jobs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher l'exécution immédiate (run asynchrone) du pipeline d'intégration de données sélectionné",
+        "operationId": "runETLJob",
+        "tags": [
+          "Jobs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/etl/jobs/{id}/runs/{runId}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "runId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer les journaux d'exécution, traces techniques et logs détaillés d'un run pour le débogage ou l'audit",
+        "operationId": "getETLRunLogs",
+        "tags": [
+          "Runs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

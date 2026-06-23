@@ -1,0 +1,153 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "File Storage API",
+    "version": "1.0.0",
+    "x-api-id": "file-storage-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "Cette API fournit les services d'infrastructure de base pour le téléversement, le téléchargement et l'organisation logique de fichiers numériques de toutes natures (documents, données structurées brutes). Elle gère l'arborescence des dossiers et automatise la génération d'URLs pré-signées sécurisées, permettant aux applications de charger directement leurs volumes lourds vers le stockage objet sous-jacent (type AWS S3) sans transiter par les serveurs applicatifs.",
+    "x-synonymes": "stockage de fichiers, téléversement de document, upload de fichier, téléchargement sécurisé, url pré-signée, stockage objet, bucket S3, dossier logique, partage de fichier, métadonnées de fichier, binaire brut, file transfer, infrastructure de stockage",
+    "x-false-positive-warning": "Attention : Cette API exécute le stockage de fichiers binaires bruts et génère des passerelles techniques de transfert direct (File Storage). Ne pas la confondre avec la `media-api` (optimisée pour le redimensionnement d'images et la diffusion CDN), ni avec la `document-management-api` (qui est une GED collaborative gérant des cycles de validation métiers).",
+    "x-cas-usage": "Comment générer une URL pré-signée sécurisée pour permettre à un client de téléverser un fichier volumineux en direct ? | Comment uploader un document binaire au sein d'un répertoire logique spécifique du stockage objet ? | Quelle méthode appeler pour supprimer définitivement un fichier périmé et libérer l'espace disque ?"
+  },
+  "paths": {
+    "/v1/files/upload": {
+      "post": {
+        "summary": "Téléverser (upload) un fichier binaire et l'associer à un dossier ou définir sa visibilité publique/privée",
+        "operationId": "uploadFile",
+        "tags": [
+          "Files"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "folder": {
+                    "type": "string"
+                  },
+                  "public": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Uploadé"
+          }
+        }
+      }
+    },
+    "/v1/files/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les métadonnées techniques d'un fichier, incluant sa taille, son extension et sa date de création",
+        "operationId": "getFile",
+        "tags": [
+          "Files"
+        ],
+        "responses": {
+          "200": {
+            "description": "Fichier"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer définitivement un fichier physique du stockage objet de l'infrastructure",
+        "operationId": "deleteFile",
+        "tags": [
+          "Files"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimé"
+          }
+        }
+      }
+    },
+    "/v1/files/{id}/download": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Télécharger le contenu d'un fichier numérique sous forme de flux binaire",
+        "operationId": "downloadFile",
+        "tags": [
+          "Files"
+        ],
+        "responses": {
+          "200": {
+            "description": "Fichier"
+          }
+        }
+      }
+    },
+    "/v1/files/presigned-url": {
+      "post": {
+        "summary": "Générer une URL éphémère pré-signée pour autoriser un téléversement ou un téléchargement direct sécurisé (S3)",
+        "operationId": "getPresignedURL",
+        "tags": [
+          "Files"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "filename",
+                  "content_type"
+                ],
+                "properties": {
+                  "filename": {
+                    "type": "string"
+                  },
+                  "content_type": {
+                    "type": "string"
+                  },
+                  "expires_in": {
+                    "type": "integer",
+                    "default": 3600
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "URL pré-signée valable expires_in secondes"
+          }
+        }
+      }
+    }
+  }
+}

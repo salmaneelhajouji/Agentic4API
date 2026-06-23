@@ -1,0 +1,56 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Audit Log API",
+    "version": "1.0.0",
+    "x-api-id": "audit-log-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Security",
+    "x-domain": "Security & Compliance",
+    "description": "Journal d'audit et traçabilité des actions sensibles dans les systèmes d'information. Couvre les domaines de la sécurité informatique, de la conformité réglementaire (RGPD, ISO 27001, SOC 2) et de l'investigation forensique. Enregistre de manière immuable qui a fait quoi, quand et depuis quelle adresse IP — connexions, modifications de données, accès aux ressources sensibles, suppressions et changements de permissions. Utilisée par les équipes sécurité, les auditeurs internes et externes, les DPO et les équipes compliance pour produire des preuves de traçabilité. DIFFÉRENCE vs alert-api : Audit Log API = traçabilité passive de toutes les actions pour conformité ; alert-api = notification active en cas d'incident ou dépassement de seuil. DIFFÉRENCE vs access-review-api : Audit Log API = historique de ce qui s'est passé ; access-review-api = décision active sur les droits futurs. DIFFÉRENCE vs monitoring-api : Audit Log API = logs d'actions utilisateurs pour conformité ; monitoring-api = métriques techniques de performance des systèmes.",
+    "x-synonymes": "journal audit, log audit, traçabilité actions, qui a fait quoi, historique actions utilisateur, log sécurité, piste audit, audit trail, conformité ISO 27001, conformité RGPD logs, log accès, log connexion, log modification, log suppression, forensique, investigation sécurité, export logs audit, accountability, non-répudiation, log administration",
+    "x-false-positive-warning": "DIFFÉRENCE vs alert-api : Audit Log API = traçabilité passive de toutes les actions pour conformité ; alert-api = notification active en cas d'incident ou dépassement de seuil. DIFFÉRENCE vs access-review-api : Audit Log API = historique de ce qui s'est passé ; access-review-api = décision active sur les droits futurs à accorder ou révoquer. DIFFÉRENCE vs monitoring-api : Audit Log API = logs d'actions utilisateurs pour conformité réglementaire ; monitoring-api = métriques techniques de performance et santé des systèmes. DIFFÉRENCE vs analytics-api : Audit Log API = enregistrement immuable d'événements de sécurité à des fins de preuve ; analytics-api = agrégation et analyse statistique de données métier.",
+    "x-cas-usage": "Comment savoir qui a modifié ou supprimé un enregistrement sensible et à quelle heure ? | Comment produire un rapport d'audit complet pour une certification ISO 27001 ou SOC 2 ? | Comment exporter les logs de connexion des 6 derniers mois pour un audit externe ? | Quels utilisateurs ont accédé à une ressource confidentielle sur une période donnée ? | Comment retrouver toutes les actions effectuées par un compte compromis pour une investigation forensique ?"
+  },
+  "paths": {
+    "/v1/audit/logs": {
+      "get": {
+        "summary": "Consulter et filtrer les logs d'audit par utilisateur, ressource, type d'action et plage de dates pour analyse de conformité ou investigation",
+        "operationId": "getAuditLogs",
+        "tags": ["Audit"],
+        "parameters": [
+          {"name": "user_id", "in": "query", "schema": {"type": "string"}},
+          {"name": "resource", "in": "query", "schema": {"type": "string"}},
+          {"name": "action", "in": "query", "schema": {"type": "string"}},
+          {"name": "from", "in": "query", "schema": {"type": "string", "format": "date-time"}},
+          {"name": "to", "in": "query", "schema": {"type": "string", "format": "date-time"}},
+          {"name": "page", "in": "query", "schema": {"type": "integer", "default": 1}}
+        ],
+        "responses": {"200": {"description": "Logs d'audit filtrés selon les critères fournis, paginés"}}
+      }
+    },
+    "/v1/audit/export": {
+      "post": {
+        "summary": "Lancer un export asynchrone des logs d'audit au format CSV pour transmission à un auditeur externe, une investigation forensique ou un rapport de conformité réglementaire",
+        "operationId": "exportAuditLogs",
+        "tags": ["Audit"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "from": {"type": "string", "format": "date"},
+                  "to": {"type": "string", "format": "date"},
+                  "filters": {"type": "object"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"202": {"description": "Export lancé de manière asynchrone — fichier CSV disponible sous peu via notification ou polling"}}
+      }
+    }
+  }
+}

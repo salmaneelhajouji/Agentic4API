@@ -1,0 +1,105 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Subscriber API",
+    "version": "3.0.0",
+    "x-api-id": "subscriber-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Version actuelle et recommandée de la gestion des abonnés télécom. Cycle de vie complet : création, modification, résiliation, gestion des lignes téléphoniques multiples, SIM/eSIM, portabilité de numéro entrant et suivi du statut de portabilité. DIFFÉRENCE vs customer-profile-api : Subscriber gère spécifiquement les abonnés télécom avec leurs lignes, SIM et forfaits, Customer Profile gère le client commercial générique tous produits. DIFFÉRENCE vs subscription-api : Subscriber = l'abonné et ses lignes télécom, Subscription = les abonnements produits/services commerciaux.",
+    "x-synonymes": "abonné télécom, ligne téléphonique, forfait mobile, SIM eSIM, portabilité numéro, multi-lignes, résiliation abonné, création abonné, MSISDN, IMSI, cycle de vie abonné, gestion abonné, opérateur télécom, offre mobile, profil abonné",
+    "x-false-positive-warning": "Client commercial générique → customer-profile-api. Abonnements produits/services → subscription-api. Facturation télécom → billing-api.",
+    "x-cas-usage": "je veux créer un nouvel abonné télécom et lui attribuer une ligne | je veux ajouter une ligne supplémentaire à un abonné existant | je veux initier une portabilité de numéro entrant | je veux vérifier le statut d'une portabilité en cours | je veux résilier l'abonnement d'un client",
+    "x-breaking-changes-from-previous": [
+      "eSIM",
+      "Multi-lignes"
+    ]
+  },
+  "paths": {
+    "/v3/subscribers": {
+      "get": {
+        "summary": "Lister les abonnés télécom avec leurs lignes, forfaits et statut de compte",
+        "operationId": "listSubscribersV3",
+        "tags": ["Subscribers"],
+        "responses": { "200": { "description": "Abonnés" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Créer un nouvel abonné télécom avec attribution de ligne et de SIM/eSIM",
+        "operationId": "createSubscriberV3",
+        "tags": ["Subscribers"],
+        "responses": { "200": { "description": "Abonné créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v3/subscribers/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le profil complet d'un abonné (lignes, forfait, SIM, statut, adresse)",
+        "operationId": "getSubscriberV3",
+        "tags": ["Subscribers"],
+        "responses": { "200": { "description": "Profil abonné" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Modifier les informations d'un abonné (adresse, forfait, options)",
+        "operationId": "updateSubscriberV3",
+        "tags": ["Subscribers"],
+        "responses": { "200": { "description": "Abonné mis à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Résilier l'abonnement télécom d'un abonné",
+        "operationId": "terminateSubscriber",
+        "tags": ["Subscribers"],
+        "responses": { "200": { "description": "Abonné résilié" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v3/subscribers/{id}/lines": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lister les lignes téléphoniques d'un abonné (multi-lignes nouveau en v3)",
+        "operationId": "getLines",
+        "tags": ["Lines"],
+        "responses": { "200": { "description": "Lignes" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Ajouter une ligne supplémentaire (SIM ou eSIM) à un abonné existant",
+        "operationId": "addLine",
+        "tags": ["Lines"],
+        "responses": { "200": { "description": "Ligne ajoutée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v3/subscribers/{id}/portability": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "post": {
+        "summary": "Initier une portabilité de numéro entrant pour un abonné",
+        "operationId": "portNumberV3",
+        "tags": ["Portability"],
+        "responses": { "200": { "description": "Portabilité initiée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "get": {
+        "summary": "Consulter le statut en cours d'une demande de portabilité de numéro",
+        "operationId": "getPortabilityStatus",
+        "tags": ["Portability"],
+        "responses": { "200": { "description": "Statut portabilité" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

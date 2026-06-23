@@ -1,0 +1,225 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Email API",
+    "version": "2.0.0",
+    "x-api-id": "email-api",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Communication",
+    "description": "Cette API spécialisée orchestre la composition, l'envoi et le suivi analytique approfondi d'emails transactionnels et de campagnes de marketing direct. Elle prend en charge la gestion de gabarits dynamiques (templates Handlebars), le suivi en temps réel des indicateurs de délivrabilité (taux d'ouverture, clics), ainsi que le traitement automatisé des rejets (bounces) et des désabonnements via des listes de suppression centralisées. Elle garantit l'optimisation de la réputation de routage de la plateforme.",
+    "x-synonymes": "email transactionnel, campagne email, routage d'email, template Handlebars, suivi des ouvertures, tracking de clics, gestion des bounces, adresse de rebond, liste de suppression, désabonnement, délivrabilité email, envoi en masse, courriel marketing, réputation d'expéditeur, historique de livraison",
+    "x-false-positive-warning": "Attention : Cette API se consacre de façon exclusive et pointue au canal email, à sa délivrabilité et à ses gabarits dédiés. Ne pas la confondre avec la `notification-api` (qui orchestre l'envoi multicanal synchrone type SMS, push et email basique sans tracking fin), ni avec la `messaging-api` (réservée au clavardage et à la messagerie instantanée en temps réel).",
+    "x-cas-usage": "Comment router un email transactionnel personnalisé de confirmation de commande en y injectant un template Handlebars ? | Comment lancer une campagne d'envoi d'emails en masse vers une liste de 10 000 destinataires ? | Où consulter le statut de livraison d'un courriel ou identifier la cause d'un échec de routage ? | Comment extraire la liste des adresses email bloquées suite à des bounces répétés ou des plaintes pour désinscription ?"
+  },
+  "paths": {
+    "/v2/emails/send": {
+      "post": {
+        "summary": "Composer et router un email transactionnel unitaire personnalisé en s'appuyant sur un gabarit dynamique (template)",
+        "operationId": "sendEmail",
+        "tags": [
+          "Emails"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailSend"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Envoyé"
+          }
+        }
+      }
+    },
+    "/v2/emails/batch": {
+      "post": {
+        "summary": "Déclencher l'envoi asynchrone d'une campagne d'emails en masse vers une liste de destinataires (maximum 10 000)",
+        "operationId": "sendBatchEmail",
+        "tags": [
+          "Emails"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailBatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Traitement asynchrone lancé"
+          }
+        }
+      }
+    },
+    "/v2/emails/{id}/status": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Suivre l'état de livraison, de réception et les indicateurs d'ouverture ou de clic d'un email spécifique",
+        "operationId": "getEmailStatus",
+        "tags": [
+          "Emails"
+        ],
+        "responses": {
+          "200": {
+            "description": "Statut"
+          }
+        }
+      }
+    },
+    "/v2/emails/templates": {
+      "get": {
+        "summary": "Lister l'ensemble des templates et gabarits de courriels (Handlebars) disponibles dans le référentiel de communication",
+        "operationId": "listTemplates",
+        "tags": [
+          "Templates"
+        ],
+        "responses": {
+          "200": {
+            "description": "Templates"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et enregistrer un nouveau gabarit d'email (Handlebars) intégrant la structure HTML et le sujet de base",
+        "operationId": "createTemplate",
+        "tags": [
+          "Templates"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailTemplate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        }
+      }
+    },
+    "/v2/emails/suppressions": {
+      "get": {
+        "summary": "Consulter le registre des adresses email supprimées ou exclues suite à des rejets (bounces) ou des demandes de désabonnement",
+        "operationId": "getSuppressions",
+        "tags": [
+          "Suppressions"
+        ],
+        "responses": {
+          "200": {
+            "description": "Suppressions"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EmailSend": {
+        "type": "object",
+        "required": [
+          "to",
+          "subject",
+          "template_id"
+        ],
+        "properties": {
+          "to": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "cc": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "email"
+            }
+          },
+          "subject": {
+            "type": "string"
+          },
+          "template_id": {
+            "type": "string"
+          },
+          "template_data": {
+            "type": "object",
+            "description": "Variables Handlebars injectées dans le template"
+          },
+          "from_name": {
+            "type": "string",
+            "default": "Devoteam"
+          }
+        }
+      },
+      "EmailBatch": {
+        "type": "object",
+        "properties": {
+          "recipients": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "template_id": {
+            "type": "string"
+          }
+        }
+      },
+      "EmailTemplate": {
+        "type": "object",
+        "required": [
+          "name",
+          "subject",
+          "html_body"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "html_body": {
+            "type": "string",
+            "description": "Template Handlebars"
+          },
+          "text_body": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

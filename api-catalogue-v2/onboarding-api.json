@@ -1,0 +1,71 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Onboarding API",
+    "version": "1.0.0",
+    "x-api-id": "onboarding-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe RH",
+    "x-domain": "Human Resources",
+    "description": "Gestion du parcours d intégration des nouveaux employés. Permet de démarrer un parcours d onboarding avec un template adapté au poste, de suivre l avancement des tâches, de marquer les étapes comme complétées et de provisionner automatiquement les accès systèmes. Utilisé par les équipes RH et IT pour accueillir les nouveaux collaborateurs de façon structurée.",
+    "x-synonymes": "onboarding employé, intégration nouveau salarié, parcours intégration, checklist onboarding, accueil collaborateur, premier jour employé, provisioning accès, accès systèmes nouveau employé, tâches onboarding, template onboarding, onboarding manager, onboarding développeur, documents onboarding, welcome pack, accueil RH, plan intégration, prise de poste, intégration numérique, workflow onboarding, étapes intégration",
+    "x-false-positive-warning": "DIFFÉRENCE vs employee-api : Onboarding API = processus d intégration temporaire à l arrivée. employee-api = dossier RH permanent du salarié. DIFFÉRENCE vs access-review-api : Onboarding API = provisioning initial des accès. access-review-api = révision périodique des droits existants. DIFFÉRENCE vs training-api : Onboarding API = parcours d intégration général. training-api = formations métier continues.",
+    "x-cas-usage": "je veux démarrer le parcours d onboarding d un nouveau développeur qui arrive lundi | je veux voir où en est l intégration d un nouvel employé arrivé il y a 3 jours | je veux marquer la visite des locaux comme complétée dans le parcours d onboarding | je veux provisionner automatiquement les accès GitHub, Slack et Jira du nouvel employé | je veux créer un template d onboarding spécifique pour les managers"
+  },
+  "paths": {
+    "/v1/onboarding/start": {
+      "post": {
+        "summary": "Démarrer le parcours d onboarding d un nouvel employé — avec template par poste",
+        "operationId": "startOnboarding",
+        "tags": ["Onboarding"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["employee_id", "start_date"],
+                "properties": {
+                  "employee_id": {"type": "string"},
+                  "start_date": {"type": "string", "format": "date"},
+                  "template_id": {"type": "string", "description": "Template parcours dev, commercial, manager"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Parcours d onboarding démarré"}}
+      }
+    },
+    "/v1/onboarding/{employeeId}": {
+      "parameters": [{"name": "employeeId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut du parcours d onboarding — tâches complétées, en cours et à venir",
+        "operationId": "getOnboarding",
+        "tags": ["Onboarding"],
+        "responses": {"200": {"description": "Parcours avec avancement"}}
+      }
+    },
+    "/v1/onboarding/{employeeId}/tasks/{taskId}/complete": {
+      "parameters": [
+        {"name": "employeeId", "in": "path", "required": true, "schema": {"type": "string"}},
+        {"name": "taskId", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "put": {
+        "summary": "Marquer une tâche d onboarding comme complétée — avance la progression",
+        "operationId": "completeOnboardingTask",
+        "tags": ["Onboarding"],
+        "responses": {"200": {"description": "Tâche complétée"}}
+      }
+    },
+    "/v1/onboarding/{employeeId}/provision-access": {
+      "parameters": [{"name": "employeeId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Provisionner automatiquement les accès systèmes du nouvel employé",
+        "operationId": "provisionAccess",
+        "tags": ["Onboarding"],
+        "responses": {"202": {"description": "Accès provisionnés"}}
+      }
+    }
+  }
+}

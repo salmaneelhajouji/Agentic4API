@@ -1,0 +1,50 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Rate Limit API",
+    "version": "1.0.0",
+    "x-api-id": "rate-limit-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "Gestion des quotas et limites de débit par client et endpoint. Permet de consulter et modifier les quotas d un client (requêtes par minute, par jour, burst), de réinitialiser ses compteurs et de blacklister une IP ou un client abusif. Utilisé par les équipes platform pour contrôler l usage de la gateway Kong.",
+    "x-synonymes": "rate limit, quota API, limite débit, throttling, requêtes par minute, requêtes par jour, burst limit, blacklist IP, blocage client, quota dépassé, 429 too many requests, limitation API, quota consommé, reset quota, quota par endpoint, quota par client, anti-abus API, protection surcharge, gateway quota, API throttle",
+    "x-false-positive-warning": "DIFFÉRENCE vs rate-limiting-api : Rate Limit API = gestion des quotas et blacklist par client pour l infrastructure Platform. rate-limiting-api = gestion générique des quotas par endpoint dans un domaine Cross. Ces deux APIs sont redondantes — préférer rate-limit-api de l équipe Platform.",
+    "x-cas-usage": "je veux voir les quotas API d un client qui se plaint de 429 | je veux augmenter la limite de requêtes par minute d un client premium | je veux réinitialiser les compteurs d un client après un incident | je veux blacklister une IP qui abuse de notre API | je veux voir le burst limit configuré pour un client"
+  },
+  "paths": {
+    "/v1/rate-limits/{clientId}": {
+      "parameters": [{"name": "clientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Quotas d un client — requêtes par minute, par jour et burst limit",
+        "operationId": "getRateLimits",
+        "tags": ["RateLimits"],
+        "responses": {"200": {"description": "Quotas client"}}
+      },
+      "put": {
+        "summary": "Modifier les quotas d un client — augmenter ou réduire les limites",
+        "operationId": "updateRateLimits",
+        "tags": ["RateLimits"],
+        "responses": {"200": {"description": "Quotas mis à jour"}}
+      }
+    },
+    "/v1/rate-limits/{clientId}/reset": {
+      "parameters": [{"name": "clientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "delete": {
+        "summary": "Réinitialiser les compteurs d un client — remet les compteurs à zéro",
+        "operationId": "resetRateLimits",
+        "tags": ["RateLimits"],
+        "responses": {"204": {"description": "Compteurs réinitialisés"}}
+      }
+    },
+    "/v1/rate-limits/blacklist": {
+      "post": {
+        "summary": "Blacklister une IP ou un client — bloquer les accès abusifs temporairement",
+        "operationId": "blacklistClient",
+        "tags": ["RateLimits"],
+        "responses": {"201": {"description": "Client ou IP blacklisté"}}
+      }
+    }
+  }
+}

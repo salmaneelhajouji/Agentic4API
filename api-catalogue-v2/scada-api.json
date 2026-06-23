@@ -1,0 +1,81 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SCADA API",
+    "version": "1.0.0",
+    "x-api-id": "scada-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Supervision et contrôle industriel SCADA (Supervisory Control and Data Acquisition). Gestion des tags SCADA (variables terrain), lecture et écriture de valeurs en temps réel sur automates et capteurs, gestion des alarmes industrielles actives, et interrogation de l'historien de process pour l'analyse des données de production. DIFFÉRENCE vs sensor-data-api : SCADA interagit directement avec les automates industriels (PLCs) et permet la télécommande, Sensor Data collecte passivement des mesures de capteurs IoT. DIFFÉRENCE vs iot-api : SCADA est dédié aux environnements OT (Operational Technology) industriels avec protocoles Modbus/OPC-UA, IoT couvre les objets connectés génériques.",
+    "x-synonymes": "SCADA supervision, automate industriel, PLC, tag SCADA, télécommande industrielle, alarme industrielle, historien process, OPC-UA, Modbus, données terrain, supervision usine, contrôle process, temps réel industriel, MES, acquisition données",
+    "x-false-positive-warning": "Capteurs IoT génériques → sensor-data-api-v2. Télémétrie équipements → telemetry-api. Maintenance et GMAO → maintenance-api.",
+    "x-cas-usage": "je veux lire la valeur temps réel d'un capteur industriel | je veux écrire une consigne sur un automate (PLC) | je veux voir les alarmes industrielles actives en ce moment | je veux interroger l'historique de production sur une plage horaire | je veux ajouter un nouveau tag de supervision SCADA"
+  },
+  "paths": {
+    "/v1/scada/tags": {
+      "get": {
+        "summary": "Lister tous les tags SCADA disponibles avec leur type, unité et statut de communication",
+        "operationId": "listSCADATags",
+        "tags": ["Tags"],
+        "responses": { "200": { "description": "Liste des tags SCADA" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Ajouter un nouveau tag SCADA pour superviser une variable terrain supplémentaire",
+        "operationId": "addTag",
+        "tags": ["Tags"],
+        "responses": { "200": { "description": "Tag ajouté" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/scada/tags/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lire la valeur temps réel d'un tag SCADA (mesure, horodatage, qualité du signal)",
+        "operationId": "getTagValue",
+        "tags": ["Tags"],
+        "responses": { "200": { "description": "Valeur temps réel du tag" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Écrire une valeur ou consigne sur un tag SCADA — télécommande automate",
+        "operationId": "writeTagValue",
+        "tags": ["Tags"],
+        "responses": { "200": { "description": "Valeur écrite" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/scada/alarms": {
+      "get": {
+        "summary": "Lister les alarmes industrielles actives avec priorité, zone et durée de déclenchement",
+        "operationId": "getActiveAlarms",
+        "tags": ["Alarms"],
+        "responses": { "200": { "description": "Alarmes actives" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Acquitter et effacer une alarme industrielle après intervention",
+        "operationId": "clearAlarm",
+        "tags": ["Alarms"],
+        "responses": { "200": { "description": "Alarme effacée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/scada/historian": {
+      "post": {
+        "summary": "Interroger l'historien de process — récupérer les données de production sur une plage de temps",
+        "operationId": "queryHistorian",
+        "tags": ["Historian"],
+        "responses": { "200": { "description": "Données historisées" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

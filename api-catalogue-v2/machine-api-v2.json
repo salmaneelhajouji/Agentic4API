@@ -1,0 +1,78 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Machine API",
+    "version": "2.0.0",
+    "x-api-id": "machine-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Gestion des machines industrielles lourdes en atelier. Permet de consulter l état et la capacité des machines, de changer leur mode opérationnel, de gérer les programmes CN (CNC) et de consulter le TRS/OEE calculé automatiquement. DIFFÉRENCE vs device-registry-api : Machine API = équipement industriel lourd avec programmes usinage et OEE. device-registry-api = appareils IoT génériques capteurs et connectés.",
+    "x-breaking-changes-from-previous": ["Programmes CNC", "OEE calculé", "Alertes automatiques"],
+    "x-synonymes": "machine industrielle, CNC machine, programme CN, usinage CNC, tour CN, fraiseuse CNC, centre usinage, TRS taux rendement synthétique, OEE overall equipment effectiveness, disponibilité machine, performance machine, qualité production machine, état machine, capacité machine, temps cycle machine, arrêt machine, panne machine, machine en production, parc machines, équipement industriel",
+    "x-false-positive-warning": "Appareils IoT capteurs génériques → device-registry-api. Gestion de l atelier et ordres de fabrication → mes-api. Planning maintenance machine → maintenance-schedule-api. Ordre de travail maintenance → maintenance-work-order-api.",
+    "x-cas-usage": "je veux voir l état de toutes nos machines CNC en temps réel | je veux charger un nouveau programme CN sur une fraiseuse | je veux calculer le TRS de notre centre d usinage sur la semaine | je veux changer une machine de l état en production à l état maintenance | je veux ajouter une nouvelle machine à notre parc industriel"
+  },
+  "paths": {
+    "/v2/machines": {
+      "get": {
+        "summary": "Lister les machines industrielles — état, capacité et TRS en temps réel",
+        "operationId": "listMachinesV2",
+        "tags": ["Machines"],
+        "responses": {"200": {"description": "Parc machines"}}
+      },
+      "post": {
+        "summary": "Ajouter une machine au parc industriel — référence, type et capacité",
+        "operationId": "addMachineV2",
+        "tags": ["Machines"],
+        "responses": {"200": {"description": "Machine ajoutée"}}
+      }
+    },
+    "/v2/machines/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d une machine — référence, type, capacité et historique",
+        "operationId": "getMachineV2",
+        "tags": ["Machines"],
+        "responses": {"200": {"description": "Détail machine"}}
+      },
+      "put": {
+        "summary": "Modifier les informations d une machine — capacité et paramètres",
+        "operationId": "updateMachineV2",
+        "tags": ["Machines"],
+        "responses": {"200": {"description": "Machine mise à jour"}}
+      }
+    },
+    "/v2/machines/{id}/status": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "État actuel d une machine — en production, arrêtée, en panne ou en maintenance",
+        "operationId": "getMachineStatus",
+        "tags": ["Status"],
+        "responses": {"200": {"description": "État machine"}}
+      },
+      "put": {
+        "summary": "Changer l état opérationnel d une machine — production, maintenance ou arrêt",
+        "operationId": "setMachineStatus",
+        "tags": ["Status"],
+        "responses": {"200": {"description": "État changé"}}
+      }
+    },
+    "/v2/machines/{id}/programs": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Programmes CNC chargés sur une machine — liste des programmes d usinage disponibles",
+        "operationId": "getNCPrograms",
+        "tags": ["Programs"],
+        "responses": {"200": {"description": "Programmes CNC"}}
+      },
+      "post": {
+        "summary": "Charger un nouveau programme CN sur une machine CNC",
+        "operationId": "uploadProgram",
+        "tags": ["Programs"],
+        "responses": {"200": {"description": "Programme chargé"}}
+      }
+    }
+  }
+}

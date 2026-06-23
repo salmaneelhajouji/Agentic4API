@@ -1,0 +1,87 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tower Management API",
+    "version": "1.0.0",
+    "x-api-id": "tower-management-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Gestion du parc d'antennes et pylônes télécom. Enregistrement et suivi des infrastructures passives (mâts, pylônes, toits-terrasses), planification et suivi des interventions de maintenance, et gestion des accords de partage d'infrastructure entre opérateurs (mutualisation). DIFFÉRENCE vs network-api : Tower Management gère l'infrastructure physique passive (pylônes, sites), Network API gère le réseau actif (équipements radio, configuration). DIFFÉRENCE vs service-assurance-api : Tower Management couvre la maintenance physique des pylônes, Service Assurance couvre la conformité SLA et les incidents réseau.",
+    "x-synonymes": "antenne pylône, infrastructure télécom, pylône 5G, site télécom, mutualisation antennes, partage infrastructure, maintenance pylône, mât télécom, toit-terrasse antenne, infrastructure passive, partage réseau, MVNO infrastructure, tour télécom, site radio, accord partage",
+    "x-false-positive-warning": "Configuration réseau actif (équipements radio) → network-api. Incidents et SLA réseau → service-assurance-api. Couverture réseau → coverage-api.",
+    "x-cas-usage": "je veux lister toutes les antennes et pylônes de mon parc | je veux planifier une intervention de maintenance sur un pylône | je veux enregistrer un nouveau site d'antenne télécom | je veux consulter les accords de partage d'infrastructure avec d'autres opérateurs | je veux modifier les caractéristiques techniques d'une antenne"
+  },
+  "paths": {
+    "/v1/towers": {
+      "get": {
+        "summary": "Lister les antennes et pylônes du parc avec localisation, type et statut opérationnel",
+        "operationId": "listTowers",
+        "tags": ["Towers"],
+        "responses": { "200": { "description": "Antennes et pylônes" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Enregistrer un nouveau site d'antenne ou pylône télécom avec ses caractéristiques techniques",
+        "operationId": "registerTower",
+        "tags": ["Towers"],
+        "responses": { "200": { "description": "Site enregistré" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/towers/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le détail technique d'un pylône (hauteur, type, équipements, coordonnées GPS)",
+        "operationId": "getTower",
+        "tags": ["Towers"],
+        "responses": { "200": { "description": "Détail pylône" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Modifier les informations techniques ou administratives d'un pylône",
+        "operationId": "updateTower",
+        "tags": ["Towers"],
+        "responses": { "200": { "description": "Pylône mis à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/towers/{id}/maintenance": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter l'historique et les interventions de maintenance planifiées pour un pylône",
+        "operationId": "getTowerMaintenance",
+        "tags": ["Maintenance"],
+        "responses": { "200": { "description": "Maintenance pylône" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Planifier une intervention de maintenance préventive ou corrective sur un pylône",
+        "operationId": "scheduleTowerService",
+        "tags": ["Maintenance"],
+        "responses": { "200": { "description": "Maintenance planifiée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/towers/{id}/sharing": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter les accords de partage d'infrastructure passive avec d'autres opérateurs pour ce pylône",
+        "operationId": "getSharingAgreements",
+        "tags": ["Sharing"],
+        "responses": { "200": { "description": "Accords de partage" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

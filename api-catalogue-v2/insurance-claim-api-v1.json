@@ -1,0 +1,32 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Insurance Claim API",
+    "version": "1.0.0",
+    "x-api-id": "insurance-claim-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "x-successor": "insurance-claim-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS insurance-claim-api-v3] Cette API gérait historiquement la déclaration et le suivi linéaire initial des sinistres d'assurance (v1). Elle est entièrement obsolète et gelée. Toutes les intégrations applicatives et interfaces de gestion doivent obligatoirement migrer vers la version 3 (insurance-claim-api-v3) pour bénéficier de l'analyse d'images par vision par ordinateur, de l'expertise automatisée par IA et du suivi en temps réel des versements d'indemnisation.",
+    "x-synonymes": "déclaration de sinistre v1, gestion des sinistres, sinistre d'assurance, historique des réclamations, ouverture de dossier sinistre, indemnisation de dommages, registre des déclarations, suivi des préjudices",
+    "x-false-positive-warning": "Attention : Cette API historique est dépréciée et restreinte à la consultation d'anciens dossiers de sinistres. Veiller à rediriger l'intégralité des flux vers la nouvelle version cible unifiée `insurance-claim-api-v3`."
+  },
+  "paths": {
+    "/v1/claims": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS insurance-claim-api-v3 - Consulter l'index historique et le registre des déclarations de sinistres de la version v1",
+        "operationId": "listClaimsV1",
+        "tags": [
+          "Claims"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

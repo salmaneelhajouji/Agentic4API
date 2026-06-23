@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Loan API",
+    "version": "3.0.0",
+    "x-api-id": "loan-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Version actuelle — Prêts personnels et professionnels avec décision IA en temps réel et écheancier complet. Permet de soumettre une demande de prêt, d obtenir une décision instantanée par IA, de simuler les mensualités, de consulter l échéancier de remboursement et d effectuer un remboursement anticipé. DIFFÉRENCE vs mortgage-api-v2 : Loan = prêt personnel ou professionnel sans garantie hypothécaire. mortgage-api-v2 = prêt immobilier avec hypothèque sur bien.",
+    "x-breaking-changes-from-previous": ["Décision IA temps réel", "Remboursement anticipé"],
+    "x-synonymes": "prêt personnel, crédit consommation, crédit professionnel, demande de prêt, décision crédit IA, scoring crédit, mensualité prêt, taux prêt, TAEG, TEG, simulation prêt, échéancier remboursement, remboursement anticipé, IRA indemnité remboursement anticipé, prêt sans garantie, crédit à la consommation, prêt auto, prêt travaux, prêt étudiant, capacité emprunt",
+    "x-false-positive-warning": "Prêt immobilier avec hypothèque → mortgage-api-v2. Protection emprunteur assurance → bancassurance-api. Scoring crédit seul → credit-scoring-api. Version précédente → loan-api-v2 (deprecated).",
+    "x-cas-usage": "je veux soumettre une demande de prêt personnel et obtenir une décision immédiate | je veux simuler les mensualités d un prêt de 20 000 € sur 48 mois | je veux consulter l échéancier de remboursement d un prêt | je veux effectuer un remboursement anticipé partiel ou total | je veux voir tous les prêts actifs d un client"
+  },
+  "paths": {
+    "/v3/loans": {
+      "get": {
+        "summary": "Portefeuille de prêts d un client — actifs, remboursés et en cours",
+        "operationId": "listLoansV3",
+        "tags": ["Loans"],
+        "responses": {"200": {"description": "Portefeuille prêts"}}
+      },
+      "post": {
+        "summary": "Demander un prêt — décision IA instantanée avec scoring temps réel",
+        "operationId": "applyLoanV3",
+        "tags": ["Loans"],
+        "responses": {"200": {"description": "Décision prêt"}}
+      }
+    },
+    "/v3/loans/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un prêt — montant, taux, durée et statut",
+        "operationId": "getLoanV3",
+        "tags": ["Loans"],
+        "responses": {"200": {"description": "Détail prêt"}}
+      },
+      "put": {
+        "summary": "Modifier un prêt — mise à jour des conditions",
+        "operationId": "updateLoan",
+        "tags": ["Loans"],
+        "responses": {"200": {"description": "Prêt modifié"}}
+      }
+    },
+    "/v3/loans/{id}/repayments": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Échéancier de remboursement — tableau des mensualités capital et intérêts",
+        "operationId": "getRepaymentSchedule",
+        "tags": ["Repayments"],
+        "responses": {"200": {"description": "Échéancier"}}
+      },
+      "post": {
+        "summary": "Effectuer un remboursement mensuel ou partiel",
+        "operationId": "makeRepayment",
+        "tags": ["Repayments"],
+        "responses": {"200": {"description": "Remboursement enregistré"}}
+      }
+    },
+    "/v3/loans/simulate": {
+      "post": {
+        "summary": "Simuler un prêt — mensualités, TAEG et coût total selon montant et durée",
+        "operationId": "simulateLoanV3",
+        "tags": ["Simulation"],
+        "responses": {"200": {"description": "Simulation prêt"}}
+      }
+    },
+    "/v3/loans/{id}/early-repayment": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Remboursement anticipé — calcul des IRA et clôture anticipée du prêt",
+        "operationId": "earlyRepay",
+        "tags": ["EarlyRepay"],
+        "responses": {"200": {"description": "Remboursement anticipé effectué"}}
+      }
+    }
+  }
+}

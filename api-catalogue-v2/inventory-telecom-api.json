@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Inventory Telecom API",
+    "version": "1.0.0",
+    "x-api-id": "inventory-telecom-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Cette API gère l'inventaire, le stockage et l'affectation opérationnelle des cartes SIM (physiques et profils), des terminaux mobiles et des équipements matériels réseau (routeurs, passerelles) de l'opérateur. Elle permet de suivre l'état des stocks de cartes SIM disponibles, de référencer le matériel technique d'infrastructure et d'orchestrer l'affectation ou le déploiement de ces équipements auprès des clients ou des techniciens terrain.",
+    "x-synonymes": "inventaire télécom, stock de cartes SIM, équipement réseau, matériel télécom, affectation d'équipement, terminal mobile stock, routeur connecté, carte SIM physique, gestion de parc télécom, approvisionnement SIM, matériel d'infrastructure réseau, stock de puces, passerelle télécom, cartes eSIM",
+    "x-false-positive-warning": "Attention : Cette API administre exclusivement les stocks de cartes SIM, de terminaux et d'équipements techniques de connectivité réseau (Inventory Telecom). Ne pas la confondre avec la `inventory-api` (dédiée aux stocks de produits finis du commerce de détail Retail).",
+    "x-cas-usage": "Comment consulter l'état des stocks de cartes SIM physiques disponibles dans notre entrepôt central ? | Comment enregistrer l'affectation d'un routeur réseau ou d'un équipement technique à un technicien terrain ? | Comment ajouter un lot de nouvelles cartes SIM reçues du fournisseur au catalogue d'inventaire ?"
+  },
+  "paths": {
+    "/v1/inventory-telecom/sim": {
+      "get": {
+        "summary": "Lister et vérifier l'état des stocks de cartes SIM disponibles par format (nano, micro, eSIM)",
+        "operationId": "listSIMInventory",
+        "tags": [
+          "SIM"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter et enregistrer un nouveau lot de cartes SIM au sein du catalogue d'inventaire télécom",
+        "operationId": "addSIM",
+        "tags": [
+          "SIM"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/inventory-telecom/equipment": {
+      "get": {
+        "summary": "Lister et parcourir le parc d'équipements réseau, routeurs et matériels techniques inventoriés",
+        "operationId": "listEquipment",
+        "tags": [
+          "Equipment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Affecter et planifier le déploiement d'un équipement réseau ou matériel technique à un utilisateur ou site",
+        "operationId": "assignEquipment",
+        "tags": [
+          "Equipment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

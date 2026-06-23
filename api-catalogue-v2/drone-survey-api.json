@@ -1,0 +1,92 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Drone Survey API",
+    "version": "1.0.0",
+    "x-api-id": "drone-survey-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Cette API supervise la planification des missions aériennes et le traitement agronomique des relevés capturés par drones sur les parcelles agricoles. Elle gère l'analyse automatisée de l'imagerie multispectrale pour calculer les indices de végétation (notamment la cartographie NDVI), évaluer l'état de santé du feuillage, et détecter précocement les anomalies de culture, foyers de maladies ou stress hydriques. Elle constitue un outil d'aide à la décision pour l'agriculture de précision.",
+    "x-synonymes": "relevé par drone, cartographie NDVI, télédétection agricole, stress hydrique, imagerie par drone, surveillance des cultures, agriculture de précision, indice de végétation, drone agricole, plan de vol, diagnostic des parcelles, rendement des cultures, anomalie de croissance, orthophotographie, analyse de feuillage, télémétrie agronomique",
+    "x-false-positive-warning": "Attention : Cette API est dédiée exclusivement au traitement des relevés par imagerie aérienne, des indices agronomiques (NDVI) et à la programmation de missions d'observation (Agriculture). Ne pas la confondre avec une API de cartographie géographique globale (maps-api) ni avec un service de gestion d'équipements IoT génériques.",
+    "x-cas-usage": "Comment planifier une nouvelle mission de survol et de relevé par drone pour inspecter une parcelle de blé ? | Où récupérer la cartographie et les valeurs de l'indice NDVI calculées suite au dernier survol aérien ? | Comment extraire le rapport des anomalies de croissance, de maladies ou de stress hydrique identifiées par télédétection ?"
+  },
+  "paths": {
+    "/v1/drone-surveys": {
+      "get": {
+        "summary": "Lister et filtrer le calendrier des missions de survol par drone planifiées, en cours ou exécutées sur les parcelles",
+        "operationId": "listDroneSurveys",
+        "tags": [
+          "Surveys"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Planifier une nouvelle mission aérienne de relevé par drone en définissant la parcelle cible et les capteurs requis",
+        "operationId": "createDroneSurvey",
+        "tags": [
+          "Surveys"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/drone-surveys/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la cartographie de l'indice de végétation NDVI calculée à partir des images multispectrales récoltées",
+        "operationId": "getNDVI",
+        "tags": [
+          "Surveys"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/drone-surveys/{id}/anomalies": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le rapport de détection automatique des anomalies de culture (maladies, adventices, sécheresse) généré par télédétection",
+        "operationId": "detectCropAnomalies",
+        "tags": [
+          "Anomalies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

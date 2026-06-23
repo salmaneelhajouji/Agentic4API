@@ -1,0 +1,132 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Subscription API",
+    "version": "2.0.0",
+    "x-api-id": "subscription-api",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "Gestion des abonnements produits et services (SaaS, contenus, offres récurrentes). Souscription à un plan, upgrade vers un plan supérieur avec calcul au prorata, downgrade effectif en fin de période, et résiliation avec ou sans effet immédiat. DIFFÉRENCE vs billing-api : Subscription gère le plan d'abonnement, les droits d'accès et le cycle de vie (upgrade/downgrade/résiliation), Billing gère les paiements récurrents et les factures associées. DIFFÉRENCE vs subscriber-api-v3 : Subscription est pour les abonnements produits/services commerciaux, Subscriber est pour les lignes téléphoniques télécom.",
+    "x-synonymes": "abonnement SaaS, plan abonnement, souscription, upgrade plan, downgrade plan, résiliation abonnement, période d'essai, trial, renouvellement abonnement, droits accès, offre mensuelle annuelle, changement plan, proration, cycle facturation, abonnement actif",
+    "x-false-positive-warning": "Paiements récurrents et factures → billing-api. Lignes téléphoniques abonnés → subscriber-api-v3. Droits et permissions d'accès → permission-api.",
+    "x-cas-usage": "je veux souscrire un client à un plan d'abonnement avec période d'essai | je veux upgrader un abonnement vers un plan supérieur avec calcul au prorata | je veux downgrader un abonnement pour la prochaine période de facturation | je veux résilier l'abonnement d'un client à la fin de sa période | je veux voir tous les abonnements actifs d'un client"
+  },
+  "paths": {
+    "/v2/subscriptions/{customerId}": {
+      "parameters": [
+        { "name": "customerId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lister tous les abonnements actifs d'un client avec plan, dates et statut",
+        "operationId": "getSubscriptions",
+        "tags": ["Subscriptions"],
+        "responses": { "200": { "description": "Abonnements" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/subscriptions": {
+      "post": {
+        "summary": "Souscrire un client à un plan d'abonnement avec option de période d'essai",
+        "operationId": "createSubscription",
+        "tags": ["Subscriptions"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["customer_id", "plan_id"],
+                "properties": {
+                  "customer_id": { "type": "string" },
+                  "plan_id": { "type": "string", "example": "PLAN-PRO-MONTHLY" },
+                  "trial_days": { "type": "integer", "default": 0 }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Souscrit" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/subscriptions/{id}/upgrade": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "put": {
+        "summary": "Upgrader un abonnement vers un plan supérieur avec calcul au prorata immédiat",
+        "operationId": "upgradeSubscription",
+        "tags": ["Subscriptions"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["new_plan_id"],
+                "properties": {
+                  "new_plan_id": { "type": "string" },
+                  "proration": { "type": "boolean", "default": true }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Upgradé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/subscriptions/{id}/downgrade": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "put": {
+        "summary": "Downgrader un abonnement vers un plan inférieur — effectif à la fin de la période en cours",
+        "operationId": "downgradeSubscription",
+        "tags": ["Subscriptions"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["new_plan_id"],
+                "properties": { "new_plan_id": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Downgradé (effectif fin de période)" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/subscriptions/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "delete": {
+        "summary": "Résilier un abonnement immédiatement ou à la fin de la période selon le paramètre end_of_period",
+        "operationId": "cancelSubscription",
+        "tags": ["Subscriptions"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": { "type": "string" },
+                  "end_of_period": { "type": "boolean", "default": true }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Résilié" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

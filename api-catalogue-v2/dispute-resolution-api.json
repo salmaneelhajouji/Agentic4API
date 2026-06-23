@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Dispute Resolution API",
+    "version": "1.0.0",
+    "x-api-id": "dispute-resolution-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Cette API orchestre les processus de résolution amiable des litiges commerciaux et des différends clients au sein du service juridique. Elle formalise les étapes de médiation, de conciliation et d'arbitrage en centralisant les pièces justificatives, les arguments des parties et le suivi des propositions d'accord transactionnel afin d'éviter l'escalade vers des procédures contentieuses.",
+    "x-synonymes": "résolution des litiges, arbitrage commercial, médiation amiable, conciliation, différend client, dossier de litige, accord transactionnel, protocole d'accord, litige de facturation, pièce justificative, service juridique, réclamation amiable, médiateur institutionnel, règlement des différends, négociation commerciale",
+    "x-false-positive-warning": "Attention : Cette API encadre exclusivement les démarches de règlement amiable, de médiation et de conciliation pré-contentieuse (Dispute Resolution). Ne pas la confondre avec la `litigation-api` qui gère le suivi des procédures judiciaires réelles devant les tribunaux, les assignations et les avocats.",
+    "x-cas-usage": "Comment ouvrir un dossier de médiation amiable pour un différend sur un contrat commercial ? | Où consulter l'historique des propositions contractuelles et l'avancement d'un dossier de conciliation ? | Comment notifier l'échec d'une tentative de médiation et clôturer la phase amiable avant contentieux ?"
+  },
+  "paths": {
+    "/v1/disputes": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des différends, dossiers de médiation et conciliations commerciales en cours de traitement",
+        "operationId": "listDisputes",
+        "tags": [
+          "Disputes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ouvrir un nouveau dossier de litige amiable ou de médiation suite à une réclamation client non résolue",
+        "operationId": "openDispute",
+        "tags": [
+          "Disputes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/disputes/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le détail complet, le statut juridique, les pièces jointes et l'historique de négociation d'un différend",
+        "operationId": "getDispute",
+        "tags": [
+          "Disputes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les conclusions, consigner de nouveaux arguments ou modifier l'état d'un litige en cours",
+        "operationId": "updateDispute",
+        "tags": [
+          "Disputes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/disputes/{id}/mediation": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Enregistrer officiellement le constat de carence ou l'échec de la médiation et clore définitivement la procédure amiable",
+        "operationId": "closeMediationFailure",
+        "tags": [
+          "Mediation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

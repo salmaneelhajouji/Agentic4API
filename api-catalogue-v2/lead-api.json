@@ -1,0 +1,92 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Lead API",
+    "version": "1.0.0",
+    "x-api-id": "lead-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe CRM",
+    "x-domain": "CRM & Marketing",
+    "description": "Gestion des prospects et leads commerciaux dans le pipeline de vente. Permet de créer des leads depuis différentes sources (site web, LinkedIn, campagnes), de les scorer automatiquement, de les qualifier par étape, de les assigner à un commercial et de suivre leur progression. DIFFÉRENCE vs crm-contact-api : Lead = prospects non encore convertis en clients dans un pipeline. crm-contact-api = toutes les relations existantes avec historique.",
+    "x-synonymes": "lead commercial, prospect, scoring lead, qualification lead, pipeline vente, funnel commercial, opportunité commerciale, lead nurturing, lead chaud froid, conversion prospect, assignation commercial, étape pipeline, lead website, lead LinkedIn, cold lead, hot lead, MQL marketing qualified lead, SQL sales qualified lead, lead source, taux conversion lead",
+    "x-false-positive-warning": "Contact client existant avec historique → crm-contact-api. Opportunité de vente avancée → opportunity-api. Campagne marketing pour générer des leads → campaign-api. Attribution source des leads → attribution-api.",
+    "x-cas-usage": "je veux créer un lead depuis le formulaire de contact de notre site web | je veux voir le score de qualification d un prospect | je veux qualifier un lead comme opportunité et le passer en phase proposition | je veux assigner ce lead chaud à notre commercial senior | je veux lister tous les leads qualifiés assignés à mon équipe commerciale"
+  },
+  "paths": {
+    "/v1/leads": {
+      "post": {
+        "summary": "Créer un lead commercial — source, email, entreprise et valeur estimée",
+        "operationId": "createLead",
+        "tags": ["Leads"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["full_name", "email", "source"],
+                "properties": {
+                  "full_name": {"type": "string"},
+                  "email": {"type": "string", "format": "email"},
+                  "company": {"type": "string"},
+                  "source": {"type": "string", "enum": ["website", "referral", "linkedin", "campaign", "cold_outreach"]},
+                  "estimated_value": {"type": "number"},
+                  "notes": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Lead créé"}}
+      },
+      "get": {
+        "summary": "Lister les leads — filtre par étape pipeline, commercial assigné et score minimum",
+        "operationId": "listLeads",
+        "tags": ["Leads"],
+        "parameters": [
+          {"name": "stage", "in": "query", "schema": {"type": "string", "enum": ["new", "contacted", "qualified", "proposal", "negotiation", "won", "lost"]}},
+          {"name": "assigned_to", "in": "query", "schema": {"type": "string"}},
+          {"name": "min_score", "in": "query", "schema": {"type": "integer"}}
+        ],
+        "responses": {"200": {"description": "Leads filtrés"}}
+      }
+    },
+    "/v1/leads/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détails d un lead — score, étape pipeline et historique d activité",
+        "operationId": "getLead",
+        "tags": ["Leads"],
+        "responses": {"200": {"description": "Détail lead"}}
+      }
+    },
+    "/v1/leads/{id}/qualify": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Qualifier un lead — faire avancer l étape dans le pipeline de vente",
+        "operationId": "qualifyLead",
+        "tags": ["Leads"],
+        "responses": {"200": {"description": "Lead qualifié"}}
+      }
+    },
+    "/v1/leads/{id}/assign": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Assigner un lead à un commercial de l équipe",
+        "operationId": "assignLead",
+        "tags": ["Leads"],
+        "responses": {"200": {"description": "Lead assigné"}}
+      }
+    },
+    "/v1/leads/score/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Score de qualification du lead — note 0-100 basée sur profil et comportement",
+        "operationId": "getLeadScore",
+        "tags": ["Leads"],
+        "responses": {"200": {"description": "Score qualification"}}
+      }
+    }
+  }
+}

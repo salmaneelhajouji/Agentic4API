@@ -1,0 +1,71 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Merger Acquisition API",
+    "version": "1.0.0",
+    "x-api-id": "merger-acquisition-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Gestion des opérations de fusions et acquisitions (M&A). Permet d ouvrir et suivre une opération M&A, de gérer la data room sécurisée pour le partage de documents de due diligence, et de suivre les jalons de closing. Utilisé par les équipes corporate, direction juridique et banquiers d affaires pour orchestrer les opérations de croissance externe.",
+    "x-synonymes": "fusion acquisition, M&A, due diligence, data room, closing M&A, LOI letter of intent, NDA M&A, valorisation entreprise, rachat entreprise, cession entreprise, transaction M&A, protocole cession, garant déclarations garanties, actif passif M&A, plan intégration post-fusion, SPA share purchase agreement, VDD vendor due diligence, book M&A, processus M&A, jalons closing",
+    "x-false-positive-warning": "DIFFÉRENCE vs contract-api : Merger Acquisition API = processus M&A complet avec data room. contract-api = contrats juridiques génériques. DIFFÉRENCE vs legal-entity-api : Merger Acquisition API = opération de cession acquisition. legal-entity-api = données juridiques SIREN des entités. DIFFÉRENCE vs document-management-api-v2 : Merger Acquisition API = data room M&A sécurisée. document-management-api-v2 = GED documents opérationnels.",
+    "x-cas-usage": "je veux ouvrir une opération d acquisition et gérer le process M&A | je veux uploader des documents confidentiels dans la data room de notre cession | je veux suivre les jalons de closing et les conditions suspensives | je veux donner accès à notre data room aux acheteurs potentiels | je veux voir toutes nos opérations M&A en cours et leur avancement"
+  },
+  "paths": {
+    "/v1/ma/deals": {
+      "get": {
+        "summary": "Lister les opérations M&A — acquisitions et cessions en cours",
+        "operationId": "listMADeals",
+        "tags": ["Deals"],
+        "responses": {"200": {"description": "Opérations M&A"}}
+      },
+      "post": {
+        "summary": "Ouvrir une opération M&A — acquisition, fusion ou cession d actifs",
+        "operationId": "createMADeal",
+        "tags": ["Deals"],
+        "responses": {"200": {"description": "Opération M&A créée"}}
+      }
+    },
+    "/v1/ma/deals/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d une opération M&A — valorisation, statut et jalons",
+        "operationId": "getMADeal",
+        "tags": ["Deals"],
+        "responses": {"200": {"description": "Détail opération M&A"}}
+      },
+      "put": {
+        "summary": "Mettre à jour une opération M&A — valorisation ou statut",
+        "operationId": "updateMADeal",
+        "tags": ["Deals"],
+        "responses": {"200": {"description": "Opération mise à jour"}}
+      }
+    },
+    "/v1/ma/deals/{id}/dataroom": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Accéder à la data room sécurisée — documents de due diligence",
+        "operationId": "getDataRoom",
+        "tags": ["Dataroom"],
+        "responses": {"200": {"description": "Contenu data room"}}
+      },
+      "post": {
+        "summary": "Uploader un document confidentiel dans la data room M&A",
+        "operationId": "uploadDocument",
+        "tags": ["Dataroom"],
+        "responses": {"200": {"description": "Document ajouté à la data room"}}
+      }
+    },
+    "/v1/ma/deals/{id}/milestones": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Jalons de closing — conditions suspensives et dates limites",
+        "operationId": "getClosingMilestones",
+        "tags": ["Milestones"],
+        "responses": {"200": {"description": "Jalons closing M&A"}}
+      }
+    }
+  }
+}

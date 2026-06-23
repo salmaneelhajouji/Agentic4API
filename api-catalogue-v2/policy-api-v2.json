@@ -1,0 +1,42 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Policy API",
+    "version": "2.0.0",
+    "x-api-id": "policy-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "DEPRECATED — NE PAS UTILISER. Version 2 avec avenants basiques sans renouvellement auto ni e-signature. Migrer vers policy-api-v3.",
+    "x-successor": "policy-api-v3",
+    "x-synonymes": "contrat assurance v2 deprecated, police assurance avenant legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser policy-api-v3.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers policy-api-v3."
+  },
+  "paths": {
+    "/v2/policies": {
+      "get": {
+        "summary": "DEPRECATED — Lister les contrats d assurance",
+        "operationId": "listPoliciesV2",
+        "tags": ["Policies"],
+        "responses": {"200": {"description": "Contrats"}}
+      },
+      "post": {
+        "summary": "DEPRECATED — Souscrire un contrat d assurance",
+        "operationId": "createPolicyV2",
+        "tags": ["Policies"],
+        "responses": {"200": {"description": "Contrat souscrit"}}
+      }
+    },
+    "/v2/policies/{id}/endorsements": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "DEPRECATED — Ajouter un avenant à un contrat",
+        "operationId": "addEndorsementV2",
+        "tags": ["Endorsements"],
+        "responses": {"200": {"description": "Avenant ajouté"}}
+      }
+    }
+  }
+}

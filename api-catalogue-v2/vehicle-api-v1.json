@@ -1,0 +1,49 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Vehicle API",
+    "version": "1.0.0",
+    "x-api-id": "vehicle-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Données véhicule v1. DEPRECATED. Remplacé par vehicle-api-v2.",
+    "x-successor": "vehicle-api-v2",
+    "x-synonymes": "véhicule, voiture, camion, transport, v1, obsolète, deprecated, diagnostic, mécanique",
+    "x-false-positive-warning": "API obsolète. Utiliser vehicle-api-v2 pour obtenir les diagnostics OBD et kilométrages récents.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers vehicle-api-v2."
+  },
+  "paths": {
+    "/v1/vehicles/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "DEPRECATED - Récupérer les détails techniques de base d'un véhicule (version obsolète)",
+        "operationId": "getVehicleV1",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

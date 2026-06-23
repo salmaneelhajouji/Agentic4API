@@ -1,0 +1,117 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cart API",
+    "version": "1.0.0",
+    "x-api-id": "cart-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "Gestion du panier d'achat temporaire dans le domaine e-commerce, couvrant l'ajout d'articles avec variantes, la modification des quantités, la suppression d'articles et le déclenchement du checkout pour convertir le panier en commande confirmée. Supporte les sessions anonymes (visiteurs non connectés) et les paniers persistants (utilisateurs authentifiés avec sauvegarde entre sessions). Utilisée principalement par les équipes front-end, les applications mobiles et les moteurs de recommandation pour piloter le tunnel d'achat. DIFFÉRENCE vs order-api : Cart = panier temporaire avant achat ; order-api = commande confirmée après paiement. DIFFÉRENCE vs wishlist-api : Cart = intention d'achat immédiate ; wishlist-api = liste de désirs sans intention d'achat immédiate. DIFFÉRENCE vs payment-api : Cart gère la composition du panier et le déclenchement du checkout ; payment-api gère la transaction financière effective.",
+    "x-synonymes": "panier achat, panier e-commerce, ajouter au panier, panier temporaire, article panier, quantité panier, vider panier, checkout panier, tunnel achat, panier abandonné, panier persistant, session panier, sous-total panier, panier anonyme, variante produit panier, rupture stock panier, récupération panier, panier sauvegardé, conversion panier commande, abandon panier",
+    "x-false-positive-warning": "Commande confirmée après paiement → order-api-v4 (cart-api ne gère que le panier avant validation). Liste de souhaits sans achat immédiat → wishlist-api (pas de checkout ni de sous-total). Bundle et pack produits → bundle-api (regroupement commercial, pas gestion de session panier). Paiement du panier → payment-api-v3 (la transaction financière est séparée du panier). Gestion du catalogue produit → product-api (cart-api référence les produits mais ne les gère pas).",
+    "x-cas-usage": "Comment ajouter un produit avec une variante spécifique au panier d'un client ? | Comment modifier la quantité d'un article dans le panier ou le supprimer en passant la quantité à 0 ? | Comment déclencher le checkout et transformer le panier en commande confirmée ? | Comment vider intégralement le panier d'un client après une annulation ou une expiration de session ? | Comment récupérer le contenu complet du panier avec les sous-totaux pour l'afficher dans le tunnel d'achat ?"
+  },
+  "paths": {
+    "/v1/cart/{userId}": {
+      "parameters": [{"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le panier complet d'un utilisateur avec la liste des articles, les quantités, les variantes sélectionnées et le sous-total calculé",
+        "operationId": "getCart",
+        "tags": ["Cart"],
+        "responses": {"200": {"description": "Contenu du panier"}}
+      }
+    },
+    "/v1/cart/{userId}/items": {
+      "parameters": [{"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Ajouter un article au panier en spécifiant l'identifiant produit, la variante souhaitée (taille, couleur) et la quantité désirée",
+        "operationId": "addCartItem",
+        "tags": ["Cart"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["product_id", "quantity"],
+                "properties": {
+                  "product_id": {"type": "string", "example": "PROD-001"},
+                  "quantity": {"type": "integer", "minimum": 1},
+                  "variant_id": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Article ajouté au panier"}}
+      }
+    },
+    "/v1/cart/{userId}/items/{itemId}": {
+      "parameters": [
+        {"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}},
+        {"name": "itemId", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "put": {
+        "summary": "Modifier la quantité d'un article existant dans le panier ; passer la quantité à 0 déclenche la suppression automatique de la ligne",
+        "operationId": "updateCartItem",
+        "tags": ["Cart"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["quantity"],
+                "properties": {
+                  "quantity": {"type": "integer", "minimum": 0, "description": "0 pour supprimer l article"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Quantité modifiée"}}
+      },
+      "delete": {
+        "summary": "Supprimer définitivement un article spécifique du panier sans affecter les autres lignes",
+        "operationId": "removeCartItem",
+        "tags": ["Cart"],
+        "responses": {"204": {"description": "Article supprimé"}}
+      }
+    },
+    "/v1/cart/{userId}/checkout": {
+      "parameters": [{"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Valider le panier et créer une commande confirmée en transmettant l'adresse de livraison et le moyen de paiement, puis vider le panier",
+        "operationId": "checkoutCart",
+        "tags": ["Cart"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "shipping_address": {"type": "object"},
+                  "payment_method": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {"description": "Commande créée — panier vidé"},
+          "409": {"description": "Article en rupture de stock"}
+        }
+      }
+    },
+    "/v1/cart/{userId}/clear": {
+      "parameters": [{"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "delete": {
+        "summary": "Vider complètement le panier en supprimant tous les articles d'un coup, par exemple après une annulation ou une expiration de session",
+        "operationId": "clearCart",
+        "tags": ["Cart"],
+        "responses": {"204": {"description": "Panier vidé"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Check-in API",
+    "version": "1.0.0",
+    "x-api-id": "checkin-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "⚠️ DEPRECATED — Migrer vers checkin-api-v2. Version 1 de l'API d'enregistrement hôtelier couvrant le processus d'arrivée des clients : vérification de réservation, attribution de chambre et génération de reçu basique. Utilisée initialement par les réceptionnistes en front-desk, cette version ne supporte ni le check-in mobile, ni la clé digitale smartphone, ni la génération automatique de documents d'identité. Les utilisateurs typiques sont les systèmes PMS hôteliers legacy et les bornes d'accueil filaires. DIFFÉRENCE vs checkin-api-v2 : cette version est dépourvue du support mobile, de la clé digitale et des flux documentaires automatisés — utiliser checkin-api-v2 pour tous les nouveaux développements.",
+    "x-successor": "checkin-api-v2",
+    "x-synonymes": "enregistrement hôtelier, check-in hôtel, arrivée client, réception hôtel, attribution de chambre, accueil voyageur, prise en charge client, fiche d'arrivée, enregistrement front-desk, check-in legacy, accueil hébergement, réservation hôtel, gestion des arrivées, processus d'accueil, enregistrement PMS, check-in réceptionniste, arrivée hébergement, fiche client hôtel",
+    "x-false-positive-warning": "⚠️ CETTE VERSION EST DEPRECATED — utiliser checkin-api-v2. Ne pas confondre avec checkin-api-v2 qui apporte le support mobile, la clé digitale et la génération automatique de documents. Ne pas confondre non plus avec booking-api (gestion des réservations en amont) ou checkout-api (départ client). Cette API couvre uniquement l'enregistrement à l'arrivée dans sa version basique sans fonctionnalités digitales.",
+    "x-cas-usage": "Comment effectuer l'enregistrement basique d'un client à son arrivée à l'hôtel ? | Comment vérifier une réservation existante lors du check-in front-desk ? | Comment attribuer une chambre à un client lors de son arrivée ? | Quels sont les champs obligatoires pour enregistrer un client en réception ? | Comment migrer ce processus d'enregistrement legacy vers checkin-api-v2 ?"
+  },
+  "paths": {
+    "/v1/checkin": {
+      "post": {
+        "summary": "DEPRECATED — Effectuer l'enregistrement basique d'un client à l'arrivée en réception, sans support mobile ni clé digitale",
+        "operationId": "checkinV1",
+        "tags": ["Checkin"],
+        "responses": {
+          "200": {
+            "description": "Enregistrement effectué"
+          }
+        }
+      }
+    }
+  }
+}

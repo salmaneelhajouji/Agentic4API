@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Subsidy API",
+    "version": "1.0.0",
+    "x-api-id": "subsidy-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Gestion des aides et subventions agricoles publiques. Consultation des aides disponibles (PAC, MSA, aides régionales), dépôt de dossiers de demande pour une exploitation, suivi de l'instruction et mise à jour des dossiers en cours. DIFFÉRENCE vs scholarship-api : Subsidy gère les aides publiques agricoles (PAC, subventions exploitation), Scholarship gère les bourses étudiantes. DIFFÉRENCE vs payment-api : Subsidy gère le cycle de vie des dossiers de demande, Payment traite les versements effectifs des montants accordés.",
+    "x-synonymes": "subvention agricole, aide PAC, MSA, aide agriculteur, aides exploitation, subvention exploitation, dossier aide agricole, demande subvention, Politique Agricole Commune, aide régionale agriculture, indemnité agricole, aides directes, soutien agricole, prime agricole, instruction dossier agricole",
+    "x-false-positive-warning": "Bourses étudiantes → scholarship-api. Versements financiers → payment-api. Gestion parcelles agricoles → field-api-v2.",
+    "x-cas-usage": "je veux voir toutes les aides agricoles disponibles pour mon exploitation | je veux déposer une demande d'aide PAC pour mon exploitation | je veux suivre le statut de mon dossier de subvention en cours | je veux mettre à jour les justificatifs d'un dossier de demande | je veux voir toutes les subventions attribuées à une exploitation"
+  },
+  "paths": {
+    "/v1/subsidies": {
+      "get": {
+        "summary": "Lister toutes les aides et subventions agricoles disponibles avec critères d'éligibilité et montants",
+        "operationId": "listAvailableSubsidies",
+        "tags": ["Subsidies"],
+        "responses": { "200": { "description": "Aides disponibles" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/subsidies/{farmId}": {
+      "parameters": [
+        { "name": "farmId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter les aides attribuées et dossiers en cours pour une exploitation agricole",
+        "operationId": "getFarmSubsidies",
+        "tags": ["Subsidies"],
+        "responses": { "200": { "description": "Aides de l'exploitation" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Déposer une demande d'aide ou de subvention pour une exploitation agricole",
+        "operationId": "applySubsidy",
+        "tags": ["Subsidies"],
+        "responses": { "200": { "description": "Demande déposée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/subsidies/applications/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le statut d'instruction d'un dossier de demande de subvention",
+        "operationId": "getSubsidyApplication",
+        "tags": ["Applications"],
+        "responses": { "200": { "description": "Statut dossier" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Mettre à jour un dossier de demande (ajout de justificatifs, corrections demandées par l'instructeur)",
+        "operationId": "updateApplication",
+        "tags": ["Applications"],
+        "responses": { "200": { "description": "Dossier mis à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

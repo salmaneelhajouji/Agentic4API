@@ -1,0 +1,142 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Catalog API",
+    "version": "1.0.0",
+    "x-api-id": "catalog-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Catalog",
+    "x-domain": "E-Commerce",
+    "description": "API de gestion des catalogues produits publiés sur les canaux de vente e-commerce (site B2C, application mobile, portail B2B, marketplace). Un catalogue regroupe une sélection de produits avec ses propres règles de prix, disponibilité et affichage pour un canal ou marché donné, couvrant les processus de création, publication planifiée et archivage saisonnier. Les utilisateurs typiques sont les équipes merchandising, les product managers e-commerce et les intégrateurs de canaux de vente. DIFFÉRENCE vs product-catalog-api : Catalog API = collections de produits publiées par canal. product-catalog-api = taxonomie des catégories et attributs produits. DIFFÉRENCE vs product-api : Catalog = regroupement de produits en collections, Product = données d un produit individuel.",
+    "x-synonymes": "catalogue produits, catalogue saisonnier, catalogue B2B, catalogue B2C, catalogue marketplace, collection produits, publication catalogue, catalogue été hiver, catalogue prix spéciaux, catalogue canal, assortiment canal, sélection produits, catalogue actif, archiver catalogue, catalogue locale, catalogue multilingue, prix catalogue, catalogue fournisseur, catalogue client, synchronisation catalogue",
+    "x-false-positive-warning": "Taxonomie catégories et attributs produits → product-catalog-api (gère la structure et les attributs, pas les collections publiées). Données d un produit individuel → product-api-v4 (fiche produit unitaire, pas les regroupements par canal). Gestion des prix et promotions → pricing-api (règles tarifaires globales, pas les prix spécifiques à un catalogue). Inventaire et stocks → inventory-api-v2 (disponibilité physique, pas la visibilité catalogue). Recherche et filtrage produits → search-api (moteur de recherche, pas la gestion de collections).",
+    "x-cas-usage": "Comment créer un catalogue d été avec des prix spéciaux pour notre site B2C ? | Comment publier un catalogue différent pour nos clients B2B en Allemagne avec une locale spécifique ? | Comment ajouter des produits à notre catalogue marketplace avec un prix catalogue dédié ? | Comment archiver un catalogue saisonnier après la fin de la période de validité ? | Quels sont tous les catalogues actifs disponibles sur notre canal web B2C ?"
+  },
+  "paths": {
+    "/v1/catalogs": {
+      "post": {
+        "summary": "Créer un catalogue produits saisonnier, B2B, B2C ou marketplace avec locale, devise et période de validité",
+        "operationId": "createCatalog",
+        "tags": ["Catalogs"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "channel", "locale"],
+                "properties": {
+                  "name": {"type": "string", "example": "Catalogue Été 2026"},
+                  "channel": {"type": "string", "enum": ["b2c_web", "b2c_app", "b2b", "marketplace"]},
+                  "locale": {"type": "string", "example": "fr"},
+                  "currency": {"type": "string", "default": "EUR"},
+                  "valid_from": {"type": "string", "format": "date"},
+                  "valid_until": {"type": "string", "format": "date"},
+                  "description": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Catalogue créé"}}
+      },
+      "get": {
+        "summary": "Lister tous les catalogues avec filtre par canal de vente, locale et statut actif ou archivé",
+        "operationId": "listCatalogs",
+        "tags": ["Catalogs"],
+        "parameters": [
+          {"name": "channel", "in": "query", "schema": {"type": "string", "enum": ["b2c_web", "b2c_app", "b2b", "marketplace"]}},
+          {"name": "locale", "in": "query", "schema": {"type": "string"}},
+          {"name": "active", "in": "query", "schema": {"type": "boolean"}}
+        ],
+        "responses": {"200": {"description": "Catalogues"}}
+      }
+    },
+    "/v1/catalogs/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le détail d un catalogue avec son canal, locale, période de validité et nombre de produits associés",
+        "operationId": "getCatalog",
+        "tags": ["Catalogs"],
+        "responses": {"200": {"description": "Détail catalogue"}}
+      },
+      "put": {
+        "summary": "Mettre à jour un catalogue existant — modifier le nom, la période de validité, la devise ou la description",
+        "operationId": "updateCatalog",
+        "tags": ["Catalogs"],
+        "responses": {"200": {"description": "Catalogue mis à jour"}}
+      },
+      "delete": {
+        "summary": "Archiver un catalogue et le retirer des canaux de vente sans supprimer les données produits",
+        "operationId": "archiveCatalog",
+        "tags": ["Catalogs"],
+        "responses": {"200": {"description": "Catalogue archivé"}}
+      }
+    },
+    "/v1/catalogs/{id}/products": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Lister les produits d un catalogue en liste paginée avec leurs prix spécifiques au catalogue",
+        "operationId": "getCatalogProducts",
+        "tags": ["Products"],
+        "parameters": [{"name": "page", "in": "query", "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Produits du catalogue"}}
+      },
+      "post": {
+        "summary": "Ajouter une sélection de produits au catalogue avec possibilité de définir un prix de catalogue spécifique",
+        "operationId": "addProductsToCatalog",
+        "tags": ["Products"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["product_ids"],
+                "properties": {
+                  "product_ids": {"type": "array", "items": {"type": "string"}},
+                  "price_override": {"type": "number", "description": "Prix spécifique à ce catalogue"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Produits ajoutés au catalogue"}}
+      }
+    },
+    "/v1/catalogs/{id}/products/{productId}": {
+      "parameters": [
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}},
+        {"name": "productId", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "delete": {
+        "summary": "Retirer un produit spécifique du catalogue sans le supprimer du référentiel produit global",
+        "operationId": "removeProductFromCatalog",
+        "tags": ["Products"],
+        "responses": {"204": {"description": "Produit retiré du catalogue"}}
+      }
+    },
+    "/v1/catalogs/{id}/publish": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Publier le catalogue sur les canaux de vente sélectionnés et rendre les produits visibles aux clients",
+        "operationId": "publishCatalog",
+        "tags": ["Catalogs"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "channels": {"type": "array", "items": {"type": "string"}},
+                  "scheduled_at": {"type": "string", "format": "date-time"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Catalogue publié"}}
+      }
+    }
+  }
+}

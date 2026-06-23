@@ -1,0 +1,38 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Crop API",
+    "version": "1.0.0",
+    "x-api-id": "crop-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "x-successor": "crop-api-v2",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS crop-api-v2] Cette API gérait historiquement le référentiel des cultures agricoles et des plantations (v1). Elle permettait aux plateformes agritech, aux logiciels de gestion d'exploitation (FMIS) et aux coopératives d'accéder aux données agronomiques de base (types de plantes, variétés, cycles de croissance). Ses utilisateurs cibles (développeurs et intégrateurs du monde agricole) doivent impérativement migrer leurs intégrations vers la version 2 (crop-api-v2) qui offre un modèle de données plus riche et actualisé.",
+    "x-synonymes": "culture, plantation, récolte, végétal, semis, variété agricole, type de culture, rendement agricole, moisson, floraison, cycle cultural, production végétale, agronomie, parcelle cultivée, plante cultivée, assolement, phénologie",
+    "x-false-positive-warning": "Attention : Cette API obsolète gère uniquement la typologie et le cycle des plantes. Ne pas la confondre avec l'API Field / Parcelle (qui gère la cartographie spatiale et le découpage géométrique des champs), l'API Soil / Sol (pour les analyses de terre et nutriments), ou l'API successeur crop-api-v2.",
+    "x-cas-usage": "Quelles étaient les caractéristiques de base du blé tendre référencées dans cette version 1 ? | Comment obtenir la liste historique des cultures d'hiver pour un assolement ? | Quelle est la durée moyenne du cycle végétatif pour cette variété spécifique de maïs doux ? | Comment dois-je modifier mon appel de listing pour migrer vers la nouvelle crop-api-v2 ?"
+  },
+  "paths": {
+    "/v1/crops": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS crop-api-v2 - Consulter et récupérer l'intégralité du catalogue historique des cultures et variétés agricoles.",
+        "operationId": "listCropsV1",
+        "tags": [
+          "Crops"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

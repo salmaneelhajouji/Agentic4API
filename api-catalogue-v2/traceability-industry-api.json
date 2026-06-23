@@ -1,0 +1,45 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Traceability Industry API",
+    "version": "1.0.0",
+    "x-api-id": "traceability-industry-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Traçabilité des produits industriels par numéro de série et lot de fabrication. Reconstruction de l'arbre des composants (nomenclature avec fournisseurs et dates), traçabilité des lots pour gestion des rappels produits et conformité réglementaire. DIFFÉRENCE vs traceability-agri-api : Traceability Industry trace les pièces, composants et lots de fabrication industrielle (numéros de série, nomenclatures), Traceability Agri trace les produits agricoles et alimentaires (ferme-consommateur). DIFFÉRENCE vs quality-api : Traceability Industry reconstitue l'historique de fabrication, Quality gère les contrôles et non-conformités.",
+    "x-synonymes": "traçabilité industrielle, numéro de série, lot fabrication, nomenclature composants, rappel produit, arbre composants, traçabilité pièce, BOM bill of materials, traçabilité fournisseur, conformité industrielle, numéro lot, historique fabrication, traçabilité aéronautique, traçabilité automobile, gestion rappel",
+    "x-false-positive-warning": "Traçabilité produits agricoles → traceability-agri-api. Contrôle qualité et non-conformités → quality-api. Gestion stock et inventaire → inventory-api.",
+    "x-cas-usage": "je veux voir l'arbre des composants d'un produit par numéro de série | je veux retrouver tous les produits fabriqués avec un lot de composants défectueux | je veux retracer l'historique de fabrication d'une pièce pour conformité | je veux identifier tous les clients impactés par un rappel de lot | je veux consulter la nomenclature complète d'un produit fini"
+  },
+  "paths": {
+    "/v1/traceability/{serialNumber}": {
+      "parameters": [
+        { "name": "serialNumber", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Récupérer l'arbre des composants d'un produit par numéro de série (nomenclature avec fournisseurs et dates)",
+        "operationId": "getComponentTree",
+        "tags": ["Traceability"],
+        "responses": { "200": { "description": "Arbre des composants" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/traceability/lots/{lotId}": {
+      "parameters": [
+        { "name": "lotId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter la dispersion d'un lot de fabrication — quels produits finis contiennent ce lot (impact rappel)",
+        "operationId": "getLotDispatch",
+        "tags": ["Lots"],
+        "responses": { "200": { "description": "Produits impactés par le lot" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

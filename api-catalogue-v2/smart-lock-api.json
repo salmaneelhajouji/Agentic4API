@@ -1,0 +1,82 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Smart Lock API",
+    "version": "1.0.0",
+    "x-api-id": "smart-lock-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Gestion des serrures connectées pour l'immobilier résidentiel et professionnel. Enregistrement des serrures dans le parc, consultation du statut (ouverte/fermée/batterie), télécommande d'ouverture/fermeture, génération de codes d'accès temporaires pour visiteurs ou prestataires, révocation de codes et historique d'accès. DIFFÉRENCE vs access-control-api : Smart Lock gère les serrures physiques connectées individuelles (porte appartement, local), Access Control gère les systèmes de contrôle d'accès de bâtiment (badges, tourniquets, pointeuse). DIFFÉRENCE vs building-api : Smart Lock est l'objet IoT serrure, Building gère le bâtiment et ses équipements dans leur globalité.",
+    "x-synonymes": "serrure connectée, serrure intelligente, smart lock, code accès temporaire, télécommande serrure, ouverture porte, accès IoT, code visiteur, révocation code, historique accès, serrure appartement, serrure locataire, accès sans clé, domotique serrure, keyless entry",
+    "x-false-positive-warning": "Contrôle d'accès bâtiment (badges, tourniquets) → access-control-api. Gestion globale du bâtiment → building-api. Alarmes et sécurité physique → alarm-api.",
+    "x-cas-usage": "je veux générer un code d'accès temporaire pour un visiteur ou un prestataire | je veux voir le statut ouvert/fermé de toutes mes serrures | je veux ouvrir ou fermer à distance une serrure connectée | je veux révoquer un code d'accès qui ne doit plus fonctionner | je veux consulter l'historique des accès d'une serrure"
+  },
+  "paths": {
+    "/v1/locks": {
+      "get": {
+        "summary": "Lister toutes les serrures connectées du parc avec statut (ouverte/fermée), batterie et localisation",
+        "operationId": "listLocks",
+        "tags": ["Locks"],
+        "responses": { "200": { "description": "Serrures" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Enregistrer une nouvelle serrure connectée dans le parc avec ses métadonnées (localisation, logement)",
+        "operationId": "registerLock",
+        "tags": ["Locks"],
+        "responses": { "200": { "description": "Serrure enregistrée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/locks/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le statut temps réel d'une serrure (ouverte/fermée, niveau batterie, dernière activité)",
+        "operationId": "getLockStatus",
+        "tags": ["Locks"],
+        "responses": { "200": { "description": "Statut serrure" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Télécommander la fermeture d'une serrure connectée à distance",
+        "operationId": "lockDoor",
+        "tags": ["Locks"],
+        "responses": { "200": { "description": "Serrure fermée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/locks/{id}/access-codes": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lister tous les codes d'accès actifs d'une serrure avec leur période de validité et titulaire",
+        "operationId": "getAccessCodes",
+        "tags": ["Codes"],
+        "responses": { "200": { "description": "Codes d'accès" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Générer un code d'accès temporaire avec plage horaire et date d'expiration pour visiteur ou prestataire",
+        "operationId": "generateCode",
+        "tags": ["Codes"],
+        "responses": { "200": { "description": "Code généré" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Révoquer immédiatement un code d'accès pour interdire l'entrée",
+        "operationId": "revokeCode",
+        "tags": ["Codes"],
+        "responses": { "200": { "description": "Code révoqué" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

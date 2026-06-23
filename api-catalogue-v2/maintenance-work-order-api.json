@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Maintenance Work Order API",
+    "version": "1.0.0",
+    "x-api-id": "maintenance-work-order-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Gestion des ordres de travail (OT) de maintenance industrielle. Permet de créer des OT correctifs, préventifs ou prédictifs, de les affecter à des techniciens, de déclarer le temps passé et de les clôturer avec rapport. DIFFÉRENCE vs maintenance-schedule-api : Maintenance Work Order = OT exécutés en atelier. maintenance-schedule-api = planification préventive des entretiens véhicules.",
+    "x-synonymes": "ordre de travail, OT maintenance, bon de travail, work order maintenance, maintenance corrective, maintenance préventive, maintenance prédictive, GMAO, clôture OT, déclaration temps maintenance, technicien maintenance, main d oeuvre OT, intervention machine, panne corrective, MTTR temps réparation, historique pannes, rapport intervention, ordre travail industriel, planning technicien, ticketing maintenance",
+    "x-false-positive-warning": "Planning entretiens préventifs véhicules → maintenance-schedule-api. Demandes d intervention locataires → maintenance-request-api. Gestion machines CNC et OEE → machine-api-v2. Supervision atelier production → mes-api.",
+    "x-cas-usage": "je veux créer un ordre de travail correctif suite à une panne machine | je veux déclarer les heures passées sur une intervention de maintenance | je veux clôturer un ordre de travail avec le rapport d intervention | je veux voir tous les ordres de travail en cours par technicien | je veux consulter la main d oeuvre totale sur un OT de maintenance préventive"
+  },
+  "paths": {
+    "/v1/work-orders": {
+      "get": {
+        "summary": "Lister les ordres de travail en cours — correctifs, préventifs et prédictifs",
+        "operationId": "listWorkOrders",
+        "tags": ["WorkOrders"],
+        "responses": {"200": {"description": "OT en cours"}}
+      },
+      "post": {
+        "summary": "Créer un ordre de travail de maintenance — correctif, préventif ou prédictif",
+        "operationId": "createWorkOrder",
+        "tags": ["WorkOrders"],
+        "responses": {"200": {"description": "OT créé"}}
+      }
+    },
+    "/v1/work-orders/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un ordre de travail — description, priorité et technicien assigné",
+        "operationId": "getWorkOrder",
+        "tags": ["WorkOrders"],
+        "responses": {"200": {"description": "Détail OT"}}
+      },
+      "put": {
+        "summary": "Modifier un ordre de travail — priorité, description ou technicien",
+        "operationId": "updateWorkOrder",
+        "tags": ["WorkOrders"],
+        "responses": {"200": {"description": "OT modifié"}}
+      },
+      "post": {
+        "summary": "Clôturer un ordre de travail — rapport d intervention et temps total",
+        "operationId": "closeWorkOrder",
+        "tags": ["WorkOrders"],
+        "responses": {"200": {"description": "OT clôturé"}}
+      }
+    },
+    "/v1/work-orders/{id}/labor": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Main d oeuvre d un OT — heures déclarées par technicien et coût",
+        "operationId": "getLaborRecords",
+        "tags": ["Labor"],
+        "responses": {"200": {"description": "Relevé main d oeuvre"}}
+      },
+      "post": {
+        "summary": "Déclarer du temps passé sur un ordre de travail — heures et nature de l intervention",
+        "operationId": "recordLabor",
+        "tags": ["Labor"],
+        "responses": {"200": {"description": "Temps déclaré"}}
+      }
+    }
+  }
+}

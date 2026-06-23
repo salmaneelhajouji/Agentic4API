@@ -1,0 +1,160 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Shipping API",
+    "version": "2.0.0",
+    "x-api-id": "shipping-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Logistique",
+    "x-domain": "Supply Chain",
+    "description": "Version 2 de l'API d'expédition — version actuelle recommandée. Gestion complète des expéditions multi-colis avec tracking GPS temps réel (SSE), calcul automatique de l'empreinte CO2, gestion des déclarations douanières pour l'export international hors-UE, étiquettes PDF ou ZPL, et support multi-compte transporteur. DIFFÉRENCE vs shipping-api (v1) : v2 remplace le mono-colis par le multi-colis, ajoute le tracking live GPS, les douanes obligatoires hors-UE et le CO2. DIFFÉRENCE vs delivery-api : Shipping gère les colis et transporteurs, Delivery gère les créneaux et plannings de livraison.",
+    "x-synonymes": "expédition multi-colis, tracking GPS temps réel, calcul CO2 livraison, douanes export, étiquette ZPL, frais de port v2, transporteur multi-compte, expédition internationale, empreinte carbone livraison, SSE tracking, étiquette PDF transport, Chronopost FedEx DHL UPS, shipping logistique, colissimo v2, expédition hors-UE",
+    "x-false-positive-warning": "Créneaux et plannings de livraison → delivery-api. Suivi multi-transporteurs agrégé → logistics-tracking-api. Ancienne version mono-colis → shipping-api-v1 (deprecated).",
+    "x-cas-usage": "je veux expédier plusieurs colis en une seule opération | je veux suivre la position GPS de mon expédition en temps réel | je veux calculer l'empreinte carbone de mes livraisons | je veux expédier hors UE avec déclaration douanière | je veux générer des étiquettes au format ZPL pour mon imprimante",
+    "x-breaking-changes-from-previous": [
+      "multi_parcels: tableau de colis (remplace l'expédition mono-colis)",
+      "tracking en temps réel via WebSocket endpoint /v2/shipping/{id}/live-track",
+      "customs_declaration: obligatoire pour destinations hors-UE",
+      "co2_kg: empreinte carbone calculée et retournée",
+      "label_format: ZPL | PDF (nouveau choix)",
+      "carrier_account_id: support multi-compte transporteur"
+    ]
+  },
+  "paths": {
+    "/v2/shipping/create": {
+      "post": {
+        "summary": "Créer une expédition multi-colis avec calcul CO2, déclaration douanière et choix du format d'étiquette",
+        "operationId": "createShipmentV2",
+        "tags": ["Shipping"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ShipmentV2Create" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Expédition créée — étiquettes générées" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/shipping/estimate": {
+      "post": {
+        "summary": "Estimer les frais de livraison et l'empreinte CO2 par transporteur pour un ou plusieurs colis",
+        "operationId": "estimateShipmentV2",
+        "tags": ["Shipping"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["parcels", "destination"],
+                "properties": {
+                  "parcels": { "type": "array", "items": { "type": "object" } },
+                  "destination": { "type": "object" },
+                  "carriers": { "type": "array", "items": { "type": "string" } },
+                  "include_co2": { "type": "boolean", "default": true }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Estimations avec CO2 par transporteur" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/shipping/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Récupérer le statut complet d'une expédition (colis, transporteur, CO2, douanes)",
+        "operationId": "getShipmentV2",
+        "tags": ["Shipping"],
+        "responses": { "200": { "description": "Expédition" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/shipping/{id}/live-track": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Tracking GPS temps réel par SSE — flux continu de la position du colis (nouveau en v2)",
+        "operationId": "liveTrackShipment",
+        "tags": ["Shipping"],
+        "responses": { "200": { "description": "Stream SSE avec position GPS" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/shipping/{id}/labels": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Télécharger les étiquettes d'expédition au format PDF ou ZPL (nouveau en v2)",
+        "operationId": "getShipmentLabels",
+        "tags": ["Shipping"],
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "schema": { "type": "string", "enum": ["PDF", "ZPL"], "default": "PDF" }
+          }
+        ],
+        "responses": { "200": { "description": "Étiquettes" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/shipping/{id}/cancel": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "put": {
+        "summary": "Annuler une expédition avant prise en charge transporteur",
+        "operationId": "cancelShipmentV2",
+        "tags": ["Shipping"],
+        "responses": { "200": { "description": "Annulée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ShipmentV2Create": {
+        "type": "object",
+        "required": ["parcels", "carrier", "destination", "origin"],
+        "properties": {
+          "parcels": {
+            "type": "array",
+            "minItems": 1,
+            "description": "BREAKING v2: multi-colis au lieu de mono",
+            "items": {
+              "type": "object",
+              "properties": {
+                "weight_kg": { "type": "number" },
+                "dimensions": { "type": "object" },
+                "contents": { "type": "string" }
+              }
+            }
+          },
+          "carrier": { "type": "string", "enum": ["chronopost", "colissimo", "ups", "fedex", "dhl"] },
+          "carrier_account_id": { "type": "string", "description": "Nouveau en v2 — multi-compte transporteur" },
+          "origin": { "type": "object" },
+          "destination": { "type": "object" },
+          "customs_declaration": {
+            "type": "object",
+            "description": "Obligatoire hors-UE en v2",
+            "properties": {
+              "hs_code": { "type": "string" },
+              "declared_value": { "type": "number" },
+              "currency": { "type": "string" }
+            }
+          },
+          "label_format": { "type": "string", "enum": ["PDF", "ZPL"], "default": "PDF" }
+        }
+      }
+    }
+  }
+}

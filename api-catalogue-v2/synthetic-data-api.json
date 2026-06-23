@@ -1,0 +1,93 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Synthetic Data API",
+    "version": "1.0.0",
+    "x-api-id": "synthetic-data-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Génération de données synthétiques. Modélisation mathématique et création d'échantillons de données fictifs mais statistiquement représentatifs pour les environnements de test, de staging ou de formation à l'IA, assurant la conformité RGPD. DIFFÉRENCE vs anonymization-api : Synthetic Data API produit des enregistrements artificiels de toutes pièces basés sur des distributions, alors que anonymization-api masque ou modifie des données réelles existantes (PII).",
+    "x-synonymes": "données synthétiques, génération, simulation, jeu de test, IA, modèle prédictif, seed, rgpd, fake data, mock, anonymat, distribution statistique, entrainement, confidentialité, vie privée, échantillonnage, validation",
+    "x-false-positive-warning": "Pour obfusquer, pseudonymiser ou anonymiser des extraits de bases de données réelles contenant de vrais clients, utilisez anonymization-api.",
+    "x-cas-usage": "je veux générer un jeu de faux profils clients réalistes pour faire des tests de charge | je veux lister les modèles statistiques d'apprentissage disponibles | je veux lancer l'entraînement d'un simulateur de données transactionnelles | je veux mesurer la fidélité statistique de données générées artificiellement"
+  },
+  "paths": {
+    "/v1/synthetic/generate": {
+      "post": {
+        "summary": "Générer un volume de données artificielles à partir d'un modèle statistique entraîné et d'une graine (seed)",
+        "operationId": "generateSyntheticData",
+        "tags": [
+          "Generate"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/synthetic/models": {
+      "get": {
+        "summary": "Lister l'ensemble des modèles génératifs et configurations d'apprentissage disponibles",
+        "operationId": "listSynthModels",
+        "tags": [
+          "Models"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Lancer l'apprentissage ou l'entraînement d'un nouveau modèle génératif sur un jeu de référence",
+        "operationId": "trainSynthModel",
+        "tags": [
+          "Models"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/synthetic/validate": {
+      "post": {
+        "summary": "Évaluer la qualité d'un jeu de données synthétiques et sa proximité avec les lois statistiques réelles",
+        "operationId": "validateSyntheticData",
+        "tags": [
+          "Validate"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

@@ -1,0 +1,56 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Carbon Footprint API",
+    "version": "1.0.0",
+    "x-api-id": "carbon-footprint-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "API de calcul et de suivi de l'empreinte carbone des installations industrielles et des activités opérationnelles. Couvre le calcul des émissions CO2 par scope (1, 2 et 3), la génération de rapports ESG conformes aux obligations réglementaires (CSRD, bilan GES), et la consultation des compensations carbone disponibles pour atteindre la neutralité. Utilisée par les équipes RSE, directions développement durable et responsables conformité pour piloter la trajectoire net zéro et alimenter les reportings climatiques. DIFFÉRENCE vs air-quality-api : Carbon Footprint API = calcul des émissions CO2 globales d'un site pour reporting RSE ; air-quality-api = mesure en temps réel des polluants atmosphériques locaux. DIFFÉRENCE vs energy-consumption-api : Carbon Footprint API = conversion de la consommation en émissions CO2 pour reporting ; energy-consumption-api = suivi de la consommation électrique seule. DIFFÉRENCE vs esg-reporting-api : Carbon Footprint API = calcul technique des émissions carbone ; esg-reporting-api = publication et soumission des rapports ESG aux régulateurs.",
+    "x-synonymes": "empreinte carbone, bilan carbone, émissions CO2, GES gaz effet serre, scope 1 scope 2 scope 3, reporting ESG, rapport RSE, développement durable, neutralité carbone, net zéro, compensation carbone, crédit carbone, CSRD, taxonomie verte, décarbonation, trajectoire carbone, bilan GES, calculateur CO2, empreinte environnementale, carbon offset",
+    "x-false-positive-warning": "DIFFÉRENCE vs air-quality-api : Carbon Footprint API = calcul des émissions CO2 globales d'un site pour reporting RSE. air-quality-api = mesure en temps réel des polluants atmosphériques locaux (NOx, PM2.5). DIFFÉRENCE vs energy-consumption-api : Carbon Footprint API = conversion de la consommation en émissions CO2 équivalentes pour le reporting climatique. energy-consumption-api = suivi de la consommation électrique et énergétique seule, sans facteur de conversion carbone. DIFFÉRENCE vs esg-reporting-api : Carbon Footprint API = calcul technique des émissions carbone par scope et par source. esg-reporting-api = publication et soumission formelle des rapports ESG aux régulateurs et parties prenantes. DIFFÉRENCE vs sustainability-api : Carbon Footprint API = focus exclusif sur les émissions CO2 et compensations. sustainability-api = indicateurs RSE élargis (eau, déchets, biodiversité).",
+    "x-cas-usage": "Comment calculer l'empreinte carbone de notre usine pour notre bilan GES annuel par scope ? | Comment générer un rapport ESG sur nos émissions CO2 conforme à la CSRD et à la taxonomie verte ? | Quels crédits carbone et projets de compensation sont disponibles pour atteindre la neutralité carbone ? | Comment suivre l'évolution mensuelle de nos émissions CO2 et piloter notre trajectoire net zéro ? | Comment calculer l'empreinte carbone de notre flotte de véhicules en scope 1 et scope 3 ?"
+  },
+  "paths": {
+    "/v1/carbon/{siteId}": {
+      "parameters": [{"name": "siteId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter l'empreinte carbone d'un site industriel — émissions CO2 cumulées ventilées par scope 1, 2 et 3",
+        "operationId": "getCarbonFootprint",
+        "tags": ["Carbon"],
+        "responses": {"200": {"description": "Empreinte carbone par scope"}}
+      },
+      "post": {
+        "summary": "Calculer l'empreinte carbone d'un site sur une période donnée — résultats détaillés par scope 1, 2 et 3 avec facteurs d'émission",
+        "operationId": "calculateCarbon",
+        "tags": ["Carbon"],
+        "responses": {"200": {"description": "Calcul CO2 effectué"}}
+      }
+    },
+    "/v1/carbon/{siteId}/report": {
+      "parameters": [{"name": "siteId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter le dernier rapport ESG carbone d'un site — bilan GES annuel et trajectoire de décarbonation",
+        "operationId": "getCarbonReport",
+        "tags": ["Report"],
+        "responses": {"200": {"description": "Rapport ESG carbone"}}
+      },
+      "post": {
+        "summary": "Générer un rapport carbone ESG complet — bilan annuel conforme CSRD, taxonomie verte et objectifs net zéro",
+        "operationId": "generateReport",
+        "tags": ["Report"],
+        "responses": {"200": {"description": "Rapport généré"}}
+      }
+    },
+    "/v1/carbon/offsets": {
+      "get": {
+        "summary": "Lister les compensations carbone disponibles — crédits carbone certifiés et projets offset éligibles par secteur",
+        "operationId": "listOffsets",
+        "tags": ["Offsets"],
+        "responses": {"200": {"description": "Compensations carbone disponibles"}}
+      }
+    }
+  }
+}

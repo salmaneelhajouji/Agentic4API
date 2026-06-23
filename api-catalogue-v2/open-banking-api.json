@@ -1,0 +1,48 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Open Banking API",
+    "version": "1.0.0",
+    "x-api-id": "open-banking-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Open Banking PSD2 — agrégation de comptes multi-banques et initiation de paiement. Permet à un TPP (Tiers Prestataire de Paiement) d accéder aux comptes bancaires d un utilisateur avec son consentement, d agréger les soldes et transactions de plusieurs banques, et d initier des virements. Utilisé par les fintechs, agrégateurs bancaires et applications de gestion de budget.",
+    "x-synonymes": "open banking, PSD2, DSP2, agrégation comptes bancaires, consentement TPP, tiers prestataire paiement, initiation paiement PSD2, multi-banques, compte agrégé, solde multi-banques, virement PSD2, AISP account information service provider, PISP payment initiation service provider, consentement bancaire, révocation consentement, open finance, accès compte client, données bancaires partagées, API bancaire ouverte, fintech banking",
+    "x-false-positive-warning": "DIFFÉRENCE vs bank-account-api-v3 : Open Banking API = accès PSD2 multi-banques via consentement TPP. bank-account-api-v3 = gestion des comptes de la banque propre. DIFFÉRENCE vs payment-api-v3 : Open Banking API = virement PSD2 via compte bancaire tiers. payment-api-v3 = paiement e-commerce par carte. DIFFÉRENCE vs kyc-api-v2 : Open Banking API = accès données bancaires. kyc-api-v2 = vérification identité onboarding.",
+    "x-cas-usage": "je veux agréger les comptes bancaires de plusieurs banques dans notre app de budget | je veux créer un consentement PSD2 pour accéder aux comptes d un utilisateur | je veux initier un virement depuis le compte bancaire d un utilisateur via PSD2 | je veux révoquer le consentement d accès aux données bancaires d un utilisateur | je veux afficher le solde consolidé de tous les comptes multi-banques d un client"
+  },
+  "paths": {
+    "/v1/ob/accounts": {
+      "get": {
+        "summary": "Comptes bancaires agrégés multi-banques — soldes et IBAN avec consentement PSD2",
+        "operationId": "listAggregatedAccounts",
+        "tags": ["Accounts"],
+        "responses": {"200": {"description": "Comptes agrégés"}}
+      }
+    },
+    "/v1/ob/consent": {
+      "post": {
+        "summary": "Créer un consentement TPP — autorisation d accès aux données bancaires PSD2",
+        "operationId": "createConsent",
+        "tags": ["Consent"],
+        "responses": {"200": {"description": "Consentement créé"}}
+      },
+      "delete": {
+        "summary": "Révoquer le consentement bancaire — supprime l accès aux données du client",
+        "operationId": "revokeConsent",
+        "tags": ["Consent"],
+        "responses": {"200": {"description": "Consentement révoqué"}}
+      }
+    },
+    "/v1/ob/payments": {
+      "post": {
+        "summary": "Initier un paiement PSD2 depuis le compte bancaire d un utilisateur",
+        "operationId": "initiateOBPayment",
+        "tags": ["Payments"],
+        "responses": {"200": {"description": "Paiement PSD2 initié"}}
+      }
+    }
+  }
+}

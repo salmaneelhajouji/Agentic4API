@@ -1,0 +1,72 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Configuration API",
+    "version": "1.0.0",
+    "x-api-id": "configuration-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Divers",
+    "x-domain": "Cross",
+    "description": "Gestion centralisée de la configuration multi-application par environnement. Permet de lire et écrire la configuration d une application selon l environnement (dev, staging, prod), de gérer les secrets chiffrés et de les centraliser pour toutes les applications. Utilisé par les équipes DevOps et platform pour externaliser la configuration sensible hors du code source.",
+    "x-synonymes": "configuration multi-app, configuration par environnement, config dev staging prod, secret applicatif, variable environnement, paramètre secret, configuration centralisée, Vault config, config server, configuration service, paramètre chiffré, secret management config, config par app, configuration microservice, paramètre par env, configuration DevOps, externalisation config, config map Kubernetes, configuration infrastructure, 12 factor app config",
+    "x-false-positive-warning": "DIFFÉRENCE vs config-api : Configuration API = configuration multi-application par environnement avec secrets. config-api = feature flags et paramètres simples clé-valeur. DIFFÉRENCE vs secret-management-api : Configuration API = configuration applicative complète incluant secrets. secret-management-api = gestion dédiée des secrets avec rotation automatique. DIFFÉRENCE vs cache-api : Configuration API = stockage persistant de paramètres. cache-api = cache temporaire avec TTL.",
+    "x-cas-usage": "je veux récupérer la configuration de mon application en production | je veux définir les paramètres de configuration pour l environnement de staging | je veux stocker un secret API key dans la configuration centralisée | je veux lister tous les secrets configurés pour une application | je veux changer une valeur de configuration sans redéployer l application"
+  },
+  "paths": {
+    "/v1/config/{appId}": {
+      "parameters": [{"name": "appId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Configuration complète d une application — tous environnements confondus",
+        "operationId": "getAppConfig",
+        "tags": ["Config"],
+        "responses": {"200": {"description": "Configuration application"}}
+      },
+      "put": {
+        "summary": "Mettre à jour la configuration d une application",
+        "operationId": "updateAppConfig",
+        "tags": ["Config"],
+        "responses": {"200": {"description": "Configuration mise à jour"}}
+      }
+    },
+    "/v1/config/{appId}/{env}": {
+      "parameters": [
+        {"name": "appId", "in": "path", "required": true, "schema": {"type": "string"}},
+        {"name": "env", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Configuration d une application pour un environnement — dev, staging ou prod",
+        "operationId": "getEnvConfig",
+        "tags": ["Config"],
+        "responses": {"200": {"description": "Configuration par environnement"}}
+      },
+      "put": {
+        "summary": "Définir la configuration d une application pour un environnement spécifique",
+        "operationId": "setEnvConfig",
+        "tags": ["Config"],
+        "responses": {"200": {"description": "Configuration définie"}}
+      }
+    },
+    "/v1/config/{appId}/secrets": {
+      "parameters": [{"name": "appId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Lister les secrets d une application — clés API, tokens et mots de passe",
+        "operationId": "listSecrets",
+        "tags": ["Secrets"],
+        "responses": {"200": {"description": "Secrets (noms uniquement, valeurs masquées)"}}
+      },
+      "post": {
+        "summary": "Définir un secret chiffré pour une application — clé API ou token",
+        "operationId": "setSecret",
+        "tags": ["Secrets"],
+        "responses": {"200": {"description": "Secret enregistré"}}
+      },
+      "delete": {
+        "summary": "Supprimer un secret d une application",
+        "operationId": "deleteSecret",
+        "tags": ["Secrets"],
+        "responses": {"200": {"description": "Secret supprimé"}}
+      }
+    }
+  }
+}

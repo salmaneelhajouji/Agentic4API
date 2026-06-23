@@ -1,0 +1,150 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Homeowner Association API",
+    "version": "1.0.0",
+    "x-api-id": "homeowner-association-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Cette API régit l'administration, la gestion financière et la conformité juridique des syndicats de copropriété (Homeowner Association / Syndic). Elle permet de centraliser les fiches d'immeubles, de planifier et de consigner les résolutions des assemblées générales (AG), d'appliquer, de répartir et de recouvrer les appels de charges de copropriété selon les tantièmes, et de suivre la budgétisation et le déploiement des travaux de maintenance ou de rénovation des parties communes.",
+    "x-synonymes": "gestion de copropriété, syndic d'immeuble, assemblée générale, AG copropriétaires, appel de charges, charges de copropriété, tantièmes, rénovation parties communes, budget de copropriété, résolution d'AG, fiche d'immeuble, procès-verbal d'assemblée, fonds de travaux, gestion immobilière, conseil syndical",
+    "x-false-positive-warning": "Attention : Cette API encadre exclusivement l'administration réglementaire des copropriétés, la planification des AG et les charges d'immeubles (RealEstate). Ne pas la confondre avec la `lease-management-api` (gestion des baux de location individuels et encaissement des loyers privatifs) ni avec les outils de gestion hôtelière.",
+    "x-cas-usage": "Comment planifier une nouvelle assemblée générale ordinaire (AG) pour voter le budget annuel d'un immeuble ? | Où consulter la répartition et l'historique comptable des appels de charges de copropriété ? | Comment créer un dossier technique de suivi de travaux de ravalement votés pour les parties communes ? | Comment récupérer les informations de tantièmes et les résolutions d'un syndicat d'immeuble ?"
+  },
+  "paths": {
+    "/v1/hoa/{buildingId}": {
+      "parameters": [
+        {
+          "name": "buildingId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive détaillée d'un immeuble, son règlement de copropriété et la structure des tantièmes",
+        "operationId": "getHOAInfo",
+        "tags": [
+          "HOA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/hoa/{buildingId}/meetings": {
+      "parameters": [
+        {
+          "name": "buildingId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister le calendrier des assemblées générales (AG) ordinaires ou extraordinaires programmées ou passées",
+        "operationId": "listMeetings",
+        "tags": [
+          "Meetings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et convoquer une nouvelle assemblée générale en enregistrant l'ordre du jour et les résolutions soumises au vote",
+        "operationId": "createMeeting",
+        "tags": [
+          "Meetings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/hoa/{buildingId}/charges": {
+      "parameters": [
+        {
+          "name": "buildingId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les budgets de fonctionnement, l'historique et l'état de recouvrement des charges de copropriété",
+        "operationId": "getCharges",
+        "tags": [
+          "Charges"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Calculer, émettre et appliquer un nouvel appel de charges trimestriel ou exceptionnel à l'ensemble des copropriétaires",
+        "operationId": "applyCharges",
+        "tags": [
+          "Charges"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/hoa/{buildingId}/works": {
+      "parameters": [
+        {
+          "name": "buildingId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister les dossiers techniques de travaux de maintenance ou de rénovation votés pour les parties communes",
+        "operationId": "listWorks",
+        "tags": [
+          "Works"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et enregistrer un nouveau chantier de travaux validé avec son budget alloué et ses prestataires retenus",
+        "operationId": "createWork",
+        "tags": [
+          "Works"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Endorsement API",
+    "version": "1.0.0",
+    "x-api-id": "endorsement-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Cette API gère la création, la tarification et la validation des avenants et modifications contractuelles pour le domaine de l'assurance. Elle permet d'enregistrer des modifications ponctuelles sur des contrats existants (ajout de garanties, réévaluation des plafonds, changement de données personnelles de l'assuré, mise à jour des biens couverts), d'exécuter les workflows d'approbation et d'intégrer l'historique des évolutions du risque assuré.",
+    "x-synonymes": "avenant de contrat, modification contractuelle, avenant d'assurance, ajout de garantie, mise à jour de contrat, ajustement de prime, évolution du risque, contrat d'assurance, approbation d'avenant, annulation d'avenant, révision de police, mise à jour de garanties, historique contractuel",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement de la gestion des avenants, des modifications d'état et des révisions intermédiaires sur un contrat existant (Endorsement). Ne pas la confondre avec la `policy-api-v3` qui pilote la création, le renouvellement complet ou la résiliation globale d'une police d'assurance de bout en bout.",
+    "x-cas-usage": "Comment créer un projet d'avenant pour ajouter une option protection juridique à une police d'assurance auto existante ? | Où consulter la liste des avenants en cours d'analyse par l'équipe de souscription ? | Comment valider et enregistrer l'approbation définitive d'un avenant suite au paiement de l'ajustement ? | Comment annuler une demande d'avenant saisie par erreur avant son entrée en vigueur ?"
+  },
+  "paths": {
+    "/v1/endorsements": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des projets d'avenants et demandes de modification contractuelle en cours de traitement",
+        "operationId": "listEndorsements",
+        "tags": [
+          "Endorsements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un nouveau projet d'avenant pour introduire des modifications de garanties ou de plafonds sur une police d'assurance existante",
+        "operationId": "createEndorsement",
+        "tags": [
+          "Endorsements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/endorsements/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le détail des modifications proposées, l'ajustement de prime associé et le statut d'un avenant spécifique",
+        "operationId": "getEndorsement",
+        "tags": [
+          "Endorsements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer l'approbation définitive d'un avenant d'assurance pour acter sa mise en vigueur contractuelle",
+        "operationId": "approveEndorsement",
+        "tags": [
+          "Endorsements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Annuler et rejeter définitivement une demande d'avenant de contrat en cours de traitement",
+        "operationId": "cancelEndorsement",
+        "tags": [
+          "Endorsements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

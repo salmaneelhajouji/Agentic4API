@@ -1,0 +1,220 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Product API",
+    "version": "1.0.0",
+    "x-api-id": "product-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Catalog",
+    "x-domain": "E-Commerce",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS product-api-v4] Cette API gérait historiquement la version initiale de l'indexation et du catalogue produits de la plateforme e-commerce (v1). Structure obsolète avec identifiants sous forme d'entiers simples, absence de variantes de produits et gestion basique des images. Toutes les applications doivent obligatoirement migrer vers la version 4 active (product-api-v4) pour prendre en charge les catalogues B2B/B2C segmentés, les bundles natifs et la conformité PIM complète.",
+    "x-breaking-changes-in-next": [
+      "id integer→string PROD-XXXX",
+      "image string→tableau images[]",
+      "Nouveau champ variants obligatoire",
+      "price→pricing.base_price"
+    ],
+    "x-successor": "product-api-v2",
+    "x-synonymes": "catalogue produits ancien, fiche produit v1, index articles déprécié, référentiel produits obsolète, prix de base article v1, inventaire e-commerce historique, recherche de produit simple",
+    "x-false-positive-warning": "Attention : Cette API historique est dépréciée et ses fonctionnalités sont gelées. Veiller à rediriger l'intégralité des flux applicatifs vers la version cible active `product-api-v4` et ne pas la confondre avec la `product-catalog-api` gérant la taxonomie."
+  },
+  "paths": {
+    "/v1/products": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS product-api-v4 - Lister les produits du catalogue historique de la v1 selon leur catégorie",
+        "operationId": "listProductsV1",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "in_stock",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductV1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS product-api-v4 - Créer une fiche d'article simplifiée dans l'ancien référentiel v1 (opération dépréciée)",
+        "operationId": "createProductV1",
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductV1Create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductV1"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/products/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          },
+          "description": "BREAKING v2: devient string PROD-XXXX"
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS product-api-v4 - Consulter le détail d'un produit tel que consigné dans l'ancienne base de données v1",
+        "operationId": "getProductV1",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductV1"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produit introuvable sur la v1"
+          }
+        }
+      },
+      "put": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS product-api-v4 - Modifier les propriétés d'une fiche produit de l'ancienne version v1",
+        "operationId": "updateProductV1",
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductV1Create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      },
+      "delete": {
+        "summary": "⚠️ [DEPRECATED] Supprimer définitivement une fiche produit de l'ancienne version v1 (devient archivage logique en v2)",
+        "operationId": "deleteProductV1",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimé"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProductV1Create": {
+        "type": "object",
+        "required": [
+          "name",
+          "price",
+          "category"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "description": "BREAKING v2: remplacé par pricing.base_price"
+          },
+          "category": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "format": "uri",
+            "description": "BREAKING v2: remplacé par tableau images[]"
+          },
+          "stock": {
+            "type": "integer"
+          }
+        }
+      },
+      "ProductV1": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "BREAKING v2: devient string PROD-XXXX"
+          },
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "category": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "stock": {
+            "type": "integer"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

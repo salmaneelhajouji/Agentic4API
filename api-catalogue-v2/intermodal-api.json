@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Intermodal API",
+    "version": "1.0.0",
+    "x-api-id": "intermodal-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Cette API orchestre la planification, le suivi et la coordination logistique des expéditions de fret empruntant plusieurs modes de transport successifs (routier, ferroviaire, maritime, aérien). Elle permet de structurer les plans de transport combinés, de suivre l'acheminement des conteneurs à travers les différentes étapes et de superviser en temps réel le statut des transferts de responsabilité et des ruptures de charge (handovers) au sein des terminaux intermodaux.",
+    "x-synonymes": "transport intermodal, fret combiné, rupture de charge, transfert de responsabilité, transport multimodal, acheminement conteneur, logistique maritime, fret ferroviaire, hub intermodal, terminal logistique, feuille de route combinée, suivi d'expédition multi-mode, commissionnaire de transport, chaîne de transport, handover fret",
+    "x-false-positive-warning": "Attention : Cette API gère le chaînage macro et les ruptures de charge de transports utilisant plusieurs modes combinés (Intermodal). Ne pas la confondre avec la `fleet-api-v4` (dédiée exclusivement à la gestion opérationnelle et à la télématique de notre propre flotte de camions routiers).",
+    "x-cas-usage": "Comment déclarer une nouvelle expédition de fret combinant un trajet ferroviaire et un acheminement routier ? | Où vérifier si le conteneur a bien été transféré lors de la rupture de charge au terminal maritime ? | Comment lister l'ensemble des expéditions intermodales actuellement en transit ?"
+  },
+  "paths": {
+    "/v1/intermodal/shipments": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des dossiers d'expéditions et de transports intermodaux actifs",
+        "operationId": "listIntermodalShipments",
+        "tags": [
+          "Shipments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et planifier un nouveau dossier d'expédition intermodale en définissant la séquence des modes de transport",
+        "operationId": "createIntermodalShipment",
+        "tags": [
+          "Shipments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/intermodal/shipments/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le statut technique détaillé d'une rupture de charge et valider le transfert de responsabilité au terminal",
+        "operationId": "getHandoverStatus",
+        "tags": [
+          "Shipments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

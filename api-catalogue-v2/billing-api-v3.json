@@ -1,0 +1,178 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Billing API",
+    "version": "3.0.0",
+    "x-api-id": "billing-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "Version actuelle et recommandée de l'API de facturation enterprise — couvre les cycles de facturation hybride (forfait fixe, usage mesuré, combinaison des deux), la gestion des crédits et avoirs clients, les workflows de relance personnalisés (dunning) et la synchronisation native avec les ERP SAP, Oracle, Sage et Cegid. Destinée aux équipes finance, ops et intégration souhaitant automatiser la facturation récurrente avec proration lors des changements de plan et périodes de grâce avant suspension d'accès. Utilisateurs typiques : directeurs financiers, développeurs d'intégration ERP, équipes RevOps et comptabilité. DIFFÉRENCE vs invoice-api : Billing orchestre les cycles de paiement récurrents, Invoice génère les documents fiscaux légaux. DIFFÉRENCE vs billing-api (v1) : v1 ne supporte pas la facturation hybride ni l'ERP. DIFFÉRENCE vs billing-api-v2 : v2 ne gère pas les crédits, avoirs ni la sync ERP native.",
+    "x-breaking-changes-from-previous": [
+      "billing_mode: flat | metered | hybrid",
+      "credits: gestion des crédits et avoirs",
+      "erp_sync: SAP, Oracle, Sage, Cegid",
+      "proration_policy: none | day | second",
+      "dunning_workflow: relances personnalisables",
+      "grace_period_days: période de grâce avant suspension"
+    ],
+    "x-synonymes": "billing hybride, facturation ERP, crédit abonnement, avoir client, workflow relance, dunning séquence, période de grâce, suspension abonnement impayé, proration upgrade downgrade, synchronisation SAP billing, synchronisation Oracle billing, Sage facturation, Cegid facturation, billing enterprise, facturation à l'usage, credit note, avoir automatique, résiliation avec grâce, facturation récurrente, metered billing",
+    "x-false-positive-warning": "Version simple sans ERP ni crédits → billing-api (v1). Version avec gestion de statuts mais sans crédits ni ERP → billing-api-v2. Facture PDF légale ou document fiscal → invoice-api. Transaction ponctuelle ou paiement one-shot → payment-api. Gestion des droits d'accès et fonctionnalités du plan → subscription-api. Ne pas confondre avec tax-api pour le calcul de TVA ou avec refund-api pour les remboursements complets.",
+    "x-cas-usage": "Comment émettre un avoir sur l'abonnement d'un client insatisfait ? | Comment synchroniser automatiquement notre facturation avec SAP ou Oracle ? | Comment configurer un workflow de relance personnalisé avec 3 tentatives avant suspension ? | Comment effectuer un upgrade proratisé d'un client en cours de période de facturation ? | Quels paramètres configurer pour accorder une période de grâce avant suspension d'un abonnement impayé ?"
+  },
+  "paths": {
+    "/v3/billing/subscriptions": {
+      "post": {
+        "summary": "Créer un abonnement hybride (flat, metered ou hybrid) avec mode de facturation, workflow de relance et période de grâce configurables",
+        "operationId": "createBillingSubV3",
+        "tags": ["Subscriptions"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["customer_id", "plan_id", "payment_method", "billing_mode"],
+                "properties": {
+                  "customer_id": {"type": "string"},
+                  "plan_id": {"type": "string"},
+                  "payment_method": {"type": "string", "enum": ["card", "sepa", "wire"]},
+                  "billing_mode": {"type": "string", "enum": ["flat", "metered", "hybrid"]},
+                  "proration_policy": {"type": "string", "enum": ["none", "day", "second"], "default": "day"},
+                  "grace_period_days": {"type": "integer", "default": 3},
+                  "dunning_workflow": {"type": "string"},
+                  "trial_days": {"type": "integer", "default": 0}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Abonnement créé avec succès"}}
+      },
+      "get": {
+        "summary": "Lister tous les abonnements avec filtrage par statut — actif, en retard de paiement, suspendu, résilié ou en période d'essai",
+        "operationId": "listBillingSubsV3",
+        "tags": ["Subscriptions"],
+        "parameters": [
+          {"name": "status", "in": "query", "schema": {"type": "string", "enum": ["active", "past_due", "suspended", "cancelled", "trialing"]}}
+        ],
+        "responses": {"200": {"description": "Liste des abonnements filtrés par statut"}}
+      }
+    },
+    "/v3/billing/subscriptions/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le détail complet d'un abonnement — inclut les crédits disponibles, l'historique de facturation et la prochaine échéance",
+        "operationId": "getBillingSubV3",
+        "tags": ["Subscriptions"],
+        "responses": {
+          "200": {"description": "Détail complet de l'abonnement"},
+          "404": {"description": "Abonnement non trouvé"}
+        }
+      },
+      "put": {
+        "summary": "Modifier le plan d'un abonnement en cours avec calcul automatique de proratisation — upgrade ou downgrade en milieu de période",
+        "operationId": "updateBillingSubV3",
+        "tags": ["Subscriptions"],
+        "responses": {
+          "200": {"description": "Abonnement modifié avec proratisation appliquée"},
+          "404": {"description": "Abonnement non trouvé"},
+          "400": {"description": "Données invalides ou modification non autorisée"}
+        }
+      },
+      "delete": {
+        "summary": "Résilier un abonnement en respectant la période de grâce configurée avant coupure effective d'accès",
+        "operationId": "cancelBillingSubV3",
+        "tags": ["Subscriptions"],
+        "responses": {
+          "200": {"description": "Abonnement résilié, période de grâce initiée si configurée"},
+          "404": {"description": "Abonnement non trouvé"}
+        }
+      }
+    },
+    "/v3/billing/usage": {
+      "post": {
+        "summary": "Reporter une quantité consommée pour le métered billing — nombre d'appels API, volume de stockage ou utilisateurs actifs sur la période",
+        "operationId": "reportUsageV3",
+        "tags": ["Usage"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["subscription_id", "quantity", "metric"],
+                "properties": {
+                  "subscription_id": {"type": "string"},
+                  "quantity": {"type": "number"},
+                  "metric": {"type": "string"},
+                  "timestamp": {"type": "string", "format": "date-time"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {"description": "Consommation enregistrée et comptabilisée pour la prochaine facturation"},
+          "400": {"description": "Données de consommation invalides ou métrique inconnue"},
+          "404": {"description": "Abonnement non trouvé"}
+        }
+      }
+    },
+    "/v3/billing/credits": {
+      "post": {
+        "summary": "Émettre un crédit ou avoir sur un abonnement client — geste commercial, compensation incident ou remboursement partiel avec date d'expiration optionnelle",
+        "operationId": "issueBillingCredit",
+        "tags": ["Credits"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["subscription_id", "amount", "reason"],
+                "properties": {
+                  "subscription_id": {"type": "string"},
+                  "amount": {"type": "number"},
+                  "currency": {"type": "string"},
+                  "reason": {"type": "string"},
+                  "expires_at": {"type": "string", "format": "date"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {"description": "Crédit ou avoir émis et appliqué à l'abonnement"},
+          "400": {"description": "Montant invalide ou raison manquante"},
+          "404": {"description": "Abonnement non trouvé"}
+        }
+      }
+    },
+    "/v3/billing/erp-sync/{subscriptionId}": {
+      "parameters": [{"name": "subscriptionId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Déclencher manuellement la synchronisation des données de facturation d'un abonnement vers le système ERP cible — SAP, Oracle, Sage ou Cegid",
+        "operationId": "syncERP",
+        "tags": ["ERP"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["erp_system"],
+                "properties": {
+                  "erp_system": {"type": "string", "enum": ["sap", "oracle", "sage", "cegid"]}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {"description": "Synchronisation ERP lancée en arrière-plan"},
+          "400": {"description": "Système ERP non reconnu ou paramètre invalide"},
+          "404": {"description": "Abonnement non trouvé"}
+        }
+      }
+    }
+  }
+}

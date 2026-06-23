@@ -1,0 +1,159 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Analytics API",
+    "version": "3.0.0",
+    "x-api-id": "analytics-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "Version actuelle et recommandée de l'API Analytics, couvrant l'analyse des ventes, le comportement utilisateur, la détection automatique d'anomalies et l'analytique prédictive par modèles ML (Prophet, LSTM). Permet de configurer des alertes sur seuils de métriques, d'exporter nativement vers Looker, Tableau et PowerBI, et de gérer des dashboards avec permissions granulaires ACL par utilisateur ou groupe. Utilisée principalement par les équipes data engineering, product managers et directions métier pour piloter la performance business en temps réel et anticiper les tendances sur des horizons allant de 7 à 90 jours. DIFFÉRENCE vs analytics-api-v2 : v3 = version actuelle avec ML prédictif, alertes automatiques sur seuils et export BI natif. v2 = version précédente sans prédictions ni intégrations BI natives. DIFFÉRENCE vs reporting-api : Analytics = exploration temps réel, prédictions ML et dashboards interactifs. reporting-api = génération de rapports PDF planifiés pour distribution automatisée.",
+    "x-breaking-changes-from-previous": [
+      "predictive_insights: nouveau endpoint ML",
+      "metric_alerts: alertes automatiques sur seuils",
+      "dashboard.permissions: ACL par utilisateur ou groupe",
+      "export_to: Looker | Tableau | PowerBI natifs",
+      "sampling_rate: contrôle du taux d'échantillonnage pour gros volumes",
+      "anomaly_detection: détection automatique des anomalies"
+    ],
+    "x-synonymes": "analytics prédictif, prédiction ventes, forecast revenue, machine learning analytics, détection anomalies, alerte métrique, seuil KPI, export Looker, export Tableau, export PowerBI, dashboard ACL, permissions dashboard, business intelligence prédictive, analyse tendances, forecasting, modèle Prophet, modèle LSTM, insights automatiques, anomalie détectée, pilotage performance business",
+    "x-false-positive-warning": "Rapports PDF planifiés pour distribution → reporting-api-v2 (génération de documents statiques, pas d'exploration interactive). Collecte brute d'événements clics et sessions → event-tracking-api (ingestion d'événements côté client, pas d'agrégation ni prédiction). Tests A/B et expérimentations produit → ab-testing-api (comparaison de variantes, pas de métriques globales). Version précédente sans ML ni export BI natif → analytics-api-v2 (compatible mais fonctionnalités réduites). Alertes incidents techniques et ops → alert-api (surveillance infrastructure, pas de métriques business).",
+    "x-cas-usage": "Comment prédire mon chiffre d'affaires sur les 30 prochains jours avec un modèle ML ? | Comment configurer une alerte automatique quand mon taux de conversion passe sous 2% ? | Comment détecter les anomalies sur mes métriques de ventes en temps réel ? | Comment exporter mes dashboards analytics vers Tableau ou PowerBI pour mon équipe finance ? | Comment créer un dashboard avec des permissions différentes par équipe ou groupe utilisateur ?"
+  },
+  "paths": {
+    "/v3/analytics/sales": {
+      "get": {
+        "summary": "Récupérer les métriques de ventes v3 avec détection automatique d'anomalies — CA, nombre de commandes, panier moyen sur une période donnée",
+        "operationId": "getSalesV3",
+        "tags": ["Analytics"],
+        "parameters": [
+          {"name": "from", "in": "query", "schema": {"type": "string", "format": "date"}},
+          {"name": "to", "in": "query", "schema": {"type": "string", "format": "date"}},
+          {"name": "anomaly_detection", "in": "query", "schema": {"type": "boolean", "default": false}}
+        ],
+        "responses": {"200": {"description": "Métriques ventes avec anomalies détectées et indicateurs de performance agrégés"}}
+      }
+    },
+    "/v3/analytics/predict": {
+      "post": {
+        "summary": "Lancer des prédictions ML sur des métriques clés — forecast revenue, taux de conversion ou nombre de commandes sur un horizon de jours avec modèle Prophet ou LSTM",
+        "operationId": "predictMetrics",
+        "tags": ["Predictive"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["metric", "horizon_days"],
+                "properties": {
+                  "metric": {"type": "string", "example": "revenue"},
+                  "horizon_days": {"type": "integer", "example": 30},
+                  "model": {
+                    "type": "string",
+                    "enum": ["linear", "prophet", "lstm"],
+                    "default": "prophet"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Prédictions avec intervalles de confiance par modèle ML sélectionné"}}
+      }
+    },
+    "/v3/analytics/alerts": {
+      "post": {
+        "summary": "Créer une alerte automatique sur seuil de métrique business — déclenchement au-dessus, en-dessous d'un seuil défini ou sur détection d'anomalie, avec notification par email",
+        "operationId": "createMetricAlert",
+        "tags": ["Alerts"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["metric", "condition", "threshold"],
+                "properties": {
+                  "metric": {"type": "string"},
+                  "condition": {
+                    "type": "string",
+                    "enum": ["above", "below", "anomaly"]
+                  },
+                  "threshold": {"type": "number"},
+                  "notify": {
+                    "type": "array",
+                    "items": {"type": "string", "format": "email"}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Alerte métrique créée et active avec les destinataires configurés"}}
+      },
+      "get": {
+        "summary": "Lister toutes les alertes métriques actives — affiche les seuils configurés, conditions et statuts de déclenchement en cours",
+        "operationId": "listMetricAlerts",
+        "tags": ["Alerts"],
+        "responses": {"200": {"description": "Liste des alertes métriques actives avec leur configuration et dernier statut"}}
+      }
+    },
+    "/v3/analytics/export": {
+      "post": {
+        "summary": "Exporter les données analytics et dashboards vers une destination BI externe — Looker, Tableau, PowerBI ou fichier CSV, sur une plage de dates spécifiée",
+        "operationId": "exportAnalytics",
+        "tags": ["Export"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["destination"],
+                "properties": {
+                  "destination": {
+                    "type": "string",
+                    "enum": ["looker", "tableau", "powerbi", "csv"]
+                  },
+                  "dashboard_id": {"type": "string"},
+                  "date_range": {"type": "object"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"202": {"description": "Export lancé de manière asynchrone vers la destination BI sélectionnée"}}
+      }
+    },
+    "/v3/analytics/dashboards": {
+      "post": {
+        "summary": "Créer un nouveau dashboard analytics avec widgets personnalisables et permissions ACL granulaires — accès par utilisateur individuel ou groupe métier",
+        "operationId": "createDashboardV3",
+        "tags": ["Dashboards"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {"type": "string"},
+                  "widgets": {"type": "array"},
+                  "permissions": {
+                    "type": "object",
+                    "description": "ACL par user/groupe",
+                    "properties": {
+                      "public": {"type": "boolean"},
+                      "allowed_users": {"type": "array", "items": {"type": "string"}},
+                      "allowed_groups": {"type": "array", "items": {"type": "string"}}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Dashboard créé avec permissions ACL configurées par utilisateur et groupe"}}
+      }
+    }
+  }
+}

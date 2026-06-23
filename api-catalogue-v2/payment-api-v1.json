@@ -1,0 +1,43 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Payment API",
+    "version": "1.0.0",
+    "x-api-id": "payment-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "DEPRECATED 2022 — NE PAS UTILISER. Version 1 carte uniquement, sans PayPal ni SEPA, remboursements manuels et ID entier. Migrer vers payment-api (v2) ou payment-api-v3.",
+    "x-breaking-changes-in_next": ["PayPal et SEPA ajoutés", "capture_mode immediate/manual", "/refund dédié remplace DELETE", "ID integer→string PAY-XXXX"],
+    "x-successor": "payment-api-v3",
+    "x-synonymes": "paiement v1 deprecated, paiement carte legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser payment-api (v2) ou payment-api-v3.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers payment-api-v3."
+  },
+  "paths": {
+    "/v1/payments": {
+      "post": {
+        "summary": "DEPRECATED — Créer un paiement carte uniquement avec ID entier",
+        "operationId": "createPaymentV1",
+        "tags": ["Payments"],
+        "responses": {"201": {"description": "Paiement initié"}}
+      }
+    },
+    "/v1/payments/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}],
+      "get": {
+        "summary": "DEPRECATED — Statut d un paiement par ID entier",
+        "operationId": "getPaymentV1",
+        "tags": ["Payments"],
+        "responses": {"200": {"description": "Paiement"}}
+      },
+      "delete": {
+        "summary": "DEPRECATED — Annuler un paiement (remplacé par /refund en v2)",
+        "operationId": "cancelPaymentV1",
+        "tags": ["Payments"],
+        "responses": {"200": {"description": "Annulé"}}
+      }
+    }
+  }
+}

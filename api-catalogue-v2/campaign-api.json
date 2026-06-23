@@ -1,0 +1,105 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Campaign API",
+    "version": "1.0.0",
+    "x-api-id": "campaign-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Marketing",
+    "x-domain": "CRM & Marketing",
+    "description": "API de gestion des campagnes marketing multicanal couvrant l'intégralité du cycle de vie d'une campagne : création, ciblage par segment d'audience, planification, lancement, mise en pause et analyse des performances. Prend en charge les canaux email, SMS, push mobile et réseaux sociaux, avec association de templates et de segments de clientèle. Utilisée par les équipes marketing, growth et CRM pour orchestrer des campagnes promotionnelles, de rétention, de réactivation et d'acquisition client. DIFFÉRENCE vs notification-api : Campaign API = campagne marketing planifiée avec segmentation et analytics. notification-api = notification transactionnelle déclenchée par un événement unitaire. DIFFÉRENCE vs email-api : Campaign API = campagnes email marketing avec segmentation et statistiques agrégées. email-api = envoi d'emails transactionnels unitaires. DIFFÉRENCE vs attribution-api : Campaign API = création et pilotage des campagnes. attribution-api = analyse de la contribution des campagnes aux conversions.",
+    "x-synonymes": "campagne marketing, campagne email, campagne SMS, campagne push, campagne social media, emailing, mailing, newsletter, segmentation audience, ciblage marketing, planification campagne, lancement campagne, taux d'ouverture, taux de clic, conversion campagne, performance campagne, ROI campagne, A/B test campagne, automatisation marketing, orchestration campagne",
+    "x-false-positive-warning": "DIFFÉRENCE vs notification-api : Campaign API = campagne marketing planifiée avec segmentation et analytics ; notification-api = notification transactionnelle déclenchée par un événement unitaire (ex : confirmation de commande). DIFFÉRENCE vs email-api : Campaign API = campagnes email marketing avec segmentation de masse et statistiques agrégées ; email-api = envoi d'emails transactionnels individuels. DIFFÉRENCE vs attribution-api : Campaign API = création et pilotage opérationnel des campagnes ; attribution-api = analyse de la contribution des campagnes aux conversions et au chiffre d'affaires. DIFFÉRENCE vs analytics-api : Campaign API = statistiques propres à chaque campagne ; analytics-api = analyse cross-canal et multi-domaine des comportements utilisateurs.",
+    "x-cas-usage": "Comment créer et envoyer une campagne email à nos clients inactifs depuis 3 mois ? | Comment planifier une campagne SMS promotionnelle pour le Black Friday avec un segment ciblé ? | Comment mettre en pause une campagne dont le taux de désabonnement est trop élevé ? | Quels sont les indicateurs de performance (open rate, click rate, conversions) d'une campagne donnée ? | Comment cibler un segment spécifique avec une campagne push mobile et suivre son évolution ?"
+  },
+  "paths": {
+    "/v1/campaigns": {
+      "post": {
+        "summary": "Créer une campagne marketing multicanal (email, SMS, push ou social) en associant un segment d'audience, un template et une date de planification",
+        "operationId": "createCampaign",
+        "tags": ["Campaigns"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "channel", "segment_id"],
+                "properties": {
+                  "name": {"type": "string"},
+                  "channel": {"type": "string", "enum": ["email", "sms", "push", "social"]},
+                  "segment_id": {"type": "string"},
+                  "subject": {"type": "string"},
+                  "template_id": {"type": "string"},
+                  "scheduled_at": {"type": "string", "format": "date-time"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Campagne créée avec succès"}}
+      },
+      "get": {
+        "summary": "Lister toutes les campagnes marketing avec filtrage par statut (brouillon, planifiée, active, en pause, terminée) et par canal de diffusion",
+        "operationId": "listCampaigns",
+        "tags": ["Campaigns"],
+        "parameters": [
+          {"name": "status", "in": "query", "schema": {"type": "string", "enum": ["draft", "scheduled", "active", "paused", "completed"]}},
+          {"name": "channel", "in": "query", "schema": {"type": "string", "enum": ["email", "sms", "push", "social"]}}
+        ],
+        "responses": {"200": {"description": "Liste des campagnes correspondant aux filtres appliqués"}}
+      }
+    },
+    "/v1/campaigns/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le détail complet d'une campagne : configuration, canal, segment cible, template associé et statut courant",
+        "operationId": "getCampaign",
+        "tags": ["Campaigns"],
+        "responses": {
+          "200": {"description": "Détail complet de la campagne"},
+          "404": {"description": "Campagne non trouvée"}
+        }
+      }
+    },
+    "/v1/campaigns/{id}/launch": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Lancer une campagne en statut brouillon ou planifiée : déclenche l'envoi immédiat ou selon la date de planification définie",
+        "operationId": "launchCampaign",
+        "tags": ["Campaigns"],
+        "responses": {
+          "200": {"description": "Campagne lancée avec succès"},
+          "404": {"description": "Campagne non trouvée"},
+          "409": {"description": "La campagne ne peut pas être lancée dans son état actuel"}
+        }
+      }
+    },
+    "/v1/campaigns/{id}/pause": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Mettre en pause une campagne active : stoppe les envois en cours et suspend la planification jusqu'à une reprise explicite",
+        "operationId": "pauseCampaign",
+        "tags": ["Campaigns"],
+        "responses": {
+          "200": {"description": "Campagne mise en pause avec succès"},
+          "404": {"description": "Campagne non trouvée"},
+          "409": {"description": "La campagne ne peut pas être mise en pause dans son état actuel"}
+        }
+      }
+    },
+    "/v1/campaigns/{id}/stats": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter les indicateurs de performance d'une campagne : taux d'ouverture, taux de clic, conversions, désabonnements et portée totale",
+        "operationId": "getCampaignStats",
+        "tags": ["Campaigns"],
+        "responses": {
+          "200": {"description": "Statistiques de performance de la campagne"},
+          "404": {"description": "Campagne non trouvée"}
+        }
+      }
+    }
+  }
+}

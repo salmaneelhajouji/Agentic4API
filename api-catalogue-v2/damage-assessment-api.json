@@ -1,0 +1,116 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Damage Assessment API",
+    "version": "1.0.0",
+    "x-api-id": "damage-assessment-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Cette API orchestre l'évaluation technique et l'expertise des dommages matériels (sinistres automobiles ou habitations). Elle permet d'automatiser le chiffrage des coûts de réparation en s'appuyant sur des algorithmes de reconnaissance visuelle par IA capables d'analyser des photographies de dégâts. Elle sert de pivot entre les assurés (via des applications mobiles de self-care), les garages/carrossiers agréés effectuant les devis, et les experts en assurance chargés de valider le rapport technique final avant indemnisation.",
+    "x-synonymes": "expertise technique, chiffrage des dégâts, rapport d'expertise, évaluation du dommage, sinistre matériel, estimation des réparations, reconnaissance d'images IA, dommages mécaniques, valeur de remplacement, constat de dégâts, taux de vétusté, valeur résiduelle, indemnités de réparation, rapport de sinistre, carrosserie, visite d'expert",
+    "x-false-positive-warning": "Attention : Cette API se concentre exclusivement sur l'analyse technico-économique des dégâts physiques (matériels) et le calcul du coût des réparations. Ne pas la confondre avec l'API de Gestion des Sinistres (insurance-claim-api) qui orchestre le flux administratif, contractuel et financier du remboursement ou de l'indemnisation globale de l'assuré.",
+    "x-cas-usage": "Comment soumettre les photos d'un pare-chocs accidenté pour obtenir une pré-évaluation automatique par l'IA ? | Où récupérer le rapport d'expertise finalisé ainsi que le montant du chiffrage des réparations ? | Comment mettre à jour les conclusions techniques d'un dossier d'évaluation après une contre-expertise ? | Est-il possible de lister toutes les expertises en attente de validation humaine pour un cabinet d'experts ?"
+  },
+  "paths": {
+    "/v1/assessments": {
+      "get": {
+        "summary": "Lister et filtrer les dossiers d'expertise technique et d'évaluation des dommages en cours de traitement",
+        "operationId": "listAssessments",
+        "tags": [
+          "Assessments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un nouveau dossier d'expertise technique pour initier l'évaluation d'un sinistre matériel",
+        "operationId": "createAssessment",
+        "tags": [
+          "Assessments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/assessments/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le rapport d'expertise technique détaillé ainsi que le chiffrage financier estimé des réparations",
+        "operationId": "getAssessment",
+        "tags": [
+          "Assessments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les conclusions techniques, les pièces à remplacer ou l'évaluation financière d'un dossier de dommages",
+        "operationId": "updateAssessment",
+        "tags": [
+          "Assessments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/assessments/{id}/photos": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Téléverser et déclencher l'analyse automatisée par intelligence artificielle des photos de sinistres pour un pré-chiffrage visuel",
+        "operationId": "analyzePhotosDamage",
+        "tags": [
+          "Photos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Récupérer le rapport d'analyse visuelle de l'IA détaillant les pièces endommagées détectées sur les clichés",
+        "operationId": "getDamageReport",
+        "tags": [
+          "Photos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

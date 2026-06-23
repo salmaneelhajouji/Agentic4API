@@ -1,0 +1,117 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Appointment API",
+    "version": "1.0.0",
+    "x-api-id": "appointment-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Support",
+    "x-domain": "Customer Support",
+    "description": "API de gestion des rendez-vous clients dans les domaines du support technique, du service après-vente et du commercial. Couvre l'ensemble du cycle de vie d'un rendez-vous : consultation des créneaux disponibles, réservation auprès d'un conseiller ou technicien, modification de créneau (report), et annulation. Supporte plusieurs canaux de contact : présentiel en agence, appel téléphonique et visioconférence. Utilisée par les centres de relation client, les équipes SAV et les forces de vente pour orchestrer la planification des interactions client. DIFFÉRENCE vs delivery-api : Appointment = RDV avec une personne (conseiller, technicien), Delivery = créneau de livraison de colis. DIFFÉRENCE vs calendar-api : Appointment gère les réservations côté client, Calendar gère les disponibilités internes. DIFFÉRENCE vs activity-booking-api : Appointment cible les rendez-vous professionnels B2C avec un agent, Activity concerne la réservation d'activités de loisirs.",
+    "x-synonymes": "rendez-vous client, prise de RDV, réservation créneau, créneau disponible, conseiller disponible, technicien SAV, rendez-vous téléphonique, rendez-vous visio, rendez-vous en agence, annulation RDV, report RDV, remplacer créneau, RDV support technique, RDV commercial, SAV rendez-vous, agenda client, planning rendez-vous, booking conseiller, slot disponible, disponibilité conseiller",
+    "x-false-positive-warning": "Livraison de colis avec créneau horaire → delivery-api (créneau sans interlocuteur humain dédié). Agenda et disponibilités internes des équipes → calendar-api (gestion côté collaborateur, pas côté client). Réservation d'activité touristique ou de loisirs → activity-booking-api (prestations récréatives, pas de rendez-vous professionnel). Réservation de salle de réunion professionnelle → meeting-room-api (ressource physique, pas un interlocuteur). Planification de livraison à domicile avec plage horaire → delivery-api.",
+    "x-cas-usage": "Comment permettre à un client de prendre rendez-vous avec un conseiller commercial depuis le portail web ? | Quels créneaux sont disponibles pour un technicien SAV sur une date donnée et un type de service spécifique ? | Comment reporter un rendez-vous existant sur un nouveau créneau disponible sans en créer un nouveau ? | Comment récupérer l'historique complet des rendez-vous d'un client pour afficher son suivi SAV ? | Comment annuler un rendez-vous client et libérer automatiquement le créneau pour d'autres réservations ?"
+  },
+  "paths": {
+    "/v1/appointments": {
+      "post": {
+        "summary": "Réserver un rendez-vous client avec un conseiller commercial, technicien SAV ou agent support en choisissant le canal (présentiel, téléphone, visio)",
+        "operationId": "bookAppointment",
+        "tags": ["Appointments"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["customer_id", "slot_id", "service_type"],
+                "properties": {
+                  "customer_id": {"type": "string"},
+                  "slot_id": {"type": "string"},
+                  "service_type": {
+                    "type": "string",
+                    "enum": ["technical_support", "sales", "after_sales"]
+                  },
+                  "notes": {"type": "string"},
+                  "channel": {
+                    "type": "string",
+                    "enum": ["in_person", "phone", "video"],
+                    "default": "in_person"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Rendez-vous confirmé"}}
+      },
+      "get": {
+        "summary": "Lister les rendez-vous clients avec filtres par identifiant client, statut (planifié, confirmé, complété, annulé) et plage de dates",
+        "operationId": "listAppointments",
+        "tags": ["Appointments"],
+        "parameters": [
+          {"name": "customer_id", "in": "query", "schema": {"type": "string"}},
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {"type": "string", "enum": ["scheduled", "confirmed", "completed", "cancelled"]}
+          },
+          {"name": "date", "in": "query", "schema": {"type": "string", "format": "date"}}
+        ],
+        "responses": {"200": {"description": "Liste des rendez-vous"}}
+      }
+    },
+    "/v1/appointments/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Obtenir le détail complet d'un rendez-vous : conseiller assigné, créneau horaire, canal de contact et statut courant",
+        "operationId": "getAppointment",
+        "tags": ["Appointments"],
+        "responses": {"200": {"description": "Détails du rendez-vous"}}
+      },
+      "put": {
+        "summary": "Reporter un rendez-vous existant sur un nouveau créneau disponible en conservant le conseiller et le type de service",
+        "operationId": "rescheduleAppointment",
+        "tags": ["Appointments"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["new_slot_id"],
+                "properties": {
+                  "new_slot_id": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Rendez-vous reporté"}}
+      },
+      "delete": {
+        "summary": "Annuler un rendez-vous client et libérer automatiquement le créneau pour d'autres réservations",
+        "operationId": "cancelAppointment",
+        "tags": ["Appointments"],
+        "responses": {"200": {"description": "Rendez-vous annulé"}}
+      }
+    },
+    "/v1/appointments/slots": {
+      "get": {
+        "summary": "Consulter les créneaux horaires disponibles pour un conseiller ou technicien, filtrés par date, type de service et identifiant de conseiller",
+        "operationId": "getAvailableSlots",
+        "tags": ["Appointments"],
+        "parameters": [
+          {"name": "date", "in": "query", "required": true, "schema": {"type": "string", "format": "date"}},
+          {
+            "name": "service_type",
+            "in": "query",
+            "schema": {"type": "string", "enum": ["technical_support", "sales", "after_sales"]}
+          },
+          {"name": "advisor_id", "in": "query", "schema": {"type": "string"}}
+        ],
+        "responses": {"200": {"description": "Créneaux disponibles par conseiller"}}
+      }
+    }
+  }
+}

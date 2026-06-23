@@ -1,0 +1,63 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Rent Collection API",
+    "version": "1.0.0",
+    "x-api-id": "rent-collection-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Collecte des loyers et charges locatives. Permet d enregistrer les paiements de loyer, de générer les quittances mensuelles, et d envoyer des relances aux locataires en retard. Utilisé par les gestionnaires locatifs et property managers pour la comptabilité et le suivi des encaissements. DIFFÉRENCE vs billing-api-v3 : Rent Collection = loyers immobiliers avec quittances. billing-api-v3 = facturation et abonnements génériques.",
+    "x-synonymes": "loyer encaissement, quittance loyer, collecte loyer, paiement locataire, relance loyer impayé, loyer impayé, quittancement, charge locative, régularisation charges, avis échéance loyer, locataire paiement, encaissement loyer, reçu loyer, historique paiements loyer, gérance locative, comptabilité loyer, loyer en retard, relance locataire, bail paiement mensuel, loyer charges",
+    "x-false-positive-warning": "Facturation générique clients → billing-api-v3. Contrat de bail lui-même → lease-api-v2. Taux d occupation → occupancy-api. Recouvrement créances avancées → credit-collection-api.",
+    "x-cas-usage": "je veux enregistrer le paiement du loyer de janvier d un locataire | je veux générer la quittance de loyer pour un locataire | je veux voir si un locataire a payé son loyer ce mois-ci | je veux envoyer une relance à un locataire qui n a pas payé | je veux voir toutes les quittances émises pour un bail"
+  },
+  "paths": {
+    "/v1/rent/{leaseId}": {
+      "parameters": [{"name": "leaseId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut du loyer d un bail — payé, en retard ou en attente",
+        "operationId": "getRentStatus",
+        "tags": ["Rent"],
+        "responses": {"200": {"description": "Statut loyer"}}
+      },
+      "post": {
+        "summary": "Enregistrer un paiement de loyer — montant, date et mode de paiement",
+        "operationId": "recordPayment",
+        "tags": ["Rent"],
+        "responses": {"200": {"description": "Paiement enregistré"}}
+      }
+    },
+    "/v1/rent/{leaseId}/receipts": {
+      "parameters": [{"name": "leaseId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Quittances de loyer — historique des quittances émises pour un bail",
+        "operationId": "getReceipts",
+        "tags": ["Receipts"],
+        "responses": {"200": {"description": "Quittances de loyer"}}
+      },
+      "post": {
+        "summary": "Générer une quittance de loyer mensuelle pour un locataire",
+        "operationId": "generateReceipt",
+        "tags": ["Receipts"],
+        "responses": {"200": {"description": "Quittance générée"}}
+      }
+    },
+    "/v1/rent/{leaseId}/reminders": {
+      "parameters": [{"name": "leaseId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Relances envoyées au locataire — historique et statuts",
+        "operationId": "getReminders",
+        "tags": ["Reminders"],
+        "responses": {"200": {"description": "Relances"}}
+      },
+      "post": {
+        "summary": "Envoyer une relance de loyer impayé au locataire",
+        "operationId": "sendReminder",
+        "tags": ["Reminders"],
+        "responses": {"200": {"description": "Relance envoyée"}}
+      }
+    }
+  }
+}

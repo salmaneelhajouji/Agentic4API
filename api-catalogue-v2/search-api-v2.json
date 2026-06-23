@@ -1,0 +1,86 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Search API",
+    "version": "2.0.0",
+    "x-api-id": "search-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "E-Commerce",
+    "description": "Version 2 du moteur de recherche. Introduce la recherche sémantique vectorielle par embeddings, la personnalisation des résultats selon le profil et l'historique de l'utilisateur, la recherche par similarité (more-like-this), la réindexation à la demande et l'A/B testing sur le ranking. DIFFÉRENCE vs search-api (v1) : v2 ajoute l'embedding vectoriel et la personnalisation, v1 est full-text lexical uniquement. DIFFÉRENCE vs search-api-v3 : v3 ajoute la couche LLM conversationnelle et le merchandising manuel.",
+    "x-synonymes": "recherche sémantique, recherche vectorielle, embedding recherche, personnalisation résultats, more-like-this, produits similaires, recherche hybride, A/B ranking, réindexation, recherche par profil, search v2, moteur vectoriel, similarité produit, recherche contextuelle, recherche intelligente",
+    "x-false-positive-warning": "Recherche full-text simple → search-api (v1). Recherche conversationnelle LLM et merchandising → search-api-v3. CRUD produits → product-catalog-api.",
+    "x-cas-usage": "je veux une recherche qui comprend le sens et pas seulement les mots-clés exacts | je veux personnaliser les résultats selon l'historique de navigation d'un utilisateur | je veux trouver des produits similaires à un produit donné | je veux forcer une réindexation complète du catalogue | je veux activer un test A/B sur le ranking des résultats",
+    "x-breaking-changes-from-previous": [
+      "Recherche sémantique vectorielle (embedding)",
+      "Personnalisation basée sur l'historique",
+      "A/B testing sur le ranking",
+      "Résultats enrichis avec facettes dynamiques"
+    ]
+  },
+  "paths": {
+    "/v2/search": {
+      "get": {
+        "summary": "Recherche hybride (lexical + sémantique vectorielle) avec personnalisation optionnelle par profil utilisateur",
+        "operationId": "searchV2",
+        "tags": ["Search"],
+        "parameters": [
+          { "name": "q", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "user_id", "in": "query", "schema": { "type": "string" }, "description": "Pour personnalisation" },
+          { "name": "mode", "in": "query", "schema": { "type": "string", "enum": ["lexical", "semantic", "hybrid"], "default": "hybrid" } },
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } }
+        ],
+        "responses": { "200": { "description": "Résultats personnalisés" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/search/similar": {
+      "post": {
+        "summary": "Rechercher des produits similaires à un produit de référence par similarité vectorielle (more-like-this)",
+        "operationId": "searchSimilar",
+        "tags": ["Search"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["reference_id"],
+                "properties": {
+                  "reference_id": { "type": "string" },
+                  "type": { "type": "string", "enum": ["product", "article"] }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Produits similaires" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/search/reindex": {
+      "post": {
+        "summary": "Déclencher une réindexation complète ou partielle du catalogue dans le moteur de recherche",
+        "operationId": "reindexSearch",
+        "tags": ["Admin"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "entity": { "type": "string", "enum": ["products", "articles", "all"], "default": "all" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "202": { "description": "Réindexation lancée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

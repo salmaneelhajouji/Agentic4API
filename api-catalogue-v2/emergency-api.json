@@ -1,0 +1,118 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Emergency API",
+    "version": "1.0.0",
+    "x-api-id": "emergency-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Cette API centralise l'admission, l'orientation et le suivi médical en temps réel des patients admis au sein du service des urgences hospitalières. Elle automatise la file d'attente de triage en s'appuyant sur la classification réglementaire CCMU (Clinique et Thérapeutique des Urgences), gère l'ouverture et la mise à jour des dossiers de cas d'urgence, et coordonne l'orientation ou le transfert des patients vers les services de soins spécialisés adaptés.",
+    "x-synonymes": "urgences médicales, triage des patients, score CCMU, file d'attente des urgences, cas d'urgence, admission aux urgences, orientation hospitalière, soins d'urgence, flux de patients, brancardage, salle de déchocage, dossier d'urgence, médecin urgentiste, prise en charge hospitalière",
+    "x-false-positive-warning": "Attention : Cette API régit de manière stricte le flux opérationnel aigu et le triage initial au sein du service des urgences (Emergency). Ne pas la confondre avec l'api `appointment-api` (planification des consultations externes classiques) ni avec la `bed-management-api` (gestion de la disponibilité à long terme des lits d'hospitalisation).",
+    "x-cas-usage": "Comment enregistrer le score de triage CCMU d'un patient dès son arrivée par le véhicule de secours ? | Comment ouvrir et documenter un nouveau dossier de cas d'urgence pour un traumatisme crânien ? | Où consulter la liste en temps réel des cas en cours d'examen dans les boxes des urgences ? | Quelle méthode appeler pour clore le dossier d'urgence d'un patient suite à son transfert en unité de réanimation ?"
+  },
+  "paths": {
+    "/v1/emergency/triage": {
+      "get": {
+        "summary": "Consulter la file d'attente active des patients en attente d'orientation et de triage médical initial",
+        "operationId": "getTriageQueue",
+        "tags": [
+          "Triage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer les constantes vitales et la classification réglementaire CCMU d'un patient arrivant aux urgences",
+        "operationId": "triagePatient",
+        "tags": [
+          "Triage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/emergency/cases": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des cas critiques et dossiers de patients actuellement pris en charge au service des urgences",
+        "operationId": "listCases",
+        "tags": [
+          "Cases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ouvrir un nouveau dossier de cas d'urgence pour un patient admis afin d'initier son parcours de soins immédiat",
+        "operationId": "createCase",
+        "tags": [
+          "Cases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/emergency/cases/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les données cliniques détaillées, l'historique des soins et le box d'affectation d'un cas d'urgence spécifique",
+        "operationId": "getCase",
+        "tags": [
+          "Cases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour l'évolution clinique, les examens demandés ou les notes médicales du dossier d'urgence",
+        "operationId": "updateCase",
+        "tags": [
+          "Cases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Clore définitivement le dossier de cas d'urgence suite à la sortie du patient ou son transfert vers un service de spécialité",
+        "operationId": "closeCase",
+        "tags": [
+          "Cases"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

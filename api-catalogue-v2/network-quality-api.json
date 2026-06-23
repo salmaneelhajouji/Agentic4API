@@ -1,0 +1,41 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Network Quality API",
+    "version": "1.0.0",
+    "x-api-id": "network-quality-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Mesure et suivi de la qualité réseau et des SLA télécom. Permet de consulter les métriques QoS d un site (latence, gigue, perte de paquets, débit), de lancer des tests de qualité et de consulter les violations de SLA. Utilisé par les équipes NOC et les responsables réseau pour prouver la conformité aux engagements de service. DIFFÉRENCE vs network-segmentation-api : Network Quality = métriques QoS et SLA. network-segmentation-api = zones réseau et règles de segmentation.",
+    "x-synonymes": "qualité réseau, QoS quality of service, SLA réseau, latence réseau, gigue jitter, perte paquets, débit réseau, bande passante, MOS score voix, test réseau, mesure performance réseau, violation SLA, breach SLA, disponibilité réseau, uptime réseau, MTTR réseau, NOC network operations center, KPI réseau, rapport qualité service, conformité SLA",
+    "x-false-positive-warning": "Infrastructure noeuds et topologie réseau → network-api. Segmentation VLANs et firewall → network-segmentation-api. Qualité signal mobile → radio-network-api. Logs réseau → log-api.",
+    "x-cas-usage": "je veux mesurer la latence et la gigue de notre liaison MPLS avec le datacenter | je veux lancer un test de qualité réseau sur notre site de Lyon | je veux voir toutes les violations de SLA de ce mois-ci | je veux prouver à notre opérateur qu il n a pas respecté son SLA de disponibilité | je veux surveiller la qualité QoS de nos flux voix sur IP"
+  },
+  "paths": {
+    "/v1/network-quality/{siteId}": {
+      "parameters": [{"name": "siteId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Métriques QoS d un site — latence, gigue, perte de paquets et débit",
+        "operationId": "getNetworkQuality",
+        "tags": ["Quality"],
+        "responses": {"200": {"description": "Métriques QoS"}}
+      },
+      "post": {
+        "summary": "Lancer un test de qualité réseau sur un site — mesure instantanée",
+        "operationId": "runQualityTest",
+        "tags": ["Quality"],
+        "responses": {"200": {"description": "Résultats test qualité"}}
+      }
+    },
+    "/v1/network-quality/sla": {
+      "get": {
+        "summary": "Violations de SLA — incidents de non-conformité aux engagements de service",
+        "operationId": "getSLABreaches",
+        "tags": ["SLA"],
+        "responses": {"200": {"description": "Violations SLA"}}
+      }
+    }
+  }
+}

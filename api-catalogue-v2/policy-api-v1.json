@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Policy API",
+    "version": "1.0.0",
+    "x-api-id": "policy-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "DEPRECATED — NE PAS UTILISER. Version 1 basique sans avenants ni renouvellement. Migrer vers policy-api-v3.",
+    "x-successor": "policy-api-v3",
+    "x-synonymes": "contrat assurance v1 deprecated, police assurance legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser policy-api-v3.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers policy-api-v3."
+  },
+  "paths": {
+    "/v1/policies": {
+      "get": {
+        "summary": "DEPRECATED — Lister les contrats d assurance",
+        "operationId": "listPoliciesV1",
+        "tags": ["Policies"],
+        "responses": {"200": {"description": "Contrats"}}
+      }
+    }
+  }
+}

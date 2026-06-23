@@ -1,0 +1,87 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Invoice API",
+    "version": "1.0.0",
+    "x-api-id": "invoice-api-v1",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "Génération de documents de facturation fiscaux conformes — factures, avoirs et notes de débit en PDF. Permet de créer une facture après paiement d une commande, de la télécharger en PDF, de l envoyer par email au client et de l annuler en générant un avoir automatique. Utilisé par les équipes finance et les systèmes e-commerce pour la conformité fiscale. DIFFÉRENCE vs payment-api : Invoice = document fiscal après paiement. payment-api = transaction de paiement. DIFFÉRENCE vs billing-api : Invoice = PDFs envoyés aux clients. billing-api = prélèvements automatiques récurrents.",
+    "x-synonymes": "facture client, document fiscal, facture PDF, avoir client, note de débit, facture conforme, génération facture, TVA facture, facture HT TTC, numéro facture, facture e-commerce, facture après commande, annulation facture, envoi facture email, télécharger facture, facture pro forma, facture électronique, archive facture, facture fournisseur, conformité fiscale",
+    "x-false-positive-warning": "Transaction de paiement ponctuelle → payment-api-v3. Prélèvements automatiques récurrents → billing-api-v3. Contrat juridique → contract-api. Analyse IA de contrat → contract-analytics-api.",
+    "x-cas-usage": "je veux générer une facture PDF après qu un client a payé sa commande | je veux envoyer la facture par email au client avec CC à la comptabilité | je veux annuler une facture et générer l avoir correspondant | je veux télécharger une facture en PDF pour l archiver | je veux récupérer les détails d une facture par son numéro INV-XXXX"
+  },
+  "paths": {
+    "/v1/invoices": {
+      "post": {
+        "summary": "Générer une facture fiscale — PDF avec TVA, montants HT/TTC et numéro unique",
+        "operationId": "createInvoice",
+        "tags": ["Invoices"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["customer_id", "order_id", "items", "currency"],
+                "properties": {
+                  "customer_id": {"type": "string"},
+                  "order_id": {"type": "string", "example": "ORD-0042"},
+                  "items": {"type": "array", "items": {"type": "object", "properties": {"description": {"type": "string"}, "quantity": {"type": "integer"}, "unit_price": {"type": "number"}, "tax_rate": {"type": "number", "example": 20}}}},
+                  "currency": {"type": "string", "example": "EUR"},
+                  "due_date": {"type": "string", "format": "date"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Facture générée"}}
+      }
+    },
+    "/v1/invoices/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^INV-[0-9]{4}$"}}],
+      "get": {
+        "summary": "Récupérer une facture — détails, statut et URL PDF",
+        "operationId": "getInvoice",
+        "tags": ["Invoices"],
+        "responses": {"200": {"description": "Facture complète"}}
+      }
+    },
+    "/v1/invoices/{id}/pdf": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Télécharger la facture en PDF — document fiscal prêt à envoyer",
+        "operationId": "downloadInvoicePDF",
+        "tags": ["Invoices"],
+        "responses": {"200": {"description": "PDF facture"}}
+      }
+    },
+    "/v1/invoices/{id}/send": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Envoyer la facture par email au client — avec CC optionnel",
+        "operationId": "sendInvoice",
+        "tags": ["Invoices"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {"type": "object", "properties": {"email": {"type": "string", "format": "email"}, "cc": {"type": "array", "items": {"type": "string", "format": "email"}}}}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Facture envoyée"}}
+      }
+    },
+    "/v1/invoices/{id}/void": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Annuler une facture — génère automatiquement un avoir (credit note)",
+        "operationId": "voidInvoice",
+        "tags": ["Invoices"],
+        "responses": {"200": {"description": "Facture annulée — avoir généré"}}
+      }
+    }
+  }
+}

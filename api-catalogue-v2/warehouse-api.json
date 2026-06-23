@@ -1,0 +1,144 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Warehouse API",
+    "version": "1.0.0",
+    "x-api-id": "warehouse-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Logistique",
+    "x-domain": "Supply Chain",
+    "description": "Entrepôts et emplacements physiques. Gestion de la cartographie des dépôts, des allées, des étagères et orchestration des mouvements de stock inter-entrepôts. DIFFÉRENCE vs inventory-api : Warehouse = cartographie et localisation physique des produits (allée, étagère, casier), Inventory = suivi quantitatif global des stocks disponibles à la vente.",
+    "x-synonymes": "entrepôt, emplacement, logistique, stock, transfert, allée, étagère, supply chain, entreposage, dépôt, zone de stockage, mouvement de stock, inventaire physique, logistique inverse, colis, quai de déchargement",
+    "x-false-positive-warning": "Pour obtenir le volume ou la quantité de pièces globales disponibles à la vente, utilisez l'interface inventory-api.",
+    "x-cas-usage": "je veux lister tous les entrepôts et sites de stockage de l'entreprise | je veux voir le stock détaillé et localisé au sein d'un entrepôt spécifique | je veux transférer des marchandises d'un entrepôt vers un autre dépôt | je veux consulter la liste des emplacements, allées et étagères d'un entrepôt"
+  },
+  "paths": {
+    "/v1/warehouses": {
+      "get": {
+        "summary": "Lister, rechercher et filtrer l'ensemble des entrepôts et centres de distribution physiques",
+        "operationId": "listWarehouses",
+        "tags": [
+          "Warehouses"
+        ],
+        "responses": {
+          "200": {
+            "description": "Entrepôts"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/warehouses/{id}/stock": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état détaillé des produits stockés et leur localisation précise dans cet entrepôt",
+        "operationId": "getWarehouseStock",
+        "tags": [
+          "Warehouses"
+        ],
+        "responses": {
+          "200": {
+            "description": "Stock"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/warehouses/transfer": {
+      "post": {
+        "summary": "Ordonnancer et enregistrer un transfert physique de marchandises d'un entrepôt d'origine vers un entrepôt de destination",
+        "operationId": "transferStock",
+        "tags": [
+          "Warehouses"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "product_id",
+                  "from_warehouse",
+                  "to_warehouse",
+                  "quantity"
+                ],
+                "properties": {
+                  "product_id": {
+                    "type": "string"
+                  },
+                  "from_warehouse": {
+                    "type": "string"
+                  },
+                  "to_warehouse": {
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Transfert initié"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/warehouses/{id}/locations": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la structure et l'arbre des emplacements internes (allées, étagères, casiers) d'un entrepôt",
+        "operationId": "getLocations",
+        "tags": [
+          "Warehouses"
+        ],
+        "responses": {
+          "200": {
+            "description": "Emplacements"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

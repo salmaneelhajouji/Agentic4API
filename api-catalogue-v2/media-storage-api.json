@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Media Storage API",
+    "version": "1.0.0",
+    "x-api-id": "media-storage-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Divers",
+    "x-domain": "Cross",
+    "description": "Stockage et organisation des médias avec CDN et transformation d images. Permet d uploader des fichiers médias, de les organiser en dossiers, de les transformer (resize, crop, format) et de les distribuer via CDN. Utilisé comme DAM (Digital Asset Management) léger pour centraliser les assets visuels des équipes. DIFFÉRENCE vs document-management-api-v2 : Media Storage = fichiers binaires médias avec CDN et transformations. document-management-api-v2 = GED documents métier avec workflows et versionning.",
+    "x-synonymes": "stockage médias, DAM digital asset management, bibliothèque médias, dossier médias, upload fichier média, CDN médias, transformation image, crop image, resize stockage, assets visuels, médiathèque, organisation fichiers médias, fichier binaire CDN, gestion assets, image repository, stockage cloud médias, assets marketing, ressources visuelles, fichiers images organisés, dossiers assets",
+    "x-false-positive-warning": "GED documents métier avec workflows → document-management-api-v2. Traitement avancé OCR transcodage → media-processing-api. Upload et resize simple → media-api. Stockage générique fichiers → file-storage-api.",
+    "x-cas-usage": "je veux uploader et organiser nos assets marketing dans des dossiers | je veux transformer une image stockée en la rognant aux bonnes dimensions | je veux lister tous les médias d un dossier campagne | je veux créer une structure de dossiers pour organiser nos médias par marque | je veux récupérer l URL CDN d un asset média pour l intégrer dans notre site"
+  },
+  "paths": {
+    "/v1/media/upload": {
+      "post": {
+        "summary": "Uploader un fichier média — retourne URL CDN et métadonnées",
+        "operationId": "uploadMedia",
+        "tags": ["Upload"],
+        "responses": {"200": {"description": "Média uploadé"}}
+      }
+    },
+    "/v1/media/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Informations d un média stocké — format, dimensions, poids et URL CDN",
+        "operationId": "getMediaInfo",
+        "tags": ["Media"],
+        "responses": {"200": {"description": "Informations média"}}
+      },
+      "delete": {
+        "summary": "Supprimer un fichier média du stockage et du CDN",
+        "operationId": "deleteMedia",
+        "tags": ["Media"],
+        "responses": {"200": {"description": "Média supprimé"}}
+      }
+    },
+    "/v1/media/{id}/transform": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Transformer une image stockée — resize, crop et conversion de format",
+        "operationId": "transformImage",
+        "tags": ["Transform"],
+        "responses": {"200": {"description": "Image transformée"}}
+      },
+      "get": {
+        "summary": "Récupérer un média avec transformation appliquée — URL résultante",
+        "operationId": "getTransformedMedia",
+        "tags": ["Transform"],
+        "responses": {"200": {"description": "Média transformé"}}
+      }
+    },
+    "/v1/media/folders": {
+      "get": {
+        "summary": "Lister les dossiers de médias — structure d organisation des assets",
+        "operationId": "listMediaFolders",
+        "tags": ["Folders"],
+        "responses": {"200": {"description": "Dossiers médias"}}
+      },
+      "post": {
+        "summary": "Créer un dossier pour organiser les assets médias",
+        "operationId": "createMediaFolder",
+        "tags": ["Folders"],
+        "responses": {"200": {"description": "Dossier créé"}}
+      }
+    }
+  }
+}

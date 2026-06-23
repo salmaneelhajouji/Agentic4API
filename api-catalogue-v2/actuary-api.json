@@ -1,0 +1,64 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Actuary API",
+    "version": "1.0.0",
+    "x-api-id": "actuary-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "API de calculs actuariels pour compagnies d'assurance, couvrant l'évaluation des provisions techniques (IBNR, sinistres à payer, provisions mathématiques), le suivi du ratio de solvabilité réglementaire Solvabilité II (SCR, MCR) et la conduite de stress tests financiers sur portefeuilles. Permet également la consultation des tables de mortalité et d'espérance de vie pour les calculs de réserves. Utilisée principalement par les actuaires, les équipes finance et risk pour la production de bilans prudentiels, rapports réglementaires et calculs de réserves obligatoires. DIFFÉRENCE vs risk-scoring-api : Actuary API = calculs actuariels réglementaires de provisions et solvabilité au niveau portefeuille ; risk-scoring-api = scoring du risque individuel d'un assuré avant souscription. DIFFÉRENCE vs premium-calculation-api : Actuary API = calculs financiers globaux de réserves et solvabilité ; premium-calculation-api = calcul de la prime individuelle d'un contrat. DIFFÉRENCE vs regulatory-reporting-api : Actuary API = production des données actuarielles brutes ; regulatory-reporting-api = soumission formelle des rapports aux autorités de tutelle.",
+    "x-synonymes": "actuariat, provisions techniques, réserves assurance, solvabilité, ratio de solvabilité, Solvabilité II, stress test assurance, tables de mortalité, espérance de vie, calcul de réserves, bilan prudentiel, rapport réglementaire assurance, SCR, MCR, best estimate, marge de risque, run-off, sinistres à payer, IBNR, provisions mathématiques",
+    "x-false-positive-warning": "DIFFÉRENCE vs risk-scoring-api : Actuary API = calculs actuariels réglementaires de provisions et solvabilité au niveau portefeuille. risk-scoring-api = scoring du risque individuel d'un assuré avant souscription. DIFFÉRENCE vs premium-calculation-api : Actuary API = calculs financiers globaux de réserves et solvabilité. premium-calculation-api = calcul de la prime individuelle d'un contrat. DIFFÉRENCE vs regulatory-reporting-api : Actuary API = production des données actuarielles brutes. regulatory-reporting-api = soumission formelle des rapports aux autorités de tutelle. DIFFÉRENCE vs claims-api : Actuary API = valorisation statistique et réglementaire des sinistres en masse pour les réserves. claims-api = gestion individuelle du cycle de vie d'un sinistre.",
+    "x-cas-usage": "Comment calculer les provisions techniques IBNR et sinistres à payer pour notre portefeuille assurance ? | Comment vérifier notre ratio de solvabilité Solvabilité II (SCR et MCR) en temps réel ? | Comment lancer un stress test financier sur notre portefeuille pour simuler des scénarios adverses ? | Quels sont les paramètres de tables de mortalité disponibles pour calculer une provision mathématique par âge et genre ? | Comment récupérer les données actuarielles nécessaires à la production de notre bilan prudentiel annuel ?"
+  },
+  "paths": {
+    "/v1/actuary/provisions": {
+      "get": {
+        "summary": "Consulter les provisions techniques actuelles du portefeuille — réserves, best estimate et marge de risque consolidés",
+        "operationId": "getProvisions",
+        "tags": ["Provisions"],
+        "responses": {
+          "200": {"description": "Provisions techniques calculées"}
+        }
+      },
+      "post": {
+        "summary": "Déclencher le calcul des provisions techniques pour un portefeuille donné — IBNR, sinistres à payer et provisions mathématiques selon la méthode actuarielle choisie",
+        "operationId": "calculateProvisions",
+        "tags": ["Provisions"],
+        "responses": {
+          "200": {"description": "Résultat du calcul de provisions"}
+        }
+      }
+    },
+    "/v1/actuary/solvency": {
+      "get": {
+        "summary": "Consulter le ratio de solvabilité réglementaire Solvabilité II du portefeuille — valeurs SCR, MCR et couverture en fonds propres",
+        "operationId": "getSolvencyRatio",
+        "tags": ["Solvency"],
+        "responses": {
+          "200": {"description": "Ratio de solvabilité"}
+        }
+      },
+      "post": {
+        "summary": "Lancer un stress test de solvabilité sur le portefeuille — simulation de scénarios adverses (choc de marché, catastrophe, hausse de sinistralité) et impact sur le SCR",
+        "operationId": "runSolvencyTest",
+        "tags": ["Solvency"],
+        "responses": {
+          "200": {"description": "Résultats du stress test"}
+        }
+      }
+    },
+    "/v1/actuary/mortality": {
+      "get": {
+        "summary": "Consulter les tables de mortalité réglementaires — espérance de vie, probabilités de décès et taux de survie par âge, genre et génération",
+        "operationId": "getMortalityTables",
+        "tags": ["Mortality"],
+        "responses": {
+          "200": {"description": "Tables de mortalité"}
+        }
+      }
+    }
+  }
+}

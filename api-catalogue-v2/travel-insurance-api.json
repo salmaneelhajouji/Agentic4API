@@ -1,0 +1,62 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Travel Insurance API",
+    "version": "1.0.0",
+    "x-api-id": "travel-insurance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Assurance voyage ponctuelle. Devis en ligne, souscription et gestion des sinistres pour les garanties annulation de voyage, rapatriement médical, perte ou retard de bagages, assistance à l'étranger. DIFFÉRENCE vs life-insurance-api : Travel Insurance est une assurance ponctuelle liée à un voyage spécifique (durée limitée), Life Insurance est une assurance vie long terme avec épargne. DIFFÉRENCE vs health-insurance-api : Travel Insurance couvre les frais médicaux à l'étranger pour un voyage, Health Insurance couvre la santé au quotidien en France.",
+    "x-synonymes": "assurance voyage, annulation voyage, rapatriement médical, assurance bagages, assistance étranger, sinistre voyage, garantie voyage, assurance séjour, multirisque voyage, couverture voyage, remboursement voyage, assurance vacances, police voyage, contrat voyage, devis assurance voyage",
+    "x-false-positive-warning": "Assurance vie et épargne long terme → life-insurance-api. Assurance santé quotidienne → health-insurance-api. Assurance habitation logement de vacances → property-insurance-api.",
+    "x-cas-usage": "je veux obtenir un devis d'assurance pour un voyage | je veux souscrire une assurance annulation pour un voyage | je veux déclarer un sinistre suite à une perte de bagage | je veux voir tous mes contrats d'assurance voyage actifs | je veux déclarer un sinistre pour frais médicaux à l'étranger"
+  },
+  "paths": {
+    "/v1/travel-insurance/quote": {
+      "post": {
+        "summary": "Obtenir un devis d'assurance voyage selon destination, durée et garanties souhaitées",
+        "operationId": "getTravelInsuranceQuote",
+        "tags": ["Quote"],
+        "responses": { "200": { "description": "Devis avec tarifs par formule" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/travel-insurance/policies": {
+      "get": {
+        "summary": "Lister les contrats d'assurance voyage actifs avec garanties et dates de couverture",
+        "operationId": "listTravelPolicies",
+        "tags": ["Policies"],
+        "responses": { "200": { "description": "Contrats voyage" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Souscrire un contrat d'assurance voyage sur la base d'un devis",
+        "operationId": "subscribeTravelInsurance",
+        "tags": ["Policies"],
+        "responses": { "200": { "description": "Contrat souscrit" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/travel-insurance/claims": {
+      "get": {
+        "summary": "Lister les sinistres voyage déclarés avec leur statut d'instruction et montants",
+        "operationId": "listTravelClaims",
+        "tags": ["Claims"],
+        "responses": { "200": { "description": "Sinistres voyage" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Déclarer un sinistre voyage (annulation, rapatriement, bagages, frais médicaux)",
+        "operationId": "declareTravelClaim",
+        "tags": ["Claims"],
+        "responses": { "200": { "description": "Sinistre déclaré" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

@@ -1,0 +1,169 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Order Management API",
+    "version": "3.0.0",
+    "x-api-id": "order-management-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Retail",
+    "x-domain": "Retail",
+    "description": "Cette API orchestre l'intégralité du cycle de vie des commandes omnicanales (Order Management System / OMS) de l'entreprise (v3). Elle prend en charge la validation des paniers transformés en achats, effectue le suivi logistique des étapes (préparation, expédition, mise à disposition en magasin), pilote les mécanismes complexes de fractionnement de colis (split-orders) issus d'entrepôts multiples, et administre le flux d'enregistrement et d'approbation des retours d'articles.",
+    "x-synonymes": "gestion de commandes, order management system, OMS omnicanal, cycle de vie commande, fractionnement de commande, split order, retour d'article, réclamation client commande, annulation de commande, statut de livraison, préparation logistique, commande validée retail, suivi d'achat",
+    "x-false-positive-warning": "Attention : Cette API administre exclusivement les commandes fermes, validées et entrées dans le tunnel de préparation logistique (Order Management). Ne pas la confondre avec la `cart-api` qui gère la constitution éphémère du panier d'achat en ligne avant la phase de paiement.",
+    "x-cas-usage": "Comment soumettre et enregistrer une nouvelle commande client finalisée via nos canaux omnicanaux ? | Où consulter l'étape logistique courante et le statut d'avancement d'un colis ? | Comment initier et déclarer un retour d'article partiel pour déclencher l'étiquette de transport ? | Quelle méthode appeler pour annuler une commande client avant son traitement en entrepôt ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "Fractionnement",
+    "Retours",
+    "Omnicanal"
+  ],
+  "paths": {
+    "/v3/orders": {
+      "get": {
+        "summary": "Lister, trier et filtrer l'ensemble des commandes d'achat omnicanales reçues selon les clients ou les dates",
+        "operationId": "listOrdersV3",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et injecter une nouvelle commande validée au sein du système central d'ordonnancement (OMS)",
+        "operationId": "createOrderV3",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/orders/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche complète, les lignes d'articles, les taxes et le mode de retrait (Click&Collect / Livraison) d'une commande",
+        "operationId": "getOrderV3",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier l'adresse d'expédition, les coordonnées de contact ou réajuster les lignes d'une commande non préparée",
+        "operationId": "updateOrderV3",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Annuler une commande d'achat existante et déclencher les procédures financières de remboursement",
+        "operationId": "cancelOrderV3",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/orders/{id}/status": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état d'avancement et l'étape logistique courante (en préparation, expédiée, livrée) de la commande",
+        "operationId": "getOrderStatus",
+        "tags": [
+          "Status"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour et faire progresser l'état ou l'étape du cycle de vie opérationnel de la commande",
+        "operationId": "updateOrderStatus",
+        "tags": [
+          "Status"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/orders/{id}/returns": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique, les motifs et l'état d'avancement des demandes de retours d'articles de la commande",
+        "operationId": "getOrderReturns",
+        "tags": [
+          "Returns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et initialiser une procédure de retour d'article ou de réclamation client pour cette commande",
+        "operationId": "createReturn",
+        "tags": [
+          "Returns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

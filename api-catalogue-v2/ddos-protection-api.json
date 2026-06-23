@@ -1,0 +1,98 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "DDoS Protection API",
+    "version": "1.0.0",
+    "x-api-id": "ddos-protection-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Cette API administre les mécanismes de cyber-défense et de protection contre les attaques par déni de service distribué (DDoS). Elle permet de surveiller en temps réel le statut de protection des infrastructures web, de lister et de qualifier les attaques détectées, de configurer dynamiquement des règles de mitigation (filtrage IP, rate limiting, géo-blocage), et de générer des rapports d'activité détaillant le volume et la nature du trafic légitime ou malveillant nettoyé. Elle est au cœur des outils d'automatisation des équipes SecOps et du SOC (Security Operations Center).",
+    "x-synonymes": "protection DDoS, déni de service distribué, mitigation d'attaque, filtrage de trafic, règle de mitigation, trafic malveillant, scrubbing center, sécurité périmétrique, détection d'attaque, attaque par inondation, flood HTTP, volumétrie de trafic, sécurité réseau, cyber-attaque, rate limiting, blocage IP, rapport de sécurité, clean traffic",
+    "x-false-positive-warning": "Attention : Cette API se concentre uniquement sur la détection et la mitigation des attaques de saturation volumétrique et applicative réseau (DDoS). Ne pas la confondre avec un WAF classique (web-application-firewall-api) traitant des injections de code (OWASP Top 10), ni avec l'API de gestion des pare-feux internes ou l'API DLP de fuite de données.",
+    "x-cas-usage": "Quel est le statut de protection actuel de nos points d'entrée d'API face au trafic de saturation ? | Comment ajouter une règle de mitigation d'urgence pour bloquer une plage d'adresses IP suspectes ? | Où trouver le registre des attaques DDoS détectées et neutralisées au cours des dernières 24 heures ? | Comment générer un rapport de sécurité consolidé montrant le volume de trafic malveillant écarté ?"
+  },
+  "paths": {
+    "/v1/ddos/status": {
+      "get": {
+        "summary": "Consulter l'état d'activation, la charge réseau et le statut opérationnel de la protection DDoS périmétrique",
+        "operationId": "getDDoSStatus",
+        "tags": [
+          "Status"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/ddos/attacks": {
+      "get": {
+        "summary": "Lister et qualifier l'historique des attaques par déni de service distribué (DDoS) détectées ou en cours de mitigation",
+        "operationId": "listDDoSAttacks",
+        "tags": [
+          "Attacks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Signaler manuellement un comportement suspect ou une anomalie de trafic pour forcer l'analyse de sécurité",
+        "operationId": "reportDDoSAttack",
+        "tags": [
+          "Attacks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/ddos/rules": {
+      "get": {
+        "summary": "Consulter les règles de mitigation et de filtrage de trafic (rate-limiting, géo-blocage) actuellement déployées",
+        "operationId": "getDDoSRules",
+        "tags": [
+          "Rules"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter et déployer une nouvelle règle de mitigation d'urgence pour neutraliser un vecteur d'attaque DDoS",
+        "operationId": "addDDoSRule",
+        "tags": [
+          "Rules"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/ddos/reports": {
+      "get": {
+        "summary": "Générer un rapport de sécurité consolidé détaillant la volumétrie et la répartition du trafic nettoyé",
+        "operationId": "getDDoSReport",
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

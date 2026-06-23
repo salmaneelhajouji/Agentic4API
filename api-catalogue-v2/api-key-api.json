@@ -1,0 +1,79 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Key API",
+    "version": "1.0.0",
+    "x-api-id": "api-key-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Security",
+    "x-domain": "Security & Compliance",
+    "description": "Gestion complète du cycle de vie des clés API dans le domaine sécurité et accès programmatiques. Couvre la création de clés avec scopes granulaires et restrictions IP, la révocation immédiate en cas de compromission, la rotation sécurisée avec période de grâce, et le monitoring des usages pour l'audit de conformité. Utilisé par les équipes développement pour l'onboarding de nouveaux services, par les équipes sécurité pour la rotation périodique des secrets et la gestion des incidents, et par les équipes compliance pour l'audit des accès API. DIFFÉRENCE vs auth-api : API Key API = gestion administrative des clés API programmatiques pour services et intégrations machine-to-machine ; auth-api = authentification des utilisateurs finaux via JWT et sessions interactives. DIFFÉRENCE vs permission-api : API Key API = création, révocation et cycle de vie des clés d'accès API ; permission-api = contrôle des droits RBAC applicatifs sur les ressources métier. DIFFÉRENCE vs certificate-management-api : API Key API = gestion des clés API textuelles (secrets partagés) ; certificate-management-api = gestion des certificats SSL/TLS et PKI.",
+    "x-synonymes": "clé API, API key, création clé API, révocation clé API, rotation clé API, secret API, token API, scope API, permission clé API, restriction IP clé, clé compromise, renouvellement clé, expiration clé API, audit clé API, historique utilisation clé, clé production, clé staging, gestion secrets, credential API, accès programmatique",
+    "x-false-positive-warning": "DIFFÉRENCE vs auth-api : API Key API = gestion administrative des clés API programmatiques pour services et intégrations machine-to-machine. auth-api = authentification des utilisateurs finaux via JWT, sessions et flux OAuth. DIFFÉRENCE vs permission-api : API Key API = création et révocation des clés d'accès API avec leurs scopes. permission-api = contrôle des droits RBAC applicatifs sur les ressources métier. DIFFÉRENCE vs certificate-management-api : API Key API = gestion des clés API textuelles (secrets partagés). certificate-management-api = gestion des certificats SSL/TLS et infrastructure PKI. DIFFÉRENCE vs api-gateway-api : API Key API = cycle de vie et administration des clés. api-gateway-api = configuration et routage des appels via la passerelle.",
+    "x-cas-usage": "Comment créer une clé API pour un nouveau service avec des scopes limités comme orders:read et payments:write ? | Comment révoquer immédiatement une clé API compromise ou exposée accidentellement dans un dépôt public ? | Comment effectuer une rotation sécurisée de ma clé API de production sans interruption de service ? | Comment consulter l'historique d'utilisation d'une clé API pour un audit de conformité ou détecter des usages suspects ? | Quels sont les scopes et restrictions IP configurés sur les clés API actives de mon organisation ?"
+  },
+  "paths": {
+    "/v1/api-keys": {
+      "post": {
+        "summary": "Créer une clé API avec scopes de permission, date d'expiration et restrictions IP — valeur secrète affichée une seule fois à la création",
+        "operationId": "createAPIKey",
+        "tags": ["APIKeys"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "scopes"],
+                "properties": {
+                  "name": {"type": "string", "example": "Production Key"},
+                  "scopes": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "example": ["orders:read", "payments:write"]
+                  },
+                  "expires_at": {"type": "string", "format": "date"},
+                  "allowed_ips": {"type": "array", "items": {"type": "string"}}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Clé API créée avec succès — la valeur secrète est retournée une seule fois et ne peut pas être récupérée ultérieurement"}}
+      },
+      "get": {
+        "summary": "Lister toutes les clés API actives de l'organisation avec leurs métadonnées (scopes, expiration, restrictions IP) sans exposer les valeurs secrètes",
+        "operationId": "listAPIKeys",
+        "tags": ["APIKeys"],
+        "responses": {"200": {"description": "Liste paginée des clés API avec métadonnées (sans valeurs secrètes)"}}
+      }
+    },
+    "/v1/api-keys/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "delete": {
+        "summary": "Révoquer immédiatement une clé API identifiée par son ID — accès invalidé en temps réel sur tous les services, action irréversible",
+        "operationId": "revokeAPIKey",
+        "tags": ["APIKeys"],
+        "responses": {"204": {"description": "Clé API révoquée avec succès — tous les appels utilisant cette clé sont désormais rejetés"}}
+      }
+    },
+    "/v1/api-keys/{id}/rotate": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Effectuer une rotation sécurisée d'une clé API — génère une nouvelle clé active immédiatement et maintient l'ancienne valide 24h pour éviter toute interruption de service",
+        "operationId": "rotateAPIKey",
+        "tags": ["APIKeys"],
+        "responses": {"200": {"description": "Nouvelle clé générée et activée — l'ancienne clé reste valide pendant 24h pour permettre la migration progressive"}}
+      }
+    },
+    "/v1/api-keys/{id}/usage": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter l'historique d'utilisation d'une clé API avec détail des appels, endpoints sollicités, codes de réponse et adresses IP sources pour audit et détection d'anomalies",
+        "operationId": "getAPIKeyUsage",
+        "tags": ["APIKeys"],
+        "responses": {"200": {"description": "Historique détaillé d'utilisation de la clé : timestamps, endpoints, méthodes HTTP, codes réponse et IPs sources"}}
+      }
+    }
+  }
+}

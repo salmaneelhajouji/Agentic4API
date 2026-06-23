@@ -1,0 +1,35 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Plagiarism Detection API",
+    "version": "1.0.0",
+    "x-api-id": "plagiarism-detection-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Détection de plagiat et analyse de similarité de documents. Permet de soumettre un document pour analyse de plagiat et de consulter le rapport de similarité avec les sources détectées. Utilisé par les établissements d enseignement et plateformes e-learning pour contrôler l originalité des travaux étudiants.",
+    "x-synonymes": "détection plagiat, vérification plagiat, similarité texte, originalité document, copier coller détection, Turnitin style, anti-plagiat, taux similarité, sources plagiat, plagiat académique, intégrité académique, plagiat mémoire thèse, plagiat travail étudiant, fingerprint document, matching texte, emprunt texte, paraphrase détection, rapport plagiat, score originalité, plagiat en ligne",
+    "x-false-positive-warning": "DIFFÉRENCE vs certification-api : Plagiarism Detection API = vérification originalité de contenu. certification-api = émission de diplômes et badges. DIFFÉRENCE vs assessment-api : Plagiarism Detection API = analyse post-soumission. assessment-api = évaluation et notation. DIFFÉRENCE vs document-management-api-v2 : Plagiarism Detection API = analyse contenu. document-management-api-v2 = stockage et gestion.",
+    "x-cas-usage": "je veux vérifier si le mémoire d un étudiant contient du plagiat avant de le valider | je veux voir le rapport de similarité d un devoir soumis | je veux intégrer la vérification anti-plagiat dans notre plateforme de dépôt de mémoires | je veux voir quels passages d un document sont identifiés comme similaires à d autres sources | je veux analyser l originalité d un article avant publication"
+  },
+  "paths": {
+    "/v1/plagiarism/check": {
+      "post": {
+        "summary": "Analyser un document pour détecter le plagiat — calcul du taux de similarité",
+        "operationId": "checkPlagiarism",
+        "tags": ["Check"],
+        "responses": {"200": {"description": "Analyse lancée"}}
+      }
+    },
+    "/v1/plagiarism/reports/{documentId}": {
+      "parameters": [{"name": "documentId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Rapport de plagiat d un document — sources similaires et passages identifiés",
+        "operationId": "getSimilarDocuments",
+        "tags": ["Reports"],
+        "responses": {"200": {"description": "Rapport similarité"}}
+      }
+    }
+  }
+}

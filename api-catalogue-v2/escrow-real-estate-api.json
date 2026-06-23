@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Escrow Real Estate API",
+    "version": "1.0.0",
+    "x-api-id": "escrow-real-estate-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Cette API encadre la gestion réglementaire et la consignation des fonds pour les comptes séquestres immobiliers. Elle permet de sécuriser le dépôt de garantie ou l'indemnité d'immobilisation lors de la signature d'un compromis de vente ou d'une promesse d'achat, de lister les comptes de tiers gérés, de suivre la levée des conditions suspensives, et d'orchestrer la libération ou la restitution des fonds rattachés à la transaction notariale.",
+    "x-synonymes": "séquestre immobilier, consignation notariale, dépôt de garantie immobilier, indemnité d'immobilisation, compromis de vente, fonds de séquestre de vente, libération de fonds notariés, notariat numérique, compte de tiers immobilier, encaissement d'acompte immobilier, levée de conditions suspensives, transaction immobilière sécurisée, restitution d'acompte de vente, promesse d'achat",
+    "x-false-positive-warning": "Attention : Cette API régit de façon exclusive le cadre légal et la consignation des dépôts de garantie pour l'acquisition de biens immobiliers (RealEstate). Ne pas la confondre avec la `escrow-api` (dédiée aux comptes séquestres de vente de biens de grande consommation sur les marketplaces e-commerce), ni avec la `lease-management-api` (gestion des cautions de location courantes).",
+    "x-cas-usage": "Comment ouvrir un compte séquestre immobilier pour consigner le dépôt de garantie lié à un nouveau compromis de vente ? | Où consulter l'état des fonds et le niveau de validation juridique d'un dossier de vente immobilière ? | Comment annuler un séquestre et restituer l'indemnité à l'acquéreur suite au constat de non-réalisation d'une condition suspensive ?"
+  },
+  "paths": {
+    "/v1/escrow/real-estate": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des comptes de séquestre immobilier actifs, en attente de libération ou archivés",
+        "operationId": "listRealEstateEscrows",
+        "tags": [
+          "Escrow"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ouvrir et provisionner un nouveau compte séquestre immobilier pour consigner l'acompte ou l'indemnité d'immobilisation d'un accord",
+        "operationId": "createRealEstateEscrow",
+        "tags": [
+          "Escrow"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/escrow/real-estate/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les clauses de blocage, le solde financier et l'historique d'un compte de séquestre immobilier spécifique",
+        "operationId": "getEscrow",
+        "tags": [
+          "Escrow"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Annuler la transaction immobilière et valider la procédure de rétrocession ou de restitution des fonds consignés",
+        "operationId": "cancelEscrow",
+        "tags": [
+          "Escrow"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

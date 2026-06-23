@@ -1,0 +1,115 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Production Scheduling API",
+    "version": "1.0.0",
+    "x-api-id": "production-scheduling-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Cette API gère l'ordonnancement fin, le séquencement à court terme et l'optimisation opérationnelle des tâches sur les lignes de production. Conçue pour les outils de planification avancée (APS) et les ordonnanceurs d'usine, son rôle est d'organiser la file d'attente des travaux sur les machines, de minimiser les temps de changement de série et de résoudre les goulots d'étranglement capacitaires au jour le jour.",
+    "x-synonymes": "Ordonnancement de production, Séquencement des tâches, Planning capacitaire fin, Optimisation des files d'attente, Changement de série, Temps de réglage, Goulot d'étranglement, Charge capacitaire machine, Outil APS, Séquencement machine, Job d'ordonnancement, Programmation d'atelier, Reprogrammation de tâche, Flux de production, Matrice de changement de teinte, Planification opérationnelle",
+    "x-false-positive-warning": "Attention : Cette API pilote l'ordonnancement fin et le séquencement opérationnel à court terme. Pour la planification macroscopique à moyen/long terme (PDP/MPS), utilisez la Production Planning API. Pour le suivi d'exécution des consommations et ordres physiques, utilisez la Production Order API.",
+    "x-cas-usage": "Comment faire pour extraire le planning d'ordonnancement optimisé pour une journée de production ? | Comment faire pour lancer le calcul algorithmique d'ordonnancement afin d'optimiser les passages machine en limitant les changements de série ? | Comment faire pour reprogrammer en urgence un job spécifique suite à une panne machine imprévue ?"
+  },
+  "paths": {
+    "/v1/scheduling/plan": {
+      "get": {
+        "summary": "Récupérer le planning d'ordonnancement chronologique détaillé des opérations par ligne de production",
+        "operationId": "getProductionSchedule",
+        "tags": [
+          "Plan"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher l'algorithme d'optimisation pour générer ou recalculer la séquence idéale des travaux d'atelier",
+        "operationId": "generateSchedule",
+        "tags": [
+          "Plan"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/scheduling/capacity": {
+      "get": {
+        "summary": "Consulter la charge capacitaire fine et identifier en amont les risques de saturation ou de goulot d'étranglement",
+        "operationId": "getCapacityLoad",
+        "tags": [
+          "Capacity"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Exécuter une simulation de contrôle de disponibilité capacitaire pour valider l'insertion d'une commande urgente",
+        "operationId": "runCapacityCheck",
+        "tags": [
+          "Capacity"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/scheduling/jobs/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la position, l'heure de début planifiée et l'affectation machine d'un job d'ordonnancement précis",
+        "operationId": "getScheduledJob",
+        "tags": [
+          "Jobs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Reprogrammer manuellement ou réassigner un job spécifique dans la file d'attente d'un autre centre de charge",
+        "operationId": "rescheduleJob",
+        "tags": [
+          "Jobs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

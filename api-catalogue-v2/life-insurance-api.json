@@ -1,0 +1,152 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Life Insurance API",
+    "version": "1.0.0",
+    "x-api-id": "life-insurance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Cette API régit la souscription, le suivi financier et l'administration des contrats d'assurance-vie et de prévoyance. Elle permet de structurer les fiches de souscription, de désigner ou d'amender la clause bénéficiaire, de calculer en temps réel la valeur de rachat théorique d'un capital investi (fonds euros et unités de compte), et d'orchestrer les demandes de rachat partiel ou total formulées par les assurés.",
+    "x-synonymes": "assurance-vie, contrat de prévoyance, bénéficiaire de contrat, clause bénéficiaire, valeur de rachat, rachat partiel, rachat total, fonds en euros, unités de compte, capital investi, arbitrage financier, souscription d'assurance-vie, rente viagère, versement complémentaire",
+    "x-false-positive-warning": "Attention : Cette API est dédiée au placement de capital, à l'épargne à long terme et à la prévoyance décès (Life Insurance). Ne pas la confondre avec la `health-insurance-api` (complémentaire santé, mutuelle et remboursements de soins courants) ni avec la `insurance-claim-api-v3` gérant les sinistres matériels.",
+    "x-cas-usage": "Comment initialiser la souscription en ligne d'un nouveau contrat d'assurance-vie ? | Où consulter la valeur de rachat à jour d'un capital placé sur des supports en unités de compte ? | Comment soumettre un avenant pour ajouter ou modifier les bénéficiaires désignés d'une police ? | Quelle méthode appeler pour valider et liquider une demande de rachat partiel d'un assuré ?"
+  },
+  "paths": {
+    "/v1/life-insurance": {
+      "get": {
+        "summary": "Lister et filtrer le portefeuille complet des contrats d'assurance-vie actifs, rachetés ou clos",
+        "operationId": "listLifeInsurance",
+        "tags": [
+          "LifeInsurance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et enregistrer un nouveau contrat d'assurance-vie ou de prévoyance après validation du profil de l'assuré",
+        "operationId": "subscribeLifeInsurance",
+        "tags": [
+          "LifeInsurance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/life-insurance/{contractId}": {
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les caractéristiques détaillées, le solde des encours et l'état de répartition d'un contrat vie",
+        "operationId": "getLifeInsurance",
+        "tags": [
+          "LifeInsurance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier la configuration d'épargne, les options de prélèvement ou les métadonnées administratives du contrat",
+        "operationId": "updateLifeInsurance",
+        "tags": [
+          "LifeInsurance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/life-insurance/{contractId}/beneficiaries": {
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la clause bénéficiaire active et la liste des personnes désignées au contrat en cas de décès",
+        "operationId": "getBeneficiaries",
+        "tags": [
+          "Beneficiaries"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Amender la clause et enregistrer un nouveau bénéficiaire avec sa quote-part de répartition du capital",
+        "operationId": "addBeneficiary",
+        "tags": [
+          "Beneficiaries"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/life-insurance/{contractId}/surrender": {
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Calculer la valeur de rachat nette de frais et estimer le capital disponible pour un désinvestissement immédiat",
+        "operationId": "getSurrenderValue",
+        "tags": [
+          "Surrender"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Initier et soumettre formellement une demande de rachat (partiel ou total) de l'épargne accumulée",
+        "operationId": "requestSurrender",
+        "tags": [
+          "Surrender"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

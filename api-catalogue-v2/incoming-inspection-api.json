@@ -1,0 +1,90 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Incoming Inspection API",
+    "version": "1.0.0",
+    "x-api-id": "incoming-inspection-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Cette API pilote et documente les processus de contrôle qualité à la réception des matières premières, composants et marchandises entrantes à l'usine. Elle permet de confronter les livraisons physiques avec les commandes d'achat (PO) d'origine, de générer des plans d'échantillonnage statistiques selon les normes de tolérance (AQL/NQA), de consigner les résultats des tests de conformité, et d'acter l'acceptation ou le rejet motivé des lots fournisseurs.",
+    "x-synonymes": "contrôle à la réception, inspection des entrants, conformité marchandises usine, plan d'échantillonnage statistique, échantillonnage de réception, contrôle qualité logistique, réception de commande d'achat, acceptation de lot fournisseur, rejet de livraison matières, AQL, niveau de qualité acceptable, inspection d'entrée d'usine, suivi qualité composants, bon de réception industriel",
+    "x-false-positive-warning": "Attention : Cette API encadre la validation qualitative, l'échantillonnage physique et la conformité des pièces de fabrication lors de leur entrée en stock logistique (Incoming Inspection). Ne pas la confondre avec la `data-quality-api` (réservée à l'observabilité et à la détection d'anomalies logiques au sein des bases de données).",
+    "x-cas-usage": "Comment récupérer le dossier de contrôle d'hygiène ou de tolérance requis pour la réception de cette commande d'achat ? | Comment calculer et obtenir le plan d'échantillonnage statistique (nombre de pièces à tester) pour un lot de 5 000 unités livré ? | Où enregistrer les résultats des tests d'inspection de pièces pour acter la conformité et débloquer la marchandise ? | Comment consigner un rapport de non-conformité pour justifier le rejet d'un lot fournisseur défectueux ?"
+  },
+  "paths": {
+    "/v1/incoming/{poId}": {
+      "parameters": [
+        {
+          "name": "poId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état de l'inspection, les critères d'acceptation et les contrôles requis pour la commande d'achat spécifiée",
+        "operationId": "getIncomingInspection",
+        "tags": [
+          "Incoming"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer le verdict global de l'inspection à la réception pour valider l'entrée en stock ou le litige",
+        "operationId": "recordInspection",
+        "tags": [
+          "Incoming"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/incoming/{poId}/sampling": {
+      "parameters": [
+        {
+          "name": "poId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Générer et consulter le plan d'échantillonnage statistique (AQL) définissant le volume de pièces à prélever et inspecter",
+        "operationId": "getSamplingPlan",
+        "tags": [
+          "Sampling"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Consigner les métriques, mesures physiques et résultats détaillés issus des tests sur l'échantillon prélevé",
+        "operationId": "recordSamplingResult",
+        "tags": [
+          "Sampling"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

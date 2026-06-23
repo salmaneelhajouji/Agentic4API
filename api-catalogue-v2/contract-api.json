@@ -1,0 +1,418 @@
+
+
+
+
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Contract API",
+    "version": "1.0.0",
+    "x-api-id": "contract-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Operations",
+    "description": "Gestion du cycle de vie complet des contrats juridiques entre l'entreprise et ses partenaires, fournisseurs, clients et employés. Couvre la rédaction initiale, la négociation multi-versions, la signature électronique conforme eIDAS (simple, avancée, qualifiée), le suivi des obligations contractuelles (paiements, livrables, rapports), les alertes d'échéance et le renouvellement automatique ou manuel. Utilisateurs typiques : équipes juridiques, direction des achats, direction financière, account managers et responsables RH. DIFFÉRENCE vs document-api : Contract API gère le cycle de vie juridique complet (négociation, versioning, obligations, renouvellement) ; Document API se limite à la génération de documents depuis des templates. DIFFÉRENCE vs invoice-api : un contrat est un accord juridique entre parties définissant des obligations, une invoice est un document fiscal de facturation.",
+    "x-synonymes": "contrat, accord, convention, engagement contractuel, contrat cadre, NDA, accord de confidentialité, SLA, contrat de service, contrat fournisseur, contrat partenariat, contrat de licence, contrat d'emploi, contrat d'achat, renouvellement contrat, signature électronique, obligation contractuelle, échéance contrat, avenant, résiliation",
+    "x-false-positive-warning": "Génération de documents depuis template → document-api. Facturation → invoice-api. Signature électronique seule sans gestion de contrat → document-api. Gestion de bons de commande → purchase-order-api. Gestion des accords de niveau de service en tant que métriques de performance → sla-api.",
+    "x-cas-usage": "Comment créer un nouveau contrat NDA avec un partenaire externe ? | Quels contrats arrivent à expiration dans les 30 prochains jours ? | Comment ajouter une obligation de paiement à un contrat en cours ? | Comment envoyer un contrat SLA en signature électronique qualifiée eIDAS ? | Comment renouveler un contrat fournisseur arrivé à terme avec modification des conditions ?"
+  },
+  "paths": {
+    "/v1/contracts": {
+      "post": {
+        "summary": "Créer un nouveau contrat (NDA, SLA, partenariat, emploi, achat, licence ou service) avec ses parties et conditions initiales",
+        "operationId": "createContract",
+        "tags": [
+          "Contracts"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContractCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contrat créé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Lister et filtrer les contrats par statut (draft, negotiation, signed, expired…), contrepartie ou proximité d'échéance",
+        "operationId": "listContracts",
+        "tags": [
+          "Contracts"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "review",
+                "negotiation",
+                "signed",
+                "active",
+                "expired",
+                "terminated"
+              ]
+            }
+          },
+          {
+            "name": "counterparty_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "expiring_in_days",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contrats"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/contracts/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^CTR-[0-9]{4}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer un contrat complet avec son historique de versions et l'état de chaque négociation",
+        "operationId": "getContract",
+        "tags": [
+          "Contracts"
+        ],
+        "responses": {
+          "200": {
+            "description": "Contrat"
+          },
+          "404": {
+            "description": "Contrat non trouvé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Modifier le contrat et créer automatiquement une nouvelle version — utile lors d'une renégociation ou d'un avenant",
+        "operationId": "updateContract",
+        "tags": [
+          "Contracts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Nouvelle version créée"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/contracts/{id}/sign": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Envoyer le contrat en signature électronique eIDAS (simple, avancée ou qualifiée) aux signataires désignés (parties, témoins)",
+        "operationId": "signContract",
+        "tags": [
+          "Contracts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "signatories"
+                ],
+                "properties": {
+                  "signatories": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "party_a",
+                            "party_b",
+                            "witness"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "signature_method": {
+                    "type": "string",
+                    "enum": [
+                      "eidas_simple",
+                      "eidas_advanced",
+                      "eidas_qualified"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Invitations de signature envoyées"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/contracts/{id}/obligations": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter toutes les obligations contractuelles et leurs échéances : paiements, livrables, rapports, renouvellements",
+        "operationId": "getObligations",
+        "tags": [
+          "Obligations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Obligations"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Ajouter une nouvelle obligation au contrat : livrable à rendre, paiement à effectuer, rapport à soumettre ou date de renouvellement",
+        "operationId": "addObligation",
+        "tags": [
+          "Obligations"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "due_date",
+                  "type"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "due_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "payment",
+                      "delivery",
+                      "report",
+                      "renewal"
+                    ]
+                  },
+                  "amount": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Obligation ajoutée"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/contracts/{id}/renew": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Renouveler un contrat expiré ou arrivant à terme — crée une nouvelle version avec la nouvelle date de fin et les éventuelles modifications de conditions",
+        "operationId": "renewContract",
+        "tags": [
+          "Contracts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "new_end_date"
+                ],
+                "properties": {
+                  "new_end_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "changes": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Contrat renouvelé — nouvelle version créée"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ContractCreate": {
+        "type": "object",
+        "required": [
+          "title",
+          "counterparty_id",
+          "type",
+          "start_date",
+          "end_date"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "counterparty_id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "nda",
+              "sla",
+              "partnership",
+              "employment",
+              "purchase",
+              "license",
+              "service"
+            ]
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "value": {
+            "type": "number",
+            "description": "Valeur contractuelle totale"
+          },
+          "currency": {
+            "type": "string",
+            "default": "EUR"
+          },
+          "auto_renew": {
+            "type": "boolean",
+            "default": false
+          },
+          "notice_days": {
+            "type": "integer",
+            "description": "Jours de préavis avant expiration"
+          }
+        }
+      }
+    }
+  }
+}

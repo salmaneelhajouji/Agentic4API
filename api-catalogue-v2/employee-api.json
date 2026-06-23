@@ -1,0 +1,331 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Employee API",
+    "version": "1.0.0",
+    "x-api-id": "employee-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe RH",
+    "x-domain": "Human Resources",
+    "description": "Cette API sécurisée constitue le référentiel unique des dossiers de gestion des ressources humaines (RH) pour l'ensemble des collaborateurs internes de l'entreprise. Elle centralise les données d'identité civile, l'historique des contrats de travail (CDI, CDD, stages), le suivi des soldes de congés et d'absences, ainsi que les éléments salariaux sensibles liés à la paie. Protégée par des habilitations d'accès strictes (scopes RH), elle soutient les processus d'onboarding, de gestion des carrières et d'administration du personnel.",
+    "x-synonymes": "dossier employé, référentiel RH, ressources humaines, contrat de travail, gestion de la paie, solde de congés, onboarding collaborateur, fiche salarié, administration du personnel, historique des contrats, rémunération, département engineering, compétences internes, suivi des absences",
+    "x-false-positive-warning": "Attention : Cette API contient exclusivement les données contractuelles, salariales et RH confidentielles du personnel interne de l'entreprise (Employee). Ne pas la confondre avec la `user-api` (qui gère uniquement les identifiants techniques et droits de connexion), la `customer-profile-api` (dédiée aux clients acheteurs externes) ni avec l'elle-même distincte `account-api` (réservée aux fiches d'organisations partenaires ou entreprises clientes).",
+    "x-cas-usage": "Comment créer et initialiser le dossier RH d'un nouveau collaborateur lors de sa phase d'onboarding ? | Où récupérer l'historique complet des avenants et contrats de travail d'un ingénieur ? | Comment consulter le solde de congés payés restant d'un employé ? | Comment extraire de façon sécurisée les informations salariales pour le calcul de la paie mensuelle via le scope requis ?"
+  },
+  "paths": {
+    "/v1/employees": {
+      "get": {
+        "summary": "Lister, filtrer et auditer l'ensemble des dossiers des employés de l'entreprise par département, statut ou responsable",
+        "operationId": "listEmployees",
+        "tags": [
+          "Employees"
+        ],
+        "parameters": [
+          {
+            "name": "department",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "on_leave",
+                "terminated"
+              ]
+            }
+          },
+          {
+            "name": "manager_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Employee"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et initialiser un nouveau dossier employé complet dans le cadre du processus d'onboarding RH",
+        "operationId": "createEmployee",
+        "tags": [
+          "Employees"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        }
+      }
+    },
+    "/v1/employees/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^EMP-[0-9]{3}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche employé complète regroupant l'identité, le poste, les compétences et les statuts administratifs",
+        "operationId": "getEmployee",
+        "tags": [
+          "Employees"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Employee"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour le département, l'intitulé de poste, le responsable ou le statut d'activité du dossier de l'employé",
+        "operationId": "updateEmployee",
+        "tags": [
+          "Employees"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmployeeUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      }
+    },
+    "/v1/employees/{id}/contracts": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la chronologie et l'historique complet des contrats de travail et avenants signés par le collaborateur",
+        "operationId": "getContracts",
+        "tags": [
+          "Contracts"
+        ],
+        "responses": {
+          "200": {
+            "description": "Contrats"
+          }
+        }
+      }
+    },
+    "/v1/employees/{id}/leaves": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les soldes de congés restants, l'historique des absences et les demandes de congés validées de l'employé",
+        "operationId": "getLeaves",
+        "tags": [
+          "Leaves"
+        ],
+        "responses": {
+          "200": {
+            "description": "Congés"
+          }
+        }
+      }
+    },
+    "/v1/employees/{id}/salary": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Accéder de façon sécurisée aux informations salariales et éléments de rémunération du collaborateur (accès restreint)",
+        "operationId": "getSalary",
+        "tags": [
+          "Payroll"
+        ],
+        "responses": {
+          "200": {
+            "description": "Salaire"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "EmployeeCreate": {
+        "type": "object",
+        "required": [
+          "employee_id",
+          "full_name",
+          "email",
+          "department",
+          "position",
+          "start_date"
+        ],
+        "properties": {
+          "employee_id": {
+            "type": "string",
+            "pattern": "^EMP-[0-9]{3}$"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "department": {
+            "type": "string",
+            "example": "Engineering"
+          },
+          "position": {
+            "type": "string",
+            "example": "Software Engineer"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "contract_type": {
+            "type": "string",
+            "enum": [
+              "CDI",
+              "CDD",
+              "Stage",
+              "Freelance"
+            ]
+          },
+          "manager_id": {
+            "type": "string",
+            "pattern": "^EMP-[0-9]{3}$"
+          }
+        }
+      },
+      "EmployeeUpdate": {
+        "type": "object",
+        "properties": {
+          "department": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "manager_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "on_leave",
+              "terminated"
+            ]
+          }
+        }
+      },
+      "Employee": {
+        "type": "object",
+        "properties": {
+          "employee_id": {
+            "type": "string"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "department": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "contract_type": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "manager_id": {
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

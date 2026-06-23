@@ -1,0 +1,69 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Data Catalog API",
+    "version": "2.0.0",
+    "x-api-id": "data-catalog-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "x-successor": "data-catalog-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS data-catalog-api-v3] Cette API gérait la version 2 du catalogue de données de l'entreprise, introduisant la traçabilité des métadonnées et le suivi du lignage technique (lineage). Elle permettait aux Data Stewards, architectes de données et ingénieurs BI d'inventorier les jeux de données (datasets) et de cartographier leur provenance. Cette version est définitivement gelée ; toutes les applications consommatrices et les nouveaux pipelines doivent impérativement migrer vers la version 3 (data-catalog-api-v3) pour s'appuyer sur le nouveau moteur de découverte automatisé.",
+    "x-synonymes": "catalogue de données, data catalog, dictionnaire de données, lignage de données, data lineage, traçabilité des données, provenance de la donnée, jeu de données, dataset, métadonnées, cartographie des données, référentiel de données, inventaire des données, schéma de table, glossaire métier, gouvernance des données, data discovery, data governance",
+    "x-false-positive-warning": "Attention : Cette API obsolète est strictement limitée à l'indexation, la documentation et la traçabilité des métadonnées (inventaire et lignage v2). Ne pas la confondre avec la `data-access-control-api` (qui régit l'attribution des droits, masquages et habilitations de sécurité sur les tables) ni avec la `data-api-gateway-api` (qui exécute et route physiquement les flux de requêtes de données brutes), et veiller à cibler directement la nouvelle `data-catalog-api-v3`.",
+    "x-cas-usage": "Comment lister les jeux de données encore indexés dans cette version 2 pour finaliser notre inventaire de migration ? | Où puis-je extraire le graphe de lineage technique d'un dataset pour comprendre sa provenance historique ? | Comment déclarer un dataset transitoire avant la désactivation complète de cette infrastructure v2 ? | Comment adapter mes scripts automatisés de récupération du lignage pour basculer vers la nouvelle data-catalog-api-v3 ?"
+  },
+  "paths": {
+    "/v2/datasets": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS data-catalog-api-v3 - Consulter l'inventaire historique et le dictionnaire des jeux de données (datasets) de la plateforme data v2.",
+        "operationId": "listDatasetsV2",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS data-catalog-api-v3 - Enregistrer ou référencer manuellement un nouveau jeu de données dans l'ancien catalogue (opération dépréciée).",
+        "operationId": "addDatasetV2",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/datasets/{id}/lineage": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS data-catalog-api-v3 - Récupérer l'arbre de dépendances et le lignage technique (lineage) pour analyser la provenance d'un jeu de données spécifique.",
+        "operationId": "getLineageV2",
+        "tags": [
+          "Lineage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

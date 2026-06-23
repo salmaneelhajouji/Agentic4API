@@ -1,0 +1,160 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Experiment Tracking API",
+    "version": "1.0.0",
+    "x-api-id": "experiment-tracking-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API supervise l'enregistrement, l'organisation et le suivi comparatif des expériences de Machine Learning (ML). Elle permet aux Data Scientists et aux ingénieurs MLOps de consigner les paramètres de configuration, de tracer l'évolution des métriques de performance au fil des itérations (runs), et de lier les artefacts générés. Elle sécurise la reproductibilité des modèles de l'entreprise et simplifie le choix des meilleures versions avant leur passage à l'échelle.",
+    "x-synonymes": "suivi d'expériences, experiment tracking, run d'entraînement, métriques de modèle, hyperparamètres, reproductibilité ML, MLOps, journalisation des métriques, cycle de vie des modèles, comparaison de performances, évaluation de modèle, artefact machine learning, entraînement algorithmique",
+    "x-false-positive-warning": "Attention : Cette API assure le suivi des métriques de performance et des hyperparamètres lors de la phase d'entraînement de modèles de Machine Learning (ML). Ne pas la confondre avec la `event-tracking-api` (dédiée à la collecte analytique des clics et du comportement des utilisateurs sur les interfaces web), ni avec la `data-lineage-api`.",
+    "x-cas-usage": "Comment démarrer un nouveau run d'entraînement pour enregistrer les hyperparamètres associés à une expérience ? | Où consigner et consigner la courbe de perte (loss) et le score d'exactitude mesurés à chaque époque d'un traitement ? | Comment lister et extraire les métriques consolidées de toutes les itérations d'un projet pour identifier le meilleur modèle ?"
+  },
+  "paths": {
+    "/v1/experiments": {
+      "get": {
+        "summary": "Lister et parcourir l'ensemble des projets d'expérimentation de Machine Learning actifs ou archivés",
+        "operationId": "listExperiments",
+        "tags": [
+          "Experiments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et initialiser un nouvel espace d'expérimentation pour isoler les runs d'un cas d'usage de modélisation",
+        "operationId": "createExperiment",
+        "tags": [
+          "Experiments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/experiments/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les détails structurels, la description et l'état d'un projet d'expérimentation spécifique",
+        "operationId": "getExperiment",
+        "tags": [
+          "Experiments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier l'intitulé, les tags d'organisation ou la documentation d'un projet d'expérimentation existant",
+        "operationId": "updateExperiment",
+        "tags": [
+          "Experiments"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/experiments/{id}/runs": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la liste complète des itérations d'entraînement (runs) rattachées à une expérience",
+        "operationId": "getExperimentRuns",
+        "tags": [
+          "Runs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et démarrer une nouvelle itération d'entraînement (run) pour y consigner des métriques à chaud",
+        "operationId": "startRun",
+        "tags": [
+          "Runs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/experiments/{id}/runs/{runId}/metrics": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "runId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique et les valeurs finales de l'ensemble des métriques de performance enregistrées pour un run",
+        "operationId": "getRunMetrics",
+        "tags": [
+          "Metrics"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Pousser et logger une nouvelle valeur de métrique (ex: perte, F1-score) associée à un instant ou une époque de l'entraînement",
+        "operationId": "logMetric",
+        "tags": [
+          "Metrics"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

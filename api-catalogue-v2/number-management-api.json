@@ -1,0 +1,62 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Number Management API",
+    "version": "1.0.0",
+    "x-api-id": "number-management-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Gestion des numéros de téléphone — attribution, libération, portabilité et numéros SDA. Permet d attribuer un numéro à un abonné, de le libérer, de consulter ses informations et d initier une procédure de portabilité. Utilisé par les opérateurs et MVNOs pour gérer leur parc de numéros.",
+    "x-synonymes": "attribution numéro, allocation numéro, libération numéro, numéro SDA sélection directe arrivée, portabilité opérateur, numéro abonné, parc numéros, gestion numéros télécom, numéro DDI, plage numéros, numéro géographique, numéro non géographique, 080x 090x numéro spécial, numéro virtuel, numéro court, numéro MSISDN, numéro réservé, inventaire numéros, gestion MVNO, lifecycle numéro",
+    "x-false-positive-warning": "Portabilité spécifique entre opérateurs → number-portability-api. Lookup et validation numéro → number-lookup-api. CDR appels facturation → cdr-api. Facturation télécom → billing-telecom-api.",
+    "x-cas-usage": "je veux attribuer un numéro SDA à un nouveau client entreprise | je veux libérer un numéro d un abonné résilié | je veux voir les informations et le statut d un numéro dans notre parc | je veux initier une demande de portabilité pour un numéro | je veux voir le statut de portabilité en cours d un numéro"
+  },
+  "paths": {
+    "/v1/numbers": {
+      "get": {
+        "summary": "Lister les numéros du parc — attributs, statuts et abonnés",
+        "operationId": "listNumbers",
+        "tags": ["Numbers"],
+        "responses": {"200": {"description": "Numéros du parc"}}
+      },
+      "post": {
+        "summary": "Attribuer un numéro à un abonné — SDA, géographique ou non géographique",
+        "operationId": "allocateNumber",
+        "tags": ["Numbers"],
+        "responses": {"200": {"description": "Numéro attribué"}}
+      }
+    },
+    "/v1/numbers/{number}": {
+      "parameters": [{"name": "number", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Informations d un numéro — abonné, statut et historique",
+        "operationId": "getNumberInfo",
+        "tags": ["Numbers"],
+        "responses": {"200": {"description": "Informations numéro"}}
+      },
+      "delete": {
+        "summary": "Libérer un numéro — désattribuer et remettre dans le parc disponible",
+        "operationId": "releaseNumber",
+        "tags": ["Numbers"],
+        "responses": {"200": {"description": "Numéro libéré"}}
+      }
+    },
+    "/v1/numbers/{number}/portability": {
+      "parameters": [{"name": "number", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Initier une procédure de portabilité pour un numéro",
+        "operationId": "initiatePortability",
+        "tags": ["Portability"],
+        "responses": {"200": {"description": "Portabilité initiée"}}
+      },
+      "get": {
+        "summary": "Statut de portabilité d un numéro — en cours, complétée ou refusée",
+        "operationId": "getPortabilityStatus",
+        "tags": ["Portability"],
+        "responses": {"200": {"description": "Statut portabilité"}}
+      }
+    }
+  }
+}

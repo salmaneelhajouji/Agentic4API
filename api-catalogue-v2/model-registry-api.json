@@ -1,0 +1,160 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Model Registry API",
+    "version": "1.0.0",
+    "x-api-id": "model-registry-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API régit le référentiel centralisé et le registre de gouvernance des modèles de Machine Learning (Model Registry) de l'entreprise. Elle permet aux équipes de Data Science et MLOps de déclarer de nouveaux modèles, d'administrer l'historique complet de leurs versions, de lier les métadonnées techniques et d'évaluation, et de piloter les transitions d'états (déploiement, archivage) vers les environnements cibles. Elle garantit la traçabilité et le cycle de vie auditable des actifs d'intelligence artificielle.",
+    "x-synonymes": "registre de modèles, model registry, gouvernance ML, versionnement de modèle, artefact machine learning, cycle de vie du modèle, MLOps, métadonnées de modèle, déploiement de modèle IA, catalogue d'algorithmes, enregistrement de modèle, version de modèle",
+    "x-false-positive-warning": "Attention : Cette API encadre exclusivement le stockage, le versionnement et la gouvernance d'état des modèles (Model Registry). Ne pas la confondre avec l'api `inference-api` (dédiée au serving, à l'exécution des prédictions à faible latence ou batch en production), ni avec l'api `experiment-tracking-api` réservée à la phase d'apprentissage.",
+    "x-cas-usage": "Comment enregistrer un nouveau modèle de scoring de crédit dans le registre central ? | Où consulter l'historique complet des versions et révisions publiées pour cet algorithme ? | Comment promouvoir et marquer une version spécifique de modèle comme prête au déploiement ? | Quelle méthode appeler pour retirer un modèle de l'environnement de production actif ?"
+  },
+  "paths": {
+    "/v1/models": {
+      "get": {
+        "summary": "Lister, filtrer et auditer l'ensemble des modèles de Machine Learning référencés dans le registre de gouvernance",
+        "operationId": "listMLModels",
+        "tags": [
+          "Models"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et enregistrer une nouvelle fiche de modèle de Machine Learning au sein du catalogue central",
+        "operationId": "registerModel",
+        "tags": [
+          "Models"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/models/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche d'identité, la description, l'équipe propriétaire et les tags d'un modèle ML spécifique",
+        "operationId": "getMLModel",
+        "tags": [
+          "Models"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier la documentation, le descriptif fonctionnel ou les variables organisationnelles d'un modèle existant",
+        "operationId": "updateModel",
+        "tags": [
+          "Models"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/models/{id}/versions": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Parcourir la chronologie et l'historique complet de toutes les versions et artefacts associés à ce modèle",
+        "operationId": "getModelVersions",
+        "tags": [
+          "Versions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et ajouter une nouvelle version logique ou un nouvel artefact physique pour le modèle spécifié",
+        "operationId": "addModelVersion",
+        "tags": [
+          "Versions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/models/{id}/versions/{version}/deploy": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "version",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Promouvoir et déclencher le déploiement d'une version spécifique du modèle vers les environnements d'inférence",
+        "operationId": "deployModel",
+        "tags": [
+          "Deploy"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Retirer et désactiver une version de modèle de l'environnement de production actif",
+        "operationId": "undeployModel",
+        "tags": [
+          "Deploy"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

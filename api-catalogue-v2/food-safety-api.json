@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Food Safety API",
+    "version": "1.0.0",
+    "x-api-id": "food-safety-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Cette API pilote et automatise les processus de contrôle de la sécurité sanitaire des aliments et de conformité réglementaire (HACCP) tout au long de la chaîne d'approvisionnement agroalimentaire. Elle permet d'enregistrer les audits de conformité d'hygiène, d'émettre des alertes sanitaires immédiates en cas de contamination détectée, et d'orchestrer la procédure d'urgence de retrait et de rappel de lots de produits non conformes pour protéger les consommateurs.",
+    "x-synonymes": "sécurité alimentaire, conformité HACCP, contrôle sanitaire, rappel de produit, retrait de lot, alerte sanitaire, traçabilité alimentaire, hygiène des aliments, contamination microbiologique, inspection sanitaire, sécurité des consommateurs, chaîne du froid, lot défectueux, audit d'abattoir, filière agroalimentaire",
+    "x-false-positive-warning": "Attention : Cette API régit exclusivement le cadre de la sécurité microbiologique, de l'hygiène et des rappels de produits alimentaires (Food Safety). Ne pas la confondre avec la `crop-protection-api` (suivi des traitements phytosanitaires aux champs) ni avec la `data-quality-api` (qualité technique des bases de données).",
+    "x-cas-usage": "Comment enregistrer les résultats d'un contrôle sanitaire HACCP effectué sur une ligne de conditionnement ? | Où consulter la liste des procédures de rappel et de retrait de produits actuellement actives sur le réseau ? | Comment déclencher et diffuser une alerte de sécurité alimentaire d'urgence suite à une suspicion de contamination ?"
+  },
+  "paths": {
+    "/v1/food-safety/checks": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des inspections sanitaires et contrôles de conformité HACCP effectués",
+        "operationId": "listFoodSafetyChecks",
+        "tags": [
+          "Checks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Consigner et enregistrer un nouveau rapport de contrôle d'hygiène ou d'inspection sanitaire sur un site",
+        "operationId": "createFoodSafetyCheck",
+        "tags": [
+          "Checks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/food-safety/recalls": {
+      "get": {
+        "summary": "Consulter le registre des procédures de retrait et de rappel de lots de produits alimentaires actifs",
+        "operationId": "listRecalls",
+        "tags": [
+          "Recalls"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Initier et lancer d'urgence une procédure de rappel produit et de blocage de lot suite à une non-conformité majeure",
+        "operationId": "initiateRecall",
+        "tags": [
+          "Recalls"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/food-safety/alerts": {
+      "get": {
+        "summary": "Récupérer le flux des alertes de sécurité sanitaire des aliments en cours pour la coordination des crises",
+        "operationId": "getFoodSafetyAlerts",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

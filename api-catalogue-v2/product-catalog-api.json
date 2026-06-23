@@ -1,0 +1,220 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Product Catalog API",
+    "version": "2.0.0",
+    "x-api-id": "product-catalog-api",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Catalog",
+    "x-domain": "E-Commerce",
+    "description": "Cette API orchestre l'administration structurelle et l'organisation hiérarchique du catalogue d'articles e-commerce (v2). Elle prend en charge l'exécution complète des opérations de création, modification et classification des articles, et gère l'arborescence des catégories de produits et de leurs attributs dynamiques associés. Elle fait office de référentiel de taxonomie pour alimenter les moteurs d'affichage des portails marchands.",
+    "x-synonymes": "catalogue produits v2, arborescence de catégories, taxonomie e-commerce, attributs de produits, référentiel d'articles, fiche produit administrative, classement par catégories, classification de produits, SKU produit, gestion du catalogue retail",
+    "x-false-positive-warning": "Attention : Cette API est dédiée exclusivement à l'administration, la classification et la structure documentaire des référentiels d'articles (Product Catalog). Ne pas la confondre avec la `search-api` (microservice hautement optimisé pour l'interrogation full-text, la navigation facettée et le requêtage par les clients finaux)."
+  },
+  "paths": {
+    "/v2/products": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des fiches articles du catalogue selon leur arborescence de catégories et statuts",
+        "operationId": "listProducts",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "draft",
+                "archived"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Produits"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et enregistrer une nouvelle référence de produit avec son SKU, son prix et ses attributs de catégorisation",
+        "operationId": "createProduct",
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "sku",
+                  "price"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "sku": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "category_id": {
+                    "type": "string"
+                  },
+                  "images": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  },
+                  "attributes": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé"
+          }
+        }
+      }
+    },
+    "/v2/products/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les fiches descriptives, les prix d'origine et la liste d'attributs d'un produit spécifique",
+        "operationId": "getProduct",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "Produit"
+          },
+          "404": {
+            "description": "Référence d'article introuvable dans le catalogue"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour la nomenclature, les attributs techniques ou les images d'un produit existant",
+        "operationId": "updateProduct",
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Archiver logiquement un produit du catalogue pour suspendre définitivement sa commercialisation",
+        "operationId": "deleteProduct",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "Archivé"
+          }
+        }
+      }
+    },
+    "/v2/categories": {
+      "get": {
+        "summary": "Lister l'ensemble de l'arborescence des catégories et nœuds de classement du catalogue",
+        "operationId": "listCategories",
+        "tags": [
+          "Categories"
+        ],
+        "responses": {
+          "200": {
+            "description": "Catégories"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un nouveau nœud ou une catégorie de classement en spécifiant son éventuel dossier parent",
+        "operationId": "createCategory",
+        "tags": [
+          "Categories"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "parent_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créée"
+          }
+        }
+      }
+    }
+  }
+}

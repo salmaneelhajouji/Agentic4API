@@ -1,0 +1,151 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Quality Control API",
+    "version": "1.0.0",
+    "x-api-id": "quality-control-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Cette API orchestre l'assurance qualité et les processus de contrôle de conformité physique au cœur de l'outil de production industrielle. Conçue pour s'interfacer avec les systèmes MES, les terminaux des opérateurs d'atelier et les ingénieurs qualité d'usine, elle permet de déployer les plans de contrôle, d'enregistrer les mesures de tolérance en cours de fabrication et d'isoler les rebuts via la déclaration d'anomalies industrielles.",
+    "x-synonymes": "Contrôle qualité production, Plan de contrôle usine, Mesure de conformité, Non-conformité industrielle, Contrôle qualité atelier, Résolution de non-conformité, Écart de fabrication, Tolérance dimensionnelle, Fiche d'anomalie usine, Mesure de qualité produit, Point de contrôle industriel, Rebut de fabrication, Assurance qualité production, Fiche de non-conformité industrielle, Audit qualité atelier, Contrôle en cours de processus",
+    "x-false-positive-warning": "Attention : Cette API régit les contrôles physiques de conformité et de qualité des pièces manufacturées en atelier de fabrication. Pour le contrôle de la conformité, de l'intégrité, du format ou de la propreté des flux de données informatiques, vous devez utiliser la Data Quality API.",
+    "x-cas-usage": "Comment faire pour extraire les plans et fiches de contrôle qualité obligatoires définis pour une ligne ou un îlot de fabrication ? | Comment faire pour valider la conformité d'une étape de fabrication en saisissant les mesures physiques et les points de contrôles obligatoires ? | Comment faire pour consigner et tracer une non-conformité industrielle sur un lot de fabrication et suivre sa résolution ?"
+  },
+  "paths": {
+    "/v1/quality/plans": {
+      "get": {
+        "summary": "Consulter les grilles de contrôle qualité réglementaires, tolérances et plans d'échantillonnage applicables aux lignes de fabrication",
+        "operationId": "listQualityPlans",
+        "tags": [
+          "Plans"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Définir, formaliser et déployer un nouveau protocole ou plan de contrôle qualité sur un produit ou composant industriel",
+        "operationId": "createQualityPlan",
+        "tags": [
+          "Plans"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/quality/checks/{orderId}": {
+      "parameters": [
+        {
+          "name": "orderId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le journal des points de contrôles qualité exécutés ou planifiés pour un ordre de fabrication (OF) d'atelier",
+        "operationId": "getQualityChecks",
+        "tags": [
+          "Checks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Saisir les résultats des relevés de mesures physiques et statuer sur la conformité d'une phase ou étape de production active",
+        "operationId": "performCheck",
+        "tags": [
+          "Checks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/quality/nonconformities": {
+      "get": {
+        "summary": "Consulter l'inventaire consolidé des écarts de fabrication et des non-conformités détectées sur les lignes de montage",
+        "operationId": "listNonConformities",
+        "tags": [
+          "NC"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ouvrir une fiche de non-conformité d'atelier nécessitant le blocage d'un lot, une retouche technique ou la mise au rebut d'un produit",
+        "operationId": "createNC",
+        "tags": [
+          "NC"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/quality/nonconformities/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la description technique, la cause racine identifiée et l'état de traitement d'une anomalie industrielle spécifique",
+        "operationId": "getNC",
+        "tags": [
+          "NC"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer le plan d'actions correctives mené sur le terrain pour clore et résoudre le dossier de non-conformité usine",
+        "operationId": "resolveNC",
+        "tags": [
+          "NC"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

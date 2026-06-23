@@ -1,0 +1,38 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Room Booking API",
+    "version": "1.0.0",
+    "x-api-id": "room-booking-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Réservation chambres v1. DEPRECATED. Remplacé par room-booking-api-v3.",
+    "x-successor": "room-booking-api-v3",
+    "x-synonymes": "réservation, chambre, hôtel, hébergement, nuitée, séjour, v1, obsolète, deprecated",
+    "x-false-positive-warning": "API obsolète. Utiliser room-booking-api-v3 pour intégrer les garanties bancaires et politiques d'annulation.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers room-booking-api-v3."
+  },
+  "paths": {
+    "/v1/bookings": {
+      "post": {
+        "summary": "DEPRECATED - Effectuer une réservation de chambre d'hôtel (Ancienne version, migrer vers v3)",
+        "operationId": "bookRoomV1",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

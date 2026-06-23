@@ -1,0 +1,78 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Profiling API",
+    "version": "1.0.0",
+    "x-api-id": "data-profiling-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API supervise l'analyse structurelle et statistique approfondie (data profiling) des jeux de données de l'entreprise. Elle examine automatiquement les tables pour en extraire les caractéristiques mathématiques fondamentales : distribution des fréquences, taux de complétude, cardinalité, détection automatique des types réels et validation des formats de chaînes (patterns). Elle sert d'outil d'exploration indispensable pour les Data Engineers concevant des pipelines d'ingestion, les Data Scientists évaluant la propreté d'une table avant l'entraînement de modèles de Machine Learning, et les analystes BI vérifiant l'intégrité de leurs sources.",
+    "x-synonymes": "profilage de données, data profiling, statistiques de dataset, distribution des valeurs, taux de nullité, cardinalité, analyse de schéma, métriques de colonnes, pattern matching, détection de type, valeurs aberrantes, anomalies de données, analyse statistique, complétude des données, volumétrie, fréquence des valeurs, empreinte de données, exploration de données",
+    "x-false-positive-warning": "Attention : Cette API calcule des indicateurs mathématiques intrinsèques, descriptifs et statistiques sur le contenu d'une table. Ne pas la confondre avec la `data-quality-api` (qui applique des règles métiers spécifiques et déterministes, ex: 'l'âge doit être supérieur à 18', pour lever des alertes de non-conformité), ni avec la `data-catalog-api` (dédiée au dictionnaire de données documentaire, aux étiquettes fonctionnelles et au lignage technique sans calcul mathématique sur les lignes).",
+    "x-cas-usage": "Comment analyser la distribution statistique et détecter les valeurs aberrantes d'une table avant de l'injecter dans un modèle d'IA ? | Quel est le pourcentage exact de valeurs manquantes ou vides (taux de nullité) mesuré sur la colonne des numéros de téléphone ? | Comment lancer un diagnostic automatique pour vérifier si les formats de chaînes suivent les expressions régulières attendues ? | Où récupérer l'analyse de cardinalité d'une colonne pour déterminer si elle possède un niveau de distinction suffisant pour servir de clé ?"
+  },
+  "paths": {
+    "/v1/profiling/{datasetId}": {
+      "parameters": [
+        {
+          "name": "datasetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Déclencher un travail d'analyse asynchrone pour calculer l'empreinte statistique, les patterns et la structure d'un jeu de données",
+        "operationId": "runProfiling",
+        "tags": [
+          "Profiling"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Récupérer les métriques de profilage complètes, incluant la cardinalité, les types détectés et les distributions de fréquences",
+        "operationId": "getProfilingResults",
+        "tags": [
+          "Profiling"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/profiling/{datasetId}/statistics": {
+      "parameters": [
+        {
+          "name": "datasetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter spécifiquement les indicateurs de complétude, le taux de valeurs manquantes (nulles) et les anomalies de remplissage par colonne",
+        "operationId": "getNullPercentages",
+        "tags": [
+          "Stats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

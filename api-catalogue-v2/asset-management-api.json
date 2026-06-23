@@ -1,0 +1,62 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Asset-Management API",
+    "version": "1.0.0",
+    "x-api-id": "asset-management-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "API de gestion comptable et financière des actifs industriels immobilisés, couvrant l'enregistrement des immobilisations (machines, équipements, véhicules, bâtiments), le calcul des amortissements linéaires ou dégressifs, et le suivi de la valeur nette comptable (VNC) tout au long du cycle de vie de l'actif. Permet aux équipes finance, comptabilité et contrôle de gestion de produire le tableau des immobilisations, d'alimenter le bilan comptable et de répondre aux obligations fiscales et déclaratives. Utilisée typiquement lors d'un achat d'équipement industriel (enregistrement CAPEX, date de mise en service, durée d'amortissement) ou lors de la clôture comptable annuelle (calcul des dotations, édition du registre des immobilisations). DIFFÉRENCE vs asset-tracking-api : Asset Management = valeur comptable et amortissements des immobilisations. Asset Tracking = localisation GPS et suivi physique des équipements sur le terrain. DIFFÉRENCE vs maintenance-work-order-api : Asset Management = gestion financière et comptable des actifs. Work Order = planification et exécution des ordres de maintenance préventive et corrective.",
+    "x-synonymes": "immobilisation, actif industriel, amortissement linéaire, amortissement dégressif, valeur nette comptable, valeur résiduelle, durée d'amortissement, plan d'amortissement, tableau des amortissements, immobilisation corporelle, immobilisation incorporelle, bilan des immobilisations, cession d'actif, mise en service actif, inventaire des immobilisations, dotation aux amortissements, VNC, registre des immobilisations, actif fixe, capex",
+    "x-false-positive-warning": "Localisation GPS et suivi physique des équipements sur le terrain → asset-tracking-api (Asset Tracking gère la position et l'état physique, pas la valeur comptable). Gestion des ordres de maintenance et interventions sur les machines → maintenance-work-order-api (Work Order gère la planification des travaux, pas les amortissements). Suivi des outils coupants, usures et remplacements en production → tooling-api. Gestion d'un portefeuille d'actifs financiers, titres ou investissements → portfolio-api (domaine financier, non industriel). Gestion des stocks et pièces de rechange → inventory-api (les stocks ne sont pas des immobilisations).",
+    "x-cas-usage": "Comment enregistrer une nouvelle immobilisation suite à l'achat d'une machine industrielle avec date de mise en service et valeur d'acquisition ? | Comment calculer le plan d'amortissement linéaire ou dégressif d'un équipement sur sa durée de vie comptable ? | Comment récupérer la valeur nette comptable (VNC) actuelle de l'ensemble de nos immobilisations pour la clôture annuelle ? | Quels actifs industriels ont été entièrement amortis et peuvent faire l'objet d'une cession ou d'une mise au rebut ? | Comment produire le tableau des immobilisations et des dotations annuelles pour le bilan comptable et les déclarations fiscales ?"
+  },
+  "paths": {
+    "/v1/assets-mgmt": {
+      "get": {
+        "summary": "Lister les actifs industriels immobilisés — machines, équipements, véhicules et bâtiments avec valeur comptable, VNC et statut d'amortissement",
+        "operationId": "listIndustrialAssets",
+        "tags": ["Assets"],
+        "responses": {"200": {"description": "Liste des immobilisations"}}
+      },
+      "post": {
+        "summary": "Enregistrer une nouvelle immobilisation — machine, équipement ou bâtiment avec valeur d'acquisition, date de mise en service et méthode d'amortissement choisie",
+        "operationId": "addAsset",
+        "tags": ["Assets"],
+        "responses": {"200": {"description": "Immobilisation enregistrée"}}
+      }
+    },
+    "/v1/assets-mgmt/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter le détail d'une immobilisation — valeur d'origine, amortissements cumulés, valeur nette comptable (VNC) et informations de mise en service",
+        "operationId": "getAsset",
+        "tags": ["Assets"],
+        "responses": {"200": {"description": "Détail de l'immobilisation"}}
+      },
+      "put": {
+        "summary": "Modifier une immobilisation existante — révision de valeur, enregistrement d'une cession partielle ou totale, ou mise au rebut en fin de vie",
+        "operationId": "updateAsset",
+        "tags": ["Assets"],
+        "responses": {"200": {"description": "Immobilisation mise à jour"}}
+      }
+    },
+    "/v1/assets-mgmt/{id}/depreciation": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter le plan d'amortissement d'une immobilisation — tableau des dotations annuelles, amortissements cumulés et VNC par exercice comptable",
+        "operationId": "getDepreciation",
+        "tags": ["Depreciation"],
+        "responses": {"200": {"description": "Plan d'amortissement"}}
+      },
+      "post": {
+        "summary": "Calculer l'amortissement d'une immobilisation — génère le tableau annuel en mode linéaire ou dégressif selon la durée et le taux définis",
+        "operationId": "calculateDepreciation",
+        "tags": ["Depreciation"],
+        "responses": {"200": {"description": "Amortissement calculé avec tableau annuel"}}
+      }
+    }
+  }
+}

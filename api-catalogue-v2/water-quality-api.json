@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Water Quality API",
+    "version": "1.0.0",
+    "x-api-id": "water-quality-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Qualite eau irrigation. Suivi analytique des paramètres physico-chimiques (pH, nitrates, salinité) et contrôle de conformité environnementale pour l'usage agricole. DIFFERENCE vs air-quality-api : Water Quality = eau à usage agricole et nappes, Air Quality = qualité de l'air ambiant et pollution urbaine. DIFFÉRENCE vs water-meter-api : Water Quality API analyse la pureté, la composition et la pollution de l'eau, tandis que water-meter-api mesure les volumes consommés.",
+    "x-synonymes": "qualité, eau, irrigation, analyse, potabilité, conformité, ph, agriculture, pollution, nitrate, pureté, échantillon, laboratoire, environnement, source d'eau, contaminant, composition chimique",
+    "x-false-positive-warning": "Pour relever des index de consommation d'eau ou mesurer des débits via des objets connectés, utilisez water-meter-api. Pour la qualité de l'air, utilisez air-quality-api.",
+    "x-cas-usage": "je veux consulter les paramètres de qualité de l'eau d'une source d'irrigation | je veux enregistrer les résultats d'une analyse physico-chimique effectuée en laboratoire | je veux vérifier la conformité sanitaire et environnementale d'une source d'eau | je veux suivre les niveaux de nitrates ou contaminants d'une nappe"
+  },
+  "paths": {
+    "/v1/water-quality/{sourceId}": {
+      "parameters": [
+        {
+          "name": "sourceId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le dernier bilan des paramètres physico-chimiques et de composition d'une source d'eau",
+        "operationId": "getWaterQuality",
+        "tags": [
+          "Water"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Enregistrer un nouveau rapport d'analyse de laboratoire ou échantillon de contrôle de l'eau",
+        "operationId": "addWaterAnalysis",
+        "tags": [
+          "Water"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/water-quality/{sourceId}/compliance": {
+      "parameters": [
+        {
+          "name": "sourceId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Évaluer le niveau de conformité sanitaire et réglementaire de la source d'eau pour l'irrigation des cultures",
+        "operationId": "getWaterCompliance",
+        "tags": [
+          "Compliance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

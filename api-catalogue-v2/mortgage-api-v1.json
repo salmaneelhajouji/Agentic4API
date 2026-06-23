@@ -1,0 +1,44 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Mortgage API",
+    "version": "1.0.0",
+    "x-api-id": "mortgage-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "x-successor": "mortgage-api-v2",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS mortgage-api-v2] Cette API gérait historiquement l'instruction basique et le dépôt des demandes de prêts immobiliers (v1). Elle est désormais entièrement obsolète et gelée. Toutes les intégrations bancaires et applications clientes doivent obligatoirement migrer vers la version 2 (mortgage-api-v2) pour bénéficier des fonctionnalités d'édition des tableaux d'amortissement complets et de gestion des mainlevées d'hypothèques.",
+    "x-synonymes": "prêt immobilier v1, crédit immobilier ancien, instruction de prêt immobilier, financement immobilier v1, dossier d'emprunt immobilier déprécié",
+    "x-false-positive-warning": "Attention : Cette API historique est dépréciée et restreinte à la consultation d'anciens dossiers de financement. Veiller à rediriger l'intégralité des flux applicatifs vers la version cible active `mortgage-api-v2`."
+  },
+  "paths": {
+    "/v1/mortgages": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS mortgage-api-v2 - Consulter l'index historique des demandes de prêts immobiliers de la version v1",
+        "operationId": "listMortgagesV1",
+        "tags": [
+          "Mortgages"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS mortgage-api-v2 - Soumettre un dossier de demande de financement immobilier sur l'ancien canevas v1",
+        "operationId": "applyMortgageV1",
+        "tags": [
+          "Mortgages"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

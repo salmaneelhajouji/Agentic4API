@@ -1,0 +1,165 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Risk Management API",
+    "version": "1.0.0",
+    "x-api-id": "risk-management-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Gestion risques cybersécurité. Identification, évaluation et traitement du cycle de vie des menaces informatiques. DIFFÉRENCE vs risk-scoring-api : Risk Management pilote la conformité, la remédiation et la cartographie des risques du SI (ISO 27001), tandis que Risk Scoring calcule des probabilités de risques financiers et assurantiels pour des clients.",
+    "x-synonymes": "cybersecurité, menace, vulnérabilité, impact, probabilité, mitigation, plan d'action, conformité, iso27001, audit, faille, sécurité, risque informatique, cartographie, criticité, gouvernance, rssi, incident, remédiation, heatmap",
+    "x-false-positive-warning": "Ne pas confondre avec risk-scoring-api qui évalue le risque actuariel ou credit-scoring-api dédié aux analyses de solvabilité financière bancaire.",
+    "x-cas-usage": "je veux lister les risques cyber identifiés | je veux déclarer une nouvelle vulnérabilité informatique | je veux consulter le plan de traitement d'un risque | je veux voir la cartographie de nos menaces SI"
+  },
+  "paths": {
+    "/v1/risks": {
+      "get": {
+        "summary": "Lister et filtrer tous les risques de cybersécurité identifiés",
+        "operationId": "listCyberRisks",
+        "tags": [
+          "Risks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Enregistrer et qualifier un nouveau risque ou une vulnérabilité cyber",
+        "operationId": "createRisk",
+        "tags": [
+          "Risks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/risks/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les détails, la criticité et l'impact d'un risque spécifique",
+        "operationId": "getRisk",
+        "tags": [
+          "Risks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour l'évaluation, l'impact ou le statut d'un risque informatique",
+        "operationId": "updateRisk",
+        "tags": [
+          "Risks"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/risks/{id}/treatment": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le plan d'action et les mesures de mitigation prévus pour un risque",
+        "operationId": "getRiskTreatment",
+        "tags": [
+          "Treatment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Valider et appliquer une action de traitement ou de remédiation sur le risque",
+        "operationId": "applyTreatment",
+        "tags": [
+          "Treatment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/risks/heatmap": {
+      "get": {
+        "summary": "Générer la matrice d'impact et de probabilité (heatmap) globale des risques cyber",
+        "operationId": "getRiskHeatmap",
+        "tags": [
+          "Heatmap"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

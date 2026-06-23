@@ -1,0 +1,148 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Customer Journey API",
+    "version": "1.0.0",
+    "x-api-id": "customer-journey-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Analytics & BI",
+    "description": "Cette API agrège et consolide les données comportementales multi-sources pour reconstruire le parcours client omnicanal (web, application mobile, campagnes de communication, visites en magasin). Elle permet aux équipes Data, aux Product Managers et aux analystes Business Intelligence (BI) de cartographier l'expérience utilisateur, de modéliser les entonnoirs de conversion et d'identifier précisément les points de friction et les ruptures d'expérience provoquant l'abandon de panier ou l'attrition.",
+    "x-synonymes": "parcours client, tunnel de conversion, entonnoir d'achat, point de contact, touchpoint, parcours omnicanal, attrition client, churn, point de friction, cartographie d'expérience, expérience client, analytics utilisateur, comportement d'achat, événement comportemental, tracking omnicanal, entonnoir de vente, abandon de panier, chemin de conversion",
+    "x-false-positive-warning": "Attention : Cette API analyse les flux d'événements et la reconstruction de parcours analytiques (Analytics & BI). Ne pas la confondre avec la `crm-contact-api` (qui stocke les données contractuelles et l'historique commercial de vente), la `customer-profile-api` (qui contient l'état civil et les attributs d'identité actuels de l'acheteur), ni avec un outil d'analytics brut (type Google Analytics) car elle réconcilie les données autour d'un identifiant client unifié et persistant.",
+    "x-cas-usage": "Quels points de contact (email, SMS, visite web) ce client a-t-il traversés avant de finaliser son achat ? | Où se situent les principales baisses de conversion ou points de friction dans notre entonnoir d'achat actuel ? | Comment consigner le fait qu'un utilisateur a interagi avec l'application mobile suite à une visite en magasin physique ? | Quel est le taux d'abandon mesuré spécifiquement sur l'étape de saisie des coordonnées de livraison ?"
+  },
+  "paths": {
+    "/v1/journey/{customerId}": {
+      "parameters": [
+        {
+          "name": "customerId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Reconstruire la chronologie complète des points de contact (touchpoints) omnicanaux d'un client spécifique sur une période donnée pour analyser son parcours",
+        "operationId": "getCustomerJourney",
+        "tags": [
+          "Journey"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Parcours avec tous les touchpoints"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/journey/touchpoints": {
+      "post": {
+        "summary": "Ingérer et enregistrer un nouvel événement comportemental ou point de contact (interaction web, physique ou marketing) pour enrichir le parcours du client",
+        "operationId": "recordTouchpoint",
+        "tags": [
+          "Journey"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "customer_id",
+                  "channel",
+                  "action"
+                ],
+                "properties": {
+                  "customer_id": {
+                    "type": "string"
+                  },
+                  "channel": {
+                    "type": "string",
+                    "enum": [
+                      "website",
+                      "mobile_app",
+                      "email",
+                      "sms",
+                      "store",
+                      "social"
+                    ]
+                  },
+                  "action": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Enregistré"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/journey/friction-points": {
+      "get": {
+        "summary": "Extraire les goulots d'étranglement, anomalies de navigation et taux d'abandon identifiés de manière agrégée à une étape spécifique de l'entonnoir de conversion",
+        "operationId": "getFrictionPoints",
+        "tags": [
+          "Journey"
+        ],
+        "parameters": [
+          {
+            "name": "funnel_step",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Points de friction et taux d'abandon"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

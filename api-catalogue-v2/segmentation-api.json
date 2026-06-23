@@ -1,0 +1,105 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Segmentation API",
+    "version": "1.0.0",
+    "x-api-id": "segmentation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe CRM",
+    "x-domain": "CRM & Marketing",
+    "description": "Segmentation dynamique des clients pour le ciblage marketing. Création de segments basés sur des règles comportementales (achats, visites, interactions) et des attributs démographiques (âge, localisation, type de client). Permet de lister les membres d'un segment, de modifier les règles en temps réel, et de prévisualiser l'audience estimée avant création. DIFFÉRENCE vs audience-api : Segmentation crée et gère les règles de définition des segments, Audience API pousse ces segments vers les outils d'activation (email, pub). DIFFÉRENCE vs customer-api : Segmentation groupe les clients selon des critères, Customer API gère les données individuelles de chaque client.",
+    "x-synonymes": "segmentation client, segment marketing, ciblage client, audience cible, règle segmentation, critère ciblage, segment dynamique, groupe client, profil client CRM, filtre audience, population cible, cluster client, segmentation comportementale, segmentation RFM, liste ciblée",
+    "x-false-positive-warning": "Activation des segments vers email ou pub → audience-api ou campaign-api. Données individuelles clients → customer-api. Scoring client → scoring-api.",
+    "x-cas-usage": "je veux créer un segment de clients ayant acheté plus de 3 fois ce mois | je veux voir combien de clients correspondent à mes critères avant de créer le segment | je veux modifier les règles d'un segment existant | je veux lister tous les clients membres d'un segment | je veux créer un segment de clients inactifs depuis 6 mois pour une campagne de réactivation"
+  },
+  "paths": {
+    "/v1/segments": {
+      "post": {
+        "summary": "Créer un segment dynamique avec des règles comportementales ou attributaires (opérateurs eq, gt, contains, in...)",
+        "operationId": "createSegment",
+        "tags": ["Segments"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "rules"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "rules": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "field": { "type": "string" },
+                        "operator": { "type": "string", "enum": ["eq", "ne", "gt", "lt", "contains", "in"] },
+                        "value": { "type": "string" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Segment créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "get": {
+        "summary": "Lister tous les segments configurés avec leur nom, description et nombre de membres estimé",
+        "operationId": "listSegments",
+        "tags": ["Segments"],
+        "responses": { "200": { "description": "Segments" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/segments/{id}/members": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lister les clients membres d'un segment avec leurs identifiants et données de correspondance",
+        "operationId": "getSegmentMembers",
+        "tags": ["Segments"],
+        "responses": { "200": { "description": "Membres du segment" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/segments/{id}/rules": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "put": {
+        "summary": "Mettre à jour les règles de segmentation d'un segment existant — recalcul automatique des membres",
+        "operationId": "updateSegmentRules",
+        "tags": ["Segments"],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "type": "object" } }
+          }
+        },
+        "responses": { "200": { "description": "Règles mises à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/segments/preview": {
+      "post": {
+        "summary": "Prévisualiser le nombre de clients estimés correspondant à des règles avant de créer le segment",
+        "operationId": "previewSegment",
+        "tags": ["Segments"],
+        "requestBody": {
+          "content": {
+            "application/json": { "schema": { "type": "object" } }
+          }
+        },
+        "responses": { "200": { "description": "Aperçu — nombre de membres estimé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

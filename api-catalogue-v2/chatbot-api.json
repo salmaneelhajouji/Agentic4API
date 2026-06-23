@@ -1,0 +1,93 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Chatbot API",
+    "version": "1.0.0",
+    "x-api-id": "chatbot-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Support",
+    "x-domain": "Customer Support",
+    "description": "Bot conversationnel pour le support client automatisé, couvrant la détection d'intentions (intent), l'extraction d'entités NLP et la génération de réponses automatiques. Permet de configurer des scénarios de self-service pour les demandes courantes (FAQ, remboursements, suivi de commande) et d'escalader vers un agent humain en cas de besoin. Destinée aux équipes support, intégrateurs de widgets de chat et développeurs de plateformes CRM. Réduit le volume de tickets entrants et assure une disponibilité 24/7. DIFFÉRENCE vs live-chat-api : Chatbot API gère les réponses automatiques par bot avec escalade, live-chat-api gère la messagerie temps réel entre client et agent humain. DIFFÉRENCE vs messaging-api : Chatbot API propose une logique conversationnelle avec intents et entités, messaging-api envoie des messages transactionnels sans dialogue. DIFFÉRENCE vs ticket-api : Chatbot API tente la résolution automatique avant création de ticket, ticket-api gère les tickets ouverts affectés à des agents.",
+    "x-synonymes": "chatbot, bot support, assistant virtuel, NLP intent, intention détectée, entité NLP, réponse automatique, escalade agent humain, live chat bot, bot FAQ, bot service client, agent virtuel, bot conversationnel, dialogue automatique, self-service bot, bot WhatsApp, déflexion ticket, taux résolution bot, session chatbot, traitement langage naturel",
+    "x-false-positive-warning": "DIFFÉRENCE vs live-chat-api : Chatbot API = réponses automatiques par bot avec escalade vers humain. live-chat-api = messagerie temps réel entre client et agent humain, sans logique NLP. DIFFÉRENCE vs messaging-api : Chatbot API = bot conversationnel avec intents et entités pour dialogues structurés. messaging-api = envoi de messages transactionnels (SMS, email, push) sans logique conversationnelle. DIFFÉRENCE vs ticket-api : Chatbot API = résolution automatique avant création de ticket, gestion de sessions. ticket-api = gestion des tickets support ouverts, affectation à des agents, suivi SLA. DIFFÉRENCE vs nlp-api : Chatbot API intègre NLP + gestion de session + réponses, nlp-api expose uniquement les primitives d'analyse linguistique (tokenisation, POS, NER).",
+    "x-cas-usage": "Comment mettre en place un chatbot pour répondre automatiquement aux questions FAQ de mes clients ? | Comment configurer un intent pour reconnaître les demandes de remboursement et retourner une réponse template ? | Comment transférer une conversation bot vers un agent humain lorsque le bot ne sait pas répondre ? | Quels intents sont actuellement configurés dans mon chatbot et quels exemples d'entraînement utilisent-ils ? | Comment intégrer un bot conversationnel dans mon widget de support et gérer les sessions utilisateurs ?"
+  },
+  "paths": {
+    "/v1/chatbot/message": {
+      "post": {
+        "summary": "Envoyer un message texte au chatbot, obtenir l'intent détecté, les entités extraites et la réponse automatique générée",
+        "operationId": "chatbotMessage",
+        "tags": ["Chatbot"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["message", "session_id"],
+                "properties": {
+                  "message": {"type": "string"},
+                  "session_id": {"type": "string"},
+                  "user_id": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Réponse bot + intent détecté"}}
+      }
+    },
+    "/v1/chatbot/intents": {
+      "get": {
+        "summary": "Lister tous les intents configurés (FAQ, remboursement, livraison, etc.) avec leurs exemples d'entraînement et templates de réponse",
+        "operationId": "listIntents",
+        "tags": ["Intents"],
+        "responses": {"200": {"description": "Intents configurés"}}
+      },
+      "post": {
+        "summary": "Créer un nouvel intent en fournissant un nom, des phrases d'entraînement NLP et un template de réponse automatique associé",
+        "operationId": "createIntent",
+        "tags": ["Intents"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "examples"],
+                "properties": {
+                  "name": {"type": "string"},
+                  "examples": {"type": "array", "items": {"type": "string"}},
+                  "response_template": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Intent créé"}}
+      }
+    },
+    "/v1/chatbot/escalate": {
+      "post": {
+        "summary": "Escalader une session chatbot active vers un agent humain via live-chat-api, en précisant la raison du transfert",
+        "operationId": "escalateToHuman",
+        "tags": ["Chatbot"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["session_id"],
+                "properties": {
+                  "session_id": {"type": "string"},
+                  "reason": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Transfert vers agent humain initié"}}
+      }
+    }
+  }
+}

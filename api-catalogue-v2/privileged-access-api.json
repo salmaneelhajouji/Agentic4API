@@ -1,0 +1,120 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Privileged Access API",
+    "version": "1.0.0",
+    "x-api-id": "privileged-access-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Cette API administre et sécurise la gestion des accès à privilèges (PAM - Privileged Access Management) sur l'infrastructure sensible de l'entreprise. Elle pilote le coffre-fort de mots de passe, contrôle les procédures d'emprunt (checkout) et de remise (checkin) de secrets d'administration, supervise l'ouverture de sessions temporaires et consigne l'enregistrement complet de ces activités pour répondre aux audits de conformité de cybersécurité.",
+    "x-synonymes": "gestion des accès privilégiés, PAM, coffre-fort de secrets d'administration, comptes à privilèges, emprunt de privilège, session d'administration sécurisée, enregistrement de session technique, checkout de credential, checkin de credential, sécurisation de comptes à privilèges, gestion des super-utilisateurs, traçabilité cyber",
+    "x-false-positive-warning": "Attention : Cette API régit de façon exclusive le contrôle d'accès, la rotation et l'enregistrement vidéo/textuel des comptes à hauts privilèges d'administration système (PAM). Ne pas la confondre avec la `identity-governance-api` (gestion du cycle de vie RH et des rôles macro des comptes de collaborateurs standard) ni avec la `permission-api`.",
+    "x-cas-usage": "Comment emprunter temporairement un identifiant root ou administrateur du coffre-fort PAM pour une maintenance ? | Comment initialiser et démarrer une session d'administration privilégiée entièrement enregistrée et auditée ? | Où parcourir l'historique et récupérer les journaux ou enregistrements des sessions de super-utilisateurs ?"
+  },
+  "paths": {
+    "/v1/pam/credentials": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des comptes privilégiés et identifiants d'administration référencés dans le coffre-fort",
+        "operationId": "listPrivilegedCredentials",
+        "tags": [
+          "Credentials"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et chiffrer un nouveau compte d'infrastructure ou secret d'administration dans le coffre-fort PAM",
+        "operationId": "addPrivilegedCredential",
+        "tags": [
+          "Credentials"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/pam/credentials/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Effectuer l'emprunt temporaire (checkout) d'un identifiant à privilèges avec enregistrement de l'auteur",
+        "operationId": "checkoutCredential",
+        "tags": [
+          "Credentials"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Effectuer la remise formelle (checkin) d'un identifiant à privilèges pour consigner la fin d'usage et forcer sa rotation",
+        "operationId": "checkinCredential",
+        "tags": [
+          "Credentials"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/pam/sessions": {
+      "get": {
+        "summary": "Lister, suivre et auditer l'ensemble des sessions d'administration à privilèges actuellement actives ou passées",
+        "operationId": "listPAMSessions",
+        "tags": [
+          "Sessions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Initialiser et ouvrir une nouvelle session d'administration privilégiée sécurisée avec isolation réseau",
+        "operationId": "startPAMSession",
+        "tags": [
+          "Sessions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/pam/recordings": {
+      "get": {
+        "summary": "Parcourir et récupérer les enregistrements complets et journaux d'activité des sessions d'administration closes",
+        "operationId": "listSessionRecordings",
+        "tags": [
+          "Recordings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

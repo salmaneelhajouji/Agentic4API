@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Car Rental API",
+    "version": "1.0.0",
+    "x-api-id": "car-rental-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "API de location de véhicules couvrant l'ensemble du cycle de réservation : recherche de véhicules disponibles par date, lieu et catégorie, création et confirmation de réservation, modification ou annulation, et récupération du contrat de location avec conditions d'assurance et caution. Utilisée par les agences de voyage, plateformes de comparaison, applications de mobilité touristique et opérateurs de tourisme pour proposer une expérience de location fluide à leurs clients. DIFFÉRENCE vs fleet-api-v4 : Car Rental API = location courte durée pour particuliers et touristes ; fleet-api-v4 = gestion d'une flotte de véhicules d'entreprise avec missions et conducteurs. DIFFÉRENCE vs vehicle-api-v2 : Car Rental API = réservation et contrat de location ; vehicle-api-v2 = données techniques du véhicule. DIFFÉRENCE vs ride-hailing-api : Car Rental API = location avec conduite personnelle ; ride-hailing-api = transport avec chauffeur à la demande.",
+    "x-synonymes": "location voiture, location véhicule, louer une voiture, voiture de location, réservation véhicule, disponibilité voiture, tarif location, contrat location, agence location, catégorie véhicule, berline location, SUV location, utilitaire location, annulation location, modification réservation location, pick-up location, drop-off location, kilométrage illimité, assurance location, caution location",
+    "x-false-positive-warning": "DIFFÉRENCE vs fleet-api-v4 : Car Rental API = location courte durée pour particuliers et touristes ; fleet-api-v4 = gestion d'une flotte de véhicules d'entreprise avec missions, conducteurs et maintenance. DIFFÉRENCE vs vehicle-api-v2 : Car Rental API = réservation et gestion du contrat de location ; vehicle-api-v2 = catalogue et données techniques des véhicules (modèle, motorisation, options). DIFFÉRENCE vs ride-hailing-api : Car Rental API = location avec conduite personnelle sur une période définie ; ride-hailing-api = transport avec chauffeur à la demande, sans conduite par le client. DIFFÉRENCE vs car-sharing-api (si existante) : Car Rental API = location classique en agence avec contrat ; car-sharing = usage partagé à l'heure ou à la minute via application mobile.",
+    "x-cas-usage": "Comment rechercher les voitures disponibles à l'aéroport de Nice du 15 au 20 juillet ? | Comment réserver un SUV pour une semaine avec prise en charge à Paris et restitution à Lyon ? | Comment annuler ou modifier une réservation de location de voiture existante ? | Comment récupérer le contrat de location d'un client avec les conditions d'assurance et de caution ? | Quels sont les véhicules disponibles dans une catégorie donnée pour une date et un lieu précis ?"
+  },
+  "paths": {
+    "/v1/car-rental/vehicles": {
+      "get": {
+        "summary": "Rechercher les véhicules disponibles à la location en filtrant par date de prise en charge, lieu de retrait et catégorie de véhicule (berline, SUV, utilitaire)",
+        "operationId": "searchAvailableVehicles",
+        "tags": ["Vehicles"],
+        "responses": {
+          "200": {"description": "Véhicules disponibles avec tarifs"}
+        }
+      }
+    },
+    "/v1/car-rental/bookings": {
+      "get": {
+        "summary": "Lister toutes les réservations de location d'un client — statuts en cours, à venir et terminées, avec dates et véhicule associé",
+        "operationId": "listCarBookings",
+        "tags": ["Bookings"],
+        "responses": {
+          "200": {"description": "Réservations location"}
+        }
+      },
+      "post": {
+        "summary": "Créer une réservation de véhicule de location en précisant les dates, le lieu de prise en charge, la catégorie de véhicule et les options d'assurance",
+        "operationId": "bookVehicle",
+        "tags": ["Bookings"],
+        "responses": {
+          "200": {"description": "Réservation confirmée"}
+        }
+      }
+    },
+    "/v1/car-rental/bookings/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Obtenir le détail complet d'une réservation de location — véhicule attribué, dates, lieu de retrait et restitution, et montant total",
+        "operationId": "getCarBooking",
+        "tags": ["Bookings"],
+        "responses": {
+          "200": {"description": "Détail réservation"}
+        }
+      },
+      "put": {
+        "summary": "Modifier une réservation de location existante — changer les dates de prise en charge ou de restitution, le lieu ou la catégorie de véhicule",
+        "operationId": "modifyCarBooking",
+        "tags": ["Bookings"],
+        "responses": {
+          "200": {"description": "Réservation modifiée"}
+        }
+      },
+      "delete": {
+        "summary": "Annuler une réservation de location de voiture et déclencher le remboursement selon la politique d'annulation applicable",
+        "operationId": "cancelCarBooking",
+        "tags": ["Bookings"],
+        "responses": {
+          "200": {"description": "Réservation annulée"}
+        }
+      }
+    },
+    "/v1/car-rental/bookings/{id}/contract": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le contrat de location associé à une réservation — conditions générales, couverture assurance, montant de la caution et modalités de restitution",
+        "operationId": "getRentalContract",
+        "tags": ["Contract"],
+        "responses": {
+          "200": {"description": "Contrat de location"}
+        }
+      }
+    }
+  }
+}

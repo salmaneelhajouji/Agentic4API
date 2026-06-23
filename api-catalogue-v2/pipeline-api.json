@@ -1,0 +1,86 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pipeline API",
+    "version": "1.0.0",
+    "x-api-id": "pipeline-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Orchestration et monitoring des pipelines de données. Permet de créer, configurer et déclencher des pipelines ETL/ELT, de consulter l historique des exécutions et d annuler un run en cours. Utilisé par les équipes data engineering pour automatiser les flux de données entre systèmes sources et destinations.",
+    "x-synonymes": "pipeline données, ETL extract transform load, ELT pipeline, orchestration données, workflow données, run pipeline, exécution pipeline, déclencher pipeline, planification pipeline, DAG airflow style, job données, ingestion données, transformation données, pipeline batch, pipeline streaming, monitoring pipeline, échec pipeline, log exécution, dépendance tâches, data engineering pipeline",
+    "x-false-positive-warning": "DIFFÉRENCE vs analytics-api-v3 : Pipeline API = orchestration flux de données ETL. analytics-api-v3 = requêtes et métriques analytiques. DIFFÉRENCE vs log-api : Pipeline API = exécution et monitoring des pipelines. log-api = centralisation des logs applicatifs. DIFFÉRENCE vs ci-cd-api : Pipeline API = pipelines de données. ci-cd-api = pipelines d intégration et déploiement continu.",
+    "x-cas-usage": "je veux créer un pipeline ETL qui synchronise nos données CRM vers notre datawarehouse | je veux déclencher manuellement un pipeline d ingestion de données | je veux voir le statut d un run de pipeline en cours | je veux annuler un pipeline qui prend trop de temps | je veux consulter l historique des exécutions d un pipeline pour détecter des échecs"
+  },
+  "paths": {
+    "/v1/pipelines": {
+      "get": {
+        "summary": "Lister les pipelines de données — ETL, ELT et leurs statuts",
+        "operationId": "listPipelines",
+        "tags": ["Pipelines"],
+        "responses": {"200": {"description": "Pipelines"}}
+      },
+      "post": {
+        "summary": "Créer un pipeline de données — source, transformations et destination",
+        "operationId": "createPipeline",
+        "tags": ["Pipelines"],
+        "responses": {"200": {"description": "Pipeline créé"}}
+      }
+    },
+    "/v1/pipelines/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un pipeline — configuration, source et destination",
+        "operationId": "getPipeline",
+        "tags": ["Pipelines"],
+        "responses": {"200": {"description": "Détail pipeline"}}
+      },
+      "put": {
+        "summary": "Modifier un pipeline — configuration ou planification",
+        "operationId": "updatePipeline",
+        "tags": ["Pipelines"],
+        "responses": {"200": {"description": "Pipeline modifié"}}
+      },
+      "delete": {
+        "summary": "Supprimer un pipeline de données",
+        "operationId": "deletePipeline",
+        "tags": ["Pipelines"],
+        "responses": {"200": {"description": "Pipeline supprimé"}}
+      }
+    },
+    "/v1/pipelines/{id}/runs": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Historique des exécutions d un pipeline — durées, statuts et erreurs",
+        "operationId": "getPipelineRuns",
+        "tags": ["Runs"],
+        "responses": {"200": {"description": "Exécutions pipeline"}}
+      },
+      "post": {
+        "summary": "Déclencher manuellement un run de pipeline",
+        "operationId": "triggerRun",
+        "tags": ["Runs"],
+        "responses": {"200": {"description": "Run déclenché"}}
+      }
+    },
+    "/v1/pipelines/{id}/runs/{runId}": {
+      "parameters": [
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}},
+        {"name": "runId", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Statut d un run — en cours, complété, échoué avec logs",
+        "operationId": "getRunStatus",
+        "tags": ["Runs"],
+        "responses": {"200": {"description": "Statut run"}}
+      },
+      "delete": {
+        "summary": "Annuler un run de pipeline en cours",
+        "operationId": "cancelRun",
+        "tags": ["Runs"],
+        "responses": {"200": {"description": "Run annulé"}}
+      }
+    }
+  }
+}

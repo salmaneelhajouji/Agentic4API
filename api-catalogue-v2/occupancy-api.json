@@ -1,0 +1,44 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Occupancy API",
+    "version": "1.0.0",
+    "x-api-id": "occupancy-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Taux d occupation et disponibilités d un portefeuille immobilier. Permet de consulter les vacances locatives actuelles, d obtenir des prévisions d occupation et de recevoir des alertes sur les biens vacants depuis trop longtemps. Utilisé par les gestionnaires d actifs immobiliers et property managers pour piloter la performance du portefeuille.",
+    "x-synonymes": "taux occupation, vacance locative, taux vacance, biens disponibles, unités vacantes, prévisions occupation, forecasting immobilier, KPI immobilier, portefeuille locatif, vacance commerciale, taux remplissage, bien non loué, occupation logement, vacance bureau, vacance entrepôt, alerte vacance prolongée, rendement locatif occupation, bail actif, occupation prévue, pilotage portefeuille",
+    "x-false-positive-warning": "DIFFÉRENCE vs lease-api-v2 : Occupancy API = métriques et taux d occupation du portefeuille. lease-api-v2 = contrats de bail individuels. DIFFÉRENCE vs property-api-v3 : Occupancy API = indicateurs d occupation. property-api-v3 = données du bien immobilier lui-même. DIFFÉRENCE vs building-automation-api : Occupancy API = occupation locative. building-automation-api = capteurs d occupation physique du bâtiment.",
+    "x-cas-usage": "je veux voir quels biens de mon portefeuille sont actuellement vacants | je veux prévoir le taux d occupation de mon portefeuille dans 6 mois | je veux être alerté quand un bien est vacant depuis plus de 3 mois | je veux calculer le taux d occupation global de mon parc immobilier | je veux identifier les biens avec la vacance locative la plus longue"
+  },
+  "paths": {
+    "/v1/occupancy/{portfolioId}": {
+      "parameters": [{"name": "portfolioId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Vacances locatives d un portefeuille — biens disponibles et durée de vacance",
+        "operationId": "getVacancies",
+        "tags": ["Occupancy"],
+        "responses": {"200": {"description": "Vacances locatives"}}
+      }
+    },
+    "/v1/occupancy/{portfolioId}/forecast": {
+      "parameters": [{"name": "portfolioId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Prévisions d occupation d un portefeuille — taux prévus sur 3, 6 et 12 mois",
+        "operationId": "getOccupancyForecast",
+        "tags": ["Forecast"],
+        "responses": {"200": {"description": "Prévisions occupation"}}
+      }
+    },
+    "/v1/occupancy/alerts": {
+      "get": {
+        "summary": "Alertes vacance prolongée — biens vacants au-delà du seuil configuré",
+        "operationId": "getOccupancyAlerts",
+        "tags": ["Alerts"],
+        "responses": {"200": {"description": "Alertes vacance"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Livestock API",
+    "version": "1.0.0",
+    "x-api-id": "livestock-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "x-successor": "livestock-api-v2",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS livestock-api-v2] Cette API gérait historiquement le registre d'inventaire linéaire initial des animaux du cheptel de l'exploitation (v1). Elle est obsolète et gelée ; toutes les applications agricoles de gestion d'élevage doivent migrer vers la version 2 (livestock-api-v2) pour intégrer l'identification individuelle obligatoire, le suivi de santé électronique et la traçabilité des mouvements conformes aux critères de l'INAO.",
+    "x-synonymes": "gestion de cheptel v1, registre des animaux historique, suivi de troupeau déprécié, inventaire d'élevage ancien, fiche bovine v1, bétail agricole, identification d'animaux v1",
+    "x-false-positive-warning": "Attention : Cette API historique est dépréciée et restreinte à de simples consultations d'inventaires figés. Rediriger immédiatement vos flux applicatifs vers la version cible active `livestock-api-v2`."
+  },
+  "paths": {
+    "/v1/livestock": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS livestock-api-v2 - Consulter la liste et l'index historique des animaux du cheptel v1",
+        "operationId": "listLivestockV1",
+        "tags": [
+          "Livestock"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

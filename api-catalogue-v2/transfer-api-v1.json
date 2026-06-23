@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Transfer API",
+    "version": "1.0.0",
+    "x-api-id": "transfer-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "DEPRECATED — Version 1 de l'API de virements bancaires. Ne plus utiliser. Migrer vers transfer-api-v2 qui apporte le SEPA instantané, SWIFT international, la validation IBAN et le calcul des frais.",
+    "x-successor": "transfer-api-v2",
+    "x-synonymes": "virement v1 deprecated",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser transfer-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers transfer-api-v2."
+  },
+  "paths": {
+    "/v1/transfers": {
+      "post": {
+        "summary": "[DEPRECATED] Effectuer un virement — utiliser transfer-api-v2",
+        "operationId": "createTransferV1",
+        "tags": ["Transfers"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

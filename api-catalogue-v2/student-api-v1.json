@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Student API",
+    "version": "1.0.0",
+    "x-api-id": "student-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "DEPRECATED — Version 1 de l'API de gestion des étudiants. Ne plus utiliser. Migrer vers student-api-v2 qui apporte le suivi de progression détaillée et la gestion des certificats.",
+    "x-successor": "student-api-v2",
+    "x-synonymes": "étudiant v1 deprecated",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser student-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers student-api-v2."
+  },
+  "paths": {
+    "/v1/students": {
+      "get": {
+        "summary": "[DEPRECATED] Lister les étudiants — utiliser student-api-v2",
+        "operationId": "listStudentsV1",
+        "tags": ["Students"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

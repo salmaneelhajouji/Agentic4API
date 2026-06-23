@@ -1,0 +1,180 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Time Tracking API",
+    "version": "1.0.0",
+    "x-api-id": "time-tracking-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe RH",
+    "x-domain": "Human Resources",
+    "description": "Suivi du temps de travail. Enregistrement des données de présence (pointage), décompte des heures supplémentaires et édition des rapports d'activité réglementaires pour les RH. DIFFÉRENCE vs leave-management-api : Time Tracking API suit les heures réelles travaillées et la présence physique ou virtuelle, tandis que leave-management-api gère les absences, les congés payés et arrêts maladie.",
+    "x-synonymes": "pointage, feuille de temps, heures de travail, présence, heures supplémentaires, rh, planning, badgeuse, chrono, déclaration d'activité, temps passé, ressources humaines, salarié, badgeage, relevé d'heures, présence collaborateur",
+    "x-false-positive-warning": "Pour poser des congés, RTT ou déclarer des arrêts maladie, utilisez l'interface leave-management-api.",
+    "x-cas-usage": "je veux enregistrer mon heure d'arrivée via la badgeuse virtuelle | je veux pointer mon heure de fin de journée de travail | je veux consulter l'historique de présence d'un employé | je veux obtenir le résumé mensuel des heures supplémentaires"
+  },
+  "paths": {
+    "/v1/time/clock-in": {
+      "post": {
+        "summary": "Enregistrer l'heure et la localisation de début de service d'un salarié (badgeage arrivée)",
+        "operationId": "clockIn",
+        "tags": [
+          "TimeTracking"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "employee_id"
+                ],
+                "properties": {
+                  "employee_id": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pointage enregistré"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/time/clock-out": {
+      "post": {
+        "summary": "Enregistrer l'heure de fin de service d'un collaborateur (badgeage départ)",
+        "operationId": "clockOut",
+        "tags": [
+          "TimeTracking"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "employee_id"
+                ],
+                "properties": {
+                  "employee_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Départ enregistré"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/time/{employeeId}/entries": {
+      "parameters": [
+        {
+          "name": "employeeId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la liste chronologique des entrées et pointages de temps de travail pour un employé",
+        "operationId": "getTimeEntries",
+        "tags": [
+          "TimeTracking"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Entrées"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/time/{employeeId}/summary": {
+      "parameters": [
+        {
+          "name": "employeeId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Générer un bilan consolidé des heures travaillées normales et supplémentaires sur une période donnée",
+        "operationId": "getTimeSummary",
+        "tags": [
+          "TimeTracking"
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "2026-04"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Résumé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

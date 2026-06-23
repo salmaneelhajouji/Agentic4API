@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Premium Calculation API",
+    "version": "1.0.0",
+    "x-api-id": "premium-calculation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Cette API centralise et formalise les calculs de tarification actuarielle indispensables à l'évaluation des primes d'assurance. Elle permet de confronter des profils de risques et des choix de garanties pour calculer en temps réel le montant exact des cotisations de base, de comparer les tarifs de plusieurs formules commerciales, et de suivre l'historique des primes appliquées à une police ou à un assuré spécifique.",
+    "x-synonymes": "calcul de prime d'assurance, tarification actuarielle, prime commerciale assurance, cotisation d'assurance, évaluation du risque assuré, comparaison d'offres tarifaires, tarification de police, historique des cotisations, simulation de tarif d'assurance, calcul du coût de contrat",
+    "x-false-positive-warning": "Attention : Cette API calcule exclusivement les cotisations commerciales de départ et les primes d'assurance basées sur des modèles de risques statistiques (Premium Calculation). Ne pas la confondre avec la `excess-api` (dédiée au calcul des franchises restant à la charge de l'assuré lors du règlement d'un sinistre) ni avec la `policy-api-v3`.",
+    "x-cas-usage": "Comment évaluer le montant exact de la prime annuelle pour un nouveau contrat d'habitation ? | Comment comparer les tarifs et primes de trois formules de garanties pour éditer un devis commercial ? | Où retrouver l'historique des évolutions tarifaires de primes appliquées à un bénéficiaire ?"
+  },
+  "paths": {
+    "/v1/premium/calculate": {
+      "post": {
+        "summary": "Calculer le montant de la prime d'assurance et de la cotisation à l'aide des règles actuarielles et du profil de risque soumis",
+        "operationId": "calculatePremium",
+        "tags": [
+          "Premium"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/premium/compare": {
+      "post": {
+        "summary": "Comparer simultanément les tarifs et les montants de primes de plusieurs offres ou formules d'assurance",
+        "operationId": "comparePremiums",
+        "tags": [
+          "Compare"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/premium/{policyId}": {
+      "parameters": [
+        {
+          "name": "policyId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le montant exact et le détail structurel de la prime d'assurance actuellement appliquée à une police d'assurance",
+        "operationId": "getPolicyPremium",
+        "tags": [
+          "Premium"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/premium/history/{clientId}": {
+      "parameters": [
+        {
+          "name": "clientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique complet des cotisations et l'évolution tarifaire des primes d'assurance payées par le client",
+        "operationId": "getPremiumHistory",
+        "tags": [
+          "History"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

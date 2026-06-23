@@ -1,0 +1,98 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Broker API",
+    "version": "1.0.0",
+    "x-api-id": "broker-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "API de gestion des courtiers et apporteurs d'affaires dans le secteur de l'assurance. Couvre l'enregistrement des intermédiaires (mandats, agréments ORIAS), le calcul et le suivi des commissions sur contrats apportés, ainsi que la consultation du portefeuille clients de chaque courtier. Destinée aux compagnies d'assurance, gestionnaires de réseaux de distribution et directions partenariats pour piloter leurs intermédiaires réglementés. Permet également de gérer les taux de commissionnement et de suivre la performance commerciale des apporteurs. DIFFÉRENCE vs insurance-contract-api : Broker API = gestion des courtiers et leurs commissions. insurance-contract-api = gestion des contrats d'assurance eux-mêmes. DIFFÉRENCE vs partner-api : Broker API = courtiers et apporteurs spécifiques au secteur assurance avec commissions réglementées. partner-api = partenaires commerciaux génériques. DIFFÉRENCE vs commission-api : Broker API = commissions spécifiques aux courtiers assurance avec mandats. commission-api = calcul générique de commissions commerciales.",
+    "x-synonymes": "courtier assurance, apporteur affaires, intermédiaire assurance, commission courtier, mandat courtier, portefeuille courtier, réseau distribution assurance, IOBSP, agent général assurance, courtage assurance, rémunération courtier, taux commission assurance, contrat apporté, producteur assurance, partenaire assurance, résiliation mandat, agrément courtier, ORIAS courtier, réseau courtage, commissionnement assurance",
+    "x-false-positive-warning": "DIFFÉRENCE vs insurance-contract-api : Broker API = gestion des courtiers et leurs commissions. insurance-contract-api = gestion des contrats d'assurance eux-mêmes. DIFFÉRENCE vs partner-api : Broker API = courtiers et apporteurs spécifiques au secteur assurance avec commissions réglementées. partner-api = partenaires commerciaux génériques. DIFFÉRENCE vs commission-api : Broker API = commissions spécifiques aux courtiers assurance avec mandats réglementés. commission-api = calcul générique de commissions commerciales sans dimension réglementaire. DIFFÉRENCE vs agent-api : Broker API = courtiers indépendants apporteurs d'affaires multi-compagnies. agent-api = agents exclusifs liés à une seule compagnie.",
+    "x-cas-usage": "Comment enregistrer un nouveau courtier partenaire avec son agrément ORIAS dans notre réseau de distribution ? | Comment calculer les commissions dues à un apporteur d'affaires sur les contrats souscrits sur une période donnée ? | Comment consulter le portefeuille clients actif d'un courtier avec les primes et les dates de renouvellement ? | Quels sont les taux de commission appliqués à chaque courtier et comment les modifier ? | Comment lister tous les courtiers actifs de notre réseau avec leur statut d'agrément ORIAS ?"
+  },
+  "paths": {
+    "/v1/brokers": {
+      "get": {
+        "summary": "Lister tous les courtiers et apporteurs d'affaires actifs avec leurs agréments ORIAS, taux de commission et statut réglementaire",
+        "operationId": "listBrokers",
+        "tags": ["Brokers"],
+        "responses": {
+          "200": {"description": "Liste des courtiers actifs"}
+        }
+      },
+      "post": {
+        "summary": "Enregistrer un nouveau courtier ou apporteur d'affaires dans le réseau avec son mandat, son numéro d'agrément ORIAS et ses conditions de commissionnement",
+        "operationId": "addBroker",
+        "tags": ["Brokers"],
+        "responses": {
+          "200": {"description": "Courtier enregistré avec succès"}
+        }
+      }
+    },
+    "/v1/brokers/{id}": {
+      "parameters": [
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Récupérer le profil complet d'un courtier — coordonnées, numéro d'agrément ORIAS, taux de commission et statut du mandat",
+        "operationId": "getBroker",
+        "tags": ["Brokers"],
+        "responses": {
+          "200": {"description": "Profil courtier"},
+          "404": {"description": "Courtier non trouvé"}
+        }
+      },
+      "put": {
+        "summary": "Modifier les informations d'un courtier existant — coordonnées, taux de commission ou renouvellement du mandat d'intermédiation",
+        "operationId": "updateBroker",
+        "tags": ["Brokers"],
+        "responses": {
+          "200": {"description": "Courtier mis à jour avec succès"},
+          "404": {"description": "Courtier non trouvé"},
+          "400": {"description": "Données invalides"}
+        }
+      }
+    },
+    "/v1/brokers/{id}/commission": {
+      "parameters": [
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Consulter le détail des commissions d'un courtier — contrats apportés, montants dus et historique de versements sur la période",
+        "operationId": "getBrokerCommission",
+        "tags": ["Commission"],
+        "responses": {
+          "200": {"description": "Commissions du courtier"},
+          "404": {"description": "Courtier non trouvé"}
+        }
+      },
+      "post": {
+        "summary": "Calculer et générer les commissions dues à un courtier sur une période donnée en fonction des contrats apportés et des taux négociés",
+        "operationId": "calculateCommission",
+        "tags": ["Commission"],
+        "responses": {
+          "200": {"description": "Commissions calculées et enregistrées"},
+          "400": {"description": "Données invalides ou période incorrecte"},
+          "404": {"description": "Courtier non trouvé"}
+        }
+      }
+    },
+    "/v1/brokers/{id}/portfolio": {
+      "parameters": [
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Consulter le portefeuille clients d'un courtier — contrats actifs par ligne de produit, primes en cours et échéances de renouvellement",
+        "operationId": "getBrokerPortfolio",
+        "tags": ["Portfolio"],
+        "responses": {
+          "200": {"description": "Portefeuille client du courtier"},
+          "404": {"description": "Courtier non trouvé"}
+        }
+      }
+    }
+  }
+}

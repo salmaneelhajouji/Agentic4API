@@ -1,0 +1,151 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Escrow API",
+    "version": "1.0.0",
+    "x-api-id": "escrow-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "Cette API régit le système de paiements sous séquestre sécurisé (Escrow) destiné aux plateformes de type Marketplace. Elle permet d'isoler et de consigner les fonds des transactions commerciales dès la commande de l'acheteur, d'en suivre le statut financier, et de libérer automatiquement l'argent vers le compte bancaire du vendeur une fois la livraison physique du colis validée par le client. Elle embarque également les fonctionnalités nécessaires au remboursement de l'acheteur en cas de litige.",
+    "x-synonymes": "paiement sous séquestre, compte séquestre, escrow général, rétention de fonds, consignation financière, libération de fonds, tiers de confiance financier, sécurisation des transactions, marketplace payment, remboursement acheteur, litige commercial marketplace, déblocage de paiement, fonds bloqués temporaires, intermédiaire de paiement, garantie transactionnelle retail",
+    "x-false-positive-warning": "Attention : Cette API gère les transactions et la retenue de fonds intermédiaires de type commerce en ligne et e-commerce (Finance). Ne pas la confondre avec la `escrow-real-estate-api` (exclusivement structurée pour les transactions notariales et les dépôts de garantie d'acquisitions de biens immobiliers).",
+    "x-cas-usage": "Comment ouvrir un compte séquestre sécurisé pour figer le paiement d'une commande marketplace ? | Où interroger le solde, l'état d'avancement et les conditions de libération des fonds d'un séquestre ? | Comment valider et débloquer les fonds pour créditer le portefeuille du vendeur suite à la bonne réception du colis ? | Quelle est la procédure pour exécuter un remboursement de l'acheteur suite à l'arbitrage d'un litige ?"
+  },
+  "paths": {
+    "/v1/escrow": {
+      "post": {
+        "summary": "Créer et provisionner un nouveau compte séquestre sécurisé pour retenir les fonds d'une transaction marketplace",
+        "operationId": "createEscrow",
+        "tags": [
+          "Escrow"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "order_id",
+                  "amount",
+                  "seller_id"
+                ],
+                "properties": {
+                  "order_id": {
+                    "type": "string"
+                  },
+                  "amount": {
+                    "type": "number"
+                  },
+                  "seller_id": {
+                    "type": "string"
+                  },
+                  "release_condition": {
+                    "type": "string",
+                    "enum": [
+                      "delivery_confirmed",
+                      "buyer_accepts",
+                      "auto_7d"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Séquestre créé"
+          }
+        }
+      }
+    },
+    "/v1/escrow/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le solde, les conditions de déblocage et le statut de validation d'un compte séquestre commercial",
+        "operationId": "getEscrow",
+        "tags": [
+          "Escrow"
+        ],
+        "responses": {
+          "200": {
+            "description": "Séquestre"
+          }
+        }
+      }
+    },
+    "/v1/escrow/{id}/release": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Autoriser et libérer définitivement les fonds séquestrés en faveur du portefeuille financier du vendeur",
+        "operationId": "releaseEscrow",
+        "tags": [
+          "Escrow"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fonds libérés"
+          }
+        }
+      }
+    },
+    "/v1/escrow/{id}/refund": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Déclencher le remboursement intégral des fonds séquestrés à l'acheteur en cas de résolution de litige",
+        "operationId": "refundEscrow",
+        "tags": [
+          "Escrow"
+        ],
+        "responses": {
+          "200": {
+            "description": "Remboursé"
+          }
+        }
+      }
+    }
+  }
+}

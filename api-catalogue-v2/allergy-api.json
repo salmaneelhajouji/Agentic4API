@@ -1,0 +1,105 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Allergy API",
+    "version": "1.0.0",
+    "x-api-id": "allergy-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Registre centralisé des allergies et intolérances médicamenteuses et alimentaires des patients, couvrant la déclaration, la consultation, la suppression et la vérification automatique du risque allergique avant toute prescription. Permet aux professionnels de santé (médecins, infirmières, pharmaciens) de sécuriser le parcours de soin en détectant en temps réel les contre-indications allergiques. Génère des alertes automatiques lorsqu'un médicament prescrit est incompatible avec le terrain allergique connu du patient. DIFFÉRENCE vs drug-interaction-api : Allergy API vérifie les allergies connues du patient à un médicament spécifique ; drug-interaction-api vérifie les interactions entre deux médicaments prescrits simultanément. DIFFÉRENCE vs medical-record-api : Allergy API est un registre spécialisé allergies avec vérification automatique ; medical-record-api couvre l'ensemble du dossier médical patient tous antécédents confondus. DIFFÉRENCE vs prescription-api-v2 : Allergy API vérifie la compatibilité allergie avant création de l'ordonnance ; prescription-api-v2 crée et gère l'ordonnance médicale.",
+    "x-synonymes": "allergie patient, intolérance médicamenteuse, allergie médicament, contre-indication allergie, allergie pénicilline, allergie alimentaire, allergie latex, dossier allergie, registre allergies, alerte allergie, risque allergique, anaphylaxie, hypersensibilité, réaction allergique, allergie antibiotique, vérification allergie avant prescription, terrain allergique, antécédents allergiques, profil allergique patient, incompatibilité médicamenteuse allergie",
+    "x-false-positive-warning": "DIFFÉRENCE vs drug-interaction-api : Allergy API = vérification des allergies connues du patient à un médicament. drug-interaction-api = vérification des interactions entre deux médicaments prescrits simultanément. DIFFÉRENCE vs medical-record-api : Allergy API = registre spécialisé allergies avec vérification automatique. medical-record-api = dossier médical complet du patient tous antécédents confondus. DIFFÉRENCE vs prescription-api-v2 : Allergy API = vérifie la compatibilité allergie avant de créer l'ordonnance. prescription-api-v2 = crée et gère l'ordonnance médicale. DIFFÉRENCE vs immunology-api (si existante) : Allergy API = gestion opérationnelle des allergies pour sécuriser les prescriptions. immunology-api = données immunologiques et résultats de tests allergologiques détaillés.",
+    "x-cas-usage": "Comment enregistrer qu'un patient est allergique à la pénicilline pour déclencher des alertes automatiques lors des prescriptions ? | Comment vérifier si un patient est allergique à un médicament avant de le prescrire ? | Comment récupérer la liste complète des allergies et intolérances connues d'un patient ? | Comment supprimer une allergie du dossier patient lorsqu'elle n'est plus confirmée ou résolue ? | Quels médicaments sont contre-indiqués pour un patient avec un terrain allergique documenté ?"
+  },
+  "paths": {
+    "/v1/allergies/{patientId}": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la liste complète des allergies et intolérances médicamenteuses et alimentaires connues d'un patient identifié",
+        "operationId": "getAllergies",
+        "tags": ["Allergies"],
+        "responses": {
+          "200": {
+            "description": "Liste des allergies du patient"
+          },
+          "404": {
+            "description": "Patient non trouvé"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer une nouvelle allergie ou intolérance dans le dossier patient avec type, substance et niveau de sévérité",
+        "operationId": "addAllergy",
+        "tags": ["Allergies"],
+        "responses": {
+          "200": {
+            "description": "Allergie déclarée"
+          },
+          "400": {
+            "description": "Données invalides"
+          },
+          "404": {
+            "description": "Patient non trouvé"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Supprimer une allergie du dossier patient lorsqu'elle est non confirmée, résolue ou saisie par erreur",
+        "operationId": "removeAllergy",
+        "tags": ["Allergies"],
+        "responses": {
+          "200": {
+            "description": "Allergie supprimée"
+          },
+          "404": {
+            "description": "Allergie ou patient non trouvé"
+          }
+        }
+      }
+    },
+    "/v1/allergies/{patientId}/check/{drugId}": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "drugId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Vérifier en temps réel le risque allergique d'un médicament pour un patient avant prescription et retourner compatible ou contre-indiqué",
+        "operationId": "checkAllergyRisk",
+        "tags": ["Check"],
+        "responses": {
+          "200": {
+            "description": "Résultat vérification risque allergique — compatible ou contre-indiqué"
+          },
+          "404": {
+            "description": "Patient ou médicament non trouvé"
+          }
+        }
+      }
+    }
+  }
+}

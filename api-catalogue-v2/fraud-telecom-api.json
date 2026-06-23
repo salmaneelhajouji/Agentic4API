@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fraud Telecom API",
+    "version": "1.0.0",
+    "x-api-id": "fraud-telecom-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Cette API orchestre la détection et la remédiation automatique des activités frauduleuses spécifiques aux réseaux de télécommunications. Elle permet d'évaluer le score de risque des comportements d'usage suspect (appels frauduleux massifs, détournement de trafic de type IRSF - International Revenue Share Fraud) et de piloter en urgence le blocage ou le gel des cartes SIM en cas de suspicion d'usurpation d'identité par SIM swap (changement frauduleux de carte SIM). Elle sert d'outil central pour la protection des abonnés et des revenus de l'opérateur.",
+    "x-synonymes": "fraude télécom, SIM swap, usurpation de SIM, IRSF, fraude au partage de revenus, appels frauduleux, numéros surtaxés, piratage de ligne mobile, score de fraude télécom, blocage de carte SIM, détournement de trafic, volume d'appels suspect, sécurité télécom, alerte de fraude réseau",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement de la fraude sur l'usage des réseaux cellulaires, le piratage de lignes et les alertes matérielles de cartes SIM (Telecom). Ne pas la confondre avec la `fraud-detection-api` (qui filtre en temps réel les fraudes aux cartes bancaires et les mouvements de fonds transactionnels).",
+    "x-cas-usage": "Comment calculer l'indice de suspicion de fraude (score) sur une hausse soudaine d'appels internationaux d'une ligne ? | Où consulter les alertes critiques de détection de SIM swap pour interrompre immédiatement le provisionnement réseau ? | Quelle méthode appeler pour forcer le blocage de sécurité d'une ligne mobile suite à une suspicion d'exfiltration ? | Comment clore et acter la résolution d'une alerte de fraude après vérification auprès de l'abonné ?"
+  },
+  "paths": {
+    "/v1/fraud-telecom/score": {
+      "post": {
+        "summary": "Évaluer et calculer en temps réel le score de risque de fraude sur un volume ou comportement d'appels suspect",
+        "operationId": "scoreTelecomFraud",
+        "tags": [
+          "Score"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/fraud-telecom/sim-swap": {
+      "get": {
+        "summary": "Consulter et filtrer la file d'attente des alertes de changement de carte SIM suspectes détectées sur le réseau",
+        "operationId": "getSimSwapAlerts",
+        "tags": [
+          "SIMSwap"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher le blocage et la mise hors tension d'urgence de la ligne cellulaire pour neutraliser un SIM swap confirmé",
+        "operationId": "blockSIMSwap",
+        "tags": [
+          "SIMSwap"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/fraud-telecom/alerts": {
+      "get": {
+        "summary": "Lister l'ensemble des anomalies d'usage, alertes IRSF ou suspicions de détournement de trafic télécom actives",
+        "operationId": "getTelecomFraudAlerts",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour le statut d'une alerte réseau et consigner la remédiation ou la confirmation de l'infraction",
+        "operationId": "resolveTelecomFraudAlert",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

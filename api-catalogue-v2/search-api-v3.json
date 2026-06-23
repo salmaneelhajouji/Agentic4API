@@ -1,0 +1,115 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Search API",
+    "version": "3.0.0",
+    "x-api-id": "search-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "E-Commerce",
+    "description": "Version actuelle et recommandée du moteur de recherche. Ajoute la recherche conversationnelle en langage naturel via LLM, les dictionnaires de synonymes configurables, les règles de merchandising (boost/bury/pin de produits), la correction orthographique automatique, la réécriture IA des requêtes et les analytics de recherche (requêtes sans résultat, taux de clic). DIFFÉRENCE vs search-api-v2 : v3 ajoute la couche LLM pour les requêtes en langage naturel complet et le merchandising manuel. DIFFÉRENCE vs search-api (v1) : v3 est la version complète recommandée pour tous les nouveaux projets.",
+    "x-synonymes": "recherche conversationnelle, LLM recherche, recherche langage naturel, merchandising produit, boost produit, synonymes recherche, correction orthographique, réécriture requête, analytics recherche, search v3, moteur IA, ranking personnalisé, recherche intelligente, taux clic recherche, requêtes sans résultat",
+    "x-false-positive-warning": "Recherche sémantique sans LLM → search-api-v2. Recherche full-text simple → search-api. CRUD produits → product-catalog-api. Analytics e-commerce généraux → analytics-api.",
+    "x-cas-usage": "je veux une recherche qui comprend les questions en langage naturel (ex: chaussures de sport rouges taille 42) | je veux configurer des synonymes pour que 'téléphone' trouve aussi 'smartphone' | je veux mettre en avant certains produits pour des mots-clés spécifiques | je veux analyser quels termes de recherche ne donnent aucun résultat | je veux que les fautes de frappe soient corrigées automatiquement dans la recherche",
+    "x-breaking-changes-from-previous": [
+      "conversational: mode de recherche LLM (langage naturel complet)",
+      "synonyms_id: référence un dictionnaire de synonymes configuré",
+      "merchandising_rules: boost/bury de produits spécifiques",
+      "explain: retourne le score de pertinence expliqué",
+      "spell_correction: correction automatique des fautes",
+      "query_rewriting: réécriture IA de la requête avant recherche"
+    ]
+  },
+  "paths": {
+    "/v3/search": {
+      "get": {
+        "summary": "Recherche hybride avec mode LLM conversationnel optionnel, correction orthographique, synonymes et explication du scoring",
+        "operationId": "searchV3",
+        "tags": ["Search"],
+        "parameters": [
+          { "name": "q", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "mode", "in": "query", "schema": { "type": "string", "enum": ["lexical", "semantic", "hybrid", "conversational"], "default": "hybrid" }, "description": "conversational = mode LLM — nouveau en v3" },
+          { "name": "user_id", "in": "query", "schema": { "type": "string" } },
+          { "name": "synonyms_id", "in": "query", "schema": { "type": "string" }, "description": "Nouveau en v3" },
+          { "name": "explain", "in": "query", "schema": { "type": "boolean", "default": false }, "description": "Retourne les scores de pertinence" },
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "per_page", "in": "query", "schema": { "type": "integer", "default": 20 } }
+        ],
+        "responses": { "200": { "description": "Résultats avec explication optionnelle" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v3/search/synonyms": {
+      "post": {
+        "summary": "Créer un dictionnaire de synonymes pour améliorer le recall de la recherche (nouveau en v3)",
+        "operationId": "createSynonyms",
+        "tags": ["Synonyms"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "synonyms"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "synonyms": { "type": "array", "items": { "type": "object", "properties": { "terms": { "type": "array", "items": { "type": "string" } } } } }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Dictionnaire créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "get": {
+        "summary": "Lister tous les dictionnaires de synonymes configurés",
+        "operationId": "listSynonyms",
+        "tags": ["Synonyms"],
+        "responses": { "200": { "description": "Dictionnaires" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v3/search/merchandising": {
+      "post": {
+        "summary": "Créer une règle de merchandising pour booster, enterrer ou épingler des produits sur des requêtes cibles (nouveau en v3)",
+        "operationId": "createMerchandising",
+        "tags": ["Merchandising"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["query_pattern", "action"],
+                "properties": {
+                  "query_pattern": { "type": "string", "example": "chaussures" },
+                  "action": { "type": "string", "enum": ["boost", "bury", "pin"] },
+                  "product_ids": { "type": "array", "items": { "type": "string" } },
+                  "position": { "type": "integer", "description": "Pour l'action pin" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Règle créée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v3/search/analytics": {
+      "get": {
+        "summary": "Analyser les performances de recherche (requêtes sans résultat, taux de clic, conversions, top requêtes)",
+        "operationId": "getSearchAnalytics",
+        "tags": ["Analytics"],
+        "parameters": [
+          { "name": "from", "in": "query", "schema": { "type": "string", "format": "date" } },
+          { "name": "metric", "in": "query", "schema": { "type": "string", "enum": ["no_results", "click_through", "conversion", "top_queries"] } }
+        ],
+        "responses": { "200": { "description": "Analytics de recherche" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

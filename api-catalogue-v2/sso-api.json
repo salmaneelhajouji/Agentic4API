@@ -1,0 +1,74 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "SSO API",
+    "version": "1.0.0",
+    "x-api-id": "sso-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Identity",
+    "x-domain": "Identity & Access",
+    "description": "Single Sign-On par fédération d'identité avec les Identity Providers externes. Supporte SAML 2.0 et OpenID Connect (OIDC) avec Azure AD, Okta, Google Workspace et autres IdP d'entreprise. Permet de configurer des providers, d'initier le flux de redirection SSO et de traiter le callback pour émettre un JWT local. DIFFÉRENCE vs auth-api : SSO délègue l'authentification à un IdP externe (SAML/OIDC), Auth API gère l'authentification locale avec credentials internes et JWT. DIFFÉRENCE vs session-api : SSO crée la session initiale via fédération, Session API gère et révoque les sessions existantes.",
+    "x-synonymes": "SSO, Single Sign-On, SAML, OpenID Connect, OIDC, Azure AD, Okta, fédération identité, IdP, identity provider, authentification fédérée, SSO entreprise, login SSO, Google Workspace SSO, assertion SAML, token OIDC",
+    "x-false-positive-warning": "Authentification locale avec mot de passe → auth-api. Gestion des sessions existantes → session-api. Gestion des rôles et permissions → permission-api.",
+    "x-cas-usage": "je veux configurer Azure AD comme fournisseur d'identité SSO | je veux initier le flux de connexion SSO pour rediriger vers l'IdP | je veux traiter le callback SAML/OIDC après authentification IdP | je veux lister les IdP SSO configurés dans mon organisation | je veux activer le provisionnement automatique des comptes depuis l'IdP"
+  },
+  "paths": {
+    "/v1/sso/providers": {
+      "get": {
+        "summary": "Lister les Identity Providers SSO configurés (Azure AD, Okta, Google) avec leur type et statut",
+        "operationId": "listSSOProviders",
+        "tags": ["SSO"],
+        "responses": { "200": { "description": "Providers SSO" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Configurer un nouvel Identity Provider SSO (SAML 2.0 ou OIDC) via son URL de métadonnées",
+        "operationId": "createSSOProvider",
+        "tags": ["SSO"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "type", "metadata_url"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "type": { "type": "string", "enum": ["saml2", "oidc"] },
+                  "metadata_url": { "type": "string", "format": "uri" },
+                  "auto_provision": { "type": "boolean", "default": true }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "IdP configuré" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/sso/login/{providerId}": {
+      "parameters": [
+        { "name": "providerId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Initier le flux SSO — génère la requête d'authentification et redirige vers l'IdP (302)",
+        "operationId": "initSSO",
+        "tags": ["SSO"],
+        "responses": { "302": { "description": "Redirection vers l'IdP" } },
+        "security": []
+      }
+    },
+    "/v1/sso/callback": {
+      "post": {
+        "summary": "Traiter le callback SSO (assertion SAML ou authorization code OIDC) et émettre un JWT local",
+        "operationId": "ssoCallback",
+        "tags": ["SSO"],
+        "responses": { "200": { "description": "JWT local généré" } },
+        "security": []
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

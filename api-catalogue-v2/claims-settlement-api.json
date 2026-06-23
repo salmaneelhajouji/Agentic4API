@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Claims Settlement API",
+    "version": "1.0.0",
+    "x-api-id": "claims-settlement-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "API de règlement et d'indemnisation financière des sinistres assurance, couvrant l'ensemble du processus de clôture : initiation du règlement après acceptation du dossier, calcul de l'indemnité nette selon les garanties souscrites et les franchises applicables, déclenchement du paiement vers l'assuré ou le réparateur agréé, et génération de la quittance de règlement. Destinée aux gestionnaires sinistres, aux plateformes d'expertise et aux systèmes de gestion de compagnies d'assurance pour automatiser la phase finale de traitement des dossiers. DIFFÉRENCE vs insurance-claim-api-v3 : Claims Settlement API couvre uniquement l'étape finale de règlement financier ; insurance-claim-api-v3 gère le cycle de vie complet du sinistre de la déclaration à la clôture. DIFFÉRENCE vs payment-api-v3 : Claims Settlement API est spécialisée dans le paiement d'indemnités sinistres avec contexte assurance (franchise, garanties) ; payment-api-v3 est un service de paiement générique e-commerce. DIFFÉRENCE vs claims-tracking-api : Claims Settlement API traite le règlement financier ; claims-tracking-api suit le statut et l'avancement du dossier sinistre.",
+    "x-synonymes": "règlement sinistre, indemnisation assuré, paiement sinistre, montant indemnité, calcul indemnité, franchise sinistre, règlement dommage, quittance règlement, indemnisation dommage corporel, règlement dommage matériel, virement indemnité, chèque indemnité, clôture sinistre, règlement réparateur, indemnité sinistre auto, indemnité sinistre habitation, indemnisation totale perte, règlement partiel, accord règlement, offre indemnitaire",
+    "x-false-positive-warning": "DIFFÉRENCE vs insurance-claim-api-v3 : Claims Settlement API = étape finale de règlement financier uniquement. insurance-claim-api-v3 = gestion complète du dossier sinistre de la déclaration à la clôture. DIFFÉRENCE vs payment-api-v3 : Claims Settlement API = paiement spécifique d'indemnité sinistre avec contexte assurance (franchise, garanties, quittance). payment-api-v3 = paiement générique e-commerce sans logique assurantielle. DIFFÉRENCE vs claims-tracking-api : Claims Settlement API = règlement financier et génération de quittance. claims-tracking-api = suivi du statut et de l'avancement du dossier sinistre sans volet paiement. DIFFÉRENCE vs billing-api : Claims Settlement API = indemnisation sortante vers l'assuré ou réparateur. billing-api = facturation entrante client.",
+    "x-cas-usage": "Comment initier le règlement financier d'un sinistre après acceptation du dossier par l'expert ? | Comment calculer le montant net de l'indemnité après déduction de la franchise et application des garanties ? | Comment déclencher le paiement de l'indemnité directement au réparateur agréé plutôt qu'à l'assuré ? | Comment récupérer la quittance de règlement pour clore officiellement le dossier sinistre ? | Quels sont les règlements sinistres en cours de traitement et leur statut de paiement ?"
+  },
+  "paths": {
+    "/v1/settlements": {
+      "get": {
+        "summary": "Lister tous les règlements sinistres en cours avec leurs statuts de traitement et montants d'indemnité",
+        "operationId": "listSettlements",
+        "tags": ["Settlements"],
+        "responses": {
+          "200": {"description": "Règlements en cours"}
+        }
+      },
+      "post": {
+        "summary": "Initier un nouveau règlement de sinistre accepté : calcul de l'indemnité nette, déduction franchise et déclenchement du paiement",
+        "operationId": "createSettlement",
+        "tags": ["Settlements"],
+        "responses": {
+          "200": {"description": "Règlement initié"}
+        }
+      }
+    },
+    "/v1/settlements/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le détail complet d'un règlement : montant brut, franchise déduite, indemnité nette et statut du paiement",
+        "operationId": "getSettlement",
+        "tags": ["Settlements"],
+        "responses": {
+          "200": {"description": "Détail règlement"}
+        }
+      },
+      "post": {
+        "summary": "Verser l'indemnité validée à l'assuré ou au réparateur agréé par virement bancaire ou chèque selon le mode choisi",
+        "operationId": "paySettlement",
+        "tags": ["Settlements"],
+        "responses": {
+          "200": {"description": "Indemnité versée"}
+        }
+      }
+    },
+    "/v1/settlements/{id}/receipt": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Générer et télécharger la quittance de règlement signée servant de document officiel de clôture du dossier sinistre",
+        "operationId": "getSettlementReceipt",
+        "tags": ["Receipt"],
+        "responses": {
+          "200": {"description": "Quittance de règlement"}
+        }
+      }
+    }
+  }
+}

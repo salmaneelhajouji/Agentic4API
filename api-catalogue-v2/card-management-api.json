@@ -1,0 +1,72 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Card Management API",
+    "version": "1.0.0",
+    "x-api-id": "card-management-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "API de gestion du cycle de vie des cartes bancaires débit et crédit, couvrant la commande, la consultation, la modification des plafonds, l'opposition et la carte virtuelle. Permet aux applications bancaires mobiles et aux espaces clients de donner aux titulaires une autonomie complète sur leurs cartes. Les cas d'usage principaux incluent la commande d'une nouvelle carte, le blocage immédiat en cas de perte ou vol, la mise à jour des plafonds de paiement et retrait, ainsi que la génération de cartes virtuelles pour sécuriser les achats en ligne. Utilisée par les équipes front-end bancaire, les applications self-care client et les systèmes de gestion de back-office. DIFFÉRENCE vs payment-api-v3 : Card Management API = gestion administrative des cartes bancaires ; payment-api-v3 = traitement des paiements et transactions par carte. DIFFÉRENCE vs bank-account-api-v3 : Card Management API = gestion des cartes liées au compte ; bank-account-api-v3 = gestion du compte bancaire lui-même. DIFFÉRENCE vs wallet-api : Card Management API = cartes bancaires physiques et virtuelles émises par une banque ; wallet-api = portefeuille électronique interne sans carte bancaire.",
+    "x-synonymes": "carte bancaire, carte débit, carte crédit, carte Visa, carte Mastercard, opposition carte, blocage carte, faire opposition, carte perdue, carte volée, carte virtuelle, carte numérique, plafond paiement, plafond retrait, modifier plafond, activation carte, commande carte, carte sans contact, NFC carte, gestion carte mobile",
+    "x-false-positive-warning": "DIFFÉRENCE vs payment-api-v3 : Card Management API = gestion administrative des cartes bancaires (commande, blocage, plafonds) ; payment-api-v3 = traitement des paiements et transactions effectuées par carte. DIFFÉRENCE vs bank-account-api-v3 : Card Management API = gestion des cartes attachées à un compte ; bank-account-api-v3 = gestion du compte bancaire lui-même (solde, virements, relevés). DIFFÉRENCE vs wallet-api : Card Management API = cartes bancaires physiques et virtuelles émises par une banque ; wallet-api = portefeuille électronique interne sans carte bancaire physique. DIFFÉRENCE vs fraud-api : Card Management API = actions de blocage initiées par le client ; fraud-api = détection automatique et gestion des alertes de fraude côté système.",
+    "x-cas-usage": "Comment faire opposition sur une carte bancaire perdue ou volée ? | Comment augmenter ou modifier le plafond de paiement ou de retrait d'une carte ? | Comment générer une carte virtuelle pour payer en ligne sans exposer ma carte physique ? | Comment commander une nouvelle carte bancaire pour un client ou un titulaire ? | Comment lever l'opposition sur une carte bancaire retrouvée ou après résolution d'un incident ?"
+  },
+  "paths": {
+    "/v1/cards/{clientId}": {
+      "parameters": [{"name": "clientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Lister toutes les cartes bancaires d'un client — débit, crédit, virtuelles avec leur statut et plafonds",
+        "operationId": "getCards",
+        "tags": ["Cards"],
+        "responses": {"200": {"description": "Cartes du client"}}
+      },
+      "post": {
+        "summary": "Commander une nouvelle carte bancaire pour un client avec choix du type, du réseau et des options de livraison",
+        "operationId": "orderCard",
+        "tags": ["Cards"],
+        "responses": {"200": {"description": "Carte commandée"}}
+      }
+    },
+    "/v1/cards/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter le détail d'une carte — numéro masqué, plafonds, statut actif ou bloqué, et date d'expiration",
+        "operationId": "getCard",
+        "tags": ["Cards"],
+        "responses": {"200": {"description": "Détail carte"}}
+      },
+      "put": {
+        "summary": "Modifier les plafonds de paiement en ligne, de paiement en magasin et de retrait DAB d'une carte existante",
+        "operationId": "updateCard",
+        "tags": ["Cards"],
+        "responses": {"200": {"description": "Plafonds modifiés"}}
+      }
+    },
+    "/v1/cards/{id}/block": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Faire opposition immédiate sur une carte bancaire en cas de perte, vol ou suspicion de fraude",
+        "operationId": "blockCard",
+        "tags": ["Block"],
+        "responses": {"200": {"description": "Opposition effectuée"}}
+      },
+      "delete": {
+        "summary": "Lever l'opposition sur une carte bancaire après récupération de la carte ou résolution de la situation signalée",
+        "operationId": "unblockCard",
+        "tags": ["Block"],
+        "responses": {"200": {"description": "Opposition levée"}}
+      }
+    },
+    "/v1/cards/{id}/virtual": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Générer une carte virtuelle à usage unique ou limité pour sécuriser les paiements en ligne sans exposer la carte physique",
+        "operationId": "generateVirtualCard",
+        "tags": ["Virtual"],
+        "responses": {"200": {"description": "Carte virtuelle générée"}}
+      }
+    }
+  }
+}

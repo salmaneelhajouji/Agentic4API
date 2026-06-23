@@ -1,0 +1,63 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Knowledge Base API",
+    "version": "1.0.0",
+    "x-api-id": "knowledge-base-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Support",
+    "x-domain": "Customer Support",
+    "description": "Base de connaissances et FAQ pour le support client. Permet de créer et publier des articles d aide, de rechercher sémantiquement dans la base de connaissances, et d obtenir des suggestions automatiques d articles pertinents à partir d un ticket support. Utilisé par les équipes support et les portails self-service pour réduire le volume de tickets.",
+    "x-synonymes": "base de connaissances, FAQ, article aide, centre aide, help center, documentation self-service, recherche sémantique KB, article support, suggestion article, déflexion ticket, article publié, catégorie KB, recherche FAQ, portail self-service, article solution, knowledge management, base documentaire support, article tutoriel, guide résolution, recherche intelligente",
+    "x-false-positive-warning": "DIFFÉRENCE vs chatbot-api : Knowledge Base API = articles statiques rédigés par les équipes. chatbot-api = réponses dynamiques générées par NLP. DIFFÉRENCE vs ticket-api : Knowledge Base API = articles d aide en self-service. ticket-api = gestion des demandes avec agents. DIFFÉRENCE vs knowledge-graph-api : Knowledge Base API = articles FAQ pour support client. knowledge-graph-api = graphe d entités et relations pour data engineering.",
+    "x-cas-usage": "je veux créer un article d aide sur comment réinitialiser son mot de passe | je veux rechercher dans la base de connaissances pour répondre à un client | je veux suggérer automatiquement des articles pertinents quand un ticket est créé | je veux lister tous les articles publiés dans la catégorie facturation | je veux intégrer notre base de connaissances dans notre portail self-service"
+  },
+  "paths": {
+    "/v1/kb/articles": {
+      "get": {
+        "summary": "Lister les articles de la base de connaissances — filtre par catégorie et statut publié",
+        "operationId": "listKBArticles",
+        "tags": ["Articles"],
+        "parameters": [
+          {"name": "category", "in": "query", "schema": {"type": "string"}},
+          {"name": "published", "in": "query", "schema": {"type": "boolean", "default": true}}
+        ],
+        "responses": {"200": {"description": "Articles KB"}}
+      },
+      "post": {
+        "summary": "Créer un article d aide — titre, contenu, catégorie et tags",
+        "operationId": "createKBArticle",
+        "tags": ["Articles"],
+        "responses": {"201": {"description": "Article créé"}}
+      }
+    },
+    "/v1/kb/articles/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Lire un article de la base de connaissances — contenu complet",
+        "operationId": "getKBArticle",
+        "tags": ["Articles"],
+        "responses": {"200": {"description": "Article complet"}}
+      }
+    },
+    "/v1/kb/search": {
+      "get": {
+        "summary": "Recherche sémantique dans la base de connaissances — retourne articles pertinents",
+        "operationId": "searchKB",
+        "tags": ["Search"],
+        "parameters": [{"name": "q", "in": "query", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "Résultats de recherche"}}
+      }
+    },
+    "/v1/kb/suggest": {
+      "get": {
+        "summary": "Suggestions automatiques d articles basées sur un ticket — déflexion support",
+        "operationId": "suggestKB",
+        "tags": ["Search"],
+        "parameters": [{"name": "ticketId", "in": "query", "required": true, "schema": {"type": "string"}}],
+        "responses": {"200": {"description": "Articles suggérés pour ce ticket"}}
+      }
+    }
+  }
+}

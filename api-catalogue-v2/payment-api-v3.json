@@ -1,0 +1,90 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Payment API",
+    "version": "3.0.0",
+    "x-api-id": "payment-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "Version actuelle — Paiements crypto (BTC, ETH, USDC), BNPL paiement en 3 ou 4 fois (Klarna/Alma), gestion des litiges chargeback et réconciliation bancaire automatique. DIFFÉRENCE vs payment-api (v2) : v3 ajoute BNPL, crypto et dispute management.",
+    "x-breaking-changes-from-previous": ["BNPL paiement 3x/4x", "Crypto BTC ETH USDC", "Réconciliation bancaire automatique", "Dispute management chargebacks"],
+    "x-synonymes": "paiement BNPL, payer en 3 fois, payer en 4 fois, Klarna, Alma paiement fractionné, paiement crypto, Bitcoin paiement, Ethereum paiement, USDC stablecoin, chargeback contestation, litige paiement, réconciliation bancaire, dispute paiement, paiement fractionné sans frais, buy now pay later, crypto checkout, paiement BTC ETH, contestation carte bancaire, réconciliation automatique",
+    "x-false-positive-warning": "Version sans BNPL ni crypto → payment-api (v2). Version carte seule → payment-api-v1 (deprecated). Versements vendeurs marketplace → payout-api. Abonnements récurrents → billing-api-v3.",
+    "x-cas-usage": "je veux proposer le paiement en 3 fois sans frais sur mon site | je veux accepter les paiements en Bitcoin ou Ethereum | je veux contester un chargeback frauduleux sur un paiement | je veux lancer la réconciliation bancaire de mes paiements du mois | je veux proposer Klarna ou Alma comme option de paiement à la checkout"
+  },
+  "paths": {
+    "/v3/payments": {
+      "post": {
+        "summary": "Initier un paiement — carte, PayPal, SEPA, wallet, BNPL 3x/4x ou crypto",
+        "operationId": "createPaymentV3",
+        "tags": ["Payments"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["amount", "currency", "method", "order_id"],
+                "properties": {
+                  "amount": {"type": "number"},
+                  "currency": {"type": "string"},
+                  "method": {"type": "string", "enum": ["card", "paypal", "sepa", "wallet", "bnpl", "bitcoin", "ethereum", "usdc"]},
+                  "installments": {"type": "integer", "description": "Pour BNPL: 3 ou 4", "enum": [3, 4]},
+                  "order_id": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {"description": "Paiement initié"},
+          "402": {"description": "Paiement refusé"}
+        }
+      }
+    },
+    "/v3/payments/{id}/dispute": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Contester un paiement chargeback — non autorisé, non reçu, défectueux ou doublon",
+        "operationId": "disputePayment",
+        "tags": ["Disputes"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["reason"],
+                "properties": {
+                  "reason": {"type": "string", "enum": ["unauthorized", "not_received", "defective", "duplicate"]},
+                  "evidence": {"type": "array", "items": {"type": "string", "format": "uri"}}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Litige ouvert"}}
+      }
+    },
+    "/v3/payments/reconciliation": {
+      "post": {
+        "summary": "Lancer la réconciliation bancaire automatique pour une période",
+        "operationId": "reconcilePayments",
+        "tags": ["Reconciliation"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["period"],
+                "properties": {"period": {"type": "string", "example": "2026-04"}}
+              }
+            }
+          }
+        },
+        "responses": {"202": {"description": "Réconciliation lancée"}}
+      }
+    }
+  }
+}

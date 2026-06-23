@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Air Quality API",
+    "version": "1.0.0",
+    "x-api-id": "air-quality-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "API de mesure et de surveillance de la qualité de l'air intérieur et extérieur via capteurs connectés IoT. Couvre la collecte en temps réel des données de CO2, particules fines PM2.5 et PM10, composés organiques volatils (COV), température et humidité, ainsi que le calcul de l'indice de qualité de l'air (AQI). Permet la création d'alertes automatiques en cas de dépassement de seuils configurables et la consultation d'historiques de mesures. Utilisateurs typiques : responsables HSE, gestionnaires de bâtiments intelligents, équipes IoT industrielles et prestataires de facilities management. DIFFÉRENCE vs sensor-data-api-v2 : Air Quality API est spécialisée mesure qualité de l'air avec indices AQI et polluants spécifiques ; sensor-data-api-v2 est une ingestion générique de télémétrie industrielle multi-capteurs. DIFFÉRENCE vs carbon-footprint-api : Air Quality API mesure en temps réel les polluants atmosphériques locaux ; carbon-footprint-api calcule l'empreinte carbone globale d'une organisation pour reporting RSE. DIFFÉRENCE vs energy-consumption-api : Air Quality API surveille les polluants de l'air ; energy-consumption-api suit la consommation électrique.",
+    "x-synonymes": "qualité de l'air, pollution intérieure, CO2, dioxyde de carbone, particules fines, PM2.5, PM10, composés organiques volatils, COV, indice qualité air, AQI, capteur air, surveillance atmosphère, qualité air bureau, qualité air entrepôt, salle de production air, alerte pollution, monitoring air, mesure pollution, air intérieur",
+    "x-false-positive-warning": "DIFFÉRENCE vs sensor-data-api-v2 : Air Quality API est spécialisée mesure qualité de l'air avec indices AQI et polluants spécifiques (CO2, PM2.5, COV) ; sensor-data-api-v2 est une ingestion générique de télémétrie industrielle multi-capteurs sans calcul d'indice environnemental. DIFFÉRENCE vs carbon-footprint-api : Air Quality API mesure en temps réel les polluants atmosphériques locaux sur des capteurs physiques ; carbon-footprint-api calcule l'empreinte carbone globale d'une organisation pour le reporting RSE et ne s'appuie pas sur des capteurs physiques. DIFFÉRENCE vs energy-consumption-api : Air Quality API surveille la composition et la qualité de l'air ambiant ; energy-consumption-api suit la consommation électrique des équipements et bâtiments. DIFFÉRENCE vs environmental-monitoring-api : Air Quality API se concentre exclusivement sur les polluants atmosphériques ; environmental-monitoring-api couvre un spectre plus large incluant bruit, eau et sol.",
+    "x-cas-usage": "Comment mesurer le CO2 et les particules fines dans nos salles de production en temps réel ? | Comment surveiller la qualité de l'air dans nos bureaux open space et déclencher des alertes automatiques ? | Comment créer une alerte quand le taux de CO2 dépasse 1000 ppm sur un capteur donné ? | Comment récupérer l'historique de qualité de l'air d'un capteur sur les 30 derniers jours ? | Quels polluants atmosphériques puis-je surveiller pour garantir la santé des employés en entrepôt ?"
+  },
+  "paths": {
+    "/v1/air-quality/{sensorId}": {
+      "parameters": [
+        {
+          "name": "sensorId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lire les données qualité de l'air en temps réel d'un capteur donné — CO2, PM2.5, PM10, COV et indice AQI calculé",
+        "operationId": "getAirQuality",
+        "tags": ["AirQuality"],
+        "responses": {
+          "200": {
+            "description": "Données qualité air du capteur"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer une mesure qualité de l'air transmise par un capteur connecté IoT avec horodatage et valeurs brutes de polluants",
+        "operationId": "recordAirQuality",
+        "tags": ["AirQuality"],
+        "responses": {
+          "200": {
+            "description": "Mesure enregistrée"
+          }
+        }
+      }
+    },
+    "/v1/air-quality/{sensorId}/history": {
+      "parameters": [
+        {
+          "name": "sensorId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique des mesures qualité air d'un capteur pour analyser tendances, pics de pollution et conformité sur une période donnée",
+        "operationId": "getAirQualityHistory",
+        "tags": ["History"],
+        "responses": {
+          "200": {
+            "description": "Historique des mesures"
+          }
+        }
+      }
+    },
+    "/v1/air-quality/alerts": {
+      "get": {
+        "summary": "Lister toutes les alertes qualité air actives correspondant à des dépassements de seuils configurés sur CO2, particules fines ou AQI",
+        "operationId": "getAirQualityAlerts",
+        "tags": ["Alerts"],
+        "responses": {
+          "200": {
+            "description": "Alertes actives"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer une règle d'alerte automatique sur seuil de pollution configurable — CO2, PM2.5, PM10 ou indice AQI global — avec notification associée",
+        "operationId": "createAlert",
+        "tags": ["Alerts"],
+        "responses": {
+          "200": {
+            "description": "Alerte créée"
+          }
+        }
+      }
+    }
+  }
+}

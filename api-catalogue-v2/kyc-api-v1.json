@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "KYC API",
+    "version": "1.0.0",
+    "x-api-id": "kyc-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "DEPRECATED — NE PAS UTILISER. Version 1 sans biométrie ni vérification listes de sanctions. Migrer vers kyc-api-v2 qui intègre la biométrie faciale, la vérification sur listes de sanctions et le scoring LCB-FT.",
+    "x-successor": "kyc-api-v2",
+    "x-synonymes": "KYC v1 deprecated, vérification identité legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser kyc-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers kyc-api-v2."
+  },
+  "paths": {
+    "/v1/kyc": {
+      "post": {
+        "summary": "DEPRECATED — Soumettre une demande KYC sans biométrie",
+        "operationId": "submitKycV1",
+        "tags": ["KYC"],
+        "responses": {"200": {"description": "KYC soumis"}}
+      }
+    }
+  }
+}

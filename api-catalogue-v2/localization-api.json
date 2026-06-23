@@ -1,0 +1,67 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Localization API",
+    "version": "1.0.0",
+    "x-api-id": "localization-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Localisation",
+    "description": "Traductions et internationalisation des applications (i18n/l10n). Permet de récupérer les traductions d une langue, de traduire dynamiquement un texte, de consulter les devises supportées avec taux de change, et d obtenir les formats régionaux (date, heure, nombre, monnaie). Utilisé par les équipes frontend pour adapter les applications à plusieurs marchés. DIFFÉRENCE vs geolocation-api : Localization = textes et formats culturels i18n. geolocation-api = coordonnées GPS et localisation physique.",
+    "x-synonymes": "internationalisation, i18n, l10n, localisation, traduction application, multi-langue, multi-locale, langue interface, format date régional, format nombre régional, devise locale, taux change, texte traduit, clé traduction, bundle traduction, locale fr en es de, pluralisation, RTL localisation, traduction dynamique, format monétaire",
+    "x-false-positive-warning": "Coordonnées GPS et localisation physique → geolocation-api. Traduction professionnelle de documents → translation-api. Devises et taux change financiers → currency-exchange-api. Géolocalisation utilisateur → geolocation-api.",
+    "x-cas-usage": "je veux récupérer toutes les traductions en anglais pour mon interface | je veux traduire dynamiquement un texte généré de français vers espagnol | je veux obtenir le format de date et de nombre pour le marché allemand | je veux lister toutes les devises supportées avec leurs taux de change | je veux adapter mon application aux formats régionaux français"
+  },
+  "paths": {
+    "/v1/l10n/translations/{lang}": {
+      "parameters": [{"name": "lang", "in": "path", "required": true, "schema": {"type": "string", "example": "fr"}}],
+      "get": {
+        "summary": "Toutes les traductions d une langue — bundle complet pour une locale",
+        "operationId": "getTranslations",
+        "tags": ["Translations"],
+        "responses": {"200": {"description": "Bundle traductions"}}
+      }
+    },
+    "/v1/l10n/currencies": {
+      "get": {
+        "summary": "Devises supportées avec taux de change — EUR, USD, GBP et autres",
+        "operationId": "getCurrencies",
+        "tags": ["Currencies"],
+        "responses": {"200": {"description": "Devises et taux"}}
+      }
+    },
+    "/v1/l10n/translate": {
+      "post": {
+        "summary": "Traduire un texte dynamiquement — source vers langue cible",
+        "operationId": "translateText",
+        "tags": ["Translations"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["text", "target_lang"],
+                "properties": {
+                  "text": {"type": "string"},
+                  "source_lang": {"type": "string", "default": "fr"},
+                  "target_lang": {"type": "string", "example": "en"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Texte traduit"}}
+      }
+    },
+    "/v1/l10n/formats/{country}": {
+      "parameters": [{"name": "country", "in": "path", "required": true, "schema": {"type": "string", "example": "FR"}}],
+      "get": {
+        "summary": "Formats régionaux d un pays — date, heure, nombre et monnaie locaux",
+        "operationId": "getFormats",
+        "tags": ["Formats"],
+        "responses": {"200": {"description": "Formats régionaux"}}
+      }
+    }
+  }
+}

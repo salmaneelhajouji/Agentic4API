@@ -1,0 +1,61 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Amenity Booking API",
+    "version": "1.0.0",
+    "x-api-id": "amenity-booking-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "API de réservation des équipements et espaces partagés au sein d'une résidence, copropriété ou immeuble de co-living. Couvre la gestion des disponibilités, la création et l'annulation de réservations pour des équipements collectifs tels que salle de sport, piscine, salle commune, parking visiteur, buanderie, terrasse ou local vélos. Destinée aux gestionnaires de résidences, syndics de copropriété, opérateurs de résidences étudiantes et plateformes de co-living souhaitant offrir un service numérique de réservation aux résidents. DIFFÉRENCE vs meeting-room-api : Amenity Booking = équipements résidentiels et collectifs pour résidents. meeting-room-api = salles de réunion professionnelles en entreprise. DIFFÉRENCE vs activity-booking-api : Amenity Booking = équipements partagés d'un immeuble/résidence. activity-booking-api = activités touristiques ou loisirs externes.",
+    "x-synonymes": "équipement résidence, salle commune, salle de sport résidence, piscine résidence, parking visiteur, buanderie résidence, terrasse commune, espace partagé résidence, réservation équipement collectif, copropriété équipements, résidence services, co-living équipements, réservation salle résidence, espace commun immeuble, aire de jeux résidence, local vélos, cave commune, toit terrasse, barbecue collectif, créneau équipement partagé",
+    "x-false-positive-warning": "Salles de réunion professionnelles en entreprise → meeting-room-api (contexte B2B, pas résidentiel). Réservation d'activités touristiques ou de loisirs externes → activity-booking-api. Réservation de chambre d'hôtel ou d'appartement → room-booking-api-v3. Location de salle événementielle ou séminaire → event-venue-api. Gestion de places de parking longue durée → parking-api.",
+    "x-cas-usage": "Comment permettre aux résidents de réserver la salle de sport et la piscine de la résidence ? | Comment afficher les créneaux disponibles pour la buanderie commune d'un immeuble ? | Comment annuler une réservation d'équipement partagé effectuée par un locataire ? | Quels équipements collectifs sont disponibles à la réservation dans une copropriété donnée ? | Comment récupérer la liste des réservations en cours sur le parking visiteur pour une date précise ?"
+  },
+  "paths": {
+    "/v1/amenities": {
+      "get": {
+        "summary": "Lister tous les équipements partagés disponibles à la réservation — salle de sport, piscine, parking visiteur, buanderie, terrasse, local vélos",
+        "operationId": "listAmenities",
+        "tags": ["Amenities"],
+        "responses": {
+          "200": {"description": "Liste des équipements disponibles"}
+        }
+      }
+    },
+    "/v1/amenities/{id}/bookings": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter toutes les réservations d'un équipement résidentiel donné — créneaux occupés, disponibles et historique par date",
+        "operationId": "getBookings",
+        "tags": ["Bookings"],
+        "responses": {
+          "200": {"description": "Réservations de l'équipement"}
+        }
+      },
+      "post": {
+        "summary": "Réserver un équipement partagé de la résidence pour un résident — sélection du créneau horaire, de la date et confirmation immédiate",
+        "operationId": "bookAmenity",
+        "tags": ["Bookings"],
+        "responses": {
+          "200": {"description": "Réservation confirmée"}
+        }
+      }
+    },
+    "/v1/amenities/{id}/bookings/{bookingId}": {
+      "parameters": [
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}},
+        {"name": "bookingId", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "delete": {
+        "summary": "Annuler une réservation existante d'un équipement résidentiel et libérer le créneau pour d'autres résidents",
+        "operationId": "cancelBooking",
+        "tags": ["Bookings"],
+        "responses": {
+          "200": {"description": "Réservation annulée"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Currency Exchange API",
+    "version": "1.0.0",
+    "x-api-id": "currency-exchange-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Cette API centralise la fourniture des taux de change en temps réel, le calcul de conversions monétaires instantanées et le suivi des cours pour les devises internationales. Elle est principalement exploitée au sein des plateformes de réservation touristique, des applications de voyage pour particuliers et des systèmes de gestion des bureaux de change physiques. Elle permet d'afficher les prix locaux aux voyageurs, de sécuriser les transactions multi-devises lors du checkout et de fournir un historique de cotation fiable pour les audits comptables et l'ajustement des prix catalogue.",
+    "x-synonymes": "taux de change, conversion de devise, paire de devises, cours des monnaies, forex, taux de conversion, monnaie étrangère, taux spot, bureau de change, cotation monétaire, conversion monétaire, paire EUR/USD, valeur des devises, achat vente devise, fluctuation des cours, ticker de change",
+    "x-false-positive-warning": "Attention : Cette API gère exclusivement le change de devises et la conversion de monnaies étrangères. Ne pas la confondre avec l'API Taux d'Intérêt / interest-rate-api (dédiée aux taux d'intérêt bancaires, directeurs ou d'emprunt), ni avec une API de Paiement / Passerelle transactionnelle (qui traite les flux financiers, les autorisations bancaires et les encaissements réels).",
+    "x-cas-usage": "Quel est le taux de change actuel en temps réel pour la paire EUR/USD ? | Comment convertir instantanément un montant de 250 Euros en Yen Japonais pour l'affichage d'un billet de train ? | Où puis-je récupérer l'historique complet des fluctuations de la livre sterling (EUR/GBP) sur les 30 derniers jours ? | Comment synchroniser les écrans d'affichage d'un bureau de change physique avec les cours officiels ? | Quelle formule appliquer pour calculer une conversion inverse de devises avec cette API ?"
+  },
+  "paths": {
+    "/v1/currency/rates": {
+      "get": {
+        "summary": "Récupérer les taux de change en temps réel et les cours de cotation pour l'ensemble des devises internationales supportées",
+        "operationId": "getExchangeRates",
+        "tags": [
+          "Rates"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/currency/convert": {
+      "post": {
+        "summary": "Calculer la conversion instantanée d'un montant financier d'une devise source vers une devise cible selon le dernier cours de référence",
+        "operationId": "convertCurrency",
+        "tags": [
+          "Convert"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/currency/history/{pair}": {
+      "parameters": [
+        {
+          "name": "pair",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique des variations et de fluctuation des cours pour une paire de devises spécifique sur une période donnée (à des fins de comptabilité ou d'analyse)",
+        "operationId": "getExchangeHistory",
+        "tags": [
+          "History"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

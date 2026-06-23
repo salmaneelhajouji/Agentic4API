@@ -1,0 +1,128 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Processing Agreement API",
+    "version": "1.0.0",
+    "x-api-id": "data-processing-agreement-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Cette API centralise et formalise la gestion des accords de traitement des données (DPA - Data Processing Agreement) conformément aux exigences contractuelles du RGPD. Elle permet de structurer les obligations juridiques liant l'entreprise (en tant que responsable de traitement ou sous-traitant) avec ses partenaires commerciaux, fournisseurs et sous-traitants ultérieurs. L'API automatise l'ensemble du cycle de vie de ces accords, de leur rédaction initiale à leur signature électronique obligatoire, tout en maintenant un registre à jour et auditable des entités tierces autorisées à manipuler des données à caractère personnel.",
+    "x-synonymes": "accord de traitement des données, data processing agreement, DPA, contrat de sous-traitance, responsable de traitement, sous-traitant, conformité RGPD contractuelle, clauses contractuelles types, registre des sous-traitants, sous-traitant ultérieur, sub-processor, engagement de confidentialité, sécurité des données personnelles, annexe de sécurité, audit juridique RGPD, signature de dpa, convention de flux",
+    "x-false-positive-warning": "Attention : Cette API administre exclusivement le cadre conventionnel, les engagements contractuels et la liste des intermédiaires juridiques (DPA). Ne pas la confondre avec la `gdpr-api` (qui traite opérationnellement de l'exercice des droits des personnes concernées, tels que le droit d'accès, d'effacement ou d'opposition) ni avec une API de gestion des consentements (cookie consent / consent-api) destinée aux interfaces utilisateurs.",
+    "x-cas-usage": "Comment générer et soumettre un nouvel accord de traitement des données (DPA) pour un sous-traitant informatique ? | Où puis-je récupérer la liste officielle des sous-traitants ultérieurs approuvés et rattachés à ce contrat spécifique ? | Comment enregistrer formellement la signature électronique et valider l'entrée en vigueur d'un avenant DPA ? | Quelle méthode appeler pour mettre à jour les clauses de sécurité d'un accord suite à une évolution réglementaire ?"
+  },
+  "paths": {
+    "/v1/dpa": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des accords de traitement des données (DPA) actuellement en vigueur, en attente de signature ou archivés",
+        "operationId": "listDPAs",
+        "tags": [
+          "DPA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un nouveau projet d'accord de traitement des données (DPA) en spécifiant les obligations des parties et les catégories de données concernées",
+        "operationId": "createDPA",
+        "tags": [
+          "DPA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dpa/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les clauses détaillées, le statut juridique et les métadonnées de conformité d'un accord de traitement spécifique",
+        "operationId": "getDPA",
+        "tags": [
+          "DPA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier ou amender les termes, la durée ou les exigences de sécurité d'un projet d'accord DPA non encore validé",
+        "operationId": "updateDPA",
+        "tags": [
+          "DPA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Valider l'accord et enregistrer formellement la signature électronique liant le responsable de traitement et le sous-traitant",
+        "operationId": "signDPA",
+        "tags": [
+          "DPA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dpa/{id}/processors": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la liste officielle des sous-traitants ultérieurs (sub-processors) autorisés à intervenir sur les données dans le cadre de cet accord",
+        "operationId": "getSubProcessors",
+        "tags": [
+          "Processors"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et associer un nouveau sous-traitant ultérieur autorisé à intervenir sur le périmètre réglementaire de cet accord",
+        "operationId": "addSubProcessor",
+        "tags": [
+          "Processors"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,130 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Dispatch API",
+    "version": "1.0.0",
+    "x-api-id": "dispatch-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Cette API pilote le dispatching, l'ordonnancement et l'affectation optimisée des missions de transport. Elle s'appuie sur des algorithmes de recherche opérationnelle pour associer au mieux les conducteurs disponibles, les véhicules de la flotte et les ordres de transport (missions) à réaliser, en optimisant les temps de trajet et les capacités d'emport. Elle est intégrée dans les systèmes de gestion de flotte (TMS) et les terminaux embarqués des chauffeurs.",
+    "x-synonymes": "dispatching, affectation de mission, ordre de transport, planification des chauffeurs, feuille de route, gestion de flotte, attribution de véhicule, recherche opérationnelle, optimisation de tournées, conducteur routier, course urgente, ordonnancement des missions, régulation de trafic, terminal embarqué, transport de marchandises, plan de transport",
+    "x-false-positive-warning": "Attention : Cette API calcule les allocations optimales de ressources mobiles (conducteurs/véhicules) sur des missions spécifiques (Dispatch). Ne pas la confondre avec la `delivery-api` (axée sur la prise de rendez-vous client pour le dernier kilomètre) ni avec la `fleet-maintenance-api` (dédiée à l'entretien mécanique des camions).",
+    "x-cas-usage": "Comment créer une nouvelle mission de fret routier à planifier ? | Comment affecter manuellement un chauffeur et un tracteur à un ordre de transport prioritaire ? | Comment lancer l'algorithme d'optimisation automatique des tournées pour la flotte de demain ? | Où consulter la feuille de route détaillée et le statut d'une mission de transport ?"
+  },
+  "paths": {
+    "/v1/missions": {
+      "get": {
+        "summary": "Lister les missions de transport en attente d'affectation ou d'ordonnancement dans le système",
+        "operationId": "listMissions",
+        "tags": [
+          "Missions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et enregistrer une nouvelle mission de fret ou un ordre de transport à exécuter",
+        "operationId": "createMission",
+        "tags": [
+          "Missions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/missions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la feuille de route détaillée, les adresses de chargement et le statut d'exécution d'une mission",
+        "operationId": "getMission",
+        "tags": [
+          "Missions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les fenêtres horaires, les contraintes de volume ou les métadonnées d'une mission existante",
+        "operationId": "updateMission",
+        "tags": [
+          "Missions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/missions/{id}/assign": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Affecter et planifier officiellement un conducteur et un véhicule sur la mission de transport spécifiée",
+        "operationId": "assignMission",
+        "tags": [
+          "Assign"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Désaffecter un conducteur d'une mission de transport pour la remettre dans le pool de planification global",
+        "operationId": "unassignMission",
+        "tags": [
+          "Assign"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/dispatch/optimize": {
+      "post": {
+        "summary": "Déclencher l'algorithme de recherche opérationnelle pour optimiser automatiquement l'attribution globale de la flotte",
+        "operationId": "optimizeDispatch",
+        "tags": [
+          "Optimize"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

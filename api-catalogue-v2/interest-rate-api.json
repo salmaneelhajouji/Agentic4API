@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Interest Rate API",
+    "version": "1.0.0",
+    "x-api-id": "interest-rate-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Cette API centralise la diffusion, le suivi historique et le calcul financier basés sur les indices de taux d'intérêt de référence des marchés financiers (notamment l'EURIBOR, les taux directeurs de la BCE ou de la Fed). Elle permet aux applications de core banking, de gestion de trésorerie et d'octroi de crédits de consommer les taux interbancaires à jour et de simuler avec exactitude les calculs d'intérêts simples ou composés pour des placements ou des emprunts.",
+    "x-synonymes": "taux d'intérêt, indice financier, EURIBOR, taux directeur BCE, calcul d'intérêts, intérêts composés, marché interbancaire, historique de taux, taux de référence, trésorerie bancaire, rendement financier, emprunt, placement monétaire, intérêts simples, courbe des taux",
+    "x-false-positive-warning": "Attention : Cette API délivre des indices macro-financiers et des outils de simulation de calcul d'intérêts (Interest Rate). Ne pas la confondre avec la `loan-api` (qui gère l'instruction opérationnelle et les dossiers de prêts individuels des clients).",
+    "x-cas-usage": "Comment récupérer les indices de taux directeurs de la BCE en vigueur aujourd'hui ? | Où consulter l'historique des fluctuations du taux EURIBOR 3 mois pour nos analyses de trésorerie ? | Comment simuler le montant des intérêts générés par un placement monétaire sous un taux spécifique ?"
+  },
+  "paths": {
+    "/v1/rates": {
+      "get": {
+        "summary": "Consulter la liste de l'ensemble des taux d'intérêt et indices financiers de référence actifs",
+        "operationId": "getCurrentRates",
+        "tags": [
+          "Rates"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/rates/{type}": {
+      "parameters": [
+        {
+          "name": "type",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique chronologique et les valeurs d'un type de taux d'intérêt spécifique",
+        "operationId": "getRateByType",
+        "tags": [
+          "Rates"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/rates/calculate": {
+      "post": {
+        "summary": "Exécuter le calcul mathématique des intérêts financiers générés selon un capital, une durée et un taux",
+        "operationId": "calculateInterest",
+        "tags": [
+          "Calculation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

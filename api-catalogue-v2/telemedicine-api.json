@@ -1,0 +1,159 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Telemedicine API",
+    "version": "1.0.0",
+    "x-api-id": "telemedicine-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Téléconsultation médicale. Planification visio-consultations, salle d'attente virtuelle et compte-rendu. DIFFÉRENCE vs medical-appointment-api : Telemedicine API orchestre spécifiquement les flux de visioconférence et l'accueil en ligne en salle d'attente virtuelle pour des soins à distance, alors que medical-appointment-api planifie de manière générale les rendez-vous médicaux et examens physiques en cabinet.",
+    "x-synonymes": "téléconsultation, visio, consultation à distance, médecin, santé, patient, visioconférence, salle d'attente virtuelle, rdv médical, télémédecine, soin, e-santé, clinique virtuelle, ordonnance, praticien, vidéo consultation, docteur",
+    "x-false-positive-warning": "Pour la prise de rendez-vous physiques classiques en cabinet ou hôpital, utilisez medical-appointment-api. Pour la gestion lourde de la chirurgie, préférez surgery-scheduling-api.",
+    "x-cas-usage": "je veux planifier une téléconsultation vidéo avec un patient | je veux lister toutes les consultations en visio programmées aujourd'hui | je veux lancer la session de visioconférence sécurisée | je veux enregistrer le compte-rendu médical d'une téléconsultation"
+  },
+  "paths": {
+    "/v1/teleconsult": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des téléconsultations médicales à distance programmées",
+        "operationId": "listTeleconsult",
+        "tags": [
+          "Teleconsult"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Planifier et enregistrer une nouvelle session de téléconsultation vidéo pour un patient",
+        "operationId": "scheduleTeleconsult",
+        "tags": [
+          "Teleconsult"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/teleconsult/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les détails, participants et statuts d'une téléconsultation médicale spécifique",
+        "operationId": "getTeleconsult",
+        "tags": [
+          "Teleconsult"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Annuler un rendez-vous de téléconsultation planifié et libérer le créneau horaire du praticien",
+        "operationId": "cancelTeleconsult",
+        "tags": [
+          "Teleconsult"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/teleconsult/{id}/start": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Démarrer la session vidéo cryptée et ouvrir la salle d'attente virtuelle pour le patient",
+        "operationId": "startSession",
+        "tags": [
+          "Session"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/teleconsult/{id}/summary": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Soumettre et associer le compte-rendu clinique officiel de la consultation à distance",
+        "operationId": "addSummary",
+        "tags": [
+          "Summary"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

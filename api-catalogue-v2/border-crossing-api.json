@@ -1,0 +1,52 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Border Crossing API",
+    "version": "1.0.0",
+    "x-api-id": "border-crossing-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "API de gestion des passages frontaliers pour le transport international de marchandises et de personnes, couvrant les postes frontières terrestres, maritimes et aériens. Permet de lister les points de passage disponibles avec leurs horaires d'ouverture, de consulter les documents requis selon la nationalité du conducteur et le type de marchandise transportée, et d'obtenir les temps d'attente en temps réel pour optimiser la planification logistique. Utilisée par les transporteurs routiers, transitaires, agents de fret et agences de voyage pour anticiper les formalités douanières et respecter les réglementations internationales. DIFFÉRENCE vs customs-api : Border Crossing API = gestion logistique du passage et documents requis. customs-api = déclarations douanières fiscales et calcul des droits. DIFFÉRENCE vs logistics-tracking-api : Border Crossing API = information sur les postes frontières et documents. logistics-tracking-api = suivi GPS du colis en transit. DIFFÉRENCE vs visa-api : Border Crossing API = information sur les documents requis au passage. visa-api = demande et gestion des visas.",
+    "x-synonymes": "passage frontalier, poste frontière, douane, contrôle frontière, documents passage, visa frontière, carnet ATA, TIR, CMR transport international, temps attente frontière, file attente douane, déclaration douanière, dédouanement, frontière Schengen, frontière hors Schengen, point entrée pays, checkpoint frontière, transit douanier, formalités douanières, corridor douanier",
+    "x-false-positive-warning": "DIFFÉRENCE vs customs-api : Border Crossing API = gestion logistique du passage et documents requis au poste frontière. customs-api = déclarations douanières fiscales, calcul des droits et taxes à l'import/export. DIFFÉRENCE vs logistics-tracking-api : Border Crossing API = information sur les postes frontières, horaires et documents nécessaires. logistics-tracking-api = suivi GPS du colis ou véhicule en transit. DIFFÉRENCE vs visa-api : Border Crossing API = information sur les documents requis au moment du passage physique. visa-api = processus de demande, obtention et gestion administrative des visas. DIFFÉRENCE vs trade-compliance-api : Border Crossing API = opérationnel (quel poste, quels documents, quel délai). trade-compliance-api = conformité réglementaire et classification tarifaire des marchandises.",
+    "x-cas-usage": "Quels documents sont requis pour passer la frontière avec une cargaison de produits alimentaires vers un pays tiers ? | Comment obtenir le temps d'attente en temps réel aux différents postes frontières pour optimiser ma route logistique ? | Comment lister tous les points de passage disponibles acceptant le carnet TIR pour le transport routier international ? | Comment récupérer les horaires d'ouverture et les types de transit acceptés à un poste frontière spécifique ? | Comment vérifier quelles frontières sont ouvertes la nuit pour planifier un passage en dehors des heures de pointe ?"
+  },
+  "paths": {
+    "/v1/borders": {
+      "get": {
+        "summary": "Lister tous les points de passage frontaliers disponibles avec leurs horaires d'ouverture, types de transit acceptés et temps d'attente actuels",
+        "operationId": "listBorderCrossings",
+        "tags": ["Borders"],
+        "responses": {
+          "200": {
+            "description": "Points de passage disponibles"
+          }
+        }
+      }
+    },
+    "/v1/borders/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Obtenir le détail d'un poste frontière spécifique : documents requis selon la nationalité du conducteur, type de marchandise et mode de transport",
+        "operationId": "getRequiredDocs",
+        "tags": ["Borders"],
+        "responses": {
+          "200": {
+            "description": "Documents requis et conditions de passage"
+          }
+        }
+      }
+    }
+  }
+}

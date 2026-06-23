@@ -1,0 +1,375 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Product API",
+    "version": "4.0.0",
+    "x-api-id": "product-api-v4",
+    "x-api-version": "v4",
+    "x-status": "active",
+    "x-team": "Equipe Catalog",
+    "x-domain": "E-Commerce",
+    "description": "Cette API de pointe orchestre la gouvernance et le cycle de vie omnicanal des fiches articles (PIM corporatif) dans sa version 4. Elle introduit la gestion multi-catalogue isolée (B2B/B2C), l'ordonnancement de lots et de bundles natifs, l'intégration de microservices d'IA pour la génération automatique de descriptions marketing, la conformité de structuration de données sémantiques (JSON-LD de Schema.org), et impose des règles de taxes (TTC/HT) obligatoires.",
+    "x-breaking-changes-from-previous": [
+      "multi_catalog_id obligatoire (remplace category_id seul)",
+      "description_auto: champ IA généré (optionnel mais présent)",
+      "variants désormais paginés via /v4/products/{id}/variants?page=N",
+      "seo.structured_data ajouté (JSON-LD Schema.org)",
+      "status 'archived' remplacé par lifecycle.stage enum",
+      "pricing.tax_inclusive obligatoire (Boolean)"
+    ],
+    "x-synonymes": "PIM d'entreprise, product information management, catalogue d'articles v4, fiche produit omnicanale, multi-catalogue B2B B2C, description générée par IA, données structurées JSON-LD, schema.org produit, cycle de vie produit lifecycle, taxinclusive taxe, bundle d'articles natif, variantes paginées article",
+    "x-false-positive-warning": "Attention : Cette API administre l'enrichissement sémantique, la publication marketing et les variantes du produit (Product API / PIM). Ne pas la confondre avec la `product-catalog-api` (microservice restreint au dictionnaire brut de la taxonomie des catégories) ni avec l'api de gestion des stocks."
+  },
+  "paths": {
+    "/v4/products": {
+      "get": {
+        "summary": "Rechercher sémantiquement par IA et lister les produits au sein des catalogues cloisonnés B2B ou B2C",
+        "operationId": "listProductsV4",
+        "tags": [
+          "Products"
+        ],
+        "parameters": [
+          {
+            "name": "catalog_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filtrage obligatoire par catalogue d'exposition B2B ou B2C"
+          },
+          {
+            "name": "lifecycle_stage",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "review",
+                "active",
+                "end_of_life"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Moteur de recherche sémantique propulsé par l'IA"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste paginée enrichie"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et initialiser une fiche produit PIM complète avec structure d'arborescence SEO JSON-LD",
+        "operationId": "createProductV4",
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductV4Create"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Produit créé"
+          },
+          "422": {
+            "description": "SEO manquant pour lifecycle_stage=active"
+          }
+        }
+      }
+    },
+    "/v4/products/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^PROD-[0-9]{3}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche article complète encapsulant les données structurées balisées JSON-LD de Schema.org",
+        "operationId": "getProductV4",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Référence d'article inconnue du PIM"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour l'état, les règles de taxes, le catalogue d'affectation ou les attributs du produit",
+        "operationId": "updateProductV4",
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Basculer formellement le produit dans l'état de fin de vie commerciale (end_of_life) sans suppression physique",
+        "operationId": "eolProductV4",
+        "tags": [
+          "Products"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lifecycle → end_of_life"
+          }
+        }
+      }
+    },
+    "/v4/products/{id}/variants": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister de manière paginée les variantes et déclinaisons d'articles rattachées à la fiche maîtresse",
+        "operationId": "getVariantsV4",
+        "tags": [
+          "Variants"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Variantes"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter une nouvelle variante déclinée paginée avec son SKU propre et ses contraintes de prix d'achat",
+        "operationId": "addVariantV4",
+        "tags": [
+          "Variants"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "sku",
+                  "attributes"
+                ],
+                "properties": {
+                  "sku": {
+                    "type": "string"
+                  },
+                  "attributes": {
+                    "type": "object"
+                  },
+                  "stock": {
+                    "type": "integer"
+                  },
+                  "price_override": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ajoutée"
+          }
+        }
+      }
+    },
+    "/v4/products/{id}/ai-description": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Déclencher le microservice d'IA générative pour compiler automatiquement une description marketing multilingue",
+        "operationId": "generateDescriptionV4",
+        "tags": [
+          "Products"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "tone": {
+                    "type": "string",
+                    "enum": [
+                      "professional",
+                      "casual",
+                      "luxury"
+                    ]
+                  },
+                  "language": {
+                    "type": "string",
+                    "default": "fr"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Description générée"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProductV4Create": {
+        "type": "object",
+        "required": [
+          "name",
+          "sku",
+          "catalog_id",
+          "pricing"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "catalog_id": {
+            "type": "string",
+            "description": "Nouveau champ obligatoire en v4 — identifie le catalogue B2B ou B2C"
+          },
+          "description": {
+            "type": "string"
+          },
+          "pricing": {
+            "type": "object",
+            "required": [
+              "base_price",
+              "currency",
+              "tax_inclusive"
+            ],
+            "properties": {
+              "base_price": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string",
+                "example": "EUR"
+              },
+              "tax_inclusive": {
+                "type": "boolean",
+                "description": "BREAKING v4 : champ obligatoire"
+              }
+            }
+          },
+          "lifecycle": {
+            "type": "object",
+            "properties": {
+              "stage": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "review",
+                  "active",
+                  "end_of_life"
+                ],
+                "description": "Remplace 'status' de v3"
+              }
+            }
+          },
+          "seo": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string"
+              },
+              "meta_title": {
+                "type": "string"
+              },
+              "meta_description": {
+                "type": "string"
+              },
+              "structured_data": {
+                "type": "object",
+                "description": "JSON-LD Schema.org — nouveau en v4"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

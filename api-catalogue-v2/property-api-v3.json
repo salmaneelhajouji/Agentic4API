@@ -1,0 +1,202 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Property API",
+    "version": "3.0.0",
+    "x-api-id": "property-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "x-breaking-changes-from-previous": [
+      "Valorisation IA",
+      "Photos 3D",
+      "DPE integre"
+    ],
+    "description": "Cette API représente le référentiel officiel et centralisé de gestion, d'enrichissement et de diffusion des biens immobiliers de l'entreprise (Version 3). Destinée aux portails clients, aux applications des agents immobiliers et aux partenaires externes, elle intègre des services avancés de valorisation prédictive par Intelligence Artificielle, l'hébergement d'imagerie immersive (photos 3D) ainsi que la consolidation des dossiers de diagnostics de performance énergétique (DPE).",
+    "x-synonymes": "Bien immobilier v3, Référentiel des actifs, Fiche immobilière enrichie, Estimation par IA, Diagnostic de Performance Énergétique, DPE réglementaire, Imagerie immobilière 3D, Visite virtuelle, Valorisation d'actif, Mandat immobilier, Patrimoine foncier, Annonce immobilière premium, Fiche technique logement, Dossier technique de diagnostic, Évaluation immobilière, Caractéristiques du bien",
+    "x-false-positive-warning": "Attention : Cette API gère la description physique, technique et la valorisation financière intrinsèque du bien immobilier. Elle ne gère pas les relations contractuelles de location, les quittances de loyer ou les baux, qui relèvent exclusivement de la Lease API (v2).",
+    "x-cas-usage": "Comment faire pour publier une nouvelle annonce immobilière incluant les fichiers de modélisation pour la visite 3D ? | Comment faire pour solliciter le moteur d'Intelligence Artificielle afin d'obtenir la valorisation financière estimative d'un bien ? | Comment faire pour associer un nouveau diagnostic de performance énergétique (DPE) certifié à une propriété existante ?"
+  },
+  "paths": {
+    "/v3/properties": {
+      "get": {
+        "summary": "Rechercher et lister les biens immobiliers du catalogue selon des critères géographiques, de surface ou de performance énergétique",
+        "operationId": "listPropertiesV3",
+        "tags": [
+          "Properties"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et enregistrer un nouvel actif immobilier enrichi au sein du référentiel central de l'entreprise",
+        "operationId": "createPropertyV3",
+        "tags": [
+          "Properties"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/properties/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le profil complet et détaillé d'un bien incluant ses caractéristiques, sa notation DPE et ses indicateurs IA",
+        "operationId": "getPropertyV3",
+        "tags": [
+          "Properties"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour l'état descriptif, les surfaces, la tarification ou les métadonnées d'une propriété existante",
+        "operationId": "updatePropertyV3",
+        "tags": [
+          "Properties"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Archiver ou retirer définitivement un bien immobilier du catalogue d'exposition actif",
+        "operationId": "deleteProperty",
+        "tags": [
+          "Properties"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/properties/{id}/valuation": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Générer et extraire le rapport de valorisation du bien calculé par le moteur d'intelligence artificielle",
+        "operationId": "getPropertyValuation",
+        "tags": [
+          "Valuation"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/properties/{id}/diagnostics": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la liste des diagnostics réglementaires obligatoires et le bilan de performance énergétique (DPE)",
+        "operationId": "getDiagnostics",
+        "tags": [
+          "Diagnostics"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Attacher un nouveau document de diagnostic certifié (gaz, électricité, amiante, DPE) au dossier technique d'un bien",
+        "operationId": "addDiagnostic",
+        "tags": [
+          "Diagnostics"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/properties/{id}/photos": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la galerie de médias (photos standards, haute définition et fichiers de rendu 3D) associée au bien",
+        "operationId": "getPhotos",
+        "tags": [
+          "Photos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter un nouveau média visuel ou un panorama immersif à la galerie d'exposition du logement",
+        "operationId": "addPhoto",
+        "tags": [
+          "Photos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

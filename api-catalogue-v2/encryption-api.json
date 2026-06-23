@@ -1,0 +1,176 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Encryption API",
+    "version": "1.0.0",
+    "x-api-id": "encryption-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Security",
+    "x-domain": "Security & Compliance",
+    "description": "Cette API d'infrastructure orchestre les opérations cryptographiques de haute sécurité et la gestion du cycle de vie des clés de chiffrement de l'entreprise. Elle expose des services de chiffrement et de déchiffrement de payloads ou données sensibles en s'appuyant sur des algorithmes de confiance (AES-256-GCM, RSA-OAEP) et automatise les processus de génération, de stockage sécurisé dans un coffre-fort (Vault) et de rotation périodique des clés cryptographiques.",
+    "x-synonymes": "chiffrement de données, déchiffrement, clé cryptographique, gestion des clés, KMS, rotation de clés, algorithme AES-256, chiffrement RSA, coffre-fort de clés, vault, secret de chiffrement, protection cryptographique, données chiffrées, payload sécurisé, intégrité des données, conformité sécurité",
+    "x-false-positive-warning": "Attention : Cette API réalise des transformations cryptographiques de bas niveau (chiffrement/déchiffrement) et pilote les clés d'infrastructure. Ne pas la confondre avec la `data-loss-prevention-api` (détection de fuites de données) ni avec une API d'authentification utilisateur type SSO ou gestion d'identités (IAM).",
+    "x-cas-usage": "Comment chiffrer de manière sécurisée une chaîne de données confidentielle avant son stockage en base ? | Comment appeler l'API pour déchiffrer un payload à l'aide d'un identifiant de clé cryptographique valide ? | Comment générer une nouvelle clé AES-256 en configurant une politique de rotation automatique à 90 jours ? | Comment déclencher une procédure manuelle de rotation d'urgence sur une clé compromise ?"
+  },
+  "paths": {
+    "/v1/encrypt": {
+      "post": {
+        "summary": "Chiffrer une chaîne de données ou un payload sensible à l'aide d'un algorithme robuste et d'une clé cryptographique spécifiée",
+        "operationId": "encryptData",
+        "tags": [
+          "Encryption"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "data",
+                  "key_id"
+                ],
+                "properties": {
+                  "data": {
+                    "type": "string"
+                  },
+                  "key_id": {
+                    "type": "string"
+                  },
+                  "algorithm": {
+                    "type": "string",
+                    "enum": [
+                      "AES-256-GCM",
+                      "RSA-OAEP"
+                    ],
+                    "default": "AES-256-GCM"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Données chiffrées"
+          }
+        }
+      }
+    },
+    "/v1/decrypt": {
+      "post": {
+        "summary": "Déchiffrer un texte sécurisé (ciphertext) pour restituer la donnée d'origine en utilisant la clé cryptographique associée",
+        "operationId": "decryptData",
+        "tags": [
+          "Encryption"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "ciphertext",
+                  "key_id"
+                ],
+                "properties": {
+                  "ciphertext": {
+                    "type": "string"
+                  },
+                  "key_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Données déchiffrées"
+          }
+        }
+      }
+    },
+    "/v1/keys": {
+      "post": {
+        "summary": "Générer une nouvelle clé cryptographique immuable (AES ou RSA) en définissant sa politique de rotation périodique",
+        "operationId": "generateKey",
+        "tags": [
+          "Keys"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "type"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "AES-256",
+                      "RSA-2048",
+                      "RSA-4096"
+                    ]
+                  },
+                  "rotation_days": {
+                    "type": "integer",
+                    "default": 90
+                  }
+                }
+              }
+            }
+          }
+         },
+        "responses": {
+          "201": {
+            "description": "Clé créée"
+          }
+        }
+      },
+      "get": {
+        "summary": "Lister l'ensemble des clés cryptographiques disponibles et consulter leurs métadonnées de validité (sans exposition des secrets)",
+        "operationId": "listKeys",
+        "tags": [
+          "Keys"
+        ],
+        "responses": {
+          "200": {
+            "description": "Clés"
+          }
+        }
+      }
+    },
+    "/v1/keys/{id}/rotate": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Déclencher manuellement la rotation d'une clé cryptographique pour générer une nouvelle version logique et révoquer l'ancienne",
+        "operationId": "rotateKey",
+        "tags": [
+          "Keys"
+        ],
+        "responses": {
+          "200": {
+            "description": "Rotation effectuée"
+          }
+        }
+      }
+    }
+  }
+}

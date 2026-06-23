@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Smart Meter API",
+    "version": "1.0.0",
+    "x-api-id": "smart-meter-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "DEPRECATED — Version 1 de l'API de gestion des compteurs intelligents. Ne plus utiliser. Migrer vers smart-meter-api-v2 qui apporte le relevé temps réel, le support multi-fluides et les alertes de seuil.",
+    "x-successor": "smart-meter-api-v2",
+    "x-synonymes": "compteur intelligent v1 deprecated",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser smart-meter-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers smart-meter-api-v2."
+  },
+  "paths": {
+    "/v1/meters": {
+      "get": {
+        "summary": "[DEPRECATED] Lister les compteurs — utiliser smart-meter-api-v2",
+        "operationId": "listMetersV1",
+        "tags": ["Meters"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

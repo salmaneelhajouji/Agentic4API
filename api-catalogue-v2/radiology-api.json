@@ -1,0 +1,125 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Radiology API",
+    "version": "1.0.0",
+    "x-api-id": "radiology-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Cette API régit l'ensemble du cycle de vie des demandes d'imagerie médicale (Radiographies, Scanners, IRM). Destinée aux praticiens hospitaliers, prescripteurs et secrétariats médicaux, elle permet d'enregistrer les prescriptions d'examens, d'assurer le suivi des étapes opérationnelles, d'accéder aux métadonnées d'imagerie réglementaires au standard DICOM et de consigner les comptes-rendus cliniques officiels dictés par les radiologues.",
+    "x-synonymes": "Imagerie médicale, Examen de radiologie, Résultat DICOM, Compte-rendu radiologique, Prescription d'examen, Scanner médical, IRM, Radiographie numérique, Planification d'examen médical, Imagerie diagnostique, Archivage DICOM, Cliché radiologique, Examen d'imagerie, Compte-rendu de prescription, Service de radiologie, Dossier radiologique patient",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement du domaine de la radiologie, des examens d'imagerie et du format DICOM associé. Pour les résultats d'analyses biologiques, de laboratoires, de prélèvements sanguins ou de virologie, utilisez exclusivement la Laboratory API.",
+    "x-cas-usage": "Comment faire pour enregistrer et prescrire une nouvelle demande d'examen radiologique ou d'imagerie pour un patient ? | Comment faire pour extraire les références de stockage sécurisé et les clichés d'imagerie normalisés au standard DICOM ? | Comment faire pour associer et soumettre le compte-rendu médical d'analyse clinique rédigé par le médecin radiologue ?"
+  },
+  "paths": {
+    "/v1/imaging/orders": {
+      "get": {
+        "summary": "Lister et filtrer les prescriptions et demandes d'examens d'imagerie médicale d'un établissement selon leur statut",
+        "operationId": "listOrders",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et planifier une nouvelle prescription ou demande d'examen d'imagerie diagnostique pour un patient",
+        "operationId": "createOrder",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/imaging/orders/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive exhaustive d'un examen, ses motifs cliniques associés et son état de traitement",
+        "operationId": "getOrder",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour le statut opérationnel et l'avancement d'une demande d'examen (ex: planifié, pris en charge, exécuté, annulé)",
+        "operationId": "updateStatus",
+        "tags": [
+          "Orders"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/imaging/orders/{id}/results": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Extraire les métadonnées techniques et les liens d'accès sécurisés vers les clichés d'imagerie médicale conformes à la norme DICOM",
+        "operationId": "getResults",
+        "tags": [
+          "Results"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Consigner et valider le compte-rendu médical d'analyse clinique rédigé ou dicté officiellement par le praticien radiologue",
+        "operationId": "addReport",
+        "tags": [
+          "Results"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

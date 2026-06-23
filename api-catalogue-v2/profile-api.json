@@ -1,0 +1,266 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Profile API",
+    "version": "1.0.0",
+    "x-api-id": "profile-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Identity & Access",
+    "description": "Cette API permet de gérer et de restituer le profil public ainsi que les préférences d'expérience utilisateur (UX) au sein de l'écosystème applicatif de l'entreprise. Elle s'adresse principalement aux équipes de développement Front-End (Web et Mobile) et aux services transverses nécessitant l'affichage des informations de personnalisation de l'utilisateur connecté (avatar, biographie, paramètres d'interface). Son rôle est de centraliser la configuration de l'expérience vécue par l'utilisateur sans interférer avec les données d'identification ou les profils d'achat commerciaux.",
+    "x-synonymes": "Profil utilisateur, Préférences UX, Configuration interface, Paramètres UI, Avatar utilisateur, Biographie publique, Timezone utilisateur, Thème graphique, Préférences linguistiques, Options d'affichage, Données de personnalisation, Espace personnel UX, Identité publique, Réglages applicatifs, Compte utilisateur visuel, Options de notification",
+    "x-false-positive-warning": "Attention : Cette API ne doit pas être utilisée pour la gestion des identifiants de connexion, des mots de passe ou des rôles applicatifs, qui relèvent exclusivement de l'User API. De même, elle exclut les données de segmentation commerciale, d'historique d'achat ou de fidélité, réservées à la Customer Profile API, ainsi que les données relatives aux collaborateurs RH gérées par l'Employee API.",
+    "x-cas-usage": "Comment faire pour récupérer l'avatar et la biographie publique d'un utilisateur afin de les afficher sur son tableau de bord ? | Comment faire pour mettre à jour le thème graphique (sombre/clair) et la langue de l'interface choisis par l'utilisateur ? | Comment faire pour consulter l'activité récente d'un utilisateur connecté pour lui afficher ses dernières actions ? | Comment faire pour supprimer l'image de profil actuelle d'un utilisateur et repasser sur l'avatar par défaut ?"
+  },
+  "paths": {
+    "/v1/profile/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le profil public d'un utilisateur pour l'affichage au sein des interfaces",
+        "operationId": "getProfile",
+        "tags": [
+          "Profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "Profil"
+          }
+        }
+      },
+      "put": {
+        "summary": "Enregistrer les modifications de la biographie et des informations de visibilité publique de l'utilisateur",
+        "operationId": "updateProfile",
+        "tags": [
+          "Profile"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      }
+    },
+    "/v1/profile/{userId}/avatar": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Téléverser et mettre à jour l'image d'avatar de l'utilisateur sur le CDN de l'entreprise",
+        "operationId": "updateAvatar",
+        "tags": [
+          "Profile"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Avatar mis à jour — URL CDN retournée"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Réinitialiser l'avatar de l'utilisateur en supprimant définitivement le fichier du stockage externe",
+        "operationId": "deleteAvatar",
+        "tags": [
+          "Profile"
+        ],
+        "responses": {
+          "200": {
+            "description": "Avatar supprimé"
+          }
+        }
+      }
+    },
+    "/v1/profile/{userId}/preferences": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la configuration personnalisée de l'interface et les préférences UX de l'utilisateur",
+        "operationId": "getPreferences",
+        "tags": [
+          "Preferences"
+        ],
+        "responses": {
+          "200": {
+            "description": "Préférences"
+          }
+        }
+      },
+      "put": {
+        "summary": "Sauvegarder les ajustements d'affichage, de langue et de fuseau horaire définis par l'utilisateur",
+        "operationId": "updatePreferences",
+        "tags": [
+          "Preferences"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "theme": {
+                    "type": "string",
+                    "enum": [
+                      "light",
+                      "dark",
+                      "auto"
+                    ]
+                  },
+                  "language": {
+                    "type": "string"
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "example": "Europe/Paris"
+                  },
+                  "notifications": {
+                    "type": "object"
+                  },
+                  "items_per_page": {
+                    "type": "integer",
+                    "default": 20
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Préférences mises à jour"
+          }
+        }
+      }
+    },
+    "/v1/profile/{userId}/activity": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Extraire le journal des interactions et des connexions récentes pour restitution sur l'espace client",
+        "operationId": "getActivity",
+        "tags": [
+          "Activity"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Activité récente"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ProfileUpdate": {
+        "type": "object",
+        "properties": {
+          "display_name": {
+            "type": "string"
+          },
+          "bio": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "website_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "location": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string",
+            "example": "Europe/Paris"
+          },
+          "social_links": {
+            "type": "object",
+            "properties": {
+              "linkedin": {
+                "type": "string"
+              },
+              "twitter": {
+                "type": "string"
+              },
+              "github": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Clé API Kong Gateway — Devoteam nexDigital"
+      }
+    }
+  }
+}

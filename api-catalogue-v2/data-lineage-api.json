@@ -1,0 +1,42 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Lineage API",
+    "version": "1.0.0",
+    "x-api-id": "data-lineage-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API permet de retracer et de visualiser la traçabilité complète, l'historique des transformations et le cycle de vie des données (data lineage) de bout en bout, depuis leur point d'ingestion initial jusqu'à leur consommation finale dans les rapports ou dashboards décisionnels. Elle fournit une visibilité claire sur l'origine des données (flux amont) et leurs dépendances (flux aval), facilitant ainsi les audits de conformité, la détection des anomalies de traitement et l'analyse d'impact avant toute modification de structure. Ses utilisateurs cibles sont les Data Engineers, les architectes de données, les Data Stewards et les analystes BI.",
+    "x-synonymes": "lignage de données, data lineage, traçabilité des flux, provenance de la donnée, chaîne de transformation, dépendance des données, analyse d'impact data, origine de la donnée, cartographie des flux, cycle de vie de la donnée, arbre de dépendances, flux amont et aval, pipeline de données, traçabilité end-to-end, audit de transformation, graphe de lignage, lignage technique",
+    "x-false-positive-warning": "Attention : Cette API cartographie et suit dynamiquement les relations de dépendance, les flux et les transformations entre les actifs (Data Lineage). Ne pas la confondre avec la `data-catalog-api` (qui fait office d'inventaire statique, de glossaire et de dictionnaire de données pour documenter le contenu), ni avec la `data-access-control-api` (qui applique techniquement les droits de sécurité et d'accès aux tables).",
+    "x-cas-usage": "Quelles sont les tables brutes et les règles de calcul qui ont généré cet indicateur dans mon rapport BI ? | Si je modifie le type de cette colonne dans la zone Raw, quels jobs de transformation et quelles tables Gold vont être impactés ? | Comment reconstituer le cheminement réglementaire d'une donnée sensible pour prouver sa conformité lors d'un audit ? | Où s'est interrompue la chaîne de traçabilité dans notre pipeline d'ingestion pour ce jeu de données spécifique ?"
+  },
+  "paths": {
+    "/v1/lineage/{datasetId}": {
+      "parameters": [
+        {
+          "name": "datasetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le graphe complet de traçabilité et le lignage technique de bout en bout (sources amont et dépendances aval) d'un jeu de données",
+        "operationId": "getFullLineage",
+        "tags": [
+          "Lineage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

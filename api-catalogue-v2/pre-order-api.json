@@ -1,0 +1,128 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Pre-Order API",
+    "version": "1.0.0",
+    "x-api-id": "pre-order-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "Cette API régit le cycle de vie complet des réservations et pré-commandes de produits ou articles exclusifs non encore commercialisés ou temporairement indisponibles (lancements de produits). Elle permet d'enregistrer les réservations de quantités, d'orchestrer les politiques de paiement différé (autorisation bancaire initiale avec prélèvement au moment de la sortie effective), et de piloter les campagnes de notifications massives ainsi que les captures de fonds automatisées dès l'atterrissage physique de l'article en entrepôt.",
+    "x-synonymes": "pré-commande, réservation d'article indisponible, paiement différé e-commerce, lancement de produit, pré-réservation commerciale, capture de paiement différée, notification de disponibilité produit, file d'attente de lancement, commande différée, produit à paraître",
+    "x-false-positive-warning": "Attention : Cette API gère spécifiquement la file d'attente, l'autorisation bancaire différée et la réservation de produits non encore disponibles à la livraison (Pre-Order). Ne pas la confondre avec la `order-management-api-v3` (qui orchestre les flux de préparation logistique immédiate et d'expédition des commandes classiques validées).",
+    "x-cas-usage": "Comment enregistrer la pré-commande d'un client pour un produit high-tech avant sa sortie officielle ? | Comment configurer un prélèvement différé pour ne capturer les fonds qu'au moment de la disponibilité ? | Quelle méthode appeler pour notifier l'ensemble des clients en attente et déclencher la capture de paiements automatiques lorsque le stock arrive en entrepôt ?"
+  },
+  "paths": {
+    "/v1/pre-orders": {
+      "post": {
+        "summary": "Créer et enregistrer une nouvelle pré-commande sur un produit indisponible avec option de charge immédiate ou différée",
+        "operationId": "createPreOrder",
+        "tags": [
+          "PreOrders"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "customer_id",
+                  "product_id"
+                ],
+                "properties": {
+                  "customer_id": {
+                    "type": "string"
+                  },
+                  "product_id": {
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": "integer",
+                    "default": 1
+                  },
+                  "charge_now": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Si false, paiement au moment de la disponibilité"
+                  },
+                  "card_token": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Pré-commande créée"
+          }
+        }
+      }
+    },
+    "/v1/pre-orders/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état de validation, les informations de réservation et le statut d'une pré-commande spécifique",
+        "operationId": "getPreOrder",
+        "tags": [
+          "PreOrders"
+        ],
+        "responses": {
+          "200": {
+            "description": "Pré-commande"
+          },
+          "404": {
+            "description": "Dossier de pré-commande introuvable"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Annuler une pré-commande active et libérer l'autorisation d'empreinte bancaire du client sans frais",
+        "operationId": "cancelPreOrder",
+        "tags": [
+          "PreOrders"
+        ],
+        "responses": {
+          "200": {
+            "description": "Annulée"
+          }
+        }
+      }
+    },
+    "/v1/pre-orders/product/{productId}/availability": {
+      "parameters": [
+        {
+          "name": "productId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Déclencher la procédure de bascule pour notifier les clients inscrits et exécuter la capture des paiements différés",
+        "operationId": "notifyPreOrderAvailability",
+        "tags": [
+          "PreOrders"
+        ],
+        "responses": {
+          "202": {
+            "description": "Notifications envoyées — paiements déclenchés"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,205 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Inventory API",
+    "version": "3.0.0",
+    "x-api-id": "inventory-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Logistique",
+    "x-domain": "Supply Chain",
+    "description": "Cette API assure le suivi analytique et la mise à jour en temps réel des volumes et quantités de stocks de produits finis pour le réseau de vente au détail (Retail) de l'entreprise (v3). Elle permet de consulter l'état des inventaires globaux, d'ajuster les niveaux de stock suite à des ventes ou des retours, de configurer des alertes de seuil bas pour prévenir les ruptures et d'automatiser le déclenchement des ordres de réapprovisionnement auprès des fournisseurs.",
+    "x-synonymes": "inventaire de stock, quantité disponible, produit retail, niveau de stock, ajustement de stock, seuil d'alerte de rupture, réapprovisionnement automatique, réassort de magasin, mouvement de stock, inventaire en temps réel, stock de sécurité, approvisionnement fournisseur, régularisation d'inventaire, disponibilité d'article, gestion des réserves",
+    "x-false-positive-warning": "Attention : Cette API comptabilise exclusivement les volumes, les seuils logiques et les quantités de produits disponibles pour le commerce de détail (Inventory). Ne pas la confondre avec la `the-warehouse-api` (dédiée à la cartographie physique, aux allées, au placement et au picking dans l'entrepôt), ni avec la `inventory-industry-api` réservée aux stocks de matières premières d'usine.",
+    "x-cas-usage": "Comment consulter l'état des stocks disponibles pour un produit dans un entrepôt spécifique ? | Comment mettre à jour les quantités suite à un inventaire de régularisation ou une démarque ? | Comment programmer une alerte automatique par courriel lorsque le stock d'un article descend sous les 20 unités ? | Quelle méthode appeler pour lancer un ordre de réapprovisionnement d'urgence auprès d'un fournisseur ?"
+  },
+  "paths": {
+    "/v3/inventory": {
+      "get": {
+        "summary": "Consulter et filtrer l'état de l'inventaire global des produits en temps réel avec détection des niveaux bas",
+        "operationId": "listInventory",
+        "tags": [
+          "Inventory"
+        ],
+        "parameters": [
+          {
+            "name": "below_threshold",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "warehouse_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inventaire"
+          }
+        }
+      }
+    },
+    "/v3/inventory/{productId}": {
+      "delete": {
+        "summary": "Archiver et sortir logiquement un produit du catalogue actif de l'inventaire supply chain",
+        "operationId": "deleteInventory",
+        "tags": [
+          "Inventory"
+        ],
+        "responses": {
+          "204": {
+            "description": "Archivé"
+          },
+          "404": {
+            "description": "Produit non trouvé dans le référentiel"
+          }
+        }
+      }
+    },
+    "/v3/inventory/{productId}/stock": {
+      "parameters": [
+        {
+          "name": "productId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Mettre à jour, ajouter ou soustraire une quantité de stock pour un produit en spécifiant le motif de l'opération",
+        "operationId": "updateStock",
+        "tags": [
+          "Inventory"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "quantity",
+                  "operation"
+                ],
+                "properties": {
+                  "quantity": {
+                    "type": "integer"
+                  },
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "set",
+                      "add",
+                      "subtract"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "sale",
+                      "return",
+                      "adjustment",
+                      "restock"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          },
+          "400": {
+            "description": "Données d'ajustement invalides ou incohérentes"
+          }
+        }
+      }
+    },
+    "/v3/inventory/alerts": {
+      "post": {
+        "summary": "Configurer et enregistrer un seuil minimum d'alerte de rupture de stock de sécurité pour un produit",
+        "operationId": "createInventoryAlert",
+        "tags": [
+          "Alerts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "product_id",
+                  "threshold"
+                ],
+                "properties": {
+                  "product_id": {
+                    "type": "string"
+                  },
+                  "threshold": {
+                    "type": "integer",
+                    "description": "Seuil minimum avant alerte"
+                  },
+                  "notify_email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Alerte configurée"
+          }
+        }
+      }
+    },
+    "/v3/inventory/restock": {
+      "post": {
+        "summary": "Déclencher l'exécution immédiate d'un ordre de réapprovisionnement automatisé auprès d'un fournisseur certifié",
+        "operationId": "restockInventory",
+        "tags": [
+          "Inventory"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "product_id",
+                  "quantity"
+                ],
+                "properties": {
+                  "product_id": {
+                    "type": "string"
+                  },
+                  "quantity": {
+                    "type": "integer"
+                  },
+                  "supplier_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Réapprovisionnement lancé"
+          }
+        }
+      }
+    }
+  }
+}

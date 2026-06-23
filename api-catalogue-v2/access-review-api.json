@@ -1,0 +1,91 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Access Review API",
+    "version": "1.0.0",
+    "x-api-id": "access-review-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "API de gestion des campagnes périodiques de revue et certification des accès utilisateurs, couvrant le cycle complet depuis le lancement de la campagne jusqu'aux actions correctives automatisées. Permet de lancer des campagnes de recertification des droits, de collecter les décisions des managers (conserver ou révoquer), et de déclencher les remédiation automatiques afin de garantir le principe du moindre privilège. Utilisée principalement par les équipes Cybersécurité, les responsables GRC (Gouvernance, Risque et Conformité) et les auditeurs internes pour répondre aux exigences réglementaires SOX, ISO 27001 ou RGPD. DIFFÉRENCE vs identity-governance-api : Access Review = campagne périodique de vérification des droits existants avec décision humaine ; identity-governance-api = gestion du cycle de vie des identités et des rôles. DIFFÉRENCE vs permission-api : Access Review = processus de revue et certification ; permission-api = contrôle d'accès RBAC en temps réel. DIFFÉRENCE vs audit-log-api : Access Review = décision active sur les droits ; audit-log-api = traçabilité passive des actions.",
+    "x-synonymes": "revue des droits, audit des accès, certification des habilitations, recertification des accès, campagne de droits, nettoyage des accès, révocation des permissions, vérification des autorisations collaborateurs, contrôle des privilèges, moindre privilège, accès excessifs, droits inutilisés, conformité accès, gouvernance des droits, user access review, UAR, recertification SOX, campagne de recertification, validation manager des accès",
+    "x-false-positive-warning": "DIFFÉRENCE vs identity-governance-api : Access Review = campagne périodique de vérification des droits existants avec décision humaine. identity-governance-api = gestion du cycle de vie des identités et des rôles. DIFFÉRENCE vs permission-api : Access Review = processus de revue et certification. permission-api = contrôle d'accès RBAC en temps réel. DIFFÉRENCE vs audit-log-api : Access Review = décision active sur les droits. audit-log-api = traçabilité passive des actions. DIFFÉRENCE vs access-control-api : Access Review = revue humaine périodique des droits accordés. access-control-api = application des politiques d'autorisation en temps réel.",
+    "x-cas-usage": "Comment lancer une campagne de recertification des droits pour répondre à un audit SOX ? | Comment récupérer toutes les décisions managers en attente pour une campagne de revue en cours ? | Comment soumettre la décision de révoquer ou conserver un accès pour un collaborateur donné ? | Quels accès ont été identifiés comme excessifs et quelles actions correctives ont été déclenchées ? | Comment suivre l'avancement d'une campagne de revue et obtenir le taux de complétion des décisions ?"
+  },
+  "paths": {
+    "/v1/access-reviews": {
+      "get": {
+        "summary": "Lister toutes les campagnes de revue des accès avec leur statut et période de validité",
+        "operationId": "listAccessReviews",
+        "tags": ["Reviews"],
+        "responses": {
+          "200": {"description": "OK"}
+        }
+      },
+      "post": {
+        "summary": "Lancer une nouvelle campagne de revue des accès en définissant le périmètre, les reviewers et la date limite",
+        "operationId": "createAccessReview",
+        "tags": ["Reviews"],
+        "responses": {
+          "200": {"description": "OK"}
+        }
+      }
+    },
+    "/v1/access-reviews/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Obtenir le détail complet d'une campagne de revue : avancement, statistiques et décisions en attente",
+        "operationId": "getAccessReview",
+        "tags": ["Reviews"],
+        "responses": {
+          "200": {"description": "OK"},
+          "404": {"description": "Campagne de revue non trouvée"}
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les paramètres d'une campagne de revue (date limite, périmètre ou rappels automatiques)",
+        "operationId": "updateAccessReview",
+        "tags": ["Reviews"],
+        "responses": {
+          "200": {"description": "OK"},
+          "404": {"description": "Campagne de revue non trouvée"}
+        }
+      }
+    },
+    "/v1/access-reviews/{id}/decisions": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter toutes les décisions de revue soumises (conserver ou révoquer) avec le détail par accès et par manager",
+        "operationId": "getReviewDecisions",
+        "tags": ["Decisions"],
+        "responses": {
+          "200": {"description": "OK"},
+          "404": {"description": "Campagne de revue non trouvée"}
+        }
+      },
+      "post": {
+        "summary": "Soumettre la décision d'un manager sur un accès spécifique (conserver, révoquer ou escalader) avec justification",
+        "operationId": "submitDecision",
+        "tags": ["Decisions"],
+        "responses": {
+          "200": {"description": "OK"},
+          "400": {"description": "Données invalides"},
+          "404": {"description": "Campagne ou accès non trouvé"}
+        }
+      }
+    },
+    "/v1/access-reviews/{id}/remediation": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer les actions correctives déclenchées suite à la revue : révocations effectuées, ajustements de droits et statut d'exécution",
+        "operationId": "getRemediationActions",
+        "tags": ["Remediation"],
+        "responses": {
+          "200": {"description": "OK"},
+          "404": {"description": "Campagne de revue non trouvée"}
+        }
+      }
+    }
+  }
+}

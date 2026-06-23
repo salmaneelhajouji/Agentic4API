@@ -1,0 +1,132 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Auth API",
+    "version": "2.0.0",
+    "x-api-id": "auth-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Identity",
+    "x-domain": "Identity & Access",
+    "description": "Version actuelle et recommandée — Authentification et autorisation des utilisateurs dans le domaine Identity & Access. Couvre les processus de connexion email/password, génération de tokens JWT stateless, renouvellement de sessions via refresh token, déconnexion avec révocation du token, et le flux complet de réinitialisation de mot de passe oublié avec envoi d'email. Supporte également OAuth2 client_credentials pour les intégrations machine-à-machine. Utilisée par toutes les applications front-end, mobiles et services back-end qui doivent identifier et authentifier leurs utilisateurs avant d'accéder aux ressources protégées. DIFFÉRENCE vs profile-api : Auth API = authentification et session JWT de l'utilisateur connecté (qui es-tu) — profile-api = préférences et données d'affichage du profil utilisateur (comment tu te présentes). DIFFÉRENCE vs permission-api : Auth API = vérifie l'identité (authentification) — permission-api = vérifie les droits d'accès (autorisation RBAC). DIFFÉRENCE vs sso-api : Auth API = authentification directe email/password — sso-api = authentification fédérée via fournisseur externe (Google, SAML, LDAP).",
+    "x-synonymes": "login, connexion, authentification, JWT, token JWT, Bearer token, refresh token, OAuth2, mot de passe oublié, réinitialisation mot de passe, déconnexion, session utilisateur, utilisateur connecté, profil connecté, me endpoint, forgot password, reset password, identifiants, email password login, auth stateless",
+    "x-false-positive-warning": "DIFFÉRENCE vs profile-api : Auth API = authentification et session JWT de l'utilisateur connecté (qui es-tu). profile-api = préférences et données d'affichage du profil utilisateur (comment tu te présentes). DIFFÉRENCE vs permission-api : Auth API = vérifie l'identité (authentification). permission-api = vérifie les droits d'accès (autorisation RBAC). DIFFÉRENCE vs sso-api : Auth API = authentification directe email/password. sso-api = authentification fédérée via fournisseur externe (Google, SAML, LDAP). DIFFÉRENCE vs api-key-api : Auth API = authentification utilisateur humain avec session JWT. api-key-api = gestion des clés API pour accès programmatique sans session utilisateur.",
+    "x-cas-usage": "Comment authentifier un utilisateur avec son email et son mot de passe pour obtenir un JWT valide ? | Comment renouveler le token JWT d'un utilisateur expiré sans le forcer à se reconnecter ? | Comment récupérer le profil et l'identité de l'utilisateur actuellement connecté depuis son JWT ? | Comment implémenter le flux complet de mot de passe oublié avec envoi d'email et réinitialisation sécurisée ? | Comment déconnecter un utilisateur et révoquer son token pour invalider sa session active ?"
+  },
+  "paths": {
+    "/v2/auth/login": {
+      "post": {
+        "summary": "Authentifier un utilisateur avec email et mot de passe, valider ses identifiants et retourner un JWT signé accompagné d'un refresh token pour la gestion de session",
+        "operationId": "login",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {"type": "string", "format": "email"},
+                  "password": {"type": "string", "format": "password"},
+                  "remember_me": {"type": "boolean", "default": false}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "JWT + refresh token"},
+          "401": {"description": "Identifiants invalides"}
+        },
+        "security": []
+      }
+    },
+    "/v2/auth/logout": {
+      "post": {
+        "summary": "Déconnecter l'utilisateur authentifié, révoquer le JWT actif et invalider la session courante pour sécuriser la fin de session",
+        "operationId": "logout",
+        "tags": ["Auth"],
+        "responses": {"204": {"description": "Déconnecté et token révoqué"}}
+      }
+    },
+    "/v2/auth/refresh": {
+      "post": {
+        "summary": "Renouveler un JWT expiré en échangeant le refresh token contre un nouveau JWT valide, permettant de prolonger la session sans demander les identifiants à l'utilisateur",
+        "operationId": "refreshToken",
+        "tags": ["Auth"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["refresh_token"],
+                "properties": {
+                  "refresh_token": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Nouveau JWT généré"},
+          "401": {"description": "Refresh token expiré ou révoqué"}
+        },
+        "security": []
+      }
+    },
+    "/v2/auth/me": {
+      "get": {
+        "summary": "Récupérer le profil complet de l'utilisateur authentifié (identité, rôles, claims) directement depuis le JWT actif sans appel base de données supplémentaire",
+        "operationId": "getMe",
+        "tags": ["Auth"],
+        "responses": {"200": {"description": "Profil utilisateur authentifié"}}
+      }
+    },
+    "/v2/auth/forgot-password": {
+      "post": {
+        "summary": "Initier le flux de réinitialisation du mot de passe oublié en envoyant un email avec un token sécurisé à durée limitée à l'adresse associée au compte",
+        "operationId": "forgotPassword",
+        "tags": ["Auth"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": {
+                  "email": {"type": "string", "format": "email"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"202": {"description": "Email envoyé si le compte existe"}}
+      },
+      "security": []
+    },
+    "/v2/auth/reset-password": {
+      "post": {
+        "summary": "Finaliser la réinitialisation du mot de passe en soumettant le token reçu par email et le nouveau mot de passe respectant la politique de sécurité (minimum 8 caractères)",
+        "operationId": "resetPassword",
+        "tags": ["Auth"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["token", "new_password"],
+                "properties": {
+                  "token": {"type": "string"},
+                  "new_password": {"type": "string", "format": "password", "minLength": 8}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Mot de passe réinitialisé"}}
+      },
+      "security": []
+    }
+  }
+}

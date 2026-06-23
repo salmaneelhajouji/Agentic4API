@@ -1,0 +1,181 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fleet API",
+    "version": "4.0.0",
+    "x-api-id": "fleet-api-v4",
+    "x-api-version": "v4",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Cette API régit le système de gestion globale de la flotte de véhicules (Fleet Management) de l'entreprise (v4). Elle unifie au sein d'une même interface la géolocalisation GPS en temps réel, le suivi de la consommation de carburant et de l'éco-conduite, la planification avancée de la maintenance préventive, ainsi que l'affectation réglementaire des conducteurs aux différents véhicules. Elle est indispensable pour optimiser le coût total de détention (TCO) du parc et est exploitée par les gestionnaires de flotte et les outils d'ordonnancement de transport (TMS).",
+    "x-synonymes": "gestion de flotte, fleet management, parc de véhicules, géolocalisation GPS temps réel, consommation de carburant, suivi odomètre, maintenance préventive de flotte, affectation conducteur, télématique automobile, TCO, coût de détention du parc, gestion des camions, suivi de tournée logistique, alertes de maintenance avancées",
+    "x-false-positive-warning": "Attention : Cette API supervise l'ensemble de la flotte à l'échelle macro (inventaire global, planification d'entretien du parc, télématique d'exploitation). Ne pas la confondre avec la `vehicle-api-v2` qui traite exclusivement des attributs unitaires, de la télémétrie brute en direct et des fiches techniques d'un seul véhicule individuel.",
+    "x-cas-usage": "Comment lister l'intégralité des véhicules du parc actifs avec leur affectation d'exploitation ? | Où interroger la position géographique GPS précise et en temps réel d'un camion en cours de tournée ? | Comment planifier une révision ou un contrôle technique préventif pour un véhicule spécifique ? | Comment extraire l'historique des courbes de consommation de carburant pour identifier les dérives d'un actif ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "Consommation carburant",
+    "Conducteurs",
+    "Alertes avancees"
+  ],
+  "paths": {
+    "/v4/vehicles": {
+      "get": {
+        "summary": "Lister, trier et filtrer l'ensemble des véhicules de la flotte d'exploitation selon leur statut ou type",
+        "operationId": "listVehiclesV4",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et intégrer un nouveau véhicule (camion, tracteur, utilitaire) au sein du parc automobile actif",
+        "operationId": "addVehicleV4",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v4/vehicles/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le dossier administratif complet, les caractéristiques et l'état général d'un véhicule de la flotte",
+        "operationId": "getVehicleV4",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les tags d'affectation, les métadonnées d'exploitation ou le centre de rattachement d'un véhicule",
+        "operationId": "updateVehicle",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Retirer et déclasser définitivement un véhicule de l'inventaire de la flotte active (vente, mise au rebut)",
+        "operationId": "removeVehicle",
+        "tags": [
+          "Vehicles"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v4/vehicles/{id}/location": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la position géographique GPS actuelle et les données de vitesse en temps réel transmises par le boîtier télématique",
+        "operationId": "getVehicleLocation",
+        "tags": [
+          "Location"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v4/vehicles/{id}/maintenance": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique complet des interventions mécaniques réalisées et le calendrier des révisions de l'actif",
+        "operationId": "getVehicleMaintenance",
+        "tags": [
+          "Maintenance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Planifier et enregistrer une nouvelle opération d'entretien préventif ou un contrôle technique obligatoire pour un véhicule",
+        "operationId": "scheduleMaintenance",
+        "tags": [
+          "Maintenance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v4/vehicles/{id}/fuel": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les métriques de consommation de carburant, l'indice d'éco-conduite et les volumes de ravitaillement de l'actif",
+        "operationId": "getFuelConsumption",
+        "tags": [
+          "Fuel"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

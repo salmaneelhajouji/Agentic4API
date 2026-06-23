@@ -1,0 +1,41 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Bank Account API",
+    "version": "1.0.0",
+    "x-api-id": "bank-account-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "⚠️ DEPRECATED — NE PAS UTILISER pour les nouveaux développements. Version 1 basique de l'API de gestion des comptes bancaires couvrant l'ouverture et la consultation de comptes courants et épargne. Cette version ne supporte pas la clôture de compte, les relevés de transactions, ni la conformité PSD2. Les cas d'usage typiques incluent la création de compte et la consultation de listes de comptes pour des applications bancaires internes. DIFFÉRENCE vs bank-account-api-v2 : v2 ajoute la gestion des virements et la consultation de solde. DIFFÉRENCE vs bank-account-api-v3 : v3 intègre PSD2, solde temps réel, relevés de transactions et clôture de compte. Migrer vers bank-account-api-v3 (successeur recommandé).",
+    "x-successor": "bank-account-api-v3",
+    "x-synonymes": "compte bancaire, compte courant, compte épargne, ouverture de compte, gestion de compte, solde bancaire, relevé bancaire, compte client, domiciliation bancaire, titulaire de compte, RIB, IBAN, numéro de compte, compte dépôt, portefeuille bancaire, compte legacy, ancienne API bancaire, compte v1, API bancaire dépréciée, services bancaires de base",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser bank-account-api-v3 pour tout nouveau développement. Ne pas confondre avec bank-account-api-v2 qui ajoute les virements mais reste sans conformité PSD2. Ne pas confondre avec payment-api qui gère les paiements et transactions, ni avec billing-api qui couvre la facturation. Cette API couvre uniquement la gestion des comptes (ouverture, consultation), pas les opérations financières associées.",
+    "x-cas-usage": "Comment lister tous les comptes bancaires d'un client ? | Comment ouvrir un nouveau compte bancaire pour un client ? | Quels sont les champs disponibles pour un compte bancaire en v1 ? | Comment migrer depuis bank-account-api-v1 vers bank-account-api-v3 ? | Quels endpoints sont disponibles dans la version legacy de l'API bancaire ?"
+  },
+  "paths": {
+    "/v1/accounts": {
+      "get": {
+        "summary": "DEPRECATED — Lister les comptes bancaires d'un client sans solde temps réel ni conformité PSD2",
+        "operationId": "listAccountsV1",
+        "tags": ["Accounts"],
+        "responses": {
+          "200": {
+            "description": "Liste des comptes bancaires retournée avec succès"
+          }
+        }
+      },
+      "post": {
+        "summary": "DEPRECATED — Ouvrir un compte bancaire avec des fonctionnalités limitées, sans clôture ni relevés",
+        "operationId": "createAccountV1",
+        "tags": ["Accounts"],
+        "responses": {
+          "200": {
+            "description": "Compte bancaire ouvert avec succès"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Translation API",
+    "version": "1.0.0",
+    "x-api-id": "translation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Localisation",
+    "description": "Traduction automatique de textes par Neural Machine Translation (NMT). Traduction unitaire avec détection automatique de la langue source, traduction en lot jusqu'à 100 textes par requête, détection de langue avec score de confiance, et liste des langues supportées. DIFFÉRENCE vs localization-api : Translation API effectue la traduction de texte brut via NMT (contenu dynamique), Localization API gère les clés de traduction i18n statiques et les formats culturels (dates, devises, pluriels). DIFFÉRENCE vs content-api : Translation traduit du contenu, Content API stocke et gère les contenus traduits.",
+    "x-synonymes": "traduction automatique, NMT, neural machine translation, traduction texte, détection langue, langues supportées, traduction batch, traduction en lot, auto-traduction, traduction multilingue, langue source cible, traduction IA, deep learning traduction, traduction temps réel, localisation texte",
+    "x-false-positive-warning": "Clés i18n, formats culturels (dates, devises) → localization-api. Gestion de contenu multilingue → content-api. Traduction de documents Office/PDF → document-translation-api.",
+    "x-cas-usage": "je veux traduire un texte du français vers l'anglais automatiquement | je veux détecter dans quelle langue est écrit un texte | je veux traduire une liste de 50 descriptions produits en une seule requête | je veux connaître toutes les langues disponibles pour la traduction | je veux traduire sans spécifier la langue source (détection auto)"
+  },
+  "paths": {
+    "/v1/translate": {
+      "post": {
+        "summary": "Traduire un texte vers une langue cible avec détection automatique optionnelle de la langue source",
+        "operationId": "translateText",
+        "tags": ["Translation"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["text", "target_language"],
+                "properties": {
+                  "text": { "type": "string" },
+                  "source_language": { "type": "string", "description": "Auto-détecté si absent" },
+                  "target_language": { "type": "string", "example": "en" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Texte traduit avec langue source détectée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/translate/batch": {
+      "post": {
+        "summary": "Traduire jusqu'à 100 textes en une seule requête vers une langue cible",
+        "operationId": "translateBatch",
+        "tags": ["Translation"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["texts", "target_language"],
+                "properties": {
+                  "texts": { "type": "array", "items": { "type": "string" }, "maxItems": 100 },
+                  "target_language": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Traductions" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/translate/languages": {
+      "get": {
+        "summary": "Lister toutes les langues supportées pour la traduction avec leurs codes ISO",
+        "operationId": "getSupportedLanguages",
+        "tags": ["Translation"],
+        "responses": { "200": { "description": "Langues supportées" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/translate/detect": {
+      "post": {
+        "summary": "Détecter automatiquement la langue d'un texte avec score de confiance",
+        "operationId": "detectLanguage",
+        "tags": ["Translation"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["text"],
+                "properties": { "text": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Langue détectée avec score de confiance" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

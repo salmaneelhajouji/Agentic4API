@@ -1,0 +1,158 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Gift Card API",
+    "version": "1.0.0",
+    "x-api-id": "gift-card-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "Cette API orchestre l'émission, l'activation, la vérification du solde et la consommation des cartes cadeaux et des bons d'achat électroniques sur la plateforme e-commerce. Elle permet de générer des codes uniques de sécurité sécurisés, de suivre l'historique de débit partiel ou total des cartes lors du passage en caisse, de gérer les devises et de contrôler strictement les dates de fin de validité des avoirs commerciaux.",
+    "x-synonymes": "carte cadeau, bon d'achat, chèque cadeau, e-carte cadeau, solde carte cadeau, avoir commercial, émission de bon, code promo monétaire, débit de carte cadeau, historique d'utilisation carte, voucher e-commerce, portefeuille de rechargement",
+    "x-false-positive-warning": "Attention : Cette API gère des moyens de paiement prépayés, des chèques cadeaux et des bons de valeur monétaire stricte (Gift Card). Ne pas la confondre avec la `discount-api` (dédiée à la configuration de codes promotionnels et remises basées sur des pourcentages ou animations marketing sans réserve d'argent physique).",
+    "x-cas-usage": "Comment émettre et envoyer une carte cadeau créditée de 50€ à un destinataire par courriel ? | Où vérifier le solde monétaire restant et la date d'expiration d'un chèque cadeau à partir de son code unique ? | Comment débiter partiellement ou totalement une carte cadeau pour solder le paiement d'une commande ? | Où consulter l'historique complet des transactions et des utilisations successives d'un bon d'achat ?"
+  },
+  "paths": {
+    "/v1/gift-cards/issue": {
+      "post": {
+        "summary": "Générer, créditer et émettre une nouvelle carte cadeau ou un bon d'achat doté d'un code unique sécurisé",
+        "operationId": "issueGiftCard",
+        "tags": [
+          "GiftCards"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "currency"
+                ],
+                "properties": {
+                  "amount": {
+                    "type": "number"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "default": "EUR"
+                  },
+                  "expiry_date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "recipient_email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Carte émise avec code unique"
+          }
+        }
+      }
+    },
+    "/v1/gift-cards/{code}": {
+      "parameters": [
+        {
+          "name": "code",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le solde monétaire disponible, la devise et l'état de validité temporelle d'un code carte cadeau",
+        "operationId": "getGiftCard",
+        "tags": [
+          "GiftCards"
+        ],
+        "responses": {
+          "200": {
+            "description": "Carte"
+          }
+        }
+      }
+    },
+    "/v1/gift-cards/{code}/redeem": {
+      "parameters": [
+        {
+          "name": "code",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Consommer et débiter un montant spécifique sur la carte cadeau pour l'appliquer au paiement d'une commande",
+        "operationId": "redeemGiftCard",
+        "tags": [
+          "GiftCards"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "order_id"
+                ],
+                "properties": {
+                  "amount": {
+                    "type": "number"
+                  },
+                  "order_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Montant débité"
+          },
+          "400": {
+            "description": "Solde insuffisant ou carte expirée"
+          }
+        }
+      }
+    },
+    "/v1/gift-cards/{code}/balance-history": {
+      "parameters": [
+        {
+          "name": "code",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique chronologique des transactions, débits et écritures comptables rattachés au code carte cadeau",
+        "operationId": "getGiftCardHistory",
+        "tags": [
+          "GiftCards"
+        ],
+        "responses": {
+          "200": {
+            "description": "Historique"
+          }
+        }
+      }
+    }
+  }
+}

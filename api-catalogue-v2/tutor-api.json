@@ -1,0 +1,84 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tutor API",
+    "version": "1.0.0",
+    "x-api-id": "tutor-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "Plateforme de tutorat et accompagnement pédagogique. Recherche de tuteurs disponibles par matière et disponibilité, inscription comme tuteur, réservation de sessions de tutorat individuelles, et gestion des sessions (détail, annulation). DIFFÉRENCE vs training-api : Tutor gère la mise en relation individuelle tuteur/apprenant avec sessions personnalisées, Training gère les formations professionnelles collectives avec catalogue et inscriptions RH. DIFFÉRENCE vs course-api : Tutor est du soutien individuel à la demande, Course est du contenu de formation structuré en groupe.",
+    "x-synonymes": "tuteur, tutorat, soutien scolaire, accompagnement pédagogique, session tutorat, mise en relation tuteur, disponibilité tuteur, réservation session, cours particulier, mentor, coaching pédagogique, suivi étudiant, aide scolaire, matière soutien, inscription tuteur",
+    "x-false-positive-warning": "Formations professionnelles collectives → training-api. Contenus de formation structurés → course-api. Gestion des étudiants (profils, inscriptions) → student-api-v2.",
+    "x-cas-usage": "je veux trouver un tuteur disponible en mathématiques | je veux m'inscrire comme tuteur sur la plateforme | je veux réserver une session de tutorat avec un tuteur précis | je veux consulter les disponibilités d'un tuteur pour la semaine | je veux annuler une session de tutorat réservée"
+  },
+  "paths": {
+    "/v1/tutors": {
+      "get": {
+        "summary": "Lister les tuteurs disponibles avec matières, tarifs et disponibilités",
+        "operationId": "listTutors",
+        "tags": ["Tutors"],
+        "responses": { "200": { "description": "Tuteurs disponibles" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "S'inscrire comme tuteur avec matières enseignées, tarif et créneaux de disponibilité",
+        "operationId": "registerTutor",
+        "tags": ["Tutors"],
+        "responses": { "200": { "description": "Tuteur inscrit" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/tutors/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le profil et les créneaux de disponibilité d'un tuteur",
+        "operationId": "getTutorAvailability",
+        "tags": ["Tutors"],
+        "responses": { "200": { "description": "Profil et disponibilités tuteur" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/tutoring/sessions": {
+      "get": {
+        "summary": "Lister les sessions de tutorat planifiées avec tuteur, étudiant, matière et statut",
+        "operationId": "listSessions",
+        "tags": ["Sessions"],
+        "responses": { "200": { "description": "Sessions de tutorat" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Réserver une session de tutorat avec un tuteur sur un créneau disponible",
+        "operationId": "bookSession",
+        "tags": ["Sessions"],
+        "responses": { "200": { "description": "Session réservée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/tutoring/sessions/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le détail d'une session de tutorat (tuteur, étudiant, matière, lien visio)",
+        "operationId": "getSession",
+        "tags": ["Sessions"],
+        "responses": { "200": { "description": "Détail session" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Annuler une session de tutorat réservée",
+        "operationId": "cancelSession",
+        "tags": ["Sessions"],
+        "responses": { "200": { "description": "Session annulée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Plan API",
+    "version": "2.0.0",
+    "x-api-id": "plan-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Gestion des forfaits télécom voix, data et mixtes avec 5G et quotas granulaires. Permet de consulter le catalogue des forfaits disponibles, d en créer de nouveaux, de souscrire un abonné à un forfait et de migrer vers un autre forfait. DIFFÉRENCE vs subscription-api : Plan = forfait télécom avec quota data et voix. subscription-api = abonnement logiciel SaaS.",
+    "x-breaking-changes-from-previous": ["5G inclus", "Quotas data granulaires"],
+    "x-synonymes": "forfait mobile, forfait voix, forfait data, forfait 5G, plan illimité, quota data, plan mixte, souscription forfait, migration forfait, changement forfait, forfait pro, forfait entreprise, plan téléphonique, forfait SMS illimité, plan MVNO, quota mensuel data, rollover data, plan prépayé postpayé, plan familial, plan international roaming",
+    "x-false-positive-warning": "Abonnement logiciel SaaS → subscription-api. Portabilité numéro lors changement opérateur → number-portability-api. Facturation forfait télécom → billing-telecom-api. Version sans 5G → plan-api-v1 (deprecated).",
+    "x-cas-usage": "je veux voir tous les forfaits 5G disponibles dans notre catalogue | je veux souscrire un abonné à un forfait illimité 5G | je veux migrer un client vers un forfait avec plus de data | je veux créer un nouveau forfait 100 Go 5G dans notre catalogue | je veux voir les détails et quotas d un forfait spécifique"
+  },
+  "paths": {
+    "/v2/plans": {
+      "get": {
+        "summary": "Catalogue des forfaits — voix, data, mixtes et 5G avec quotas",
+        "operationId": "listPlansV2",
+        "tags": ["Plans"],
+        "responses": {"200": {"description": "Catalogue forfaits"}}
+      },
+      "post": {
+        "summary": "Créer un nouveau forfait télécom — voix, data, SMS et options 5G",
+        "operationId": "createPlanV2",
+        "tags": ["Plans"],
+        "responses": {"200": {"description": "Forfait créé"}}
+      }
+    },
+    "/v2/plans/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un forfait — quotas data/voix/SMS et options incluses",
+        "operationId": "getPlanV2",
+        "tags": ["Plans"],
+        "responses": {"200": {"description": "Détail forfait"}}
+      },
+      "put": {
+        "summary": "Modifier un forfait — prix, quotas ou options disponibles",
+        "operationId": "updatePlanV2",
+        "tags": ["Plans"],
+        "responses": {"200": {"description": "Forfait modifié"}}
+      }
+    },
+    "/v2/plans/{id}/subscribe": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Souscrire un abonné à un forfait télécom",
+        "operationId": "subscribePlan",
+        "tags": ["Subscribe"],
+        "responses": {"200": {"description": "Abonné souscrit au forfait"}}
+      }
+    },
+    "/v2/plans/{id}/migrate": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Migrer un abonné vers un autre forfait — changement de plan",
+        "operationId": "migratePlan",
+        "tags": ["Migrate"],
+        "responses": {"200": {"description": "Migration forfait effectuée"}}
+      }
+    }
+  }
+}

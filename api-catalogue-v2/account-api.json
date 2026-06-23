@@ -1,0 +1,158 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Account API",
+    "version": "1.0.0",
+    "x-api-id": "account-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Identity",
+    "x-domain": "Identity & Access",
+    "description": "API de gestion des comptes organisations B2B couvrant la création et l'administration d'entités juridiques (entreprises, associations, groupements) au sein de la plateforme. Prend en charge la gestion multi-utilisateurs avec contrôle des rôles et des droits d'accès, la facturation à l'entité, le suivi de la consommation API et les invitations de membres. Utilisateurs typiques : équipes back-office, développeurs d'intégrations SaaS, administrateurs de comptes entreprises. DIFFÉRENCE vs user-api : Account = organisation (personne morale), User = personne physique. DIFFÉRENCE vs customer-profile-api : Account = entreprise cliente B2B, Customer = particulier B2C. DIFFÉRENCE vs employee-api : Account gère les clients entreprises, Employee les collaborateurs internes.",
+    "x-synonymes": "compte entreprise, compte organisation, compte B2B, espace entreprise, multi-utilisateurs, gestion équipe, invitation membre, rôle utilisateur, facturation entreprise, abonnement entreprise, plan tarifaire, consommation API, workspace, tenant entreprise, entité juridique, personne morale, compte client professionnel, accès équipe, numéro TVA, SIRET entreprise",
+    "x-false-positive-warning": "Ne pas confondre avec user-api (personne physique individuelle) ni avec customer-profile-api (particulier B2C). Pour les collaborateurs internes d'une organisation, utiliser employee-api. Account API est exclusivement réservée aux entités juridiques clientes B2B avec gestion multi-membres.",
+    "x-cas-usage": "Comment créer un compte pour une entreprise cliente B2B sur la plateforme ? | Comment inviter des membres dans l'espace d'une organisation et leur attribuer un rôle ? | Comment récupérer les informations de facturation (plan, TVA, adresse) d'un compte entreprise ? | Quels sont les membres actifs d'une organisation et quels rôles leur sont assignés ? | Comment suivre la consommation API d'un compte organisation pour la facturation ?"
+  },
+  "paths": {
+    "/v1/accounts": {
+      "post": {
+        "summary": "Créer un compte organisation B2B avec informations légales, plan tarifaire et email de facturation",
+        "operationId": "createAccount",
+        "tags": ["Accounts"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["account_id", "company_name", "billing_email", "plan"],
+                "properties": {
+                  "account_id": {"type": "string", "pattern": "^ACC-[0-9]{3}$"},
+                  "company_name": {"type": "string", "example": "Devoteam nexDigital"},
+                  "billing_email": {"type": "string", "format": "email"},
+                  "plan": {
+                    "type": "string",
+                    "enum": ["free", "starter", "business", "enterprise"]
+                  },
+                  "vat_number": {"type": "string", "example": "FR12345678901"},
+                  "address": {
+                    "type": "object",
+                    "properties": {
+                      "street": {"type": "string"},
+                      "city": {"type": "string"},
+                      "country": {"type": "string", "example": "FR"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Compte organisation créé"}}
+      },
+      "get": {
+        "summary": "Lister tous les comptes organisations B2B avec filtres par plan tarifaire et statut d'activité",
+        "operationId": "listAccounts",
+        "tags": ["Accounts"],
+        "parameters": [
+          {
+            "name": "plan",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["free", "starter", "business", "enterprise"]
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["active", "suspended", "trial"]
+            }
+          }
+        ],
+        "responses": {"200": {"description": "Liste des comptes organisations"}}
+      }
+    },
+    "/v1/accounts/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^ACC-[0-9]{3}$"}}],
+      "get": {
+        "summary": "Récupérer les détails complets d'un compte organisation par son identifiant unique",
+        "operationId": "getAccount",
+        "tags": ["Accounts"],
+        "responses": {"200": {"description": "Détails du compte"}}
+      },
+      "put": {
+        "summary": "Mettre à jour les informations d'un compte organisation : raison sociale, plan ou email de facturation",
+        "operationId": "updateAccount",
+        "tags": ["Accounts"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "company_name": {"type": "string"},
+                  "plan": {"type": "string"},
+                  "billing_email": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Compte mis à jour"}}
+      }
+    },
+    "/v1/accounts/{id}/members": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Lister tous les membres d'une organisation avec leurs rôles et statuts d'invitation",
+        "operationId": "getMembers",
+        "tags": ["Members"],
+        "responses": {"200": {"description": "Liste des membres"}}
+      },
+      "post": {
+        "summary": "Inviter un membre dans l'organisation par email avec attribution d'un rôle (owner, admin, member, viewer)",
+        "operationId": "inviteMember",
+        "tags": ["Members"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "role"],
+                "properties": {
+                  "email": {"type": "string", "format": "email"},
+                  "role": {
+                    "type": "string",
+                    "enum": ["owner", "admin", "member", "viewer"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {"202": {"description": "Invitation envoyée"}}
+      }
+    },
+    "/v1/accounts/{id}/billing": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer les informations de facturation B2B d'un compte : plan souscrit, numéro TVA et adresse de facturation",
+        "operationId": "getBilling",
+        "tags": ["Billing"],
+        "responses": {"200": {"description": "Informations de facturation"}}
+      }
+    },
+    "/v1/accounts/{id}/usage": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter la consommation API du compte organisation pour le suivi d'utilisation et la facturation à l'usage",
+        "operationId": "getUsage",
+        "tags": ["Usage"],
+        "responses": {"200": {"description": "Consommation API"}}
+      }
+    }
+  }
+}

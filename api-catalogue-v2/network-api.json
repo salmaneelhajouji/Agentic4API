@@ -1,0 +1,108 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Network API",
+    "version": "1.0.0",
+    "x-api-id": "network-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Cette API supervise l'inventaire physique, l'évaluation de la couverture géographique et la qualité de service (QoS) du réseau de télécommunications de l'opérateur. Elle gère la topologie des nœuds de réseau (antennes, commutateurs), permet d'interroger la qualité de couverture mobile sur une localisation précise, consolide les métriques de performance réseau, et centralise la remontée immédiate des incidents techniques d'infrastructure pour l'équipe du NOC.",
+    "x-synonymes": "réseau télécom, nœud de réseau, antenne relais, couverture mobile, qualité de service réseau, QoS télécom, incident réseau, panne d'antenne, topologie télécom, performance réseau, perte de signal, supervision réseau, NOC, disponibilité réseau",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement de l'infrastructure physique réseau, de la couverture hertzienne et de la supervision technique des nœuds télécom (Network). Ne pas la confondre avec la `grid-api` (dédiée au réseau électrique intelligent), ni avec une API de configuration réseau informatique locale (LAN/WAN).",
+    "x-cas-usage": "Comment référencer et ajouter un nouveau nœud d'antenne 5G au sein du référentiel topologique ? | Quelle méthode appeler pour vérifier l'éligibilité et la qualité de la couverture mobile sur des coordonnées géographiques ? | Où extraire les indicateurs de qualité de service (QoS) pour analyser le taux d'appels coupés sur la zone ? | Comment signaler en urgence un incident technique ou une coupure de faisceau hertzien sur le réseau ?"
+  },
+  "paths": {
+    "/v1/network/nodes": {
+      "get": {
+        "summary": "Lister et filtrer l'ensemble des nœuds d'infrastructure et antennes composant le réseau télécom",
+        "operationId": "listNetworkNodes",
+        "tags": [
+          "Nodes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et intégrer un nouveau nœud d'infrastructure réseau ou un relais technique dans le système",
+        "operationId": "addNode",
+        "tags": [
+          "Nodes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/network/coverage/{location}": {
+      "parameters": [
+        {
+          "name": "location",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Analyser et évaluer le niveau de couverture et de puissance de signal (4G/5G) pour une localisation donnée",
+        "operationId": "getCoverage",
+        "tags": [
+          "Coverage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/network/qos": {
+      "get": {
+        "summary": "Récupérer l'ensemble des indicateurs de performance et métriques de qualité de service (QoS) globale du réseau",
+        "operationId": "getQoSMetrics",
+        "tags": [
+          "QoS"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/network/incidents": {
+      "get": {
+        "summary": "Consulter le registre centralisé des pannes d'infrastructures, incidents de signal et dégradations réseau actifs",
+        "operationId": "listNetworkIncidents",
+        "tags": [
+          "Incidents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Signaler et ouvrir immédiatement un ticket d'incident réseau technique suite à une alerte ou défaillance matérielle",
+        "operationId": "reportNetworkIncident",
+        "tags": [
+          "Incidents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Number Portability API",
+    "version": "1.0.0",
+    "x-api-id": "number-portability-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Portabilité des numéros de téléphone entre opérateurs. Permet de soumettre une demande de portabilité entrante ou sortante, de suivre son avancement et de l annuler. Utilisé par les opérateurs et MVNOs pour gérer les changements d opérateur des abonnés tout en conservant leur numéro.",
+    "x-synonymes": "portabilité numéro, changement opérateur, garder son numéro, MNP mobile number portability, portabilité entrante, portabilité sortante, demande portabilité, RIO code, délai portabilité, portabilité mobile fixe, conservation numéro changement opérateur, portabilité ARCEP, date portabilité, portabilité annulation, opérateur donneur, opérateur receveur, portabilité entreprise, portabilité MVNO, statut portabilité, portabilité numéro pro",
+    "x-false-positive-warning": "Gestion et attribution des numéros → number-management-api. Lookup et validation numéro → number-lookup-api. Facturation suite portabilité → billing-telecom-api.",
+    "x-cas-usage": "je veux soumettre une demande de portabilité pour garder mon numéro en changeant d opérateur | je veux voir où en est ma demande de portabilité | je veux annuler une demande de portabilité avant la date effective | je veux lister toutes les portabilités en cours de traitement | je dois gérer la portabilité entrante d un client venant d un autre opérateur"
+  },
+  "paths": {
+    "/v1/portability/requests": {
+      "get": {
+        "summary": "Lister les demandes de portabilité — entrantes, sortantes et statuts",
+        "operationId": "listPortabilityRequests",
+        "tags": ["Requests"],
+        "responses": {"200": {"description": "Demandes portabilité"}}
+      },
+      "post": {
+        "summary": "Soumettre une demande de portabilité — conservation du numéro lors du changement d opérateur",
+        "operationId": "submitPortabilityRequest",
+        "tags": ["Requests"],
+        "responses": {"200": {"description": "Demande soumise"}}
+      }
+    },
+    "/v1/portability/requests/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut d une demande de portabilité — en cours, validée ou refusée",
+        "operationId": "getPortabilityRequest",
+        "tags": ["Requests"],
+        "responses": {"200": {"description": "Statut portabilité"}}
+      },
+      "delete": {
+        "summary": "Annuler une demande de portabilité avant la date effective",
+        "operationId": "cancelPortabilityRequest",
+        "tags": ["Requests"],
+        "responses": {"200": {"description": "Demande annulée"}}
+      }
+    }
+  }
+}

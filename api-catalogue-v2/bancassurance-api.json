@@ -1,0 +1,50 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Bancassurance API",
+    "version": "1.0.0",
+    "x-api-id": "bancassurance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "API couvrant les produits bancassurance, c'est-à-dire les assurances adossées aux crédits bancaires (immobiliers, consommation, professionnels). Elle permet de consulter le catalogue de produits de protection emprunteur, de vérifier en temps réel les garanties actives sur un prêt (décès, invalidité, incapacité, perte d'emploi) et de souscrire une Assurance Décès Invalidité (ADI) directement liée à un emprunt. Les utilisateurs typiques sont les conseillers bancaires, les plateformes de souscription de crédit en ligne et les systèmes de gestion de prêts cherchant à intégrer la protection emprunteur dans leur tunnel de souscription. DIFFÉRENCE vs loan-api-v2 : Bancassurance API = assurance et protection du prêt. loan-api-v2 = création et gestion du prêt bancaire lui-même. DIFFÉRENCE vs auto-insurance-api : Bancassurance API = assurance adossée à un crédit (ADI, protection emprunteur). auto-insurance-api = assurance automobile du véhicule. DIFFÉRENCE vs life-insurance-api : Bancassurance API = assurance spécifiquement liée à un crédit bancaire. life-insurance-api = contrat d'assurance vie épargne et décès indépendant d'un crédit.",
+    "x-synonymes": "assurance emprunteur, ADI, assurance décès invalidité, protection emprunt, assurance crédit immobilier, assurance prêt personnel, assurance crédit consommation, garantie décès emprunteur, garantie invalidité emprunteur, garantie perte emploi emprunteur, couverture prêt, délégation assurance, assurance substitution, TAEA, quotité assurance, co-emprunteur assurance, assurance habitation crédit, assurance prêt professionnel, protection bancaire, assurance adossée crédit",
+    "x-false-positive-warning": "DIFFÉRENCE vs loan-api-v2 : Bancassurance API = assurance et protection du prêt. loan-api-v2 = création et gestion du prêt bancaire lui-même. DIFFÉRENCE vs auto-insurance-api : Bancassurance API = assurance adossée à un crédit (ADI, protection emprunteur). auto-insurance-api = assurance automobile du véhicule. DIFFÉRENCE vs life-insurance-api : Bancassurance API = assurance spécifiquement liée à un crédit bancaire. life-insurance-api = contrat d'assurance vie épargne et décès indépendant d'un crédit. DIFFÉRENCE vs billing-api : Bancassurance API = souscription et gestion des garanties de protection emprunteur. billing-api = facturation et paiement de produits ou services.",
+    "x-cas-usage": "Comment lister les produits bancassurance disponibles pour un crédit immobilier ou à la consommation ? | Comment vérifier les garanties ADI actives (décès, invalidité, perte d'emploi) sur un prêt existant ? | Comment souscrire une Assurance Décès Invalidité adossée à un emprunt bancaire ? | Quels produits de protection emprunteur sont éligibles pour un co-emprunteur ? | Comment récupérer le TAEA et la quotité assurance associés à un crédit en cours ?"
+  },
+  "paths": {
+    "/v1/bancassurance/products": {
+      "get": {
+        "summary": "Lister les produits bancassurance disponibles — ADI, protection emploi et invalidité par type de crédit (immobilier, consommation, professionnel)",
+        "operationId": "listBancassuranceProducts",
+        "tags": ["Products"],
+        "responses": {
+          "200": {"description": "Produits bancassurance disponibles"}
+        }
+      }
+    },
+    "/v1/bancassurance/{loanId}/coverage": {
+      "parameters": [{"name": "loanId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter la couverture assurance d'un prêt — garanties actives (décès, invalidité, incapacité), quotité par emprunteur et TAEA applicable",
+        "operationId": "getLoanCoverage",
+        "tags": ["Coverage"],
+        "responses": {
+          "200": {"description": "Couverture assurance du prêt"},
+          "404": {"description": "Prêt non trouvé"}
+        }
+      },
+      "post": {
+        "summary": "Souscrire une Assurance Décès Invalidité (ADI) pour un emprunt bancaire en définissant les garanties, quotités et co-emprunteurs",
+        "operationId": "subscribeLoanProtection",
+        "tags": ["Coverage"],
+        "responses": {
+          "200": {"description": "ADI souscrite et adossée au prêt"},
+          "400": {"description": "Données invalides"},
+          "404": {"description": "Prêt non trouvé"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Search API",
+    "version": "1.0.0",
+    "x-api-id": "search-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Divers",
+    "x-domain": "Cross",
+    "description": "DEPRECATED — Version 1 du moteur de recherche. Full-text lexical simple sans facettes ni personnalisation. Ne plus utiliser. Migrer vers search-api-v3 qui apporte la recherche hybride LLM, les synonymes configurables et le merchandising.",
+    "x-successor": "search-api-v3",
+    "x-synonymes": "recherche v1 deprecated, moteur recherche legacy",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser search-api-v3.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers search-api-v3."
+  },
+  "paths": {
+    "/v1/search": {
+      "get": {
+        "summary": "[DEPRECATED] Recherche full-text — utiliser search-api-v3",
+        "operationId": "searchV1",
+        "tags": ["Search"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

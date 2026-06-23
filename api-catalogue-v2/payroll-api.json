@@ -1,0 +1,70 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Payroll API",
+    "version": "1.0.0",
+    "x-api-id": "payroll-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe RH",
+    "x-domain": "Human Resources",
+    "description": "Gestion de la paie et des bulletins de salaire. Permet de lancer le calcul mensuel de la paie pour tout ou partie des employés, de consulter les bulletins de salaire, et de simuler la paie nette d un employé selon son salaire brut et ses primes. DIFFÉRENCE vs billing-api : Payroll = salaires des employés avec charges sociales. billing-api = facturation des clients.",
+    "x-synonymes": "bulletin paie, fiche de paie, bulletin salaire, calcul paie, paie mensuelle, salaire net, salaire brut, charges sociales, cotisations patronales, virement salaire, paie simulation, net à payer, DSN déclaration sociale nominative, paie département, lancer paie, URSSAF calcul, congés payés paie, primes salaire, paie employé, journal de paie",
+    "x-false-positive-warning": "Facturation clients → billing-api-v3. Avantages sociaux et mutuelle → benefits-api. Gestion des congés → leave-api. Remboursement de frais → expense-api-v2. Évaluation performance → performance-api.",
+    "x-cas-usage": "je veux lancer le calcul de la paie d avril pour tous nos employés | je veux consulter les bulletins de salaire d un employé sur les 12 derniers mois | je veux simuler le net à payer d un employé avec une prime exceptionnelle | je veux récupérer le bulletin de paie de mars pour un employé | je veux lancer le calcul de paie uniquement pour le département commercial"
+  },
+  "paths": {
+    "/v1/payroll/run": {
+      "post": {
+        "summary": "Lancer le calcul de la paie mensuelle — tout ou partie des employés par département",
+        "operationId": "runPayroll",
+        "tags": ["Payroll"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["month", "year"],
+                "properties": {
+                  "month": {"type": "integer", "minimum": 1, "maximum": 12},
+                  "year": {"type": "integer"},
+                  "department": {"type": "string", "description": "Si absent, toute l entreprise"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"202": {"description": "Calcul de paie lancé"}}
+      }
+    },
+    "/v1/payroll/{employeeId}/slips": {
+      "parameters": [{"name": "employeeId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Historique des bulletins de salaire d un employé",
+        "operationId": "getPaySlips",
+        "tags": ["Payroll"],
+        "responses": {"200": {"description": "Bulletins de salaire"}}
+      }
+    },
+    "/v1/payroll/{employeeId}/slips/{month}": {
+      "parameters": [
+        {"name": "employeeId", "in": "path", "required": true, "schema": {"type": "string"}},
+        {"name": "month", "in": "path", "required": true, "schema": {"type": "string", "example": "2026-04"}}
+      ],
+      "get": {
+        "summary": "Bulletin de salaire d un mois spécifique — net à payer et détail charges",
+        "operationId": "getPaySlip",
+        "tags": ["Payroll"],
+        "responses": {"200": {"description": "Bulletin du mois"}}
+      }
+    },
+    "/v1/payroll/simulate": {
+      "post": {
+        "summary": "Simuler la paie nette d un employé — brut, primes et charges calculées",
+        "operationId": "simulatePayroll",
+        "tags": ["Payroll"],
+        "responses": {"200": {"description": "Simulation paie nette"}}
+      }
+    }
+  }
+}

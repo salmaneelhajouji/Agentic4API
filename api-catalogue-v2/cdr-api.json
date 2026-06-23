@@ -1,0 +1,56 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "CDR API",
+    "version": "1.0.0",
+    "x-api-id": "cdr-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Enregistrements bruts de détail des communications télécom (Call Detail Records). Fournit les données brutes des appels voix, SMS et sessions data avec horodatage, durée, numéros source/destination et volume consommé. Couvre les processus de collecte, stockage et export des événements de communication pour les abonnés fixes et mobiles, y compris les communications en roaming. Utilisé par les équipes data, fraude et conformité pour l'analyse des usages, la détection d'anomalies comportementales et les audits réglementaires. Les utilisateurs typiques sont les analystes de fraude, les équipes de conformité réglementaire et les ingénieurs data chargés de la réconciliation des consommations. DIFFÉRENCE vs billing-telecom-api : CDR API = enregistrements bruts de communications non agrégés ; billing-telecom-api = factures calculées et montants à payer. DIFFÉRENCE vs data-usage-api : CDR API = sessions data brutes historisées par enregistrement ; data-usage-api = consommation data agrégée en temps réel par abonné.",
+    "x-synonymes": "CDR, call detail record, enregistrement appel, détail communication, log appel télécom, historique appels brut, données communication, record SMS, session data télécom, durée appel, numéro appelant, numéro appelé, volume data consommé, trace communication, journal appels, CDR export, analyse CDR, fraude CDR, roaming CDR, CDR temps réel",
+    "x-false-positive-warning": "Factures et montants à payer → billing-telecom-api. Analyse de la qualité réseau → network-quality-api. Surveillance fraude télécom → fraud-detection-api. Consommation data en temps réel → data-usage-api. Historique de facturation agrégé par période → billing-api. Ne pas confondre avec les logs réseau bas niveau (équipements, routeurs) qui relèvent de network-monitoring-api.",
+    "x-cas-usage": "Comment analyser les enregistrements bruts des appels voix d'un abonné pour détecter de la fraude ? | Comment exporter les CDR voix d'un abonné sur une période donnée pour un audit réglementaire ? | Quels sont les CDR SMS échangés par un numéro sur les 30 derniers jours ? | Comment récupérer les sessions data brutes d'un abonné pour analyser sa consommation par APN ? | Comment réconcilier les CDR bruts avec les factures pour résoudre un litige client ?"
+  },
+  "paths": {
+    "/v1/cdr/calls": {
+      "get": {
+        "summary": "Consulter les CDR voix — appels entrants et sortants avec durée, numéros source/destination, horodatage et statut de communication",
+        "operationId": "getCallCDR",
+        "tags": ["Calls"],
+        "responses": {
+          "200": {"description": "CDR appels voix"}
+        }
+      },
+      "post": {
+        "summary": "Exporter les CDR voix en CSV ou JSON pour intégration dans un outil d'analyse externe, audit réglementaire ou réconciliation de facturation",
+        "operationId": "exportCallCDR",
+        "tags": ["Calls"],
+        "responses": {
+          "200": {"description": "Export CDR lancé"}
+        }
+      }
+    },
+    "/v1/cdr/sms": {
+      "get": {
+        "summary": "Consulter les CDR SMS — messages avec expéditeur, destinataire, horodatage d'envoi et statut de livraison par enregistrement brut",
+        "operationId": "getSMSCDR",
+        "tags": ["SMS"],
+        "responses": {
+          "200": {"description": "CDR SMS"}
+        }
+      }
+    },
+    "/v1/cdr/data": {
+      "get": {
+        "summary": "Consulter les CDR data — sessions internet brutes avec volume consommé, APN utilisé, durée de session et identifiant abonné",
+        "operationId": "getDataCDR",
+        "tags": ["Data"],
+        "responses": {
+          "200": {"description": "CDR data"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,201 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Purchase Order API",
+    "version": "1.0.0",
+    "x-api-id": "purchase-order-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Supply",
+    "x-domain": "Supply Chain",
+    "description": "Cette API orchestre la création, le suivi et la réception des bons de commande d'achats émis par l'entreprise auprès de ses fournisseurs référencés (flux B2B amont). Conçue pour les acheteurs, les gestionnaires de stocks et les plateformes logistiques des entrepôts, elle permet d'assurer l'approvisionnement des stocks et d'effectuer les rapprochements physiques lors de la livraison des marchandises.",
+    "x-synonymes": "Bon de commande fournisseur, Commande d'achat B2B, Réception de marchandises, Approvisionnement stocks, Commande fournisseur, Rapprochement de commande, Commande d'achat passée, Réception de stocks, Bon de livraison fournisseur, Rapprochement de facture d'achat, Réapprovisionnement entrepôt, Entrée en stock, Commande d'approvisionnement, Nomenclature d'achat, Restitution fournisseur, Validation de commande d'achat",
+    "x-false-positive-warning": "Attention : Cette API régit uniquement les commandes passées AUX fournisseurs pour l'approvisionnement (B2B). Pour la gestion des commandes d'achat passées PAR les clients finaux lors des ventes (B2C), utilisez exclusivement l'Order API. Pour la gestion de l'annuaire des tiers fournisseurs, utilisez la Supplier API.",
+    "x-cas-usage": "Comment faire pour émettre un nouveau bon de commande ferme auprès d'un fournisseur pour réapprovisionner l'entrepôt ? | Comment faire pour enregistrer la réception de marchandises et mettre à jour le stock physique d'un produit ? | Comment faire pour lister et filtrer les bons de commande d'achat selon leur état logistique (transmis, confirmé, reçu) ?"
+  },
+  "paths": {
+    "/v1/purchase-orders": {
+      "post": {
+        "summary": "Émettre et enregistrer une nouvelle commande d'achat ferme à destination d'un partenaire fournisseur référencé",
+        "operationId": "createPurchaseOrder",
+        "tags": [
+          "PurchaseOrders"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/POCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Bon de commande créé"
+          }
+        }
+      },
+      "get": {
+        "summary": "Rechercher et lister les commandes d'approvisionnement selon leur statut logistique ou l'identifiant du fournisseur",
+        "operationId": "listPurchaseOrders",
+        "tags": [
+          "PurchaseOrders"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft",
+                "sent",
+                "confirmed",
+                "received",
+                "cancelled"
+              ]
+            }
+          },
+          {
+            "name": "supplier_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bons de commande"
+          }
+        }
+      }
+    },
+    "/v1/purchase-orders/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état structurel, le détail des articles commandés et les dates d'échéance de livraison d'une commande d'achat",
+        "operationId": "getPurchaseOrder",
+        "tags": [
+          "PurchaseOrders"
+        ],
+        "responses": {
+          "200": {
+            "description": "Bon de commande"
+          }
+        }
+      }
+    },
+    "/v1/purchase-orders/{id}/receive": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Valider l'entrée en stock et enregistrer les quantités physiques de marchandises effectivement reçues de l'arrivage fournisseur",
+        "operationId": "receivePurchaseOrder",
+        "tags": [
+          "PurchaseOrders"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "received_items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string"
+                        },
+                        "quantity_received": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  },
+                  "notes": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Réception enregistrée — stock mis à jour"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "POCreate": {
+        "type": "object",
+        "required": [
+          "supplier_id",
+          "items"
+        ],
+        "properties": {
+          "supplier_id": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "product_id": {
+                  "type": "string"
+                },
+                "quantity": {
+                  "type": "integer"
+                },
+                "unit_price": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "expected_delivery": {
+            "type": "string",
+            "format": "date"
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Clé API Kong Gateway — contacter votre équipe platform"
+      }
+    }
+  }
+}

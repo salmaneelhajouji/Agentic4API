@@ -1,0 +1,137 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Shipping API",
+    "version": "1.0.0",
+    "x-api-id": "shipping-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Logistique",
+    "x-domain": "Supply Chain",
+    "description": "Gestion des expéditions et livraisons de colis. Calcul et comparaison des frais de port multi-transporteurs (Chronopost, Colissimo, UPS, FedEx, DHL), création d'expéditions avec génération d'étiquettes, suivi de colis par numéro de tracking, annulation d'expédition et création de retours. DIFFÉRENCE vs delivery-api : Shipping gère les colis physiques et les transporteurs (étiquettes, tracking), Delivery gère les créneaux de livraison planifiés et la logistique last-mile. DIFFÉRENCE vs shipping-api-v2 : la v2 est la version recommandée avec tracking GPS temps réel, multi-colis et gestion douanière.",
+    "x-synonymes": "expédition colis, frais de port, transporteur, tracking colis, suivi livraison, étiquette transport, retour colis, colissimo, chronopost, UPS, FedEx, DHL, calcul port, annulation expédition, logistique",
+    "x-false-positive-warning": "Créneaux et plannings de livraison → delivery-api. Expédition multi-colis avec douanes et CO2 → shipping-api-v2 (version recommandée). Suivi multi-transporteurs agrégé → logistics-tracking-api.",
+    "x-cas-usage": "je veux calculer les frais de livraison pour un colis | je veux créer une expédition et générer une étiquette transporteur | je veux suivre où en est mon colis | je veux annuler une expédition en cours | je veux créer un bon de retour pour une commande"
+  },
+  "paths": {
+    "/v1/shipping/estimate": {
+      "post": {
+        "summary": "Estimer et comparer les frais de livraison par transporteur selon poids, dimensions et destination",
+        "operationId": "estimateShipping",
+        "tags": ["Shipping"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["weight", "destination"],
+                "properties": {
+                  "weight": { "type": "number", "description": "Poids en kg" },
+                  "dimensions": {
+                    "type": "object",
+                    "properties": {
+                      "length": { "type": "number" },
+                      "width": { "type": "number" },
+                      "height": { "type": "number" }
+                    }
+                  },
+                  "destination": {
+                    "type": "object",
+                    "properties": {
+                      "country": { "type": "string" },
+                      "zip": { "type": "string" }
+                    }
+                  },
+                  "carriers": {
+                    "type": "array",
+                    "items": { "type": "string", "enum": ["chronopost", "colissimo", "ups", "fedex", "dhl"] }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Estimations par transporteur" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/shipping/create": {
+      "post": {
+        "summary": "Créer une expédition et générer l'étiquette transporteur pour une commande",
+        "operationId": "createShipment",
+        "tags": ["Shipping"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["order_id", "carrier", "destination"],
+                "properties": {
+                  "order_id": { "type": "string" },
+                  "carrier": { "type": "string", "enum": ["chronopost", "colissimo", "ups", "fedex", "dhl"] },
+                  "destination": { "type": "object" },
+                  "weight": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Expédition créée — étiquette générée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/shipping/{trackingId}": {
+      "parameters": [
+        { "name": "trackingId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Suivre l'acheminement d'un colis par numéro de tracking (statut, étapes, date estimée)",
+        "operationId": "trackShipment",
+        "tags": ["Shipping"],
+        "responses": { "200": { "description": "Statut de suivi" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/shipping/{trackingId}/cancel": {
+      "parameters": [
+        { "name": "trackingId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "put": {
+        "summary": "Annuler une expédition avant prise en charge par le transporteur",
+        "operationId": "cancelShipment",
+        "tags": ["Shipping"],
+        "responses": {
+          "200": { "description": "Annulée" }
+        },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/shipping/return": {
+      "post": {
+        "summary": "Créer un retour colis avec génération d'étiquette retour prépayée",
+        "operationId": "createReturn",
+        "tags": ["Shipping"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["order_id", "reason"],
+                "properties": {
+                  "order_id": { "type": "string" },
+                  "reason": { "type": "string" },
+                  "items": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Retour créé — étiquette retour générée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

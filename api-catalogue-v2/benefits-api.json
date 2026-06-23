@@ -1,0 +1,81 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Benefits API",
+    "version": "1.0.0",
+    "x-api-id": "benefits-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe RH",
+    "x-domain": "Human Resources",
+    "description": "API dédiée à la gestion des avantages sociaux et de la complémentaire santé en entreprise. Couvre l'ensemble du cycle de vie des avantages salariaux : consultation du catalogue disponible (mutuelle santé, prévoyance, tickets restaurant, remboursement transport, chèques vacances, CESU, télétravail), souscription d'un avantage pour un salarié et résiliation lors d'un changement de situation ou d'un départ. Utilisée principalement par les équipes RH pour administrer les droits collaborateurs, ainsi que par les portails libre-service permettant aux employés de gérer eux-mêmes leurs avantages. DIFFÉRENCE vs payroll-api-v3 : Benefits API gère les avantages sociaux et leurs souscriptions RH ; payroll-api-v3 calcule la paie, les charges salariales et les fiches de paie. DIFFÉRENCE vs employee-api : Benefits API est centrée sur les avantages sociaux spécifiques ; employee-api couvre le dossier administratif complet du salarié (données personnelles, contrat, historique). DIFFÉRENCE vs expense-api-v2 : Benefits API gère des avantages récurrents attribués par l'entreprise ; expense-api-v2 traite le remboursement de frais professionnels ponctuels soumis par le salarié.",
+    "x-synonymes": "avantages sociaux, mutuelle entreprise, complémentaire santé, prévoyance, tickets restaurant, titre restaurant, remboursement transport, chèques vacances, CESU, participation, intéressement, épargne salariale, PEE, PERCO, avantages salariaux, souscription mutuelle, résiliation mutuelle, avantages collaborateur, CSE avantages, avantages en nature",
+    "x-false-positive-warning": "DIFFÉRENCE vs payroll-api-v3 : Benefits API = gestion des avantages sociaux et souscriptions RH ; payroll-api-v3 = calcul de la paie, des cotisations et des charges salariales, production des bulletins de salaire. DIFFÉRENCE vs employee-api : Benefits API = avantages sociaux spécifiques attribués au salarié ; employee-api = dossier administratif complet du salarié (identité, contrat, poste, historique RH). DIFFÉRENCE vs expense-api-v2 : Benefits API = avantages sociaux récurrents mis en place par l'employeur ; expense-api-v2 = remboursement de frais professionnels ponctuels déclarés par le salarié. DIFFÉRENCE vs hr-api : Benefits API = gestion fine des avantages et souscriptions ; hr-api = orchestration RH globale multi-domaines (onboarding, formation, évaluations).",
+    "x-cas-usage": "Comment afficher le catalogue complet des avantages sociaux disponibles pour les employés de mon entreprise ? | Comment souscrire un nouvel employé à la mutuelle entreprise avec les options de garanties souhaitées ? | Quels avantages sociaux sont actuellement actifs pour un salarié donné ? | Comment résilier automatiquement tous les avantages d'un employé lors de son départ de l'entreprise ? | Comment intégrer la gestion des avantages sociaux dans un portail RH collaborateur en libre-service ?"
+  },
+  "paths": {
+    "/v1/benefits": {
+      "get": {
+        "summary": "Consulter le catalogue complet des avantages sociaux disponibles — mutuelle, tickets restaurant, transport, chèques vacances et autres avantages salariaux",
+        "operationId": "listBenefits",
+        "tags": ["Benefits"],
+        "responses": {
+          "200": {"description": "Catalogue des avantages sociaux disponibles retourné avec succès"}
+        }
+      }
+    },
+    "/v1/benefits/{employeeId}/subscriptions": {
+      "parameters": [
+        {"name": "employeeId", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Consulter la liste des avantages sociaux souscrits et actifs pour un employé — mutuelle, remboursement transport, tickets restaurant et autres",
+        "operationId": "getEmployeeBenefits",
+        "tags": ["Benefits"],
+        "responses": {
+          "200": {"description": "Liste des avantages actifs de l'employé retournée avec succès"},
+          "404": {"description": "Employé non trouvé pour l'identifiant fourni"}
+        }
+      },
+      "post": {
+        "summary": "Souscrire un employé à un avantage social spécifique — mutuelle santé, tickets restaurant, chèques vacances ou remboursement transport, avec options personnalisables",
+        "operationId": "subscribeBenefit",
+        "tags": ["Benefits"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["benefit_id"],
+                "properties": {
+                  "benefit_id": {"type": "string"},
+                  "options": {"type": "object"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {"description": "Avantage souscrit avec succès pour l'employé"},
+          "400": {"description": "Données de souscription invalides ou avantage déjà souscrit"},
+          "404": {"description": "Employé ou avantage non trouvé pour les identifiants fournis"}
+        }
+      }
+    },
+    "/v1/benefits/{employeeId}/subscriptions/{id}": {
+      "parameters": [
+        {"name": "employeeId", "in": "path", "required": true, "schema": {"type": "string"}},
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "delete": {
+        "summary": "Résilier un avantage social souscrit pour un employé — suite à un départ de l'entreprise, un changement de situation familiale ou une demande volontaire",
+        "operationId": "unsubscribeBenefit",
+        "tags": ["Benefits"],
+        "responses": {
+          "200": {"description": "Avantage résilié avec succès pour l'employé"},
+          "404": {"description": "Souscription ou employé non trouvé pour les identifiants fournis"}
+        }
+      }
+    }
+  }
+}

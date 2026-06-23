@@ -1,0 +1,123 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Wealth API",
+    "version": "1.0.0",
+    "x-api-id": "wealth-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Gestion de patrimoine. Établissement du bilan patrimonial consolidé, propositions d'optimisation fiscale, structuration d'actifs et planification de la succession pour les clients de la banque privée (premium). DIFFÉRENCE vs account-api : Wealth API pilote le haut de bilan, les investissements et la transmission patrimoniale, tandis que account-api gère les comptes de dépôt courants et les transactions bancaires quotidiennes.",
+    "x-synonymes": "patrimoine, wealth, bilan patrimonial, fiscalité, succession, investissement, placement, actif, optimisation fiscale, banque privée, haut de bilan, assurance vie, héritage, gestion de fortune, portefeuille d'actifs, défiscalisation",
+    "x-false-positive-warning": "Cette API est dédiée de manière exclusive à la gestion de fortune (Banque Privée). Pour les comptes de dépôt courants, les relevés de compte classiques ou opérations courantes, utilisez account-api.",
+    "x-cas-usage": "je veux générer le bilan patrimonial complet et consolidé d'un client premium | je veux mettre à jour les objectifs de placement et profils de risque d'un client | je veux obtenir des recommandations d'optimisation et de défiscalisation | je veux consulter ou simuler le plan de transmission successorale"
+  },
+  "paths": {
+    "/v1/wealth/{clientId}": {
+      "parameters": [
+        {
+          "name": "clientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Générer l'inventaire global et consolidé des actifs, avoirs et placements financiers du client",
+        "operationId": "getWealthOverview",
+        "tags": [
+          "Wealth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour les objectifs financiers à long terme, horizons de placement et aversion au risque",
+        "operationId": "updateGoals",
+        "tags": [
+          "Wealth"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/wealth/{clientId}/tax-optimization": {
+      "parameters": [
+        {
+          "name": "clientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Calculer et extraire des recommandations d'optimisation fiscale et de défiscalisation sur-mesure",
+        "operationId": "getTaxOptimization",
+        "tags": [
+          "Tax"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/wealth/{clientId}/estate-plan": {
+      "parameters": [
+        {
+          "name": "clientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les simulations de droits de succession et les plans de transmission de patrimoine enregistrés",
+        "operationId": "getEstatePlan",
+        "tags": [
+          "Estate"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

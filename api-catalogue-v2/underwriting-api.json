@@ -1,0 +1,65 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Underwriting API",
+    "version": "1.0.0",
+    "x-api-id": "underwriting-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Souscription assurance et évaluation du risque. Calcul du score de risque d'un dossier de candidature, décision d'acceptation ou de refus avec conditions tarifaires, modification des décisions, et gestion des règles métier d'acceptation (seuils, exclusions, surprimes). DIFFÉRENCE vs claims-api : Underwriting évalue le risque avant souscription du contrat, Claims gère les sinistres après souscription. DIFFÉRENCE vs scoring-api : Underwriting est spécifique au domaine assurance avec règles métier, Scoring est un moteur de score générique.",
+    "x-synonymes": "souscription assurance, évaluation risque, acceptation risque, décision souscription, surprime, refus assurance, règles acceptation, scoring assurance, tarification risque, underwriting assurance, dossier souscription, niveau risque, conditions particulières, sélection risque, actuariat",
+    "x-false-positive-warning": "Gestion des sinistres → claims-api. Scoring crédit → credit-scoring-api. Devis assurance → quote-api.",
+    "x-cas-usage": "je veux évaluer le niveau de risque d'un dossier de souscription | je veux obtenir la décision d'acceptation ou de refus pour un candidat | je veux modifier la décision de souscription suite à des éléments complémentaires | je veux consulter les règles d'acceptation actuelles (seuils, exclusions) | je veux ajouter une nouvelle règle de refus automatique"
+  },
+  "paths": {
+    "/v1/underwriting/evaluate": {
+      "post": {
+        "summary": "Évaluer le niveau de risque d'un dossier de souscription et calculer le score",
+        "operationId": "evaluateRisk",
+        "tags": ["Evaluate"],
+        "responses": { "200": { "description": "Score et niveau de risque" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/underwriting/{applicationId}": {
+      "parameters": [
+        { "name": "applicationId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter la décision de souscription (accepté/refusé/conditions particulières) pour un dossier",
+        "operationId": "getUnderwritingDecision",
+        "tags": ["Applications"],
+        "responses": { "200": { "description": "Décision de souscription" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Modifier la décision de souscription (révision manuelle après éléments complémentaires)",
+        "operationId": "updateDecision",
+        "tags": ["Applications"],
+        "responses": { "200": { "description": "Décision mise à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/underwriting/rules": {
+      "get": {
+        "summary": "Lister les règles d'acceptation en vigueur (seuils, exclusions, surprimes automatiques)",
+        "operationId": "getUnderwritingRules",
+        "tags": ["Rules"],
+        "responses": { "200": { "description": "Règles d'acceptation" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Ajouter une nouvelle règle d'acceptation ou d'exclusion au moteur d'underwriting",
+        "operationId": "addRule",
+        "tags": ["Rules"],
+        "responses": { "200": { "description": "Règle ajoutée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

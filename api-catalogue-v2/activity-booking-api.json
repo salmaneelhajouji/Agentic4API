@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Activity Booking API",
+    "version": "1.0.0",
+    "x-api-id": "activity-booking-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "API de réservation d'activités et de loisirs touristiques couvrant l'ensemble du cycle de vie d'une réservation unitaire : découverte du catalogue d'activités (sports nautiques, visites guidées, excursions, culture, aventure), consultation des créneaux horaires disponibles, confirmation de réservation pour un ou plusieurs participants, et annulation. Les utilisateurs typiques sont les plateformes touristiques en ligne, les hôtels souhaitant proposer des expériences locales à leurs clients, et les agences de voyage recherchant des activités à la carte. DIFFÉRENCE vs tour-operator-api : Activity Booking gère la réservation d'une activité unitaire tandis que tour-operator-api gère la création et la vente de forfaits multi-activités. DIFFÉRENCE vs room-booking-api-v3 : cette API concerne les loisirs et activités de plein air, non les chambres d'hôtel. DIFFÉRENCE vs event-venue-api : les activités ici sont touristiques et de loisir, pas des locations de salles pour événements professionnels.",
+    "x-synonymes": "réservation activité, loisirs touristiques, excursion, visite guidée, sport nautique, kayak, surf, plongée, randonnée, activité touristique, expérience locale, booking activité, créneau disponible, annulation activité, activité culturelle, aventure, tour opérateur activités, planning touristique, sortie organisée, animation touristique",
+    "x-false-positive-warning": "DIFFÉRENCE vs tour-operator-api : Activity Booking = réservation d'une activité unitaire (un surf, une visite). tour-operator-api = création et gestion de forfaits multi-activités organisés. DIFFÉRENCE vs room-booking-api-v3 : Activity Booking = activité de loisir touristique. room-booking-api-v3 = réservation de chambre d'hôtel, sans lien avec les loisirs. DIFFÉRENCE vs event-venue-api : Activity Booking = activité de loisir touristique destinée aux visiteurs individuels ou groupes. event-venue-api = location de salle pour événement professionnel ou séminaire. DIFFÉRENCE vs car-rental-api : Activity Booking = expérience encadrée (guide, moniteur, prestataire). car-rental-api = location de véhicule en autonomie sans prestation d'accompagnement.",
+    "x-cas-usage": "Comment permettre aux clients d'un hôtel de réserver des activités nautiques (surf, kayak, plongée) directement depuis l'application ? | Quels créneaux horaires sont disponibles pour une excursion en bateau le week-end prochain ? | Comment récupérer la liste de toutes les activités culturelles et d'aventure proposées dans une destination touristique ? | Comment annuler une réservation d'activité et obtenir une confirmation d'annulation ? | Comment réserver une visite guidée pour un groupe de touristes avec un nombre précis de participants ?"
+  },
+  "paths": {
+    "/v1/activities": {
+      "get": {
+        "summary": "Lister toutes les activités et loisirs touristiques disponibles dans le catalogue (sports nautiques, visites guidées, excursions, culture, aventure)",
+        "operationId": "listActivities",
+        "tags": ["Activities"],
+        "responses": {
+          "200": {
+            "description": "Liste des activités disponibles"
+          }
+        }
+      },
+      "post": {
+        "summary": "Référencer une nouvelle activité touristique dans le catalogue avec ses caractéristiques, tarifs et créneaux proposés",
+        "operationId": "addActivity",
+        "tags": ["Activities"],
+        "responses": {
+          "200": {
+            "description": "Activité référencée"
+          }
+        }
+      }
+    },
+    "/v1/activities/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le détail et les créneaux horaires disponibles pour une activité touristique identifiée par son identifiant",
+        "operationId": "getAvailableSlots",
+        "tags": ["Activities"],
+        "responses": {
+          "200": {
+            "description": "Créneaux disponibles"
+          }
+        }
+      }
+    },
+    "/v1/activities/{id}/book": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Réserver une activité touristique pour un ou plusieurs participants en choisissant un créneau horaire et en fournissant les informations des participants",
+        "operationId": "bookActivity",
+        "tags": ["Book"],
+        "responses": {
+          "200": {
+            "description": "Réservation confirmée"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Annuler une réservation d'activité touristique existante et libérer les places réservées pour ce créneau",
+        "operationId": "cancelActivity",
+        "tags": ["Book"],
+        "responses": {
+          "200": {
+            "description": "Réservation annulée"
+          }
+        }
+      }
+    }
+  }
+}

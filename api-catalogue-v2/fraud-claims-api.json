@@ -1,0 +1,72 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fraud Claims API",
+    "version": "1.0.0",
+    "x-api-id": "fraud-claims-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Cette API pilote la détection, l'évaluation probabiliste et le traitement des suspicions de fraude lors de la déclaration des sinistres d'assurance. Elle permet de soumettre les caractéristiques d'un sinistre à un modèle d'analyse prédictive pour calculer un score de suspicion, de lever des alertes automatiques basées sur des scénarios suspects récurrents (patterns), et d'orchestrer l'ouverture des dossiers d'investigation pour les enquêteurs spécialisés du service anti-fraude (ALFA).",
+    "x-synonymes": "fraude à l'assurance, fraude aux sinistres, score de suspicion de fraude, alerte fraude assurance, investigation anti-fraude, sinistre suspect, pattern de fraude, scénario de fraude, fausse déclaration, détection de fraude assurance, enquête de sinistre, comportement suspect d'assuré, analyse de fraude claims",
+    "x-false-positive-warning": "Attention : Cette API cible de manière exclusive les mécanismes de fraude liés aux déclarations de dommages, sinistres et contrats de prévoyance ou d'assurance (Insurance). Ne pas la confondre avec la `fraud-detection-api` (qui opère le filtrage et le blocage immédiat des transactions bancaires et fraudes à la carte bancaire en temps réel).",
+    "x-cas-usage": "Comment calculer le score de suspicion de fraude d'une déclaration de sinistre automobile suspecte ? | Où consulter le registre des alertes de fraude remontées automatiquement par le moteur d'analyse ? | Comment marquer une alerte et basculer le dossier en procédure officielle d'investigation ? | Quels sont les patterns de fraude récurrents et les typologies d'abus détectés sur le portefeuille ?"
+  },
+  "paths": {
+    "/v1/fraud/claims/score": {
+      "post": {
+        "summary": "Calculer le score de suspicion et l'indice de risque de fraude d'une déclaration de sinistre soumise",
+        "operationId": "scoreFraudClaim",
+        "tags": [
+          "Score"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/fraud/claims/alerts": {
+      "get": {
+        "summary": "Lister et filtrer les alertes de fraude aux sinistres en attente d'analyse ou d'arbitrage par les enquêteurs",
+        "operationId": "getFraudClaimAlerts",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Ouvrir formellement un dossier d'investigation approfondie pour une alerte de suspicion qualifiée",
+        "operationId": "investigateFraudClaim",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/fraud/claims/patterns": {
+      "get": {
+        "summary": "Consulter la typologie des scénarios (patterns) et comportements frauduleux cartographiés par le système",
+        "operationId": "getFraudPatterns",
+        "tags": [
+          "Patterns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Auto Insurance API",
+    "version": "1.0.0",
+    "x-api-id": "auto-insurance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "API dédiée à l'assurance automobile pour particuliers et flottes d'entreprise, couvrant l'ensemble du cycle de vie contractuel : souscription, consultation des garanties actives, gestion du coefficient bonus-malus et déclaration de constat amiable après accident. Elle permet aux comparateurs d'assurance, courtiers, assureurs directs et applications de gestion de flotte d'automatiser et d'intégrer les processus assurantiels automobiles dans leurs parcours clients. Les utilisateurs typiques sont les développeurs d'agrégateurs de tarifs, les équipes IT des compagnies d'assurance et les gestionnaires de flottes d'entreprise. DIFFÉRENCE vs vehicle-api-v2 : Auto Insurance API = contrat d'assurance et bonus-malus ; vehicle-api-v2 = données techniques du véhicule (immatriculation, kilométrage, entretien). DIFFÉRENCE vs claims-api : Auto Insurance API = souscription et gestion du contrat ; claims-api = déclaration et suivi des sinistres après accident. DIFFÉRENCE vs fleet-api-v4 : Auto Insurance API = assurance des véhicules ; fleet-api-v4 = gestion opérationnelle de la flotte (missions, conducteurs, planning).",
+    "x-synonymes": "assurance auto, assurance voiture, contrat auto, bonus malus, coefficient bonus malus, constat amiable, déclaration accident, garantie tous risques, garantie tiers, responsabilité civile auto, assurance conducteur, prime assurance auto, couverture accident, assurance flotte, véhicule assuré, attestation assurance, carte verte, sinistre auto, franchise auto, assurance au km",
+    "x-false-positive-warning": "DIFFÉRENCE vs vehicle-api-v2 : Auto Insurance API = contrat d'assurance et bonus-malus. vehicle-api-v2 = données techniques du véhicule (immatriculation, kilométrage, entretien). DIFFÉRENCE vs claims-api : Auto Insurance API = souscription et gestion du contrat. claims-api = déclaration et suivi des sinistres après accident. DIFFÉRENCE vs fleet-api-v4 : Auto Insurance API = assurance des véhicules. fleet-api-v4 = gestion opérationnelle de la flotte (missions, conducteurs, planning). DIFFÉRENCE vs driver-api : Auto Insurance API = couverture contractuelle du véhicule ; driver-api = profil, permis et historique du conducteur.",
+    "x-cas-usage": "Comment souscrire une assurance auto pour un nouveau véhicule via l'API ? | Comment consulter le coefficient bonus-malus d'un contrat automobile et son impact sur la prime ? | Comment créer un constat amiable en ligne après un accident de voiture ? | Quels sont les garanties actives et le statut d'un contrat d'assurance pour un véhicule donné ? | Comment intégrer la tarification et la souscription d'assurance auto dans un comparateur de prix ?"
+  },
+  "paths": {
+    "/v1/auto-insurance/{vehicleId}": {
+      "parameters": [
+        {
+          "name": "vehicleId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le contrat d'assurance auto d'un véhicule — garanties actives, montant de la prime et statut contractuel en cours",
+        "operationId": "getAutoInsurance",
+        "tags": ["AutoInsurance"],
+        "responses": {
+          "200": {
+            "description": "Contrat assurance auto"
+          },
+          "404": {
+            "description": "Contrat ou véhicule non trouvé"
+          },
+          "401": {
+            "description": "Non autorisé"
+          }
+        }
+      },
+      "post": {
+        "summary": "Souscrire une nouvelle assurance auto pour un véhicule en choisissant la formule tiers, tous risques ou intermédiaire avec options complémentaires",
+        "operationId": "subscribeAutoInsurance",
+        "tags": ["AutoInsurance"],
+        "responses": {
+          "200": {
+            "description": "Contrat souscrit"
+          },
+          "400": {
+            "description": "Données de souscription invalides"
+          },
+          "401": {
+            "description": "Non autorisé"
+          }
+        }
+      }
+    },
+    "/v1/auto-insurance/{contractId}/bonus-malus": {
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le coefficient bonus-malus d'un contrat automobile — valeur courante, historique des évolutions annuelles et impact calculé sur la prime",
+        "operationId": "getBonusMalus",
+        "tags": ["BonusMalus"],
+        "responses": {
+          "200": {
+            "description": "Coefficient bonus-malus et historique"
+          },
+          "404": {
+            "description": "Contrat non trouvé"
+          },
+          "401": {
+            "description": "Non autorisé"
+          }
+        }
+      }
+    },
+    "/v1/auto-insurance/accident-report": {
+      "post": {
+        "summary": "Créer et transmettre un constat amiable numérique après un accident automobile — parties impliquées, circonstances et dommages déclarés",
+        "operationId": "createAccidentReport",
+        "tags": ["Accident"],
+        "responses": {
+          "200": {
+            "description": "Constat amiable créé et transmis"
+          },
+          "400": {
+            "description": "Données du constat invalides ou incomplètes"
+          },
+          "401": {
+            "description": "Non autorisé"
+          }
+        }
+      }
+    }
+  }
+}

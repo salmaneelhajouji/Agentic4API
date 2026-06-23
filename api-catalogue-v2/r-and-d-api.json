@@ -1,0 +1,62 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "R and D API",
+    "version": "1.0.0",
+    "x-api-id": "r-and-d-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Gestion des projets de Recherche et Développement. Permet de créer et suivre les projets R&D avec leurs jalons, d enregistrer les innovations et résultats, et de gérer les dépôts de brevets associés. Utilisé par les équipes R&D industrielles et bureaux d études pour piloter l innovation.",
+    "x-synonymes": "projet R&D, recherche développement, innovation industrielle, brevet dépôt, jalon R&D, milestone R&D, CIR crédit impôt recherche, projet innovation, TRL technology readiness level, budget R&D, roadmap innovation, POC proof of concept, prototype développement, veille technologique, propriété intellectuelle, laboratoire R&D, bureau d études, axe innovation, financement R&D subvention, rapport R&D",
+    "x-false-positive-warning": "DIFFÉRENCE vs bom-api : R&D API = projets de recherche et innovation. bom-api = nomenclature des composants produits. DIFFÉRENCE vs mes-api : R&D API = projets d innovation. mes-api = supervision de production en cours. DIFFÉRENCE vs pipeline-api : R&D API = pipeline d innovation. pipeline-api = pipeline de données ETL.",
+    "x-cas-usage": "je veux créer un nouveau projet R&D pour notre innovation matériau composite | je veux ajouter un jalon de validation prototype à notre projet | je veux voir tous nos projets R&D en cours avec leurs avancements | je veux mettre à jour les résultats d un projet R&D après les tests | je veux suivre le calendrier des jalons de notre projet d innovation"
+  },
+  "paths": {
+    "/v1/rnd/projects": {
+      "get": {
+        "summary": "Projets R&D — en cours, terminés et abandonnés avec budgets",
+        "operationId": "listRnDProjects",
+        "tags": ["Projects"],
+        "responses": {"200": {"description": "Projets R&D"}}
+      },
+      "post": {
+        "summary": "Créer un projet R&D — objectif, budget et équipe de recherche",
+        "operationId": "createRnDProject",
+        "tags": ["Projects"],
+        "responses": {"200": {"description": "Projet R&D créé"}}
+      }
+    },
+    "/v1/rnd/projects/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un projet R&D — jalons, budget consommé et résultats",
+        "operationId": "getRnDProject",
+        "tags": ["Projects"],
+        "responses": {"200": {"description": "Détail projet R&D"}}
+      },
+      "put": {
+        "summary": "Mettre à jour un projet R&D — résultats, statut ou budget",
+        "operationId": "updateRnDProject",
+        "tags": ["Projects"],
+        "responses": {"200": {"description": "Projet mis à jour"}}
+      }
+    },
+    "/v1/rnd/projects/{id}/milestones": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Jalons d un projet R&D — dates, livrables et statuts",
+        "operationId": "getMilestones",
+        "tags": ["Milestones"],
+        "responses": {"200": {"description": "Jalons R&D"}}
+      },
+      "post": {
+        "summary": "Ajouter un jalon à un projet R&D — date cible et critères de validation",
+        "operationId": "addMilestone",
+        "tags": ["Milestones"],
+        "responses": {"200": {"description": "Jalon ajouté"}}
+      }
+    }
+  }
+}

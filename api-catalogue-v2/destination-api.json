@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Destination API",
+    "version": "1.0.0",
+    "x-api-id": "destination-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Cette API centralise la gestion et la diffusion des guides touristiques, des données météo en temps réel et des calendriers d'événements culturels locaux pour l'ensemble des destinations catalogue. Elle est principalement exploitée par les agences de voyage en ligne, les applications mobiles pour globe-trotteurs et les portails d'offices de tourisme pour enrichir l'expérience de réservation et guider au mieux les voyageurs sur place.",
+    "x-synonymes": "guide touristique, point d'intérêt, attraction locale, météo touristique, office de tourisme, carnet de voyage, séjour touristique, événement local, festival culturel, activité de loisir, catalogue de destinations, météo en temps réel, circuit touristique, voyage organisé, station balnéaire, haut lieu touristique, agenda culturel, patrimoine local",
+    "x-false-positive-warning": "Attention : Cette API délivre exclusivement du contenu éditorial, informationnel et météorologique lié à des zones géographiques ou destinations (Tourism). Ne pas la confondre avec la `booking-api` (qui gère la réservation ferme de chambres d'hôtel ou de vols) ni avec la `transport-api` (dédiée aux grilles horaires des trains ou des bus).",
+    "x-cas-usage": "Comment lister toutes les destinations touristiques actives du catalogue avec leurs filtres thématiques ? | Quels sont les points d'intérêt, musées et monuments incontournables à visiter dans cette ville ? | Quelle est la météo prévue sur les 5 prochains jours pour adapter les activités de plein air ? | Quels festivals culturels ou événements associatifs locaux ont lieu à cette destination le mois prochain ?"
+  },
+  "paths": {
+    "/v1/destinations": {
+      "get": {
+        "summary": "Rechercher et lister l'ensemble des destinations touristiques actives du catalogue avec leurs métadonnées associées",
+        "operationId": "listDestinations",
+        "tags": [
+          "Destinations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/destinations/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'agenda complet et le calendrier des événements culturels, artistiques et associatifs locaux programmés sur une destination",
+        "operationId": "getLocalEvents",
+        "tags": [
+          "Destinations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/destinations/{id}/weather": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le bulletin météorologique en temps réel et les prévisions de température pour la destination sélectionnée",
+        "operationId": "getDestinationWeather",
+        "tags": [
+          "Weather"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/destinations/{id}/attractions": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister les points d'intérêt (POI), musées, monuments historiques et attractions recommandés pour cette destination",
+        "operationId": "getAttractions",
+        "tags": [
+          "Attractions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

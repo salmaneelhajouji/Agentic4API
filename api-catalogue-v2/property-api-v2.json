@@ -1,0 +1,94 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Property API",
+    "version": "2.0.0",
+    "x-api-id": "property-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "x-successor": "property-api-v3",
+    "x-breaking-changes-from-previous": [
+      "Géolocalisation",
+      "Photos multiples"
+    ],
+    "description": "Cette API (Version 2 - Obsolète) expose le référentiel intermédiaire des biens immobiliers, enrichi à l'époque par l'introduction de coordonnées géographiques et de galeries photos multiples. Ce service est en cours d'extinction et reste accessible uniquement pour les systèmes n'ayant pas encore finalisé leur migration vers la version majeure actuelle.",
+    "x-synonymes": "Bien immobilier, Annonce immobilière, Patrimoine immobilier, Logement, Appartement, Maison, Fonds de commerce, Propriété, Local commercial, Référentiel immobilier, Mandat de vente, Fiche bien, Actif immobilier, Parc immobilier, Géolocalisation immobilière, Galerie photos immobilière",
+    "x-false-positive-warning": "Attention : Cette version v2 ne prend pas en charge les fonctionnalités de valorisation automatisée ni les diagnostics de performance énergétique (DPE). L'usage de la version v3 est impératif pour les nouvelles fonctionnalités. Tout ce qui relève de la contractualisation de baux doit être redirigé vers la Lease API.",
+    "x-cas-usage": "Comment faire pour interroger ou mettre à jour un actif immobilier en utilisant les attributs spécifiques de la version v2 (coordonnées GPS et photos multiples) ?"
+  },
+  "paths": {
+    "/v2/properties": {
+      "get": {
+        "summary": "Rechercher et lister les biens immobiliers du catalogue avec support des données de géolocalisation (v2 dépréciée)",
+        "operationId": "listPropertiesV2",
+        "tags": [
+          "Properties"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer un nouvel actif immobilier dans le référentiel avec sa localisation géographique et ses médias (v2 dépréciée)",
+        "operationId": "createPropertyV2",
+        "tags": [
+          "Properties"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/properties/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive d'un bien immobilier, incluant sa position et son catalogue d'images (v2 dépréciée)",
+        "operationId": "getPropertyV2",
+        "tags": [
+          "Properties"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier l'état, les caractéristiques physiques ou les coordonnées d'un bien existant via le protocole v2 (déprécié)",
+        "operationId": "updatePropertyV2",
+        "tags": [
+          "Properties"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

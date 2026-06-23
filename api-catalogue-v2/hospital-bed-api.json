@@ -1,0 +1,106 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Hospital Bed API",
+    "version": "1.0.0",
+    "x-api-id": "hospital-bed-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Cette API centralise l'ordonnancement du capacitaire hospitalier et la gestion de la disponibilité des lits en temps réel au sein des différents services de soins. Elle permet de cartographier l'état d'occupation des lits (libre, occupé, bloqué pour maintenance ou désinfection), de valider les demandes d'admissions physiques de patients lors de leur hospitalisation, de mettre à jour les statuts et d'extraire des indicateurs de gestion critiques comme le taux d'occupation des lits par unité.",
+    "x-synonymes": "capacitaire hospitalier, disponibilité des lits, gestion des lits, taux d'occupation hospitalier, admission patient lit, libération de lit, unité de soins lits, attribution de chambre hospitalière, lit de réanimation, lit d'hospitalisation, statut de lit, brancardage, séjour hospitalier capacitaire, mouvement de patient",
+    "x-false-positive-warning": "Attention : Cette API régit exclusivement l'affectation physique, l'inventaire géolocalisé et la disponibilité des lits au sein des services cliniques (Healthcare). Ne pas la confondre avec la `emergency-api` (triage initial rapide aux urgences type CCMU), ni avec la `hotel-api-v3` qui gère les chambres d'hôtels touristiques.",
+    "x-cas-usage": "Quels sont les lits de soins intensifs actuellement libres et disponibles pour une admission immédiate ? | Comment enregistrer l'admission et l'affectation physique d'un patient dans un lit spécifique ? | Quelle méthode appeler pour libérer un lit suite à la sortie d'un patient d'hospitalisation ? | Où consulter le taux d'occupation analytique des lits par service pour optimiser les flux de patients ?"
+  },
+  "paths": {
+    "/v1/beds": {
+      "get": {
+        "summary": "Rechercher et lister l'ensemble des lits d'hospitalisation disponibles filtrés par service ou type de soins",
+        "operationId": "listBeds",
+        "tags": [
+          "Beds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Valider et enregistrer l'affectation physique et l'admission d'un patient dans un lit spécifique",
+        "operationId": "admitPatient",
+        "tags": [
+          "Beds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/beds/{bedId}": {
+      "parameters": [
+        {
+          "name": "bedId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les caractéristiques techniques, la chambre et le statut d'occupation d'un lit spécifique",
+        "operationId": "getBed",
+        "tags": [
+          "Beds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier l'état technique d'un lit (ex: marquer le lit en cours de désinfection ou indisponible pour maintenance)",
+        "operationId": "updateBedStatus",
+        "tags": [
+          "Beds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Libérer formellement un lit d'hospitalisation suite au départ ou au transfert du patient",
+        "operationId": "releaseBed",
+        "tags": [
+          "Beds"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/beds/occupancy": {
+      "get": {
+        "summary": "Calculer et extraire le taux d'occupation et les indicateurs capacitaires consolidés par unité de soins",
+        "operationId": "getOccupancy",
+        "tags": [
+          "Stats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

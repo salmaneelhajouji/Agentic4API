@@ -1,0 +1,90 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Permission API",
+    "version": "1.0.0",
+    "x-api-id": "permission-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Security",
+    "x-domain": "Security & Compliance",
+    "description": "Contrôle d accès basé sur les rôles (RBAC). Permet de gérer les permissions par ressource et action, de créer des rôles composés de permissions, d assigner et révoquer des rôles à des utilisateurs, et de vérifier programmatiquement si un utilisateur a le droit d effectuer une action. DIFFÉRENCE vs auth-api : auth-api = authentification (qui es-tu ?). Permission API = autorisation (qu as-tu le droit de faire ?).",
+    "x-synonymes": "RBAC, contrôle accès, permission ressource, rôle utilisateur, droits accès, politique accès, autorisation action, vérification permission, assigner rôle, révoquer rôle, read write delete admin, acl access control list, policy accès, scope permission, groupe rôle, habilitation utilisateur, droits CRUD, accès granulaire, matrice droits, permission check",
+    "x-false-positive-warning": "Authentification login token → auth-api. Clés API programmatiques → api-key-api. Révision des droits existants → access-review-api. Gestion des identités → identity-api. SSO et OAuth → sso-api.",
+    "x-cas-usage": "je veux vérifier si un utilisateur a le droit de modifier une commande | je veux créer un rôle manager avec les permissions de lecture et écriture | je veux assigner le rôle admin à un nouvel utilisateur | je veux révoquer le rôle vendeur d un utilisateur qui a changé de poste | je veux lister toutes les permissions disponibles dans notre système"
+  },
+  "paths": {
+    "/v1/permissions": {
+      "get": {
+        "summary": "Lister toutes les permissions — ressources, actions et descriptions",
+        "operationId": "listPermissions",
+        "tags": ["Permissions"],
+        "responses": {"200": {"description": "Permissions"}}
+      },
+      "post": {
+        "summary": "Créer une permission — ressource, action (read/write/delete/admin)",
+        "operationId": "createPermission",
+        "tags": ["Permissions"],
+        "responses": {"201": {"description": "Permission créée"}}
+      }
+    },
+    "/v1/roles": {
+      "get": {
+        "summary": "Lister les rôles — avec les permissions associées",
+        "operationId": "listRoles",
+        "tags": ["Roles"],
+        "responses": {"200": {"description": "Rôles"}}
+      },
+      "post": {
+        "summary": "Créer un rôle — avec un ensemble de permissions",
+        "operationId": "createRole",
+        "tags": ["Roles"],
+        "responses": {"201": {"description": "Rôle créé"}}
+      }
+    },
+    "/v1/users/{userId}/roles": {
+      "parameters": [{"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Rôles d un utilisateur — droits et permissions actifs",
+        "operationId": "getUserRoles",
+        "tags": ["Roles"],
+        "responses": {"200": {"description": "Rôles de l utilisateur"}}
+      },
+      "post": {
+        "summary": "Assigner un rôle à un utilisateur — octroie les permissions du rôle",
+        "operationId": "assignRole",
+        "tags": ["Roles"],
+        "responses": {"200": {"description": "Rôle assigné"}}
+      },
+      "delete": {
+        "summary": "Révoquer un rôle d un utilisateur — retire les permissions associées",
+        "operationId": "revokeRole",
+        "tags": ["Roles"],
+        "responses": {"200": {"description": "Rôle révoqué"}}
+      }
+    },
+    "/v1/check": {
+      "post": {
+        "summary": "Vérifier si un utilisateur a une permission — retourne allowed true/false",
+        "operationId": "checkPermission",
+        "tags": ["Permissions"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["user_id", "resource", "action"],
+                "properties": {
+                  "user_id": {"type": "string"},
+                  "resource": {"type": "string"},
+                  "action": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "allowed: true ou false"}}
+      }
+    }
+  }
+}

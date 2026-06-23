@@ -1,0 +1,83 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Cache API",
+    "version": "1.0.0",
+    "x-api-id": "cache-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "API de gestion du cache distribué permettant d'optimiser les performances applicatives en stockant temporairement des données coûteuses à recalculer (résultats de requêtes SQL, configurations, agrégats métier). Couvre les opérations de lecture, écriture avec TTL configurable, invalidation ciblée par clé ou par préfixe, et consultation des métriques de performance du cache. Basée sur Redis ou Memcached, elle s'adresse aux équipes de développement backend souhaitant réduire la charge sur les bases de données et accélérer les temps de réponse. DIFFÉRENCE vs cdn-api : Cache API = cache applicatif côté serveur pour données métier (Redis/Memcached). cdn-api = cache HTTP de contenu statique distribué géographiquement. DIFFÉRENCE vs storage-api : Cache API = stockage temporaire avec TTL et éviction automatique. storage-api = stockage persistant de fichiers. DIFFÉRENCE vs session-api : Cache API = cache générique clé-valeur pour n'importe quelle donnée. session-api = gestion spécifique des sessions utilisateurs authentifiés.",
+    "x-synonymes": "cache distribué, Redis cache, Memcached, mise en cache, TTL cache, expiration cache, invalidation cache, clé cache, valeur cache, hit rate cache, taux de succès cache, cache miss, cache hit, purge cache, cache prefix, session cache, cache applicatif, cache résultats requête, warm cache, cache layer",
+    "x-false-positive-warning": "DIFFÉRENCE vs cdn-api : Cache API = cache applicatif côté serveur pour données métier (Redis/Memcached). cdn-api = cache HTTP de contenu statique distribué géographiquement. DIFFÉRENCE vs storage-api : Cache API = stockage temporaire avec TTL et éviction automatique. storage-api = stockage persistant de fichiers. DIFFÉRENCE vs session-api : Cache API = cache générique clé-valeur pour n'importe quelle donnée. session-api = gestion spécifique des sessions utilisateurs authentifiés.",
+    "x-cas-usage": "Comment mettre en cache les résultats d'une requête SQL coûteuse avec une durée d'expiration d'une heure ? | Comment invalider le cache d'un utilisateur spécifique après modification de son profil ? | Comment purger toutes les clés de cache commençant par un préfixe donné après une mise à jour du catalogue produit ? | Quels indicateurs consulter pour évaluer le taux de succès du cache et optimiser les valeurs de TTL ? | Comment stocker temporairement des données de calcul intermédiaire avec expiration automatique ?"
+  },
+  "paths": {
+    "/v1/cache/{key}": {
+      "parameters": [{"name": "key", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Lire la valeur associée à une clé de cache — retourne 404 si la clé est absente ou si le TTL a expiré",
+        "operationId": "getCacheValue",
+        "tags": ["Cache"],
+        "responses": {
+          "200": {"description": "Valeur mise en cache"},
+          "404": {"description": "Clé absente ou expirée"}
+        }
+      },
+      "put": {
+        "summary": "Écrire ou mettre à jour une valeur en cache pour une clé donnée, avec TTL configurable en secondes (par défaut 3600 secondes)",
+        "operationId": "setCacheValue",
+        "tags": ["Cache"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["value"],
+                "properties": {
+                  "value": {},
+                  "ttl_seconds": {"type": "integer", "default": 3600}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Valeur enregistrée en cache"}}
+      },
+      "delete": {
+        "summary": "Invalider et supprimer immédiatement une clé de cache avant l'expiration naturelle de son TTL",
+        "operationId": "deleteCacheValue",
+        "tags": ["Cache"],
+        "responses": {"204": {"description": "Clé invalidée"}}
+      }
+    },
+    "/v1/cache/invalidate-prefix": {
+      "delete": {
+        "summary": "Invalider en masse toutes les clés de cache partageant un préfixe commun — utile pour purger le cache d'un domaine entier (ex: product:, user:, config:)",
+        "operationId": "invalidateCachePrefix",
+        "tags": ["Cache"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["prefix"],
+                "properties": {"prefix": {"type": "string"}}
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Toutes les clés du préfixe invalidées"}}
+      }
+    },
+    "/v1/cache/stats": {
+      "get": {
+        "summary": "Consulter les statistiques de performance du cache : hit rate, miss rate, mémoire consommée et nombre total de clés actives",
+        "operationId": "getCacheStats",
+        "tags": ["Cache"],
+        "responses": {"200": {"description": "Statistiques cache"}}
+      }
+    }
+  }
+}

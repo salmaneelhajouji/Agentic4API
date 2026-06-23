@@ -1,0 +1,60 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Knowledge Graph API",
+    "version": "1.0.0",
+    "x-api-id": "knowledge-graph-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Graphe de connaissances pour modéliser les relations entre entités métier. Permet d ajouter des entités (produits, personnes, organisations, concepts), de définir leurs relations sémantiques, et d interroger le graphe via SPARQL ou Cypher. Utilisé par les équipes data et IA pour enrichir les modèles de recommandation, la recherche sémantique et la détection de patterns.",
+    "x-synonymes": "graphe connaissances, knowledge graph, entité graphe, relation sémantique, SPARQL requête, Cypher Neo4j, ontologie données, triplet RDF, noeud graphe, arête relation, graphe entités, réseau connaissances, entity linking, graph database, Neo4j, RDF triplestore, requête graphe, voisins entité, chemin graphe, graphe sémantique",
+    "x-false-positive-warning": "DIFFÉRENCE vs knowledge-base-api : Knowledge Graph API = graphe d entités et relations pour data engineering. knowledge-base-api = articles FAQ pour support client. DIFFÉRENCE vs analytics-api-v3 : Knowledge Graph API = modélisation relationnelle des données. analytics-api-v3 = métriques et KPIs business. DIFFÉRENCE vs search-api : Knowledge Graph API = requêtes structurées sur un graphe. search-api = recherche plein texte dans des documents.",
+    "x-cas-usage": "je veux ajouter un produit et ses relations avec ses fournisseurs dans le graphe | je veux voir tous les voisins d une entité produit dans notre graphe | je veux requêter le graphe avec Cypher pour trouver des patterns de relations | je veux ajouter une relation est-fournisseur-de entre deux entités | je veux enrichir notre moteur de recommandation avec les données du graphe"
+  },
+  "paths": {
+    "/v1/kg/entities": {
+      "get": {
+        "summary": "Lister les entités du graphe — produits, personnes, organisations et concepts",
+        "operationId": "listEntities",
+        "tags": ["Entities"],
+        "responses": {"200": {"description": "Entités du graphe"}}
+      },
+      "post": {
+        "summary": "Ajouter une entité au graphe de connaissances — avec type et attributs",
+        "operationId": "addEntity",
+        "tags": ["Entities"],
+        "responses": {"200": {"description": "Entité ajoutée"}}
+      }
+    },
+    "/v1/kg/relations": {
+      "get": {
+        "summary": "Lister les relations définies dans le graphe — types et cardinalités",
+        "operationId": "listRelations",
+        "tags": ["Relations"],
+        "responses": {"200": {"description": "Relations du graphe"}}
+      },
+      "post": {
+        "summary": "Ajouter une relation sémantique entre deux entités du graphe",
+        "operationId": "addRelation",
+        "tags": ["Relations"],
+        "responses": {"200": {"description": "Relation ajoutée"}}
+      }
+    },
+    "/v1/kg/query": {
+      "post": {
+        "summary": "Requêter le graphe avec SPARQL ou Cypher — recherche relationnelle complexe",
+        "operationId": "queryGraph",
+        "tags": ["Query"],
+        "responses": {"200": {"description": "Résultats requête graphe"}}
+      },
+      "get": {
+        "summary": "Obtenir les entités voisines d une entité — traversée du graphe",
+        "operationId": "getNeighbors",
+        "tags": ["Query"],
+        "responses": {"200": {"description": "Voisins de l entité"}}
+      }
+    }
+  }
+}

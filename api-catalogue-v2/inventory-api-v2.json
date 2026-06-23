@@ -1,0 +1,220 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Inventory API",
+    "version": "2.0.0",
+    "x-api-id": "inventory-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Logistique",
+    "x-domain": "Supply Chain",
+    "x-successor": "inventory-api",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS inventory-api] Cette API gérait la version 2 du système d'inventaire, introduisant les alertes de seuil bas, l'historique des mouvements et un support multi-entrepôts initial. Elle est obsolète ; toutes les intégrations applicatives de la supply chain doivent impérativement migrer vers la version 3 (inventory-api) pour utiliser les endpoints découplés d'alertes, de restock et la modification par PATCH.",
+    "x-breaking-changes-from-previous": [
+      "ID integer → string ITEM-XXX",
+      "Alertes de seuil ajoutées",
+      "Historique mouvements par produit",
+      "Support multi-entrepôt basique (warehouse_id)"
+    ],
+    "x-breaking-changes-in-next": [
+      "Réapprovisionnement automatique déplacé vers endpoint dédié /restock",
+      "Mouvements de stock → PATCH /stock au lieu de PUT",
+      "Alertes → sous-ressource /alerts séparée",
+      "Support multi-devise sur les coûts"
+    ],
+    "x-synonymes": "inventaire de stock v2, niveau de stock déprécié, alerte de seuil bas ancienne, historique des mouvements v2, support multi-entrepôts initial, mouvement de stock v2, stock retail intermédiaire",
+    "x-false-positive-warning": "Attention : Cette API intermédiaire v2 est obsolète. Veiller à rediriger l'intégralité des flux vers la version cible active et moderne `inventory-api`."
+  },
+  "paths": {
+    "/v2/inventory": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS inventory-api - Consulter l'inventaire global avec filtres entrepôts de la version dépréciée v2",
+        "operationId": "listInventoryV2",
+        "tags": [
+          "Inventory"
+        ],
+        "parameters": [
+          {
+            "name": "warehouse_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "below_threshold",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Inventaire"
+          }
+        }
+      }
+    },
+    "/v2/inventory/{itemId}": {
+      "parameters": [
+        {
+          "name": "itemId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^ITEM-[0-9]{3}$"
+          },
+          "description": "Identifiant au format chaîne type ITEM-XXX"
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS inventory-api - Consulter la quantité disponible et le statut d'un produit spécifique (version dépréciée)",
+        "operationId": "getInventoryV2",
+        "tags": [
+          "Inventory"
+        ],
+        "responses": {
+          "200": {
+            "description": "Stock"
+          }
+        }
+      },
+      "put": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS inventory-api - Mettre à jour la quantité en stock d'un produit (remplacé par PATCH /stock en v3)",
+        "operationId": "updateInventoryV2",
+        "tags": [
+          "Inventory"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "quantity",
+                  "operation"
+                ],
+                "properties": {
+                  "quantity": {
+                    "type": "integer"
+                  },
+                  "operation": {
+                    "type": "string",
+                    "enum": [
+                      "set",
+                      "add",
+                      "subtract"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      }
+    },
+    "/v2/inventory/{itemId}/movements": {
+      "parameters": [
+        {
+          "name": "itemId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS inventory-api - Consulter le journal historique des mouvements de stock pour un produit spécifique",
+        "operationId": "getMovementsV2",
+        "tags": [
+          "Inventory"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Mouvements"
+          }
+        }
+      }
+    },
+    "/v2/inventory/alerts": {
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS inventory-api - Configurer une alerte de seuil bas pour un produit (déplacé vers une sous-ressource en v3)",
+        "operationId": "createAlertV2",
+        "tags": [
+          "Alerts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "item_id",
+                  "threshold"
+                ],
+                "properties": {
+                  "item_id": {
+                    "type": "string"
+                  },
+                  "threshold": {
+                    "type": "integer"
+                  },
+                  "notify_email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+          },
+        "responses": {
+          "201": {
+            "description": "Alerte configurée"
+          }
+        }
+      },
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS inventory-api - Lister l'ensemble des alertes de stock de sécurité configurées dans la v2",
+        "operationId": "listAlertsV2",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "Alertes"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Course API",
+    "version": "2.0.0",
+    "x-api-id": "course-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "x-breaking-changes-from-previous": [
+      "Modules structurés",
+      "Progression"
+    ],
+    "x-successor": "course-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS course-api-v3] Cette API gérait la version 2 du catalogue de cours, introduisant la notion de modules structurés et la gestion de la progression pédagogique. Elle permettait aux plateformes d'apprentissage (LMS) et aux équipes pédagogiques d'organiser les formations en chapitres et leçons. Ses utilisateurs (développeurs métiers et intégrateurs tiers) doivent impérativement planifier une migration vers la version 3, qui remplace et unifie cette implémentation.",
+    "x-synonymes": "cours, module de formation, leçon, chapitre, programme éducatif, progression pédagogique, cursus, syllabus, classe virtuelle, matière, enseignement, parcours, tutoriel, séminaire, e-learning, catalogue de formations",
+    "x-false-positive-warning": "Attention : API obsolète gérant le référentiel et la structure des cours (v2). Ne pas confondre avec l'API Inscriptions / Enrollment (pour l'affectation des élèves), l'API Emploi du Temps / Scheduling (pour la planification), ou la nouvelle API cible (course-api-v3).",
+    "x-cas-usage": "Comment récupérer la liste détaillée des modules rattachés à ce cours ? | Est-il possible d'ajouter un nouveau chapitre à un parcours de formation existant ? | Quels sont les cours et cursus disponibles pour la session d'automne ? | Comment adapter mes appels de création de cours pour utiliser la nouvelle course-api-v3 ?"
+  },
+  "paths": {
+    "/v2/courses": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS course-api-v3 - Lister l'ensemble des cours et parcours de formation disponibles dans le catalogue.",
+        "operationId": "listCoursesV2",
+        "tags": [
+          "Courses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS course-api-v3 - Créer une nouvelle fiche de cours ou initier un nouveau cursus pédagogique.",
+        "operationId": "createCourseV2",
+        "tags": [
+          "Courses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/courses/{id}/modules": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS course-api-v3 - Consulter l'arborescence et le contenu des modules (chapitres, leçons) associés à un cours spécifique.",
+        "operationId": "getModulesV2",
+        "tags": [
+          "Modules"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS course-api-v3 - Ajouter un nouveau module pédagogique ou une nouvelle étape d'apprentissage à un cours existant.",
+        "operationId": "addModuleV2",
+        "tags": [
+          "Modules"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

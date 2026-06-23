@@ -1,0 +1,81 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Payout API",
+    "version": "1.0.0",
+    "x-api-id": "payout-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "Versements sortants vers les vendeurs, partenaires et bénéficiaires. Permet de créer un virement SEPA vers un bénéficiaire, de suivre son statut, et d effectuer des virements en masse jusqu à 1000 destinataires. Utilisé par les marketplaces, plateformes freelance et agrégateurs pour reverser les fonds aux vendeurs et partenaires. DIFFÉRENCE vs payment-api : Payout = versement de nous vers un tiers (vendeur, partenaire). payment-api = encaissement d un client vers nous.",
+    "x-synonymes": "versement vendeur, payout marketplace, virement partenaire, reversement commission, paiement fournisseur, virement sortant, SEPA payout, versement affilié, reversement marketplace, batch payout, virement en masse, paiement freelance, reversement platforme, solde vendeur virement, règlement partenaire, payout B2B, commission reversée, bénéficiaire virement, virement aggrégateur, payout e-commerce",
+    "x-false-positive-warning": "Encaissement client vers nous → payment-api-v3. Remboursement client → payment-api-v3 /refund. Paie employés → payroll-api. Virement interne wallet → wallet-api.",
+    "x-cas-usage": "je veux reverser les commissions de nos vendeurs marketplace chaque semaine | je veux virer 800 paiements à nos affiliés en fin de mois | je veux voir si le virement d un partenaire a bien été traité | je veux créer un virement SEPA vers un nouveau bénéficiaire | je veux lister tous les versements en attente de traitement"
+  },
+  "paths": {
+    "/v1/payouts": {
+      "post": {
+        "summary": "Créer un virement vers un bénéficiaire — SEPA avec référence et description",
+        "operationId": "createPayout",
+        "tags": ["Payouts"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["recipient_id", "amount", "currency"],
+                "properties": {
+                  "recipient_id": {"type": "string"},
+                  "amount": {"type": "number"},
+                  "currency": {"type": "string", "example": "EUR"},
+                  "reference": {"type": "string"},
+                  "description": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Virement créé"}}
+      },
+      "get": {
+        "summary": "Lister les virements sortants — filtre par statut et bénéficiaire",
+        "operationId": "listPayouts",
+        "tags": ["Payouts"],
+        "parameters": [
+          {"name": "status", "in": "query", "schema": {"type": "string", "enum": ["pending", "processing", "completed", "failed"]}},
+          {"name": "recipient_id", "in": "query", "schema": {"type": "string"}}
+        ],
+        "responses": {"200": {"description": "Virements"}}
+      }
+    },
+    "/v1/payouts/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut d un virement — en attente, en cours, complété ou échoué",
+        "operationId": "getPayout",
+        "tags": ["Payouts"],
+        "responses": {"200": {"description": "Virement"}}
+      }
+    },
+    "/v1/payouts/batch": {
+      "post": {
+        "summary": "Virements en masse — jusqu à 1000 bénéficiaires simultanément",
+        "operationId": "batchPayouts",
+        "tags": ["Payouts"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["payouts"],
+                "properties": {"payouts": {"type": "array", "items": {"type": "object"}, "maxItems": 1000}}
+              }
+            }
+          }
+        },
+        "responses": {"202": {"description": "Virements groupés en cours"}}
+      }
+    }
+  }
+}

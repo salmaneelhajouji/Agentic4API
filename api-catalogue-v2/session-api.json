@@ -1,0 +1,81 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Session API",
+    "version": "1.0.0",
+    "x-api-id": "session-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Identity",
+    "x-domain": "Identity & Access",
+    "description": "Gestion des sessions utilisateurs actives. Permet de lister les sessions ouvertes d'un utilisateur, de révoquer une session individuelle ou toutes les sessions simultanément (déconnexion forcée globale), et de détecter les sessions suspectes via analyse géolocalisation et réputation IP. DIFFÉRENCE vs auth-api : Session API consulte et révoque les sessions existantes, Auth API les crée (login/token). DIFFÉRENCE vs token-api : Session API gère les sessions navigateur/applicatives avec état, Token API gère les JWT/access tokens sans état.",
+    "x-synonymes": "session utilisateur, gestion sessions, révocation session, déconnexion forcée, sessions actives, session suspecte, liste sessions, invalidation session, contrôle accès session, sécurité sessions, multi-session, logout global, déconnexion totale, session management, audit sessions",
+    "x-false-positive-warning": "Création de session (login) → auth-api. Gestion des tokens JWT/access tokens → token-api. Permissions et rôles → authorization-api.",
+    "x-cas-usage": "je veux voir toutes les sessions actives d'un utilisateur | je veux déconnecter un utilisateur de tous ses appareils | je veux révoquer une session spécifique suite à un signalement | je veux détecter les connexions suspectes ou depuis des IP blacklistées | je veux forcer la déconnexion globale d'un compte compromis"
+  },
+  "paths": {
+    "/v1/sessions/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "get": {
+        "summary": "Lister toutes les sessions actives d'un utilisateur (appareil, IP, date dernière activité)",
+        "operationId": "getUserSessions",
+        "tags": ["Sessions"],
+        "responses": { "200": { "description": "Sessions" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/sessions/{sessionId}": {
+      "parameters": [
+        {
+          "name": "sessionId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "delete": {
+        "summary": "Révoquer une session spécifique — déconnecte l'appareil ciblé sans affecter les autres",
+        "operationId": "revokeSession",
+        "tags": ["Sessions"],
+        "responses": { "204": { "description": "Révoquée" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/sessions/{userId}/revoke-all": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "delete": {
+        "summary": "Révoquer toutes les sessions actives d'un utilisateur — déconnexion forcée globale sur tous les appareils",
+        "operationId": "revokeAllSessions",
+        "tags": ["Sessions"],
+        "responses": { "204": { "description": "Toutes révoquées" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/sessions/suspicious": {
+      "get": {
+        "summary": "Lister les sessions suspectes détectées (géolocalisation inhabituelle, IP blacklistée, anomalie comportementale)",
+        "operationId": "getSuspiciousSessions",
+        "tags": ["Security"],
+        "responses": { "200": { "description": "Sessions suspectes" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

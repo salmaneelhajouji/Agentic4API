@@ -1,0 +1,262 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Tag API",
+    "version": "1.0.0",
+    "x-api-id": "tag-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Operations",
+    "description": "Tags libres et labels sur les ressources (produits, tickets, contrats, clients). Taxonomie folksonomy transversale permettant d'étiqueter, d'organiser et de filtrer n'importe quel objet de la plateforme. DIFFÉRENCE vs segmentation-api : Tag = étiquette libre assignée manuellement à une ressource spécifique, Segmentation = groupe dynamique calculé selon des règles comportementales sur des populations d'utilisateurs. DIFFÉRENCE vs product-catalog-api : Tag = label libre multi-domaine, Category = hiérarchie structurée propre au catalogue produit.",
+    "x-synonymes": "tag, label, étiquette, mot-clé, taxonomie, folksonomie, métadonnée, classification, marquage, catégorisation, ressource, indexation, filtre, organisation, couleur, mot clef, annotation",
+    "x-false-positive-warning": "Pour concevoir des cohortes d'utilisateurs basées sur leur comportement d'achat, utilisez segmentation-api. Pour l'arbre de catégories rigides d'un site marchand, préférez product-catalog-api.",
+    "x-cas-usage": "je veux lister les tags créés pour l'indexation des tickets support | je veux concevoir une nouvelle étiquette de couleur pour marquer des contrats | je veux assigner une série de mots-clés à une fiche produit | je veux extraire toutes les entités portant le label urgent"
+  },
+  "paths": {
+    "/v1/tags": {
+      "get": {
+        "summary": "Lister et rechercher l'ensemble des tags disponibles sur la plateforme, filtrables par type de ressource ciblée",
+        "operationId": "listTags",
+        "tags": [
+          "Tags"
+        ],
+        "parameters": [
+          {
+            "name": "resource_type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "product",
+                "ticket",
+                "contract",
+                "customer",
+                "order",
+                "task"
+              ]
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tags"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer un nouveau tag global caractérisé par un libellé, un code couleur hexadécimal et une description",
+        "operationId": "createTag",
+        "tags": [
+          "Tags"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string",
+                    "example": "#FF5733"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tag créé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/tags/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Mettre à jour les paramètres, l'intitulé ou l'apparence visuelle d'un tag existant",
+        "operationId": "updateTag",
+        "tags": [
+          "Tags"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Supprimer définitivement un tag et le détacher automatiquement de toutes les ressources indexées",
+        "operationId": "deleteTag",
+        "tags": [
+          "Tags"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/tags/assign": {
+      "post": {
+        "summary": "Associer manuellement un ensemble d'étiquettes (tags) à une entité métier spécifique (produit, ticket, contrat)",
+        "operationId": "assignTags",
+        "tags": [
+          "Tags"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "resource_type",
+                  "resource_id",
+                  "tag_ids"
+                ],
+                "properties": {
+                  "resource_type": {
+                    "type": "string",
+                    "enum": [
+                      "product",
+                      "ticket",
+                      "contract",
+                      "customer",
+                      "order",
+                      "task"
+                    ]
+                  },
+                  "resource_id": {
+                    "type": "string"
+                  },
+                  "tag_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tags assignés"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/tags/resources": {
+      "get": {
+        "summary": "Rechercher et filtrer les ressources multi-domaines indexées par une combinaison de tags (logique AND/OR)",
+        "operationId": "getTaggedResources",
+        "tags": [
+          "Tags"
+        ],
+        "parameters": [
+          {
+            "name": "tag_ids",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "IDs séparés par virgule"
+          },
+          {
+            "name": "resource_type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "operator",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "AND",
+                "OR"
+              ],
+              "default": "AND"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ressources tagguées"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

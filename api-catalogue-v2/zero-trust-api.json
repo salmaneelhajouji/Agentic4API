@@ -1,0 +1,85 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Zero Trust API",
+    "version": "1.0.0",
+    "x-api-id": "zero-trust-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Architecture Zero Trust. Moteur de contrôle assurant la vérification continue, stricte et contextuelle de l'identité des utilisateurs, de la conformité des terminaux et de la validité des accès aux applicatifs du SI. DIFFÉRENCE vs iam-api : Zero Trust API analyse dynamiquement le contexte de sécurité et les risques à chaque requête (vérification continue), tandis que iam-api administre les habilitations, annuaires et rôles statiques des collaborateurs.",
+    "x-synonymes": "zero trust, sécurité, zta, authentification continue, politique d'accès, contrôle contextuel, session, privilège minimal, conformité cyber, vérification, sécurité périmétrique, révocation, jeton, identité, sécurité réseau, accès conditionnel, posture de sécurité",
+    "x-false-positive-warning": "Ne pas utiliser pour la création d'utilisateurs, la réinitialisation de mots de passe ou la gestion des groupes statiques (qui dépendent de iam-api ou user-api).",
+    "x-cas-usage": "je veux évaluer et vérifier une demande d'accès selon les règles zero trust | je veux lister l'ensemble des politiques de sécurité zta actives | je veux concevoir une nouvelle règle d'accès conditionnelle et contextuelle | je veux voir la liste des sessions sécurisées actives | je veux révoquer ou clore immédiatement la session suspecte d'un appareil"
+  },
+  "paths": {
+    "/v1/zerotrust/verify": {
+      "post": {
+        "summary": "Valider en temps réel un droit d'accès réseau selon le contexte de l'utilisateur et la posture du terminal",
+        "operationId": "verifyAccess",
+        "tags": [
+          "Verify"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/zerotrust/policies": {
+      "get": {
+        "summary": "Lister et rechercher les politiques et règles de sécurité contextuelles configurées dans le moteur ZTA",
+        "operationId": "listZTAPolicies",
+        "tags": [
+          "Policies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et déployer une nouvelle politique d'accès conditionnel pour sécuriser une ressource",
+        "operationId": "createZTAPolicy",
+        "tags": [
+          "Policies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/zerotrust/sessions": {
+      "get": {
+        "summary": "Lister l'ensemble des sessions actives et authentifiées actuellement encadrées par le moteur zero trust",
+        "operationId": "listZTASessions",
+        "tags": [
+          "Sessions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Révoquer et invalider immédiatement une session d'accès active considérée comme compromise ou suspecte",
+        "operationId": "revokeSession",
+        "tags": [
+          "Sessions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}

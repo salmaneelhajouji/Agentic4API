@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Excess API",
+    "version": "1.0.0",
+    "x-api-id": "excess-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Cette API calcule et applique de manière automatisée les montants de franchises d'assurance et d'auto-rétention lors de la déclaration et de l'indemnisation des sinistres. Intégrée au coeur du système de gestion des polices, elle analyse les clauses contractuelles de l'assuré pour déterminer la part financière restant à sa charge en fonction du type de sinistre (accident, bris de glace, vol), met à disposition le catalogue des typologies de franchises réglementaires et met à jour les comptes de sinistres.",
+    "x-synonymes": "franchise d'assurance, auto-rétention, montant de franchise, calcul de reste à charge, gestion des sinistres, règle contractuelle, indemnisation d'assurance, part de l'assuré, franchise absolue, franchise proportionnelle, plafond de rétention, sinistre automobile, assurance dommages, application de clause, déductible commercial",
+    "x-false-positive-warning": "Attention : Cette API calcule exclusivement les règles de franchises financières, les déductibles et les niveaux d'auto-rétention applicables lors du règlement d'un dommage (Excess). Ne pas la confondre avec la claim-api (qui pilote l'ouverture, l'expertise et l'indemnisation globale du sinistre) ni avec la premium-calculation-api.",
+    "x-cas-usage": "Comment récupérer le montant de base de la franchise configuré pour un contrat d'assurance spécifique ? | Comment calculer dynamiquement la franchise nette applicable et le reste à charge lors de l'évaluation d'un sinistre ? | Où lister l'ensemble des typologies et structures de franchises autorisées dans nos règles de souscription ?"
+  },
+  "paths": {
+    "/v1/excess/{contractId}": {
+      "parameters": [
+        {
+          "name": "contractId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la valeur de la franchise par défaut et les seuils d'auto-rétention configurés pour un contrat",
+        "operationId": "getExcessAmount",
+        "tags": [
+          "Excess"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Calculer de manière dynamique le montant exact de la franchise nette applicable selon la typologie et le coût estimé du sinistre",
+        "operationId": "calculateExcess",
+        "tags": [
+          "Excess"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/excess/types": {
+      "get": {
+        "summary": "Lister l'ensemble des typologies de franchises (absolues, proportionnelles, kilométriques) gérées dans le système d'assurance",
+        "operationId": "listExcessTypes",
+        "tags": [
+          "Types"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

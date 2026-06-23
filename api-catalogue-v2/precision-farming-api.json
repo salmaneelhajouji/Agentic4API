@@ -1,0 +1,78 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Precision Farming API",
+    "version": "1.0.0",
+    "x-api-id": "precision-farming-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Cette API pilote les processus de traitement de données géospatiales pour l'agriculture de précision. Elle permet de compiler des cartes de prescription agronomique variables pour orchestrer la modulation intra-parcellaire (ajustement précis des doses de semis, de fertilisants ou de traitements à l'échelle du mètre carré) et de restituer les cartes de rendement générées par les capteurs des moissonneuses connectées afin de maximiser la performance des campagnes de culture.",
+    "x-synonymes": "agriculture de précision, modulation intra-parcellaire, carte de prescription variable, carte de rendement, intrants variables, agronomie de précision, guidage géospatial de semoir, modulation d'azote, cartographie de rendement de moisson, modulation de dose à l'hectare",
+    "x-false-positive-warning": "Attention : Cette API génère et restitue exclusivement des calques géospatiaux de prescriptions variables et des données d'analyse intra-parcellaires (Precision Farming). Ne pas la confondre avec la `field-api-v2` (qui gère l'inventaire documentaire et foncier des parcelles) ni avec la `harvest-api` (planification temporelle des chantiers de moisson).",
+    "x-cas-usage": "Comment compiler une carte de prescription variable pour moduler l'apport d'azote sur une parcelle ? | Où récupérer la carte de rendement finale générée par la moissonneuse connectée lors du dernier chantier ? | Comment consulter la superposition des calques de modulation appliqués sur un îlot cultural ?"
+  },
+  "paths": {
+    "/v1/precision/{fieldId}": {
+      "parameters": [
+        {
+          "name": "fieldId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la carte de prescription active et les calques de modulation variable pour une parcelle spécifiée",
+        "operationId": "getPrescriptionMap",
+        "tags": [
+          "Precision"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et enregistrer une nouvelle carte de prescription de dose variable pour guider les outils d'épandage connectés",
+        "operationId": "createPrescription",
+        "tags": [
+          "Precision"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/precision/{fieldId}/yield-map": {
+      "parameters": [
+        {
+          "name": "fieldId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la carte de rendement en grains et les métriques de productivité trame par trame d'une parcelle récoltée",
+        "operationId": "getYieldMap",
+        "tags": [
+          "YieldMap"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

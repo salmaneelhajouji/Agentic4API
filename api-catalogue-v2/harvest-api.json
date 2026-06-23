@@ -1,0 +1,128 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Harvest API",
+    "version": "1.0.0",
+    "x-api-id": "harvest-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Cette API orchestre la planification, l'exécution et la traçabilité des chantiers de récolte au sein des domaines agricoles de l'entreprise. Elle permet d'estimer et de planifier les dates optimales de récolte par parcelle, de coordonner l'affectation des engins de récolte, de consigner la clôture des chantiers, et d'enregistrer de manière auditable les tonnages ou rendements agricoles bruts pesés à la récolte pour chaque îlot cultural.",
+    "x-synonymes": "récolte agricole, planification des récoltes, suivi des vendanges, moisson, tonnage récolté, rendement à l'hectare, chantier de récolte, date optimale de récolte, enregistrement du tonnage, pesée agricole, îlot cultural récolte, campagne de moisson, collecte de cultures",
+    "x-false-positive-warning": "Attention : Cette API encadre exclusivement la planification temporelle des moissons/récoltes, la logistique de récolte et les tonnages bruts récoltés aux champs (Harvest). Ne pas la confondre avec la `yield-forecast-api` (qui réalise des calculs prédictifs de rendements théoriques par IA des mois à l'avance), la `field-api-v2` gérant la cartographie, ni avec une API de gestion de stocks de produits finis en magasin.",
+    "x-cas-usage": "Comment planifier et enregistrer une nouvelle session de récolte ou de moisson pour une parcelle de maïs ? | Quelle méthode appeler pour valider la clôture définitive d'un chantier de récolte sur un secteur ? | Où consulter le poids brut et le tonnage précis récolté et pesé sur un îlot cultural spécifique ? | Comment enregistrer un nouveau ticket de pesée ou un relevé de tonnage de blé en fin de journée ?"
+  },
+  "paths": {
+    "/v1/harvests": {
+      "get": {
+        "summary": "Lister et filtrer le calendrier des chantiers de récolte ou de moisson planifiés, en cours ou exécutés",
+        "operationId": "listHarvests",
+        "tags": [
+          "Harvests"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et planifier une nouvelle campagne ou un ordre de récolte sur une parcelle de l'exploitation",
+        "operationId": "createHarvest",
+        "tags": [
+          "Harvests"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/harvests/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive détaillée, l'état d'avancement et les équipes affectées à une récolte spécifique",
+        "operationId": "getHarvest",
+        "tags": [
+          "Harvests"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier la date programmée, les engins agricoles associés ou les remarques logistiques du chantier",
+        "operationId": "updateHarvest",
+        "tags": [
+          "Harvests"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Valider formellement la fin des opérations et marquer le chantier de récolte comme terminé",
+        "operationId": "completeHarvest",
+        "tags": [
+          "Harvests"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/harvests/{id}/tonnage": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le poids total, les relevés de pesée et le tonnage brut récolté sur ce chantier",
+        "operationId": "getTonnage",
+        "tags": [
+          "Tonnage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et consigner une pesée ou une quantité de tonnage récolté spécifique rattachée au dossier",
+        "operationId": "recordTonnage",
+        "tags": [
+          "Tonnage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

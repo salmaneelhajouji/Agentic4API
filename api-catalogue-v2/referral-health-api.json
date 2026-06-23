@@ -1,0 +1,62 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Referral Health API",
+    "version": "1.0.0",
+    "x-api-id": "referral-health-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Orientations médicales entre professionnels de santé. Permet de créer des demandes d orientation vers un spécialiste, de gérer leur statut, et de générer les lettres de liaison associées. Utilisé par les médecins généralistes et hôpitaux pour coordonner le parcours de soins. DIFFÉRENCE vs referral-api : Referral Health = orientation médicale patient vers spécialiste. referral-api = programme de parrainage commercial client.",
+    "x-synonymes": "orientation médicale, demande consultation spécialiste, lettre de liaison, médecin traitant adressage, référent médical, orientation patient, consultation spécialisée, adressage cardiologue dermatologue, courrier médecin, compte rendu orientation, parcours soins coordonnés, médecin correspondant, avis spécialisé demande, lettre adressage, orientation urgence programmée, suivi orientation médicale, acceptation orientation, refus orientation, réponse spécialiste, coordination soins",
+    "x-false-positive-warning": "Parrainage commercial client → referral-api. Plan de soins thérapeutique → care-plan-api. Résultats d analyses → lab-result-api. Dossier médical patient → medical-record-api.",
+    "x-cas-usage": "je veux créer une demande d orientation de mon patient vers un cardiologue | je veux voir toutes les demandes d orientation en attente de réponse | je veux mettre à jour le statut d une orientation acceptée par le spécialiste | je veux générer la lettre de liaison pour une orientation vers un dermatologue | je veux consulter la lettre de liaison d une orientation médicale"
+  },
+  "paths": {
+    "/v1/referrals": {
+      "get": {
+        "summary": "Demandes d orientation médicale — en attente, acceptées et refusées",
+        "operationId": "listReferrals",
+        "tags": ["Referrals"],
+        "responses": {"200": {"description": "Orientations médicales"}}
+      },
+      "post": {
+        "summary": "Créer une demande d orientation vers un spécialiste",
+        "operationId": "createReferral",
+        "tags": ["Referrals"],
+        "responses": {"200": {"description": "Orientation créée"}}
+      }
+    },
+    "/v1/referrals/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d une orientation médicale — spécialiste, motif et statut",
+        "operationId": "getReferral",
+        "tags": ["Referrals"],
+        "responses": {"200": {"description": "Détail orientation"}}
+      },
+      "put": {
+        "summary": "Mettre à jour le statut d une orientation — acceptée, refusée ou en attente",
+        "operationId": "updateStatus",
+        "tags": ["Referrals"],
+        "responses": {"200": {"description": "Statut mis à jour"}}
+      }
+    },
+    "/v1/referrals/{id}/letter": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter la lettre de liaison d une orientation médicale",
+        "operationId": "getLetter",
+        "tags": ["Letters"],
+        "responses": {"200": {"description": "Lettre de liaison"}}
+      },
+      "post": {
+        "summary": "Générer la lettre de liaison pour une orientation médicale",
+        "operationId": "generateLetter",
+        "tags": ["Letters"],
+        "responses": {"200": {"description": "Lettre générée"}}
+      }
+    }
+  }
+}

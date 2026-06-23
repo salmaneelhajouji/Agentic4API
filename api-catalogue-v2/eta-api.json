@@ -1,0 +1,92 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ETA API",
+    "version": "1.0.0",
+    "x-api-id": "eta-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Cette API calcule de manière dynamique le temps d'arrivée estimé (ETA - Estimated Time of Arrival) pour les expéditions, colis et véhicules de transport. Elle s'appuie sur des algorithmes prédictifs agrégeant l'état du trafic routier en temps réel, les alertes et conditions météorologiques, ainsi que l'historique des trajets passés pour fournir des heures d'arrivée hautement précises et rafraîchir en continu le suivi opérationnel de la supply chain.",
+    "x-synonymes": "temps d'arrivée estimé, ETA, heure de livraison estimée, suivi de transport, trafic en temps réel, conditions de circulation, statut de livraison, géolocalisation d'expédition, prédiction de trajet, suivi de colis, retard de transport, fenêtre de livraison, tracking de fret, calcul de parcours temporel, coordination logistique",
+    "x-false-positive-warning": "Attention : Cette API calcule et rafraîchit uniquement les estimations temporelles et les heures d'arrivée prédictives d'un transport en mouvement (ETA). Ne pas la confondre avec la route-optimization-api (qui conçoit mathématiquement l'itinéraire, l'ordre des étapes et le parcours routier optimal avant le départ).",
+    "x-cas-usage": "Comment soumettre des coordonnées et des conditions de trafic pour calculer l'heure d'arrivée estimée d'un véhicule ? | Où consulter et récupérer l'ETA en temps réel d'une expédition de marchandises spécifique ? | Comment rafraîchir et mettre à jour l'ETA d'une livraison suite à une alerte d'embouteillage ? | Comment mesurer la précision historique des estimations fournies sur un itinéraire pour optimiser le modèle ?"
+  },
+  "paths": {
+    "/v1/eta/calculate": {
+      "post": {
+        "summary": "Calculer l'heure estimée d'arrivée (ETA) entre des points géographiques en agrégeant le trafic et la météo",
+        "operationId": "calculateETA",
+        "tags": [
+          "ETA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/eta/{shipmentId}": {
+      "parameters": [
+        {
+          "name": "shipmentId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'heure d'arrivée estimée (ETA) et le statut de livraison en temps réel d'une expédition ou d'un colis",
+        "operationId": "getShipmentETA",
+        "tags": [
+          "ETA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour et recalculer manuellement ou automatiquement l'ETA d'un transport suite à un aléa de trajet",
+        "operationId": "updateETA",
+        "tags": [
+          "ETA"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/eta/history/{routeId}": {
+      "parameters": [
+        {
+          "name": "routeId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les métriques de fiabilité et d'écart historique pour analyser la précision des estimations fournies sur ce trajet",
+        "operationId": "getETAHistory",
+        "tags": [
+          "History"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

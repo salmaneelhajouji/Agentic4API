@@ -1,0 +1,35 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Number Lookup API",
+    "version": "1.0.0",
+    "x-api-id": "number-lookup-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Identification et validation des numéros de téléphone. Permet de déterminer l opérateur, le type (mobile/fixe/VoIP), le pays et la validité d un numéro, individuellement ou en masse. Utilisé pour valider les numéros avant envoi SMS, détecter les numéros invalides et optimiser les coûts d envoi. DIFFÉRENCE vs iban-validation-api : Number Lookup = numéros de téléphone. iban-validation-api = IBAN bancaires.",
+    "x-synonymes": "lookup numéro, identification opérateur, validation numéro téléphone, opérateur mobile, numéro mobile fixe VoIP, HLR lookup, numéro valide, format E.164, indicatif pays téléphone, portabilité numéro lookup, numéro MVNO, roaming numéro, batch lookup téléphone, nettoyage base numéros, détection numéro invalide, country code téléphone, MNP lookup, numéro prépayé, numéro professionnel, validation SMS avant envoi",
+    "x-false-positive-warning": "Validation IBAN bancaire → iban-validation-api. Portabilité numéro entre opérateurs → number-portability-api. Attribution et gestion de numéros → number-management-api. Qualité réseau → network-quality-api.",
+    "x-cas-usage": "je veux vérifier si un numéro est valide avant d envoyer un SMS | je veux identifier l opérateur d un numéro pour optimiser les coûts d envoi | je veux nettoyer ma base de 10 000 numéros en masse | je veux détecter si un numéro est mobile ou fixe | je veux vérifier si un numéro appartient toujours au même opérateur après portabilité"
+  },
+  "paths": {
+    "/v1/lookup/{number}": {
+      "parameters": [{"name": "number", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Identifier un numéro — opérateur, type mobile/fixe/VoIP et pays",
+        "operationId": "getCarrierInfo",
+        "tags": ["Lookup"],
+        "responses": {"200": {"description": "Informations numéro"}}
+      }
+    },
+    "/v1/lookup/batch": {
+      "post": {
+        "summary": "Identification en masse de numéros — validation et opérateur pour une liste",
+        "operationId": "batchLookup",
+        "tags": ["Batch"],
+        "responses": {"200": {"description": "Résultats batch lookup"}}
+      }
+    }
+  }
+}

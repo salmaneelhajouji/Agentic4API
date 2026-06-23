@@ -1,0 +1,67 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Property Management API",
+    "version": "1.0.0",
+    "x-api-id": "property-management-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Cette API fournit une console de supervision, de consolidation et de reporting macroscopique pour la gestion de portefeuilles d'actifs immobiliers. Elle permet aux gestionnaires de patrimoine et analystes financiers de consolider les données financières multi-biens, de suivre l'évolution des parcs fonciers et de piloter les indicateurs de rentabilité globale.",
+    "x-synonymes": "Gestion de portefeuille immobilier, Portefeuille d'actifs fonciers, Consolidation immobilière, Reporting de performance, KPIs immobiliers, Taux d'occupation, Rendement locatif, Patrimoine immobilier consolidé, Suivi des actifs fonciers, Valorisation de portefeuille, Arbitrage immobilier, Indicateurs de gestion locative, Analyse de rendement, Parc immobilier sous gestion, Taux de vacance locative, Supervision du patrimoine",
+    "x-false-positive-warning": "Attention : Cette API consolide et pilote les portefeuilles immobiliers à un niveau macro. Pour toute opération de création, consultation de détail ou modification d'une fiche d'un seul bien immobilier individuel, utilisez exclusivement la Property API v3.",
+    "x-cas-usage": "Comment faire pour obtenir la vue d'ensemble consolidée de la performance et de la vacance d'un portefeuille immobilier ? | Comment faire pour rattacher un nouvel actif immobilier au périmètre d'exploitation d'un portefeuille existant ? | Comment faire pour extraire les indicateurs clés de performance (KPIs) financiers et d'occupation du patrimoine ?"
+  },
+  "paths": {
+    "/v1/portfolio": {
+      "get": {
+        "summary": "Consulter l'état de consolidation global, l'évaluation financière et la composition d'un portefeuille d'actifs immobiliers",
+        "operationId": "getPortfolioOverview",
+        "tags": [
+          "Portfolio"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Associer un nouvel actif immobilier ou logement au périmètre de gestion d'un portefeuille d'investissement",
+        "operationId": "addPropertyToPortfolio",
+        "tags": [
+          "Portfolio"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/portfolio/kpis": {
+      "get": {
+        "summary": "Extraire les indicateurs de performance clés (rendement locatif, taux d'occupation, taux de vacance) consolidés du patrimoine",
+        "operationId": "getPortfolioKPIs",
+        "tags": [
+          "KPIs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    }
+  }
+}

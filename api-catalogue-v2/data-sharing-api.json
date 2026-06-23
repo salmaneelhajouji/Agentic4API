@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Sharing API",
+    "version": "1.0.0",
+    "x-api-id": "data-sharing-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API orchestre l'échange et le partage sécurisé de données (Data Sharing) avec des partenaires externes, des filiales ou des tiers de confiance. Elle permet d'établir, de suivre et d'auditer des accords de partage temporaires ou permanents, en définissant des restrictions d'accès précises, des politiques de gouvernance et des dates d'expiration automatiques. Elle est principalement exploitée par les équipes de Business Development, de conformité ou de Data Engineering pour automatiser l'ouverture sécurisée des flux de données transfrontaliers ou inter-entreprises sans compromettre le patrimoine informationnel d'origine.",
+    "x-synonymes": "partage de données, data sharing, échange de données, accord de partage, contrat d'échange data, data clean room, partage sécurisé, mise à disposition de données, transfert de données, révocation d'accès data, partage tiers, autorisation d'échange, flux inter-entreprises, expiration d'accès data, data partnership, partage de fichiers de données, convention d'échange, fenêtre de partage",
+    "x-false-positive-warning": "Attention : Cette API gère la contractualisation technique et l'ouverture de fenêtres de partage sécurisées avec des entités externes ou des partenaires tiers (Data Sharing). Ne pas la confondre avec la `data-marketplace-api` (qui gère la place de marché interne et les abonnements à des produits de données au sein de l'entreprise), la `data-access-control-api` (qui applique les habilitations et filtrages techniques directs sur les bases de données), ni avec la `data-processing-agreement-api` (dédiée au traitement réglementaire et contractuel pur des clauses juridiques RGPD).",
+    "x-cas-usage": "Comment formaliser un accord de partage sécurisé pour transférer nos rapports logistiques à un distributeur externe ? | Où puis-je consulter la liste des accords d'échange arrivant à expiration dans les 30 prochains jours ? | Comment révoquer immédiatement l'accès d'un partenaire tiers à un jeu de données partagé suite à la fin d'un contrat ? | Quels sont les détails d'autorisation et les restrictions géographiques appliqués à cet accord de partage spécifique ?"
+  },
+  "paths": {
+    "/v1/data-sharing/agreements": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des accords de partage de données et de partenariats d'échange actuellement configurés",
+        "operationId": "listSharingAgreements",
+        "tags": [
+          "Agreements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer un nouvel accord de partage de données sécurisé avec un tiers en définissant les règles de gouvernance et les critères d'expiration",
+        "operationId": "createSharingAgreement",
+        "tags": [
+          "Agreements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/data-sharing/agreements/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les détails structurels, les autorisations spécifiques et l'état d'activation d'un accord d'échange de données",
+        "operationId": "getSharingAgreement",
+        "tags": [
+          "Agreements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Révoquer définitivement et clore un accord de partage pour couper les accès aux flux de données associés",
+        "operationId": "revokeSharingAgreement",
+        "tags": [
+          "Agreements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

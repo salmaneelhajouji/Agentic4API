@@ -1,0 +1,130 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Feature Store API",
+    "version": "1.0.0",
+    "x-api-id": "feature-store-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API fait office de registre centralisé et de plateforme de mise à disposition des variables prédictives (features) de Machine Learning. Elle permet aux équipes Data d'enregistrer, de versionner et de servir des caractéristiques calculées de façon unifiée : soit en mode Batch (Offline Serving) pour alimenter l'entraînement des modèles, soit à très faible latence (Online Serving) pour les calculs d'inférence en temps réel, neutralisant ainsi le risque de divergence des données (training-serving skew).",
+    "x-synonymes": "magasin de caractéristiques, feature store, variable prédictive, ingénierie des features, offline serving, inférence temps réel, training-serving skew, versionnement de variables, registre MLOps, pipeline de caractéristiques, partage de métriques ML, data science feature",
+    "x-false-positive-warning": "Attention : Cette API administre des caractéristiques mathématiques et variables d'entrée destinées aux modèles de données IA (Features). Ne pas la confondre avec la `feature-flag-api` (qui gère l'activation ou l'exposition de branches de code et de fonctionnalités de l'interface applicative) ni avec la `data-catalog-api`.",
+    "x-cas-usage": "Comment publier et documenter une nouvelle variable de scoring d'attrition calculée par nos ingénieurs ? | Où extraire l'historique complet et les versions successives d'une caractéristique métier partagée ? | Comment récupérer l'ensemble des variables précalculées (offline) nécessaires au réentraînement d'un modèle ?"
+  },
+  "paths": {
+    "/v1/features": {
+      "get": {
+        "summary": "Lister et parcourir les caractéristiques (features) de Machine Learning documentées et partagées dans le référentiel",
+        "operationId": "listFeatures",
+        "tags": [
+          "Features"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et enregistrer une nouvelle variable prédictive (feature) dans le magasin centralisé",
+        "operationId": "createFeature",
+        "tags": [
+          "Features"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/features/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche technique descriptive, le type de données et la documentation sémantique d'une feature",
+        "operationId": "getFeature",
+        "tags": [
+          "Features"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour la description, la propriété ou les tags de classification d'une feature existante",
+        "operationId": "updateFeature",
+        "tags": [
+          "Features"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/features/{id}/versions": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister l'historique et les versions successives d'une variable prédictive pour assurer la reproductibilité",
+        "operationId": "getFeatureVersions",
+        "tags": [
+          "Versions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Publier une nouvelle version ou un ajustement structurel de la logique de calcul de la feature",
+        "operationId": "publishVersion",
+        "tags": [
+          "Versions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/features/serving": {
+      "post": {
+        "summary": "Extraire un jeu de données historiques (offline serving) consolidé pour l'entraînement d'un algorithme",
+        "operationId": "getOfflineFeatures",
+        "tags": [
+          "Serving"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

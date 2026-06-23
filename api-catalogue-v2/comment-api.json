@@ -1,0 +1,112 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Comment API",
+    "version": "1.0.0",
+    "x-api-id": "comment-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Operations",
+    "description": "API de gestion des commentaires et annotations collaboratifs ancrés à des ressources internes telles que tickets, tâches, documents, contrats et commandes. Couvre les processus d'annotation contextuelle, de discussion en fil de réponses, de mention de collaborateurs via @mention, d'ajout de réactions emoji et de résolution de threads. Destinée aux équipes support, opérations et product qui souhaitent enrichir leurs ressources métier d'une couche de communication structurée. Supporte les commentaires internes réservés aux agents, distincts des communications visibles par les clients. DIFFÉRENCE vs review-api : Comment = annotation interne collaborative sur une ressource métier. review-api = avis public client sur un produit ou service. DIFFÉRENCE vs messaging-api : Comment est ancré à une ressource spécifique et suit son cycle de vie. messaging-api = conversation libre entre utilisateurs sans lien obligatoire à une ressource.",
+    "x-synonymes": "commentaire interne, annotation ressource, fil discussion, thread commentaire, @mention, mention utilisateur, réaction emoji, commentaire ticket, note interne, commentaire contrat, annotation document, discussion ticket, commentaire tâche, résoudre thread, commentaire confidentiel, note agent, fil de conversation, discussion contextualisée, historique commentaires, commentaire collaboratif",
+    "x-false-positive-warning": "Avis public client sur produit ou service → review-api (les commentaires de comment-api sont internes et liés à une ressource métier, pas publiés sur une fiche produit). Chat libre ou messagerie instantanée entre utilisateurs → messaging-api (comment-api est toujours ancré à une ressource spécifique). Note médicale sur dossier patient → medical-record-api (domaine réglementé distinct). Annotation sur code source ou pull request → code-review-api (contexte développeur, non métier). Notification ou alerte → alert-api (unidirectionnelle, pas collaborative).",
+    "x-cas-usage": "Comment ajouter un commentaire interne sur un ticket support visible des agents uniquement ? | Comment mentionner un collègue dans une note sur un contrat ou une commande ? | Comment récupérer le fil complet de commentaires d'un ticket avec mentions et réactions ? | Comment ajouter une réaction emoji sur un commentaire existant ? | Comment résoudre un thread de discussion sur une tâche pour indiquer qu'elle est traitée ?"
+  },
+  "paths": {
+    "/v1/comments": {
+      "post": {
+        "summary": "Créer un commentaire ancré à une ressource interne (ticket, tâche, document, contrat ou commande) avec support des mentions et du mode interne agents uniquement",
+        "operationId": "createComment",
+        "tags": ["Comments"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["resource_type", "resource_id", "content", "author_id"],
+                "properties": {
+                  "resource_type": {"type": "string", "enum": ["ticket", "task", "document", "contract", "order"]},
+                  "resource_id": {"type": "string"},
+                  "content": {"type": "string", "maxLength": 5000},
+                  "author_id": {"type": "string"},
+                  "parent_id": {"type": "string", "description": "ID du commentaire parent pour répondre en fil"},
+                  "mentions": {"type": "array", "items": {"type": "string"}, "description": "IDs des utilisateurs mentionnés"},
+                  "internal": {"type": "boolean", "default": false, "description": "Si true: visible agents uniquement"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Commentaire ajouté avec succès et ancré à la ressource cible"}}
+      }
+    },
+    "/v1/comments/{resourceType}/{resourceId}": {
+      "parameters": [
+        {"name": "resourceType", "in": "path", "required": true, "schema": {"type": "string", "enum": ["ticket", "task", "document", "contract", "order"]}},
+        {"name": "resourceId", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "get": {
+        "summary": "Récupérer le fil complet des commentaires d'une ressource donnée avec mentions, réactions emoji et structure de threads imbriqués",
+        "operationId": "getResourceComments",
+        "tags": ["Comments"],
+        "parameters": [{"name": "page", "in": "query", "schema": {"type": "integer"}}],
+        "responses": {"200": {"description": "Liste paginée des commentaires avec fil de discussion, mentions et réactions associées"}}
+      }
+    },
+    "/v1/comments/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Modifier le contenu d'un commentaire existant — opération réservée à l'auteur du commentaire",
+        "operationId": "updateComment",
+        "tags": ["Comments"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {"type": "object", "required": ["content"], "properties": {"content": {"type": "string"}}}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Commentaire modifié avec succès, historique des modifications conservé"}}
+      },
+      "delete": {
+        "summary": "Supprimer définitivement un commentaire et ses réactions associées de la ressource cible",
+        "operationId": "deleteComment",
+        "tags": ["Comments"],
+        "responses": {"204": {"description": "Commentaire supprimé avec succès"}}
+      }
+    },
+    "/v1/comments/{id}/reactions": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Ajouter une réaction emoji (👍 ✅ 🚀 etc.) sur un commentaire pour exprimer une approbation ou un statut sans rédiger de réponse",
+        "operationId": "addReaction",
+        "tags": ["Reactions"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {"type": "object", "required": ["emoji"], "properties": {"emoji": {"type": "string", "example": "👍"}}}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Réaction emoji ajoutée et comptabilisée sur le commentaire"}}
+      },
+      "delete": {
+        "summary": "Retirer la réaction emoji que l'utilisateur courant a posée sur un commentaire donné",
+        "operationId": "removeReaction",
+        "tags": ["Reactions"],
+        "responses": {"204": {"description": "Réaction retirée avec succès"}}
+      }
+    },
+    "/v1/comments/{id}/resolve": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Marquer un thread de commentaires comme résolu pour indiquer que la discussion est terminée et que le sujet est traité",
+        "operationId": "resolveComment",
+        "tags": ["Comments"],
+        "responses": {"200": {"description": "Thread marqué comme résolu, les participants sont notifiés de la clôture"}}
+      }
+    }
+  }
+}

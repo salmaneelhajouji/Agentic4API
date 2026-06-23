@@ -1,0 +1,32 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Hotel API",
+    "version": "1.0.0",
+    "x-api-id": "hotel-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "x-successor": "hotel-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS hotel-api-v3] Cette API gérait historiquement le catalogue linéaire initial et le référencement des établissements hôteliers (v1). Elle est obsolète et gelée. Toutes les intégrations d'agences ou plateformes de voyage doivent obligatoirement migrer vers la version 3 (hotel-api-v3) pour intégrer la gestion des chambres, les grilles de tarifs dynamiques, les channel managers et les avis clients intégrés.",
+    "x-synonymes": "catalogue hôtelier v1, référentiel d'hôtels ancien, hébergement touristique, établissement hôtelier v1, liste d'hôtels dépréciée, recherche d'hôtels basique, tourisme d'hébergement",
+    "x-false-positive-warning": "Attention : Cette API historique est obsolète et restreinte à la consultation de listes d'hôtels figées. Rediriger immédiatement vos flux applicatifs vers la version cible performante `hotel-api-v3`."
+  },
+  "paths": {
+    "/v1/hotels": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS hotel-api-v3 - Consulter l'inventaire historique des hôtels référencés dans l'ancienne version v1",
+        "operationId": "listHotelsV1",
+        "tags": [
+          "Hotels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

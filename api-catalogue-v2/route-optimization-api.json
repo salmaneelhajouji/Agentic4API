@@ -1,0 +1,83 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Route Optimization API",
+    "version": "1.0.0",
+    "x-api-id": "route-optimization-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Optimisation itinéraires et tournées. Modélisation et résolution de problèmes d'ordonnancement complexes (VRP multi-contraintes, fenêtres horaires, charges) et réoptimisation en temps réel. DIFFÉRENCE vs trip-api-v2 : Route Optimization calcule en amont la séquence de points idéale pour une flotte, tandis que trip-api-v2 trace et archive les trajets individuels déjà matérialisés.",
+    "x-synonymes": "itinéraire, tournée, optimisation, vrp, logistique, livraison, trajet, chauffeur, feuille de route, cartographie, gps, étape, trafic, flotte, coût kilométrique, point de passage, ordonnancement, camion",
+    "x-false-positive-warning": "Pour suivre la télémétrie d'un véhicule ou historiser un déplacement déjà effectué -> utiliser trip-api-v2. Pour un simple calcul de distance A à B -> utiliser distance-matrix-api.",
+    "x-cas-usage": "je veux optimiser la tournée de livraison de ma flotte de camions | je veux planifier un itinéraire multi-étapes sous contraintes de temps | je veux réoptimiser dynamiquement une tournée suite à un imprévu | je veux consulter l'itinéraire calculé pour un chauffeur"
+  },
+  "paths": {
+    "/v1/routes/optimize": {
+      "post": {
+        "summary": "Calculer la séquence et l'ordonnancement optimal d'une tournée de livraison multi-contraintes",
+        "operationId": "optimizeTour",
+        "tags": [
+          "Routes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/routes/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la feuille de route géolocalisée et l'itinéraire détaillé d'une tournée planifiée",
+        "operationId": "getRoute",
+        "tags": [
+          "Routes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Ajuster manuellement ou injecter des arrêts d'urgence au sein d'un itinéraire planifié",
+        "operationId": "updateRoute",
+        "tags": [
+          "Routes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

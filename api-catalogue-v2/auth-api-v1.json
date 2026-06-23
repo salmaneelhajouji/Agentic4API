@@ -1,0 +1,71 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Auth API",
+    "version": "1.0.0",
+    "x-api-id": "auth-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Identity",
+    "x-domain": "Identity & Access",
+    "description": "⚠️ DEPRECATED — Version 1 de l'API d'authentification basée sur des sessions serveur avec cookies, sans JWT, sans refresh token et sans OAuth2. Couvre les processus de connexion par identifiants email/mot de passe, de déconnexion et de récupération du profil utilisateur courant via session serveur. Utilisée historiquement par les applications web internes nécessitant une authentification stateful avant la migration vers les standards modernes. DIFFÉRENCE vs auth-api (successeur recommandé) : auth-api v2 utilise JWT stateless, refresh tokens rotatifs et OAuth2 client_credentials, rendant cette v1 obsolète. Migrer vers auth-api pour tout nouveau développement.",
+    "x-breaking-changes-in-next": [
+      "Sessions serveur→JWT stateless",
+      "Nouveau endpoint /refresh",
+      "Cookie session→Bearer token header",
+      "Ajout OAuth2 client_credentials"
+    ],
+    "x-successor": "auth-api",
+    "x-synonymes": "login session, connexion cookie, authentification serveur, session serveur, cookie session, login email password, déconnexion, profil utilisateur connecté, auth v1 deprecated, ancienne authentification, authentification stateful, gestion de session, identifiant utilisateur, connexion utilisateur, accès sécurisé, contrôle d'accès, jeton de session, authentification legacy, gestion des utilisateurs connectés",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser auth-api (v2) pour tout nouveau développement. auth-api v2 utilise JWT stateless, refresh token rotatif et OAuth2 client_credentials, tandis que auth-api-v1 repose sur des sessions serveur legacy avec cookies sans JWT. Ne pas confondre avec account-api (gestion des comptes et données utilisateur) ou api-key-api (gestion des clés API pour accès machine-to-machine).",
+    "x-cas-usage": "Comment s'authentifier avec un email et un mot de passe via session serveur (legacy) ? | Comment invalider une session utilisateur lors de la déconnexion ? | Comment récupérer le profil de l'utilisateur actuellement connecté depuis la session serveur ? | Quels endpoints utiliser pour gérer l'authentification stateful par cookies dans une application legacy ? | Comment migrer de auth-api-v1 vers auth-api (v2) avec JWT et OAuth2 ?"
+  },
+  "paths": {
+    "/v1/auth/login": {
+      "post": {
+        "summary": "⚠️ DEPRECATED — Connexion par session serveur avec cookies en fournissant email et mot de passe, sans émission de JWT",
+        "operationId": "loginV1",
+        "tags": ["Auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {"type": "string"},
+                  "password": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {"description": "Cookie de session set-cookie retourné avec succès"},
+          "401": {"description": "Identifiants invalides — email ou mot de passe incorrect"}
+        }
+      }
+    },
+    "/v1/auth/logout": {
+      "post": {
+        "summary": "⚠️ DEPRECATED — Déconnexion de l'utilisateur courant et invalidation immédiate de la session serveur associée au cookie",
+        "operationId": "logoutV1",
+        "tags": ["Auth"],
+        "responses": {
+          "204": {"description": "Session invalidée et utilisateur déconnecté avec succès"}
+        }
+      }
+    },
+    "/v1/auth/me": {
+      "get": {
+        "summary": "⚠️ DEPRECATED — Récupérer le profil et les informations de l'utilisateur actuellement authentifié via la session serveur active",
+        "operationId": "getMeV1",
+        "tags": ["Auth"],
+        "responses": {
+          "200": {"description": "Profil et données de l'utilisateur connecté retournés depuis la session serveur"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Prescription API",
+    "version": "1.0.0",
+    "x-api-id": "prescription-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "x-successor": "prescription-api-v2",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS prescription-api-v2] Cette API gérait historiquement la création élémentaire et la consultation linéaire des ordonnances médicales (v1). Elle est gelée et obsolète. Toutes les applications de santé, progiciels de cabinets ou dossiers patients informatisés (DPI) doivent obligatoirement migrer vers la version 2 active (prescription-api-v2) pour s'appuyer sur le moteur de signature numérique sécurisée des praticiens et la transmission dématérialisée cryptée vers les officines.",
+    "x-synonymes": "ordonnance médicale v1, prescription de médicaments ancienne, ordonnance papier numérisée, traitement prescrit historique, dossier d'ordonnances déprécié, dispensation élémentaire v1",
+    "x-false-positive-warning": "Attention : Cette API historique de première génération est dépréciée et ses fonctionnalités de création sont figées. Veiller à rediriger l'intégralité des flux applicatifs vers la version cible active et sécurisée `prescription-api-v2`."
+  },
+  "paths": {
+    "/v1/prescriptions": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS prescription-api-v2 - Consulter la liste et l'index historique des ordonnances médicales de la version v1",
+        "operationId": "listPrescV1",
+        "tags": [
+          "Prescriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS prescription-api-v2 - Créer une fiche élémentaire d'ordonnance sur l'ancien référentiel v1 (opération dépréciée)",
+        "operationId": "createPrescV1",
+        "tags": [
+          "Prescriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

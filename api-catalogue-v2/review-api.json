@@ -1,0 +1,265 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Review API",
+    "version": "1.0.0",
+    "x-api-id": "review-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Catalog",
+    "x-domain": "E-Commerce",
+    "description": "Avis textuels et notations produits. Gestion du cycle de vie des témoignages clients (soumission, workflows de modération, calculs de scores globaux pour affichage e-commerce). DIFFÉRENCE vs rating-api : Review traite le bloc textuel complet rédigé par l'acheteur en plus de la note, tandis que rating-api centralise uniquement les paires numériques (étoiles d'évaluation) sans aucun contenu littéraire.",
+    "x-synonymes": "avis, commentaire, note, étoile, notation, review, modération, client, témoignage, feedback, e-commerce, produit, score, opinion, recommandation, approbation, catalogue, achat vérifié",
+    "x-false-positive-warning": "Pour comptabiliser des notes pures (étoiles sans texte écrit), utiliser impérativement rating-api.",
+    "x-cas-usage": "je veux déposer un commentaire et une note sur un produit acheté | je veux récupérer la liste des avis validés pour un article | je veux valider ou refuser un avis client en attente de modération | je veux consulter les statistiques globales de notation d'une référence"
+  },
+  "paths": {
+    "/v1/reviews": {
+      "post": {
+        "summary": "Soumettre un nouveau commentaire textuel assorti d'une note d'évaluation sur un produit",
+        "operationId": "createReview",
+        "tags": [
+          "Reviews"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Avis soumis — en attente de modération"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/reviews/product/{productId}": {
+      "parameters": [
+        {
+          "name": "productId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister, trier et paginer les avis de consommateurs approuvés pour un article du catalogue",
+        "operationId": "getProductReviews",
+        "tags": [
+          "Reviews"
+        ],
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "newest",
+                "helpful",
+                "rating_asc",
+                "rating_desc"
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Avis"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Purger et effacer administrativement tous les commentaires associés à un produit donné",
+        "operationId": "deleteProductReviews",
+        "tags": [
+          "Reviews"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimés"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/reviews/{id}/moderate": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Approuver ou rejeter un avis utilisateur selon la charte éditoriale et de modération",
+        "operationId": "moderateReview",
+        "tags": [
+          "Reviews"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "action"
+                ],
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "approve",
+                      "reject"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Modéré"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/reviews/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Supprimer définitivement un avis client spécifique à partir de son identifiant unique",
+        "operationId": "deleteReview",
+        "tags": [
+          "Reviews"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/reviews/stats/{productId}": {
+      "parameters": [
+        {
+          "name": "productId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Calculer la moyenne des notes, volumes globaux et répartition par étoile pour un article",
+        "operationId": "getReviewStats",
+        "tags": [
+          "Reviews"
+        ],
+        "responses": {
+          "200": {
+            "description": "Stats"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ReviewCreate": {
+        "type": "object",
+        "required": [
+          "product_id",
+          "rating",
+          "title",
+          "body",
+          "author_id"
+        ],
+        "properties": {
+          "product_id": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "author_id": {
+            "type": "string"
+          },
+          "purchase_verified": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    }
+  }
+}

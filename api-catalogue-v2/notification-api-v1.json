@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Notification API",
+    "version": "1.0.0",
+    "x-api-id": "notification-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Divers",
+    "x-domain": "Cross",
+    "description": "DEPRECATED — NE PAS UTILISER. Version 1 sans templates multilingues ni préférences utilisateur. Migrer vers notification-api-v2 qui intègre les templates versionnés, l opt-out par canal et le retry automatique.",
+    "x-successor": "notification-api-v2",
+    "x-synonymes": "notifications v1 deprecated, notifications legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser notification-api-v2 ou notification-api-v3.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers notification-api-v2."
+  },
+  "paths": {
+    "/v1/notifications": {
+      "post": {
+        "summary": "DEPRECATED — Envoyer une notification basique sans templates",
+        "operationId": "sendNotificationV1",
+        "tags": ["Notifications"],
+        "responses": {"200": {"description": "Notification envoyée"}}
+      }
+    }
+  }
+}

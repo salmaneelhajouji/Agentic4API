@@ -1,0 +1,67 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Restaurant Reservation API",
+    "version": "1.0.0",
+    "x-api-id": "restaurant-reservation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Réservations de tables au restaurant et gestion de la liste d attente. Permet de réserver une table pour un groupe, de modifier ou annuler une réservation, et de gérer la liste d attente quand le restaurant est complet. Utilisé par les restaurants, hôtels avec restauration et plateformes de réservation gastronomique.",
+    "x-synonymes": "réservation restaurant, réservation table, réserver au restaurant, table pour n personnes, annulation réservation restaurant, liste attente restaurant, file attente restaurant, modifier réservation, réservation déjeuner dîner, service réservation, plan salle restaurant, dîner réservation, couvert réservation, réservation gastronomique, disponibilité table, horaire réservation, rappel réservation, confirmation réservation, no-show restaurant, réservation groupe",
+    "x-false-positive-warning": "DIFFÉRENCE vs checkin-api-v2 : Restaurant Reservation API = réservation de table restaurant. checkin-api-v2 = check-in hôtel. DIFFÉRENCE vs event-booking-api : Restaurant Reservation API = table pour un repas. event-booking-api = événement privatif restaurant ou salle.",
+    "x-cas-usage": "je veux réserver une table pour 4 personnes samedi soir | je veux modifier le nombre de couverts de ma réservation | je veux annuler une réservation de restaurant | je veux voir toutes les réservations de la journée de notre restaurant | je veux m inscrire sur la liste d attente pour ce soir"
+  },
+  "paths": {
+    "/v1/reservations": {
+      "get": {
+        "summary": "Réservations du jour — tables, horaires et couverts",
+        "operationId": "listReservations",
+        "tags": ["Reservations"],
+        "responses": {"200": {"description": "Réservations"}}
+      },
+      "post": {
+        "summary": "Réserver une table — date, heure, nombre de couverts et préférences",
+        "operationId": "createReservation",
+        "tags": ["Reservations"],
+        "responses": {"200": {"description": "Réservation confirmée"}}
+      }
+    },
+    "/v1/reservations/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d une réservation — table, horaire et demandes spéciales",
+        "operationId": "getReservation",
+        "tags": ["Reservations"],
+        "responses": {"200": {"description": "Détail réservation"}}
+      },
+      "put": {
+        "summary": "Modifier une réservation — couverts, horaire ou table",
+        "operationId": "modifyReservation",
+        "tags": ["Reservations"],
+        "responses": {"200": {"description": "Réservation modifiée"}}
+      },
+      "delete": {
+        "summary": "Annuler une réservation de restaurant",
+        "operationId": "cancelReservation",
+        "tags": ["Reservations"],
+        "responses": {"200": {"description": "Réservation annulée"}}
+      }
+    },
+    "/v1/waitlist": {
+      "get": {
+        "summary": "Liste d attente du restaurant — clients en attente d une table",
+        "operationId": "getWaitlist",
+        "tags": ["Waitlist"],
+        "responses": {"200": {"description": "Liste d attente"}}
+      },
+      "post": {
+        "summary": "S inscrire sur la liste d attente — notifié quand une table se libère",
+        "operationId": "joinWaitlist",
+        "tags": ["Waitlist"],
+        "responses": {"200": {"description": "Inscrit sur liste d attente"}}
+      }
+    }
+  }
+}

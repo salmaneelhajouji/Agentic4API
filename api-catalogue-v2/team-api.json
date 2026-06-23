@@ -1,0 +1,343 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Team API",
+    "version": "1.0.0",
+    "x-api-id": "team-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Operations",
+    "description": "Équipes de travail transverses et fonctionnelles. Création, structuration des membres et suivi opérationnel des indicateurs agiles (vélocité, objectifs OKR). DIFFÉRENCE vs hr-api : Team API orchestre les structures projets de type squads ou tribus agiles, tandis que HR API gère l'arbre hiérarchique légal et les contrats de travail RH. DIFFÉRENCE vs account-api : Team modélise des collaborateurs de l'entreprise, alors que Account gère les organisations clientes externes B2B. DIFFÉRENCE vs org-api : Team représente une équipe opérationnelle fluide, tandis que Org définit les filiales et structures juridiques.",
+    "x-synonymes": "équipe, team, squad, tribu, chapter, membre, collaborateur, interne, management, organigramme opérationnel, lead, kpi, vélocité, okr, projet, structure agile, groupe de travail",
+    "x-false-positive-warning": "Pour consulter le dossier RH d'un collaborateur ou gérer l'organigramme de rattachement hiérarchique légal, utilisez hr-api.",
+    "x-cas-usage": "je veux déclarer une nouvelle squad produit ou équipe projet | je veux lister toutes les équipes agiles actives de l'organisation | je veux ajouter un développeur comme membre d'une tribu | je veux analyser la vélocité et les performances trimestrielles d'une équipe"
+  },
+  "paths": {
+    "/v1/teams": {
+      "post": {
+        "summary": "Créer un nouveau groupe ou une nouvelle équipe de travail opérationnelle (squad, chapter, tribe)",
+        "operationId": "createTeam",
+        "tags": [
+          "Teams"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Équipe créée"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "Lister, rechercher et filtrer les structures d'équipes en fonction de leur type ou de leurs membres",
+        "operationId": "listTeams",
+        "tags": [
+          "Teams"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "squad",
+                "chapter",
+                "tribe",
+                "functional",
+                "project"
+              ]
+            }
+          },
+          {
+            "name": "member_id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Équipes"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/teams/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les détails structurels, le responsable légal et l'état d'un groupe de travail",
+        "operationId": "getTeam",
+        "tags": [
+          "Teams"
+        ],
+        "responses": {
+          "200": {
+            "description": "Équipe"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour le descriptif, l'équipe parente ou le leadership d'une structure d'équipe",
+        "operationId": "updateTeam",
+        "tags": [
+          "Teams"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Dissoudre une équipe de travail et libérer l'affectation projet de ses membres",
+        "operationId": "deleteTeam",
+        "tags": [
+          "Teams"
+        ],
+        "responses": {
+          "204": {
+            "description": "Dissoute"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/teams/{id}/members": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'organigramme nominatif et la liste complète des membres d'une équipe",
+        "operationId": "getTeamMembers",
+        "tags": [
+          "Members"
+        ],
+        "responses": {
+          "200": {
+            "description": "Membres"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Ajouter et assigner un collaborateur à l'équipe avec un rôle spécifique (lead, member, observer)",
+        "operationId": "addTeamMember",
+        "tags": [
+          "Members"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "user_id",
+                  "role"
+                ],
+                "properties": {
+                  "user_id": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "lead",
+                      "member",
+                      "observer"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Membre ajouté"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/teams/{id}/members/{userId}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Retirer et désassigner un collaborateur d'une équipe de travail",
+        "operationId": "removeTeamMember",
+        "tags": [
+          "Members"
+        ],
+        "responses": {
+          "204": {
+            "description": "Retiré"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/teams/{id}/metrics": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Extraire les métriques agiles, la vélocité et l'état d'avancement des objectifs (OKRs) de l'équipe",
+        "operationId": "getTeamMetrics",
+        "tags": [
+          "Teams"
+        ],
+        "parameters": [
+          {
+            "name": "period",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "2026-Q2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "KPIs équipe"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TeamCreate": {
+        "type": "object",
+        "required": [
+          "name",
+          "type"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "squad",
+              "chapter",
+              "tribe",
+              "functional",
+              "project"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "lead_id": {
+            "type": "string"
+          },
+          "parent_team_id": {
+            "type": "string",
+            "description": "Équipe parente (ex: tribe → squad)"
+          }
+        }
+      }
+    }
+  }
+}

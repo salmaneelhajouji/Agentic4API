@@ -1,0 +1,98 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Gateway API",
+    "version": "1.0.0",
+    "x-api-id": "api-gateway-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Divers",
+    "x-domain": "Cross",
+    "description": "Gestion de la passerelle API Kong pour l'administration centralisée du trafic entrant et sortant des microservices. Couvre la configuration des routes HTTP, la gestion des consommateurs et clés API, l'activation des plugins (rate limiting, authentification, logging) et l'analyse des métriques de trafic. Utilisé principalement par les équipes platform et DevOps pour orchestrer et sécuriser les flux inter-services. DIFFÉRENCE vs rate-limit-api : API Gateway API gère la configuration globale de Kong pour toutes les APIs, tandis que rate-limit-api applique la limitation de taux au niveau applicatif d'une API spécifique. DIFFÉRENCE vs auth-api : API Gateway API administre l'authentification au niveau gateway Kong, alors qu'auth-api gère l'authentification applicative des utilisateurs finaux. DIFFÉRENCE vs analytics-api : API Gateway API expose des métriques techniques du trafic gateway (latence, erreurs HTTP), contrairement à analytics-api qui couvre des métriques business (ventes, conversion).",
+    "x-synonymes": "passerelle API, Kong API Gateway, gestion routes API, route HTTP, consommateur API, API consumer, plugin Kong, rate limiting gateway, authentification gateway, proxy API, reverse proxy, configuration Kong, admin Kong, upstream service, load balancing gateway, trafic API, monitoring gateway, clé API consommateur, gateway management, orchestration microservices",
+    "x-false-positive-warning": "DIFFÉRENCE vs rate-limit-api : API Gateway API = configuration globale de Kong pour toutes les APIs. rate-limit-api = limitation de taux applicative pour une API spécifique. DIFFÉRENCE vs auth-api : API Gateway API = gestion de l'authentification au niveau gateway Kong. auth-api = authentification applicative des utilisateurs finaux. DIFFÉRENCE vs analytics-api : API Gateway API = trafic et métriques techniques des appels gateway (latence, codes HTTP, throughput). analytics-api = métriques business ventes et conversion. DIFFÉRENCE vs api-key-api : API Gateway API gère les clés dans le contexte Kong/gateway, api-key-api gère les clés API applicatives indépendamment du gateway.",
+    "x-cas-usage": "Comment ajouter une nouvelle route vers un microservice dans Kong API Gateway ? | Comment créer un consommateur API et lui attribuer une clé d'accès dans Kong ? | Comment consulter les métriques de trafic et la latence de notre gateway Kong ? | Quels plugins sont actifs sur une route Kong et comment les modifier ? | Comment récupérer la liste de toutes les routes configurées dans Kong avec leurs upstreams ?"
+  },
+  "paths": {
+    "/v1/gateway/routes": {
+      "get": {
+        "summary": "Lister toutes les routes configurées dans Kong API Gateway avec leurs upstreams, paths et méthodes HTTP autorisées",
+        "operationId": "listRoutes",
+        "tags": ["Routes"],
+        "responses": {
+          "200": {"description": "Liste des routes Kong"}
+        }
+      },
+      "post": {
+        "summary": "Ajouter une nouvelle route vers un microservice dans Kong en spécifiant le path, les méthodes HTTP et l'upstream cible",
+        "operationId": "addRoute",
+        "tags": ["Routes"],
+        "responses": {
+          "200": {"description": "Route ajoutée dans Kong"}
+        }
+      }
+    },
+    "/v1/gateway/routes/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le détail complet d'une route Kong — configuration upstream, plugins actifs et règles de routage",
+        "operationId": "getRoute",
+        "tags": ["Routes"],
+        "responses": {
+          "200": {"description": "Détail de la route"},
+          "404": {"description": "Route non trouvée"}
+        }
+      },
+      "put": {
+        "summary": "Modifier la configuration d'une route Kong existante — mettre à jour le path, l'upstream cible ou les plugins associés",
+        "operationId": "updateRoute",
+        "tags": ["Routes"],
+        "responses": {
+          "200": {"description": "Route modifiée"},
+          "404": {"description": "Route non trouvée"},
+          "400": {"description": "Données invalides"}
+        }
+      },
+      "delete": {
+        "summary": "Supprimer une route de Kong API Gateway et désactiver le routage vers l'upstream associé",
+        "operationId": "removeRoute",
+        "tags": ["Routes"],
+        "responses": {
+          "200": {"description": "Route supprimée"},
+          "404": {"description": "Route non trouvée"}
+        }
+      }
+    },
+    "/v1/gateway/consumers": {
+      "get": {
+        "summary": "Lister tous les consommateurs API enregistrés dans Kong avec leurs clés d'accès et plugins de sécurité associés",
+        "operationId": "listConsumers",
+        "tags": ["Consumers"],
+        "responses": {
+          "200": {"description": "Liste des consommateurs Kong"}
+        }
+      },
+      "post": {
+        "summary": "Créer un nouveau consommateur API dans Kong en lui attribuant une clé API et en définissant ses permissions d'accès aux routes",
+        "operationId": "addConsumer",
+        "tags": ["Consumers"],
+        "responses": {
+          "200": {"description": "Consommateur créé avec clé API"},
+          "400": {"description": "Données invalides"},
+          "409": {"description": "Consommateur déjà existant"}
+        }
+      }
+    },
+    "/v1/gateway/analytics": {
+      "get": {
+        "summary": "Consulter les métriques techniques de trafic du gateway Kong — volume de requêtes, latence moyenne, taux d'erreur et codes HTTP par route",
+        "operationId": "getGatewayAnalytics",
+        "tags": ["Analytics"],
+        "responses": {
+          "200": {"description": "Métriques trafic gateway"},
+          "400": {"description": "Paramètres de filtrage invalides"}
+        }
+      }
+    }
+  }
+}

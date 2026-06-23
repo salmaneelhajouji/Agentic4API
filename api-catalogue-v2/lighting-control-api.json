@@ -1,0 +1,106 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Lighting Control API",
+    "version": "1.0.0",
+    "x-api-id": "lighting-control-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Cette API pilote l'automatisation, la programmation et la régulation à distance des systèmes d'éclairage connectés pour les bâtiments tertiaires, industriels et la voirie publique. Elle permet d'organiser les points lumineux en zones géographiques, d'ajuster l'intensité lumineuse (gradations), d'associer des calendriers horaires d'extinction automatique et de déployer des scènes d'ambiance lumineuses prédéfinies pour réduire les dépenses énergétiques de l'entreprise.",
+    "x-synonymes": "contrôle d'éclairage, éclairage intelligent, zone lumineuse, gradation de lumière, scène lumineuse, extinction automatique, gestion technique du bâtiment, GTB, luminaire connecté, programmation horaire éclairage, efficacité énergétique, éclairage public voirie, ambiance lumineuse, IoT éclairage",
+    "x-false-positive-warning": "Attention : Cette API régit de façon exclusive l'intensité et le calendrier d'alimentation des réseaux d'ampoules et luminaires physiques (Lighting Control). Ne pas la confondre avec la `hvac-api` (pilotage thermique et traitement d'air) ni avec la `energy-consumption-api` qui relève la consommation brute globale de l'immeuble.",
+    "x-cas-usage": "Comment diviser un étage de bureaux en plusieurs zones d'éclairage indépendantes ? | Comment programmer l'extinction automatique des luminaires de la voirie à partir de 23 heures ? | Quelle méthode appeler pour basculer les espaces de réunion sur la scène d'ambiance Conférence ?"
+  },
+  "paths": {
+    "/v1/lighting/zones": {
+      "get": {
+        "summary": "Lister et cartographier les zones d'éclairage connectées actives au sein de l'infrastructure immobilière",
+        "operationId": "listLightingZones",
+        "tags": [
+          "Zones"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et enregistrer une nouvelle zone logique regroupant un ensemble de points lumineux et de capteurs",
+        "operationId": "addLightingZone",
+        "tags": [
+          "Zones"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/lighting/zones/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'intensité actuelle, le mode de marche et la consommation en direct d'une zone d'éclairage",
+        "operationId": "getLightingZone",
+        "tags": [
+          "Zones"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour la grille de programmation horaire et les règles de commutation automatique de la zone",
+        "operationId": "setSchedule",
+        "tags": [
+          "Zones"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/lighting/scenes": {
+      "get": {
+        "summary": "Lister l'ensemble des scènes d'ambiance prédéfinies configurées sur le contrôleur d'éclairage",
+        "operationId": "listScenes",
+        "tags": [
+          "Scenes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et enregistrer un nouveau profil d'ambiance ou une scène lumineuse associant des niveaux de gradation cibles",
+        "operationId": "createScene",
+        "tags": [
+          "Scenes"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

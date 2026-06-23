@@ -1,0 +1,107 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Whistleblowing API",
+    "version": "1.0.0",
+    "x-api-id": "whistleblowing-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "Signalement alerte éthique. Canal hautement sécurisé garantissant l'anonymat, le chiffrement des données et le suivi de bout en bout des dossiers de signalements, en stricte conformité avec la Loi Sapin II et les directives européennes sur la protection des lanceurs d'alerte. DIFFÉRENCE vs ticket-api : Whistleblowing API est un espace de signalement chiffré et confidentiel dédié à la conformité réglementaire et aux violations d'éthique, alors que ticket-api gère les incidents d'assistance et réclamations du support client.",
+    "x-synonymes": "alerte, éthique, signalement, sapin ii, anonymat, conformité, dénonciation, fraude, corruption, harcèlement, légal, lanceur d'alerte, canal sécurisé, investigation, réglementation, juridique, signalement interne, conformité réglementaire, médiateur, cellule d'écoute",
+    "x-false-positive-warning": "Ne pas utiliser pour le traitement des réclamations clients courantes ou le helpdesk (utiliser ticket-api) ni pour remonter des incidents techniques d'infrastructure (utiliser incident-api).",
+    "x-cas-usage": "je veux déposer un signalement éthique anonyme de manière sécurisée | je veux lister tous les signalements de fraude reçus par la conformité | je veux suivre le statut d'avancement de mon alerte éthique | je veux mettre à jour le statut d'un signalement après investigation | je veux modifier la configuration des canaux d'alerte"
+  },
+  "paths": {
+    "/v1/whistleblowing/alerts": {
+      "post": {
+        "summary": "Soumettre un nouveau signalement anonyme et crypté concernant une violation légale ou éthique",
+        "operationId": "submitAlert",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Lister l'ensemble des signalements et alertes éthiques reçus par la cellule de conformité",
+        "operationId": "listAlerts",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/whistleblowing/alerts/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le statut d'avancement d'une investigation et le suivi d'un signalement",
+        "operationId": "getAlertStatus",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Mettre à jour l'état d'instruction ou consigner le traitement d'une alerte éthique",
+        "operationId": "updateAlertStatus",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/whistleblowing/config": {
+      "get": {
+        "summary": "Récupérer les paramètres techniques et règles de confidentialité du canal de signalement",
+        "operationId": "getChannelConfig",
+        "tags": [
+          "Config"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier la configuration, les destinataires ou les options de chiffrement du canal d'alerte",
+        "operationId": "updateChannelConfig",
+        "tags": [
+          "Config"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}

@@ -1,0 +1,75 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Travel Package API",
+    "version": "1.0.0",
+    "x-api-id": "travel-package-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Gestion des forfaits voyage (séjours tout inclus, circuits organisés, city-breaks). Consultation du catalogue de forfaits disponibles, création de nouveaux forfaits sur mesure, vérification des disponibilités par date, et réservation de forfait complet (vol + hôtel + activités). DIFFÉRENCE vs travel-package vs room-booking-api : Travel Package gère les forfaits voyage assemblés (combiné vol+hôtel+activités), Room Booking gère les réservations de chambre d'hôtel seule. DIFFÉRENCE vs tour-operator-api : Travel Package sont des produits finis packagés, Tour Operator gère les excursions guidées avec guides.",
+    "x-synonymes": "forfait voyage, séjour tout inclus, circuit organisé, city-break, package vacances, combiné vol hôtel, réservation forfait, voyage tout compris, disponibilité forfait, séjour clé en main, offre voyage, produit touristique, vacances packagées, création forfait, catalogue voyages",
+    "x-false-positive-warning": "Réservation chambre d'hôtel seule → room-booking-api-v3. Excursions guidées avec guide touristique → tour-operator-api. Billets d'avion seuls → flight-api.",
+    "x-cas-usage": "je veux voir tous les forfaits voyage disponibles avec leurs tarifs | je veux vérifier les disponibilités d'un forfait pour des dates précises | je veux réserver un forfait tout inclus pour un client | je veux créer un nouveau forfait voyage dans le catalogue | je veux modifier les détails d'un forfait existant"
+  },
+  "paths": {
+    "/v1/packages": {
+      "get": {
+        "summary": "Lister les forfaits voyage disponibles du catalogue avec destinations, prix et inclusions",
+        "operationId": "listTravelPackages",
+        "tags": ["Packages"],
+        "responses": { "200": { "description": "Forfaits disponibles" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Créer un nouveau forfait voyage dans le catalogue (combiné vol + hôtel + activités)",
+        "operationId": "createPackage",
+        "tags": ["Packages"],
+        "responses": { "200": { "description": "Forfait créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/packages/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter le détail complet d'un forfait (programme, inclusions, conditions d'annulation)",
+        "operationId": "getPackage",
+        "tags": ["Packages"],
+        "responses": { "200": { "description": "Détail forfait" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Modifier un forfait existant (tarifs, programme, disponibilités)",
+        "operationId": "updatePackage",
+        "tags": ["Packages"],
+        "responses": { "200": { "description": "Forfait modifié" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/packages/{id}/book": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "post": {
+        "summary": "Réserver un forfait voyage pour un groupe de voyageurs sur des dates données",
+        "operationId": "bookPackage",
+        "tags": ["Book"],
+        "responses": { "200": { "description": "Forfait réservé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "get": {
+        "summary": "Vérifier les disponibilités d'un forfait pour une période et un nombre de voyageurs",
+        "operationId": "getPackageAvailability",
+        "tags": ["Book"],
+        "responses": { "200": { "description": "Disponibilités" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

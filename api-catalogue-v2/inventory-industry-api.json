@@ -1,0 +1,106 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Inventory Industry API",
+    "version": "1.0.0",
+    "x-api-id": "inventory-industry-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Cette API pilote la gestion des stocks, des inventaires et des mouvements de matières premières, de composants industriels et de produits finis au sein des usines et sites de production de l'entreprise. Elle permet de suivre en temps réel les niveaux de stocks requis pour les lignes de fabrication, d'enregistrer les entrées/sorties de composants et d'auditer l'historique des mouvements de stock industriels pour éviter toute rupture d'approvisionnement de l'atelier.",
+    "x-synonymes": "stock industriel, matière première, composant de fabrication, produit fini usine, niveau de stock industriel, ajustement de stock de production, mouvement de stock usine, inventaire d'atelier, approvisionnement de ligne, flux de matières, logistique industrielle, stock d'usine, pièces détachées, ordre de prélèvement",
+    "x-false-positive-warning": "Attention : Cette API régit exclusivement les stocks de production, les matières premières et les composants d'usine (Inventory Industry). Ne pas la confondre avec la `inventory-api` (dédiée au suivi des stocks de produits finis destinés à la vente au détail Retail).",
+    "x-cas-usage": "Comment consulter le niveau de stock disponible pour une matière première sur une ligne de production ? | Comment enregistrer un mouvement d'entrée de composants suite à une livraison à l'atelier ? | Quelle méthode appeler pour ajuster manuellement le niveau de stock d'un produit fini d'usine ?"
+  },
+  "paths": {
+    "/v1/stock": {
+      "get": {
+        "summary": "Lister et parcourir l'ensemble des articles, matières premières et composants référencés en stock industriel",
+        "operationId": "listStockItems",
+        "tags": [
+          "Stock"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajouter et enregistrer une nouvelle référence d'article ou de composant dans le catalogue de stock d'usine",
+        "operationId": "addStockItem",
+        "tags": [
+          "Stock"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/stock/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la quantité disponible, le seuil d'alerte et le niveau de stock en temps réel d'un article industriel",
+        "operationId": "getStockLevel",
+        "tags": [
+          "Stock"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Ajuster et régulariser la quantité en stock d'un article ou d'une matière première suite à un inventaire d'atelier",
+        "operationId": "adjustStock",
+        "tags": [
+          "Stock"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/stock/movements": {
+      "get": {
+        "summary": "Consulter le registre complet et l'historique des mouvements de stock (entrées, sorties, transferts) de l'usine",
+        "operationId": "listStockMovements",
+        "tags": [
+          "Movements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et consigner un nouveau mouvement de stock physique de matières ou composants",
+        "operationId": "recordMovement",
+        "tags": [
+          "Movements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Lease API",
+    "version": "1.0.0",
+    "x-api-id": "lease-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "DEPRECATED — NE PAS UTILISER. Version 1 sans indexation automatique ni signature électronique. Migrer vers lease-api-v2 qui intègre l indexation IRL automatique et la signature électronique des baux.",
+    "x-successor": "lease-api-v2",
+    "x-synonymes": "bail v1 deprecated, contrat location legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser lease-api-v2.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers lease-api-v2."
+  },
+  "paths": {
+    "/v1/leases": {
+      "get": {
+        "summary": "DEPRECATED — Lister les baux",
+        "operationId": "listLeasesV1",
+        "tags": ["Leases"],
+        "responses": {"200": {"description": "Baux"}}
+      }
+    }
+  }
+}

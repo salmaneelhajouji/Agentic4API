@@ -1,0 +1,146 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Roaming API",
+    "version": "1.0.0",
+    "x-api-id": "roaming-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Telecom",
+    "x-domain": "Telecom",
+    "description": "Roaming international. Suivi opérationnel des accords d'itinérance, des grilles de tarifs et de la consommation de données à l'étranger. DIFFÉRENCE vs sim-card-api : Roaming API orchestre l'usage des réseaux partenaires hors du pays d'origine, alors que sim-card-api gère l'approvisionnement et l'activation matérielle de la ligne sur le réseau national.",
+    "x-synonymes": "roaming, itinérance, international, étranger, opérateur, forfait, hors forfait, consommation data, appels, sms, réseau partenaire, frais, tarification, couverture, interopérabilité, télécom, données mobiles",
+    "x-false-positive-warning": "Cette API traite exclusivement de la connectivité mobile internationale. Ne pas utiliser pour la gestion des abonnements locaux, de la facturation fixe ou des changements de cartes SIM physiques.",
+    "x-cas-usage": "je veux vérifier si l'itinérance est active pour cet abonné | je veux activer l'option internationale à l'étranger | je veux suivre la consommation de données en itinérance d'un client | je veux consulter les accords de roaming en vigueur"
+  },
+  "paths": {
+    "/v1/roaming/{subscriberId}": {
+      "parameters": [
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le statut d'activation et les restrictions du roaming pour un abonné",
+        "operationId": "getRoamingStatus",
+        "tags": [
+          "Roaming"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Activer immédiatement les services d'itinérance internationale pour un abonné",
+        "operationId": "activateRoaming",
+        "tags": [
+          "Roaming"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Désactiver le roaming international pour bloquer l'usage réseau à l'étranger",
+        "operationId": "deactivateRoaming",
+        "tags": [
+          "Roaming"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/roaming/{subscriberId}/usage": {
+      "parameters": [
+        {
+          "name": "subscriberId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Suivre la consommation en temps réel de data, voix et SMS consommés hors du réseau national",
+        "operationId": "getRoamingUsage",
+        "tags": [
+          "Usage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/roaming/agreements": {
+      "get": {
+        "summary": "Lister les accords commerciaux d'itinérance conclus avec les opérateurs télécom partenaires",
+        "operationId": "listRoamingAgreements",
+        "tags": [
+          "Agreements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Enregistrer un nouvel accord d'interopérabilité ou partenariat de roaming international",
+        "operationId": "addAgreement",
+        "tags": [
+          "Agreements"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

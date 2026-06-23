@@ -1,0 +1,181 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Hotel API",
+    "version": "3.0.0",
+    "x-api-id": "hotel-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Cette API régit le système de gestion hôtelière complet (Property Management System / PMS) de l'entreprise (v3). Elle orchestre le catalogue des établissements, la description détaillée et la disponibilité des chambres, l'application d'algorithmes de tarification dynamique (Yield Management), la synchronisation avec les plateformes de distribution de voyage via un channel manager, ainsi que la centralisation des avis clients intégrés. Elle est le pilier des portails de réservation B2C et B2B.",
+    "x-synonymes": "gestion hôtelière, catalogue d'hôtels, disponibilité des chambres, tarification dynamique hôtelière, yield management hôtel, channel manager, avis clients hôtel, hébergement court séjour, property management system, PMS, fiche complète hôtel, catégorie de chambre, réservation de nuitée, grille tarifaire hôtel v3",
+    "x-false-positive-warning": "Attention : Cette API administre exclusivement les hébergements hôteliers et touristiques marchands destinés à des séjours de courte durée (Hotel). Ne pas la confondre avec la `co-living-api` (réservée à la gestion des résidences de longue durée, colocations meublées permanentes ou appartements communautaires).",
+    "x-cas-usage": "Comment lister et filtrer les établissements du catalogue hôtelier par localisation ou classement ? | Où consulter la liste des chambres disponibles et leurs tarifs pour une nuitée spécifique ? | Comment mettre à jour en temps réel la grille de tarification dynamique à l'aide du channel manager ? | Comment extraire le flux des avis et notes déposés par les clients suite à leur séjour ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "Tarifs dynamiques",
+    "Channel manager",
+    "Avis intégrés"
+  ],
+  "paths": {
+    "/v3/hotels": {
+      "get": {
+        "summary": "Rechercher, filtrer et lister les établissements hôteliers actifs au sein du catalogue général de distribution",
+        "operationId": "listHotelsV3",
+        "tags": [
+          "Hotels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Référencer, ajouter et documenter un nouvel hôtel au catalogue avec ses équipements majeurs",
+        "operationId": "addHotelV3",
+        "tags": [
+          "Hotels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/hotels/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche signalétique exhaustive, la localisation, les photos et les services d'un hôtel spécifique",
+        "operationId": "getHotelV3",
+        "tags": [
+          "Hotels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les informations descriptives, les contacts ou les caractéristiques générales de l'hôtel",
+        "operationId": "updateHotelV3",
+        "tags": [
+          "Hotels"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/hotels/{id}/rooms": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister et vérifier l'état d'inventaire et la disponibilité des catégories de chambres pour une période donnée",
+        "operationId": "getRoomsV3",
+        "tags": [
+          "Rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et injecter un nouvel inventaire ou une nouvelle typologie de chambre (ex: Suite Junior) pour cet hôtel",
+        "operationId": "addRoomV3",
+        "tags": [
+          "Rooms"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/hotels/{id}/rates": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les prix, offres spéciales et grilles de tarification dynamique (Yield) calculés pour chaque nuitée",
+        "operationId": "getDynamicRates",
+        "tags": [
+          "Rates"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour ou surcharger manuellement ou via le channel manager les conditions tarifaires d'une nuitée",
+        "operationId": "updateRates",
+        "tags": [
+          "Rates"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/hotels/{id}/reviews": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le flux des avis, commentaires et notes de satisfaction déposés par les clients vérifiés",
+        "operationId": "getHotelReviews",
+        "tags": [
+          "Reviews"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

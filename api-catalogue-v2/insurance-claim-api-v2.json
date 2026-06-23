@@ -1,0 +1,72 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Insurance Claim API",
+    "version": "2.0.0",
+    "x-api-id": "insurance-claim-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "x-successor": "insurance-claim-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS insurance-claim-api-v3] Cette API gérait la version 2 du système de déclaration des sinistres, introduisant la numérisation des justificatifs et des modèles basiques d'estimation des dommages par IA. Elle est obsolète et gelée ; toutes les applications doivent migrer vers la version 3 (insurance-claim-api-v3) pour unifier ces fonctions avec l'expertise automatique avancée et le suivi des ordres de virement.",
+    "x-synonymes": "déclaration de sinistre v2, numérisation de sinistre, justificatifs numériques, estimation IA dépréciée, dossier de préjudice v2",
+    "x-false-positive-warning": "Attention : Cette API intermédiaire est dépréciée et ses modules d'analyse sont gelés. Veiller à cibler directement la nouvelle version unifiée `insurance-claim-api-v3`."
+  },
+  "x-breaking-changes-from-previous": [
+    "Documents numeriques",
+    "Estimation IA"
+  ],
+  "paths": {
+    "/v2/claims": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS insurance-claim-api-v3 - Parcourir le catalogue historique des sinistres enregistrés dans la version v2",
+        "operationId": "listClaimsV2",
+        "tags": [
+          "Claims"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS insurance-claim-api-v3 - Ouvrir une déclaration de sinistre dans l'ancien référentiel v2 (opération dépréciée)",
+        "operationId": "createClaimV2",
+        "tags": [
+          "Claims"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/claims/{id}/documents": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS insurance-claim-api-v3 - Téléverser un document ou justificatif au sein d'un dossier de sinistre de la version v2",
+        "operationId": "uploadClaimDocV2",
+        "tags": [
+          "Docs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

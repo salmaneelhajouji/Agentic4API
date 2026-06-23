@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Log API",
+    "version": "1.0.0",
+    "x-api-id": "log-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "Centralisation, consultation et alertes sur les logs applicatifs. Permet de rechercher et filtrer les logs par service, niveau et période, de publier des logs depuis les applications, de streamer les logs en temps réel via SSE, et de créer des alertes sur des patterns d erreur. Utilisé par les équipes DevOps et SRE pour le debug, le monitoring et la détection d anomalies.",
+    "x-synonymes": "logs applicatifs, journal logs, centralisation logs, log debug info warn error fatal, recherche logs, filtre logs, stream logs temps réel, alerte log pattern, log aggregation, ELK stack, Splunk style, log ingestion, tail logs, log level, stack trace, log service, error log monitoring, log search, log SSE streaming, observabilité logs",
+    "x-false-positive-warning": "DIFFÉRENCE vs audit-log-api : Log API = logs techniques applicatifs debug/info/error. audit-log-api = traçabilité des actions utilisateurs pour conformité réglementaire. DIFFÉRENCE vs alert-api : Log API = alertes déclenchées sur patterns dans les logs. alert-api = alertes métier ou systèmes de monitoring. DIFFÉRENCE vs monitoring-api : Log API = logs textuels des applications. monitoring-api = métriques numériques (CPU, RAM, latence).",
+    "x-cas-usage": "je veux rechercher tous les logs d erreur de notre API payment des 2 dernières heures | je veux streamer en temps réel les logs de notre service checkout | je veux créer une alerte quand OutOfMemoryError apparaît dans nos logs | je veux publier des logs structurés depuis notre application | je veux filtrer les logs de niveau fatal pour diagnostiquer une panne"
+  },
+  "paths": {
+    "/v1/logs": {
+      "get": {
+        "summary": "Consulter les logs — filtre par service, niveau, période et recherche plein texte",
+        "operationId": "getLogs",
+        "tags": ["Logs"],
+        "parameters": [
+          {"name": "service", "in": "query", "schema": {"type": "string"}},
+          {"name": "level", "in": "query", "schema": {"type": "string", "enum": ["debug", "info", "warn", "error", "fatal"]}},
+          {"name": "from", "in": "query", "schema": {"type": "string", "format": "date-time"}},
+          {"name": "to", "in": "query", "schema": {"type": "string", "format": "date-time"}},
+          {"name": "search", "in": "query", "schema": {"type": "string"}},
+          {"name": "page", "in": "query", "schema": {"type": "integer"}}
+        ],
+        "responses": {"200": {"description": "Logs filtrés"}}
+      },
+      "post": {
+        "summary": "Publier un log depuis une application — niveau, message et contexte",
+        "operationId": "publishLog",
+        "tags": ["Logs"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["level", "message", "service"],
+                "properties": {
+                  "level": {"type": "string", "enum": ["debug", "info", "warn", "error", "fatal"]},
+                  "message": {"type": "string"},
+                  "service": {"type": "string"},
+                  "context": {"type": "object"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"202": {"description": "Log ingéré"}}
+      }
+    },
+    "/v1/logs/tail/{service}": {
+      "parameters": [{"name": "service", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Streamer les logs d un service en temps réel — Server-Sent Events (SSE)",
+        "operationId": "tailLogs",
+        "tags": ["Logs"],
+        "responses": {"200": {"description": "Stream SSE logs temps réel"}}
+      }
+    },
+    "/v1/logs/patterns": {
+      "post": {
+        "summary": "Créer une alerte sur un pattern de log — notifie quand le pattern est détecté",
+        "operationId": "createLogPattern",
+        "tags": ["Patterns"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["pattern", "level"],
+                "properties": {
+                  "pattern": {"type": "string", "example": "OutOfMemoryError"},
+                  "level": {"type": "string"},
+                  "notify": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Pattern d alerte créé"}}
+      }
+    }
+  }
+}

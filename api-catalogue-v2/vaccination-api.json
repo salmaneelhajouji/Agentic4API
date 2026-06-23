@@ -1,0 +1,130 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Vaccination API",
+    "version": "1.0.0",
+    "x-api-id": "vaccination-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Carnet de vaccination électronique. Historique vaccins, rappels et conformité aux schémas vaccinaux de santé publique. DIFFÉRENCE vs veterinary-api : Vaccination API assure le suivi vaccinal de patients humains, alors que veterinary-api est dédiée à la santé, aux vaccins et aux traitements du bétail et des animaux d'élevage.",
+    "x-synonymes": "vaccin, vaccination, rappel, immunisation, sérum, injection, dose, immunité, pathogène, calendrier vaccinal, carnet de santé, patient, rappel obligatoire, hépatite, grippe, tétanos, santé publique, prophylaxie, rappel de vaccin",
+    "x-false-positive-warning": "Ne pas confondre avec veterinary-api pour les animaux ou vital-signs-api pour le suivi continu des constantes physiques physiques.",
+    "x-cas-usage": "je veux consulter mon carnet de vaccination en ligne | je veux lister les vaccins et rappels obligatoires à effectuer | je veux enregistrer une nouvelle dose de vaccin | je veux voir les campagnes de vaccination de santé publique actives"
+  },
+  "paths": {
+    "/v1/vaccinations/{patientId}": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique complet et le carnet de vaccination électronique d'un patient",
+        "operationId": "getVaccinations",
+        "tags": [
+          "Vaccinations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Enregistrer une nouvelle dose ou injection de vaccin dans le carnet électronique du patient",
+        "operationId": "addVaccination",
+        "tags": [
+          "Vaccinations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/vaccinations/{patientId}/due": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la liste des prochains vaccins et rappels obligatoires ou recommandés pour un patient",
+        "operationId": "getDueVaccinations",
+        "tags": [
+          "Schedule"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/vaccinations/campaigns": {
+      "get": {
+        "summary": "Lister l'ensemble des campagnes de vaccination de santé publique en cours ou planifiées",
+        "operationId": "listCampaigns",
+        "tags": [
+          "Campaigns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer et planifier une nouvelle campagne de vaccination de masse pour une région ou population",
+        "operationId": "createCampaign",
+        "tags": [
+          "Campaigns"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

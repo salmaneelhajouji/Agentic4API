@@ -1,0 +1,110 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Governance API",
+    "version": "1.0.0",
+    "x-api-id": "data-governance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API orchestre la gouvernance des données de l'entreprise en formalisant les règles d'usage, le cycle de vie et les politiques de conformité du patrimoine informationnel. Elle permet de définir des classifications de sensibilité (ex: public, confidentiel, RGPD/PII), d'auditer l'application des directives et de cartographier la responsabilité des référents (Data Stewards) sur les différents domaines. Ses utilisateurs cibles sont les Chief Data Officers (CDO), les Data Governance Managers, ainsi que les équipes de conformité (DPO, SecOps) cherchant à automatiser la validation réglementaire.",
+    "x-synonymes": "gouvernance des données, data governance, politique de données, classification de sensibilité, niveau de confidentialité, data steward, référent de données, propriétaire de la donnée, conformité réglementaire, audit de données, règle de gouvernance, cartographie des données, sensibilité des données, PII, données personnelles, charte de données, data policy, stewardship",
+    "x-false-positive-warning": "Attention : Cette API gère le cadre réglementaire, les politiques de conformité macro, les rôles de responsabilité (stewards) et les niveaux de sensibilité. Ne pas la confondre avec la `data-access-control-api` (qui applique techniquement les droits d'accès et filtrages fins au niveau des bases de données), la `data-catalog-api` (dédiée à l'indexation technique, aux schémas et au lignage des tables), ni avec la `permission-api` (réservée aux habilitations applicatives de l'interface utilisateur).",
+    "x-cas-usage": "Comment associer un Data Steward officiel à ce nouveau jeu de données ? | Quelles sont les politiques de classification de sensibilité applicables aux données financières ? | Comment générer le rapport global de conformité pour notre prochain audit RGPD ? | Quelle méthode appeler pour classifier un dataset contenant des données hautement confidentielles ?"
+  },
+  "paths": {
+    "/v1/governance/policies": {
+      "get": {
+        "summary": "Lister et auditer l'ensemble des politiques de conformité, directives réglementaires et chartes d'usage de données actives",
+        "operationId": "listDataPolicies",
+        "tags": [
+          "Policies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et publier une nouvelle directive de gouvernance ou charte d'utilisation des données de l'entreprise",
+        "operationId": "createDataPolicy",
+        "tags": [
+          "Policies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/governance/classification": {
+      "get": {
+        "summary": "Consulter les différents niveaux et schémas de classification de sensibilité des données définis dans l'entreprise",
+        "operationId": "listClassifications",
+        "tags": [
+          "Classification"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Appliquer un niveau de classification ou un tag de sensibilité (ex: Confidentiel, PII) à un jeu de données spécifique",
+        "operationId": "classifyDataset",
+        "tags": [
+          "Classification"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/governance/stewards": {
+      "get": {
+        "summary": "Récupérer la liste complète des Data Stewards certifiés et leurs périmètres de responsabilité métier",
+        "operationId": "listDataStewards",
+        "tags": [
+          "Stewards"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Assigner officiellement un Data Steward comme garant de la qualité et de la conformité d'un domaine ou jeu de données",
+        "operationId": "assignSteward",
+        "tags": [
+          "Stewards"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/governance/compliance": {
+      "get": {
+        "summary": "Générer le rapport consolidé de conformité et l'état d'application des règles de gouvernance pour l'analyse des risques ou les audits",
+        "operationId": "getGovernanceReport",
+        "tags": [
+          "Compliance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

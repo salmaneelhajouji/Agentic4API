@@ -1,0 +1,78 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Fuel Management API",
+    "version": "1.0.0",
+    "x-api-id": "fuel-management-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "description": "Cette API supervise la télémétrie du carburant, le suivi des consommations et la comptabilisation des coûts de ravitaillement pour la flotte de véhicules de l'entreprise. Elle permet de lire le niveau de jauge des réservoirs en temps réel, de consigner de manière auditable chaque plein d'essence ou de diesel (volume, lieu, coût), et d'extraire des analyses financières consolidées des dépenses énergétiques à l'échelle du parc logistique.",
+    "x-synonymes": "gestion de carburant, consommation de carburant, ravitaillement d'essence, coût du carburant, plein de gasoil, suivi de jauge, carte carburant d'entreprise, dépense d'essence flotte, télémétrie de réservoir, éco-conduite carburant, relevé de plein logistique, analyse de consommation thermique",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement de l'approvisionnement en hydrocarbures, de la consommation et des coûts liés au carburant fossile des véhicules thermiques ou hybrides (Fuel). Ne pas la confondre avec la `ev-charging-api-v2` (réservée à la recharge et à la supervision des bornes électriques pour véhicules électriques).",
+    "x-cas-usage": "Comment relever à distance le niveau de carburant ou le taux de remplissage du réservoir d'un camion ? | Comment enregistrer une nouvelle facture ou un reçu de ravitaillement d'essence effectué via une carte d'entreprise ? | Où consulter l'état consolidé des dépenses financières en carburant pour l'ensemble d'une flotte logistique ?"
+  },
+  "paths": {
+    "/v1/fuel/{vehicleId}": {
+      "parameters": [
+        {
+          "name": "vehicleId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le niveau de carburant actuel, le volume disponible et les éventuelles alertes de baisse anormale du réservoir",
+        "operationId": "getFuelLevel",
+        "tags": [
+          "Fuel"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Enregistrer et consigner un nouvel acte de ravitaillement (volume en litres, prix unitaire, station-service) pour le véhicule",
+        "operationId": "recordFueling",
+        "tags": [
+          "Fuel"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/fuel/consumption/{fleetId}": {
+      "parameters": [
+        {
+          "name": "fleetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Extraire le rapport consolidé des coûts de carburant, de la moyenne de consommation et des budgets de la flotte",
+        "operationId": "getFuelCosts",
+        "tags": [
+          "Consumption"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

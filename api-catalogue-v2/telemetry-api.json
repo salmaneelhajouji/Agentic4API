@@ -1,0 +1,123 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Telemetry API",
+    "version": "1.0.0",
+    "x-api-id": "telemetry-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Données télémétrie équipements industriels. Traitement, stockage et agrégation des métriques de fonctionnement pour la maintenance prédictive. DIFFERENCE vs sensor-data-api : Telemetry = données agrégées équipements, Sensor Data = mesures brutes capteurs. DIFFÉRENCE vs fleet-telemetry-api : Telemetry API se focalise sur les machines d'usine et automates industriels fixes, alors que fleet-telemetry-api suit la télémétrie de véhicules mobiles.",
+    "x-synonymes": "iot, télémétrie, équipement, machine, usine, industrie, données agrégées, anomalie, métrique, monitoring, flux iot, capteurs, série temporelle, statistiques, panne, maintenance prédictive, automate, appareil",
+    "x-false-positive-warning": "Pour récupérer les flux de mesures brutes non agrégées des capteurs, utilisez sensor-data-api. Pour le tracking de flottes de véhicules de transport, préférez fleet-telemetry-api.",
+    "x-cas-usage": "je veux consulter les données de télémétrie consolidées d'une machine | je veux pousser les métriques de fonctionnement d'un automate industriel | je veux analyser les statistiques de performance d'un équipement | je veux détecter les anomalies de comportement sur un appareil iot"
+  },
+  "paths": {
+    "/v1/telemetry/{deviceId}": {
+      "parameters": [
+        {
+          "name": "deviceId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique des données de télémétrie et de performance agrégées d'une machine",
+        "operationId": "getTelemetry",
+        "tags": [
+          "Telemetry"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Envoyer et enregistrer un lot de métriques de télémétrie consolidées pour un équipement",
+        "operationId": "sendTelemetry",
+        "tags": [
+          "Telemetry"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/telemetry/{deviceId}/stats": {
+      "parameters": [
+        {
+          "name": "deviceId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Calculer les statistiques périodiques d'utilisation et d'efficacité de l'équipement industriel",
+        "operationId": "getTelemetryStats",
+        "tags": [
+          "Stats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/telemetry/{deviceId}/anomalies": {
+      "parameters": [
+        {
+          "name": "deviceId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Analyser les séries temporelles pour identifier des dérives ou anomalies de fonctionnement sur l'appareil",
+        "operationId": "detectAnomalies",
+        "tags": [
+          "Anomalies"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

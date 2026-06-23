@@ -1,0 +1,106 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Marketplace API",
+    "version": "1.0.0",
+    "x-api-id": "data-marketplace-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API alimente la place d'échange interne (Data Marketplace) de l'entreprise, pilier d'une architecture Data Mesh. Elle permet aux domaines métiers (producteurs) de publier, valoriser et exposer leurs produits de données (Data Products) certifiés. Elle offre aux consommateurs (Data Scientists, Data Analysts, applications métiers) une interface unifiée pour découvrir ces offres de données, en consulter les conditions d'utilisation, et s'y abonner de manière autonome pour déclencher l'ouverture des accès.",
+    "x-synonymes": "place d'échange de données, data marketplace, magasin de données, data product, produit de données, boutique de données, catalogue de partage, partage de données, abonnement data, souscription de données, publication de dataset, fournisseur de données, consommateur de données, contrat de partage data, offre de données, data mesh portal, index d'échange",
+    "x-false-positive-warning": "Attention : Cette API gère la couche commerciale et d'abonnement volontaire à des produits de données packagés (Data Products). Ne pas la confondre avec la `data-catalog-api` (qui est un inventaire technique exhaustif et automatique de toutes les tables brutes et du lignage), ni avec la `data-access-control-api` (qui applique techniquement les règles de sécurité, de masquage et d'habilitation bas niveau).",
+    "x-cas-usage": "Comment puis-je publier mon nouveau produit de données sur les ventes pour le rendre disponible sur la place d'échange ? | Quels sont les Data Products certifiés et éligibles disponibles pour le domaine Marketing ? | Comment initier une demande d'abonnement pour obtenir l'accès au jeu de données de la Supply Chain ? | Où puis-je suivre et lister l'intégralité de mes abonnements data actifs dans l'entreprise ? | Quelle est la procédure pour résilier un contrat de partage et me désabonner d'un dataset ?"
+  },
+  "paths": {
+    "/v1/marketplace/datasets": {
+      "get": {
+        "summary": "Parcourir et filtrer les offres de produits de données (Data Products) certifiés et disponibles à l'abonnement sur la marketplace",
+        "operationId": "browseMarketplace",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Publier et référencer un nouveau produit de données qualifié sur la marketplace pour le mettre à disposition des autres équipes",
+        "operationId": "publishDataset",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/marketplace/datasets/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive, la documentation fonctionnelle, le niveau de qualité et les conditions d'accès d'un produit de données spécifique",
+        "operationId": "getMarketplaceDataset",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Souscrire et s'abonner à un produit de données pour accepter ses conditions d'usage et initier l'ouverture automatisée des droits d'accès",
+        "operationId": "subscribeToDataset",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/marketplace/subscriptions": {
+      "get": {
+        "summary": "Lister l'ensemble de mes abonnements, contrats de partage et souscriptions de données actuellement actifs",
+        "operationId": "listMySubscriptions",
+        "tags": [
+          "Subscriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Résilier un abonnement de données existant pour révoquer les droits d'accès au produit de données associé",
+        "operationId": "unsubscribeDataset",
+        "tags": [
+          "Subscriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

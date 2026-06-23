@@ -1,0 +1,178 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Document API",
+    "version": "1.0.0",
+    "x-api-id": "document-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "Cette API centralise l'automatisation de la production documentaire et la gestion de la signature électronique pour l'ensemble du système d'information. Elle permet de compiler des gabarits (templates Handlebars ou modèles Word DOCX) en y injectant dynamiquement des structures de données métiers pour générer instantanément des contrats, conditions générales de vente (CGV), comptes-rendus ou devis au format PDF sécurisé. Elle pilote également le chaînage d'approbation et l'envoi des demandes de signature certifiée.",
+    "x-synonymes": "génération de document, template de document, gabarit de contrat, modèle de devis, compilation PDF, modèle DOCX, signature électronique, signataire, conditions générales de vente, CGV, fusion de données, template Handlebars, workflow de signature, document d'accord, paraphe électronique, archivage de gabarit",
+    "x-false-positive-warning": "Attention : Cette API automatise la compilation dynamique de fichiers à partir de templates structurés et le déclenchement de signatures électroniques. Ne pas la confondre avec la `document-management-api` (qui fait office de GED pour le stockage, l'indexation et la recherche de fichiers existants), ni avec l'api de facturation (`invoice-api`) dédiée aux calculs comptables et financiers.",
+    "x-cas-usage": "Comment compiler automatiquement un devis au format PDF en y injectant les variables tarifaires négociées ? | Comment charger un nouveau gabarit Handlebars pour mettre à jour la charte graphique des CGV ? | Comment initier un parcours de signature électronique ordonnancé entre deux collaborateurs et un client extérieur ?"
+  },
+  "paths": {
+    "/v1/documents/generate": {
+      "post": {
+        "summary": "Générer et compiler un nouveau document (PDF/DOCX) en combinant un identifiant de gabarit et un jeu de variables métiers",
+        "operationId": "generateDocument",
+        "tags": [
+          "Documents"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "template_id",
+                  "data"
+                ],
+                "properties": {
+                  "template_id": {
+                    "type": "string"
+                  },
+                  "data": {
+                    "type": "object",
+                    "description": "Variables injectées dans le template"
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "pdf",
+                      "docx"
+                    ],
+                    "default": "pdf"
+                  },
+                  "sign": {
+                    "type": "boolean",
+                    "default": false
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Document généré"
+          }
+        }
+      }
+    },
+    "/v1/documents/templates": {
+      "get": {
+        "summary": "Lister et parcourir l'ensemble des templates, modèles et gabarits documentaires disponibles dans le référentiel",
+        "operationId": "listDocTemplates",
+        "tags": [
+          "Templates"
+        ],
+        "responses": {
+          "200": {
+            "description": "Templates"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et enregistrer un nouveau gabarit documentaire (code Handlebars ou binaire DOCX) utilisable pour les futures fusions",
+        "operationId": "createDocTemplate",
+        "tags": [
+          "Templates"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "content"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "format": {
+                    "type": "string",
+                    "enum": [
+                      "docx",
+                      "pdf"
+                    ]
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Template Handlebars ou base64 .docx"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Template créé"
+          }
+        }
+      }
+    },
+    "/v1/documents/{id}/sign": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Initier un parcours de validation et transmettre une demande de signature électronique certifiée à une liste de signataires ordonnancée",
+        "operationId": "requestSignature",
+        "tags": [
+          "Signatures"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "signatories"
+                ],
+                "properties": {
+                  "signatories": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string",
+                          "format": "email"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "order": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Demande de signature envoyée"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HVAC API",
+    "version": "1.0.0",
+    "x-api-id": "hvac-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Cette API pilote la supervision technique et le contrôle à distance des systèmes de Chauffage, Ventilation et Climatisation (CVC / HVAC) au sein du parc immobilier de l'entreprise. Connectée aux réseaux de capteurs et d'automates, elle permet de monitorer en continu les consignes de température, de suivre les indicateurs de qualité de l'air (taux de CO2, humidité), et d'ajuster dynamiquement les plannings de marche pour optimiser la performance énergétique des bâtiments (GTB).",
+    "x-synonymes": "système CVC, chauffage ventilation climatisation, HVAC, contrôle thermique, consigne de température, gestion technique du bâtiment, GTB, qualité de l'air intérieur, capteur de CO2, ventilation mécanique, planning de chauffage, mode éco CVC, climatiseur connecté, centrale de traitement d'air, CTA, pilotage thermique intelligent",
+    "x-false-positive-warning": "Attention : Cette API gère exclusivement le contrôle physique, mécanique et environnemental des installations de génie thermique (HVAC). Ne pas la confondre avec la `energy-consumption-api` (suivi des index et relevés de compteurs de facturation brute en kWh), ni avec la `energy-audit-api` (dédiée aux rapports réglementaires de DPE immobilier).",
+    "x-cas-usage": "Comment lire le statut opérationnel, la température ambiante et le taux de CO2 remontés par une centrale de traitement d'air ? | Comment basculer le mode de marche d'un climatiseur en mode Éco ou Hors-gel à distance ? | Où consulter et modifier le planning de programmation horaire du chauffage pour la période hivernale ?"
+  },
+  "paths": {
+    "/v1/hvac/{unitId}": {
+      "parameters": [
+        {
+          "name": "unitId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les mesures en temps réel, la température, le mode actif et l'état de fonctionnement d'une unité CVC",
+        "operationId": "getHvacStatus",
+        "tags": [
+          "HVAC"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Ajuster et modifier le mode de fonctionnement (Chauffage, Refroidissement, Ventilation, Éco) de l'unité",
+        "operationId": "setMode",
+        "tags": [
+          "HVAC"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/hvac/{unitId}/schedule": {
+      "parameters": [
+        {
+          "name": "unitId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la programmation horaire et le calendrier de régulation thermique appliqué à l'équipement",
+        "operationId": "getSchedule",
+        "tags": [
+          "Schedule"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour le planning de bascule automatique des consignes de température (confort / nuit / inoccupé)",
+        "operationId": "updateSchedule",
+        "tags": [
+          "Schedule"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

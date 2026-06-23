@@ -1,0 +1,61 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Reinsurance API",
+    "version": "1.0.0",
+    "x-api-id": "reinsurance-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Assurance",
+    "x-domain": "Insurance",
+    "description": "Gestion de la réassurance et de la cession de risques. Permet de gérer les traités de réassurance (proportionnels et non-proportionnels) et les placements facultatifs, et de céder les sinistres dépassant les seuils de rétention aux réassureurs. Utilisé par les compagnies d assurance pour transférer les risques excessifs.",
+    "x-synonymes": "réassurance, traité réassurance, facultative réassurance, cession risque, réassureur, quote-part traité, excédent de perte, XL excess of loss, réassurance proportionnelle, réassurance non proportionnelle, cession sinistre réassureur, rétention nette, capacité réassurance, placement réassurance, pool réassurance, sinistre cédé, récupération réassureur, programme réassurance, réassurance vie non-vie, retrocession",
+    "x-false-positive-warning": "DIFFÉRENCE vs policy-api-v3 : Reinsurance API = cession des risques aux réassureurs. policy-api-v3 = contrats assurance avec les clients finaux. DIFFÉRENCE vs claims-settlement-api : Reinsurance API = cession sinistres aux réassureurs. claims-settlement-api = règlement sinistres aux assurés.",
+    "x-cas-usage": "je veux voir tous nos traités de réassurance actifs | je veux créer un nouveau traité XL pour notre portefeuille auto | je veux céder un sinistre catastrophe à nos réassureurs | je veux consulter tous les sinistres cédés aux réassureurs ce trimestre | je veux modifier les conditions d un traité de réassurance existant"
+  },
+  "paths": {
+    "/v1/reinsurance/treaties": {
+      "get": {
+        "summary": "Traités de réassurance — quote-part, excédent de perte et conditions",
+        "operationId": "listTreaties",
+        "tags": ["Treaties"],
+        "responses": {"200": {"description": "Traités réassurance"}}
+      },
+      "post": {
+        "summary": "Créer un traité de réassurance — proportionnel ou non-proportionnel",
+        "operationId": "createTreaty",
+        "tags": ["Treaties"],
+        "responses": {"200": {"description": "Traité créé"}}
+      }
+    },
+    "/v1/reinsurance/treaties/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Détail d un traité de réassurance — rétention, capacité et réassureurs",
+        "operationId": "getTreaty",
+        "tags": ["Treaties"],
+        "responses": {"200": {"description": "Détail traité"}}
+      },
+      "put": {
+        "summary": "Modifier un traité de réassurance — conditions et réassureurs",
+        "operationId": "updateTreaty",
+        "tags": ["Treaties"],
+        "responses": {"200": {"description": "Traité modifié"}}
+      }
+    },
+    "/v1/reinsurance/claims": {
+      "get": {
+        "summary": "Sinistres cédés aux réassureurs — montants et statuts de récupération",
+        "operationId": "listReinsuranceClaims",
+        "tags": ["Claims"],
+        "responses": {"200": {"description": "Sinistres cédés"}}
+      },
+      "post": {
+        "summary": "Céder un sinistre au réassureur — dépassement du seuil de rétention",
+        "operationId": "cessionClaim",
+        "tags": ["Claims"],
+        "responses": {"200": {"description": "Sinistre cédé"}}
+      }
+    }
+  }
+}

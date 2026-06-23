@@ -1,0 +1,101 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Room Booking API",
+    "version": "2.0.0",
+    "x-api-id": "room-booking-api-v2",
+    "x-api-version": "v2",
+    "x-status": "deprecated",
+    "x-team": "Equipe Tourisme",
+    "x-domain": "Tourism",
+    "description": "Réservation chambres v2. DEPRECATED. Remplacé par room-booking-api-v3.",
+    "x-successor": "room-booking-api-v3",
+    "x-synonymes": "réservation, chambre, hôtel, hébergement, nuitée, séjour, v2, obsolète, deprecated",
+    "x-false-positive-warning": "API obsolète. Utiliser room-booking-api-v3 pour bénéficier des nouvelles fonctionnalités de yield management.",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers room-booking-api-v3."
+  },
+  "paths": {
+    "/v2/bookings": {
+      "get": {
+        "summary": "DEPRECATED - Lister les dossiers de réservation de chambres",
+        "operationId": "listBookingsV2",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "DEPRECATED - Créer une réservation de chambre",
+        "operationId": "bookRoomV2",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v2/bookings/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "DEPRECATED - Consulter la fiche détaillée d'une réservation v2",
+        "operationId": "getBookingV2",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "DEPRECATED - Annuler un enregistrement de réservation",
+        "operationId": "cancelBookingV2",
+        "tags": [
+          "Bookings"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

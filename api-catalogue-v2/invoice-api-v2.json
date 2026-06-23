@@ -1,0 +1,72 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Invoice API",
+    "version": "2.0.0",
+    "x-api-id": "invoice-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "Version 2 — Factures multilingues, multi-devises avec avoirs automatiques et signature électronique eIDAS. Génère automatiquement un avoir (credit_note) lors de l annulation, supporte la facturation en plusieurs langues et devises, et permet la signature électronique conforme eIDAS. DIFFÉRENCE vs invoice-api-v3 : v2 = multilingue et credit_note automatique. v3 = version actuelle avec récurrence native, pénalités de retard et export comptable ERP.",
+    "x-breaking-changes-from-previous": ["void → génère automatiquement une credit_note", "Nouveau champ locale (langue)", "signature_url ajouté", "line_items renommé items"],
+    "x-synonymes": "facture multilingue, facture multi-devise, avoir automatique, credit note facture, signature électronique facture, eIDAS facture, facture anglais espagnol, facture EUR USD GBP, annulation facture avoir, facture internationale, locale facture, devises étrangères facture, credit note automatique, avoir remboursement, facture signée électroniquement, version facture v2",
+    "x-false-positive-warning": "Version avec export comptable ERP et récurrence → invoice-api-v3. Factures simples sans multilingue → invoice-api (v1). Prélèvements automatiques → billing-api-v3.",
+    "x-cas-usage": "je veux générer une facture en anglais pour un client international | je veux annuler une facture et que l avoir soit généré automatiquement | je veux signer électroniquement une facture avec eIDAS | je veux consulter les avoirs liés à une facture annulée | je veux facturer en USD avec la locale en-US"
+  },
+  "paths": {
+    "/v2/invoices": {
+      "post": {
+        "summary": "Générer une facture multilingue et multi-devise avec credit_note automatique à l annulation",
+        "operationId": "createInvoiceV2",
+        "tags": ["Invoices"],
+        "responses": {"201": {"description": "Facture générée"}}
+      }
+    },
+    "/v2/invoices/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer une facture v2 — avec locale, devise et signature_url",
+        "operationId": "getInvoiceV2",
+        "tags": ["Invoices"],
+        "responses": {"200": {"description": "Facture v2"}}
+      }
+    },
+    "/v2/invoices/{id}/pdf": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "PDF facture dans la langue configurée — fr, en, es, de",
+        "operationId": "downloadInvoiceV2PDF",
+        "tags": ["Invoices"],
+        "responses": {"200": {"description": "PDF multilingue"}}
+      }
+    },
+    "/v2/invoices/{id}/void": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Annuler une facture — génère automatiquement un avoir (credit_note)",
+        "operationId": "voidInvoiceV2",
+        "tags": ["Invoices"],
+        "responses": {"200": {"description": "Annulée — credit_note générée"}}
+      }
+    },
+    "/v2/invoices/{id}/credit-notes": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Avoirs liés à cette facture — credit notes générées automatiquement",
+        "operationId": "getInvoiceCreditNotes",
+        "tags": ["CreditNotes"],
+        "responses": {"200": {"description": "Avoirs"}}
+      }
+    },
+    "/v2/invoices/{id}/sign": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Signer électroniquement une facture avec eIDAS — retourne signature_url",
+        "operationId": "signInvoice",
+        "tags": ["Invoices"],
+        "responses": {"200": {"description": "Facture signée — signature_url disponible"}}
+      }
+    }
+  }
+}

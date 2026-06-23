@@ -1,0 +1,71 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Asset Tracking API",
+    "version": "1.0.0",
+    "x-api-id": "asset-tracking-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Suivi GPS en temps réel des actifs physiques appartenant à l'entreprise — équipements de chantier, machines industrielles, véhicules de flotte, outils et matériels de valeur. Couvre l'enregistrement d'actifs avec balise IoT, la consultation de leur position GPS en temps réel, l'historique de leurs déplacements et la configuration de zones de géofencing avec alertes de sortie automatiques. Utilisé par les responsables de parc matériel, les gestionnaires de chantier et les équipes sécurité pour prévenir les vols, optimiser l'utilisation des équipements et localiser rapidement le matériel dispersé sur site ou entre sites. DIFFÉRENCE vs logistics-tracking-api : Asset Tracking = actifs physiques propres à l'entreprise (machines, équipements de chantier). logistics-tracking-api = colis et envois en transit chez des transporteurs. DIFFÉRENCE vs asset-management-api : Asset Tracking = localisation GPS temps réel et mouvements physiques. asset-management-api = gestion comptable, amortissements et cycle de vie financier des immobilisations.",
+    "x-synonymes": "tracking GPS équipement, suivi temps réel actif, localisation matériel, géolocalisation équipement chantier, géofencing, zone alerte sortie, historique déplacements, anti-vol équipement, tracker GPS, balise GPS, suivi flotte matériel, inventaire actifs terrain, position temps réel, alerte sortie zone, suivi équipement chantier, localisation outil, matériel introuvable, traçabilité équipement, asset tracker IoT, suivi parc matériel",
+    "x-false-positive-warning": "Colis et envois en transit chez un transporteur → logistics-tracking-api (tracking de livraison, non d'actifs propres). Gestion comptable, amortissements et cycle de vie financier des immobilisations → asset-management-api (comptabilité d'actifs, non localisation). Suivi de flotte de véhicules avec affectation de missions et conducteurs → fleet-api-v4 (gestion opérationnelle de flotte). Données OBD, télémétrie moteur et diagnostics véhicules → vehicle-api-v2 (données techniques embarquées). Gestion des stocks et inventaire en entrepôt → inventory-api (quantités et emplacements logistiques, non GPS).",
+    "x-cas-usage": "Comment tracker en GPS nos équipements de chantier pour prévenir les vols et les pertes ? | Comment récupérer la position GPS en temps réel d'un équipement spécifique identifié par son ID ? | Comment créer une alerte automatique si une machine sort d'une zone de chantier définie ? | Comment consulter l'historique des déplacements d'un équipement sur les 30 derniers jours ? | Comment enregistrer un nouvel équipement avec sa balise GPS dans le système de tracking ?"
+  },
+  "paths": {
+    "/v1/assets": {
+      "get": {
+        "summary": "Lister les actifs physiques suivis — équipements, machines et outils avec leur position GPS actuelle et statut",
+        "operationId": "listAssets",
+        "tags": ["Assets"],
+        "responses": {"200": {"description": "Liste des actifs avec positions GPS"}}
+      },
+      "post": {
+        "summary": "Enregistrer un nouvel actif physique à tracker — équipement chantier, machine ou véhicule avec sa balise IoT associée",
+        "operationId": "registerAsset",
+        "tags": ["Assets"],
+        "responses": {"200": {"description": "Actif enregistré avec balise GPS"}}
+      }
+    },
+    "/v1/assets/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter la position GPS en temps réel d'un actif — coordonnées latitude/longitude, vitesse de déplacement et statut opérationnel",
+        "operationId": "getAssetLocation",
+        "tags": ["Assets"],
+        "responses": {"200": {"description": "Position GPS temps réel de l'actif"}}
+      },
+      "put": {
+        "summary": "Modifier les informations d'un actif suivi — nom, catégorie, description ou identifiant de balise GPS associée",
+        "operationId": "updateAsset",
+        "tags": ["Assets"],
+        "responses": {"200": {"description": "Actif mis à jour"}}
+      }
+    },
+    "/v1/assets/{id}/history": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter l'historique des positions GPS d'un actif sur une période — trajet parcouru, temps d'arrêt et zones visitées",
+        "operationId": "getAssetHistory",
+        "tags": ["History"],
+        "responses": {"200": {"description": "Historique des positions GPS"}}
+      }
+    },
+    "/v1/assets/{id}/geofence": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Créer une zone de géofencing pour un actif — définir un périmètre autorisé et déclencher des alertes automatiques en cas de sortie",
+        "operationId": "createGeofence",
+        "tags": ["Geofence"],
+        "responses": {"200": {"description": "Zone géofencing créée avec alertes"}}
+      },
+      "get": {
+        "summary": "Vérifier si un actif est dans sa zone géofencing autorisée — retourne le statut intérieur ou extérieur du périmètre défini",
+        "operationId": "checkGeofence",
+        "tags": ["Geofence"],
+        "responses": {"200": {"description": "Statut géofencing de l'actif"}}
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Grade API",
+    "version": "1.0.0",
+    "x-api-id": "grade-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "x-successor": "grade-api-v2",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS grade-api-v2] Cette API gérait historiquement l'enregistrement linéaire et la consultation basique des notes et des résultats d'évaluations scolaires (v1). Elle est définitivement dépréciée et gelée. Toutes les applications pédagogiques, portails d'écoles et modules d'apprentissage doivent obligatoirement migrer vers la version 2 (grade-api-v2) pour s'appuyer sur le moteur de calcul automatisé des moyennes générales et la génération réglementaire des bulletins scolaires en PDF.",
+    "x-synonymes": "gestion des notes v1, relevé de notes historique, évaluation scolaire v1, bulletin trimestriel déprécié, saisie des notes v1, résultats académiques anciens, moyenne scolaire de base",
+    "x-false-positive-warning": "Attention : Cette API historique est dépréciée et ses fonctionnalités sont gelées. Veiller à rediriger l'ensemble des intégrations vers la nouvelle version cible fonctionnelle `grade-api-v2`."
+  },
+  "paths": {
+    "/v1/grades": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS grade-api-v2 - Consulter la liste historique et le registre des notes enregistrées sur l'ancienne infrastructure v1",
+        "operationId": "listGradesV1",
+        "tags": [
+          "Grades"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

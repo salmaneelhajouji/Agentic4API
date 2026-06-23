@@ -1,0 +1,82 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MRP API",
+    "version": "1.0.0",
+    "x-api-id": "mrp-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Cette API pilote le moteur de calcul de la planification des besoins en composants et matières premières (MRP - Material Requirements Planning) pour l'environnement de production industrielle. À partir du plan directeur de production, elle calcule automatiquement les besoins nets futurs, émet des suggestions d'approvisionnement ou d'achat auprès des fournisseurs, et valide le lancement des ordres de fabrication. Elle est essentielle pour synchroniser la chaîne logistique d'usine avec la planification commerciale.",
+    "x-synonymes": "planification des besoins en composants, MRP, calcul des besoins nets, suggestion d'approvisionnement, plan directeur de production, ordonnancement industriel, lancement de fabrication, besoins en matières premières, plan de charge usine, gestion des flux industriels, nomenclature produit, suggestion d'achat industriel",
+    "x-false-positive-warning": "Attention : Cette API réalise des projections mathématiques et des calculs de planification de besoins futurs basés sur des nomenclatures et calendriers industriels (MRP). Ne pas la confondre avec l'api `inventory-api` ou `inventory-industry-api` qui renvoient l'état physique instantané du stock disponible en magasin.",
+    "x-cas-usage": "Comment exécuter le calcul MRP pour déterminer les besoins en composants pour les 4 prochaines semaines ? | Où extraire les suggestions automatisées d'achat et d'approvisionnement générées par le système ? | Comment valider et accepter une suggestion d'approvisionnement pour la transformer en commande d'achat ? | Comment consulter le plan de production prévisionnel calculé pour une référence produit ?"
+  },
+  "paths": {
+    "/v1/mrp/calculate": {
+      "post": {
+        "summary": "Déclencher l'exécution de l'algorithme de calcul des besoins nets (MRP) selon les prévisions et états des stocks",
+        "operationId": "runMRP",
+        "tags": [
+          "MRP"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/mrp/suggestions": {
+      "get": {
+        "summary": "Lister et filtrer les suggestions d'achat ou de réapprovisionnement générées par le dernier calcul MRP",
+        "operationId": "getMRPSuggestions",
+        "tags": [
+          "Suggestions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Accepter et valider une suggestion d'approvisionnement pour générer l'ordre d'achat associé",
+        "operationId": "acceptSuggestion",
+        "tags": [
+          "Suggestions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/mrp/plan/{productId}": {
+      "parameters": [
+        {
+          "name": "productId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le plan directeur de production et le calendrier d'assemblage prévisionnel pour un produit spécifique",
+        "operationId": "getProductionPlan",
+        "tags": [
+          "Plan"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

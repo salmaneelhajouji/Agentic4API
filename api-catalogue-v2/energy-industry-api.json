@@ -1,0 +1,56 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Energy Industry API",
+    "version": "1.0.0",
+    "x-api-id": "energy-industry-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Cette API gère la surveillance, l'analyse et la corrélation de l'énergie consommée au sein des procédés de fabrication et des lignes de production industrielles. Elle permet d'extraire l'empreinte énergétique précise requise pour l'usinage d'une seule pièce mécanique et de générer des scénarios d'optimisation basés sur l'activité des automates. Ses utilisateurs cibles sont les directeurs d'usines, les ingénieurs méthodes et les responsables de la maintenance industrielle (IIoT).",
+    "x-synonymes": "efficacité énergétique industrielle, consommation machine, procédé de fabrication usine, énergie par pièce usinée, monitoring de chaîne de production, IIoT d'infrastructure industrielle, optimisation de charge d'usine, consommation d'équipement lourd, télémétrie d'automate de production, performance d'actif d'usine, sous-comptage machine, empreinte carbone de manufacture, détection de dérive énergétique, consommation de presse industrielle, diagnostic d'équipement de production",
+    "x-false-positive-warning": "Attention : Cette API traite spécifiquement de la télémétrie énergétique des machines de production, des lignes de fabrication et des pièces usinées (Industry). Ne pas la confondre avec la `energy-consumption-api` (qui suit la consommation macro-énergétique des bâtiments administratifs et des installations immobilières générales).",
+    "x-cas-usage": "Comment mesurer la quantité précise de kilowattheures (kWh) consommée par une machine pour usiner une pièce unitaire ? | Où extraire les recommandations d'optimisation énergétique consolidées pour l'ensemble du site de fabrication ? | Comment analyser la surconsommation d'un équipement lourd en fonction de son cycle d'activité ?"
+  },
+  "paths": {
+    "/v1/energy-industry/{machineId}": {
+      "parameters": [
+        {
+          "name": "machineId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'analyse d'énergie consommée et l'empreinte électrique par pièce usinée sur une machine spécifique",
+        "operationId": "getEnergyPerPart",
+        "tags": [
+          "Energy"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/energy-industry/site": {
+      "get": {
+        "summary": "Récupérer la liste des alertes et des recommandations d'optimisation énergétique automatisées pour l'ensemble du site industriel",
+        "operationId": "getEnergyOptimization",
+        "tags": [
+          "Site"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Grid Stability API",
+    "version": "1.0.0",
+    "x-api-id": "grid-stability-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Cette API supervise l'analyse physique, l'équilibrage dynamique de charge (production/consommation) et la stabilité électrique du réseau intelligent (Smart Grid). Elle permet de surveiller à la seconde la fréquence du réseau (en Hertz) pour détecter les dérives menaçant l'infrastructure, d'analyser les micro-fluctuations de tension, et d'exécuter des modèles prédictifs (forecast) pour anticiper les risques de congestion ou de délestage afin d'éviter tout black-out.",
+    "x-synonymes": "stabilité du réseau électrique, équilibrage de charge électricité, fréquence en Hertz, tension électrique réseau, dérive de fréquence, prévisions de stabilité, délestage prédictif, congestions électriques, smart grid stability, surtension de grille, synchrophasor, équilibre offre-demande énergie, black-out prévention",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement de l'analyse physique de la stabilité d'onde, de la fréquence et des prédictions d'effondrement de la grille électrique (Grid Stability). Ne pas la confondre avec la `grid-api` (qui s'occupe de l'inventaire matériel statique des sous-stations et de l'enregistrement des pannes de lignes physiques).",
+    "x-cas-usage": "Quel est l'indice de stabilité ou le niveau de réserve électrique mesuré à cet instant sur le réseau ? | Où extraire l'historique précis des fluctuations de fréquence (Hertz) pour auditer une anomalie de surtension ? | Comment récupérer le rapport prévisionnel (forecast) de stabilité pour les prochaines 24 heures afin de planifier la production ?"
+  },
+  "paths": {
+    "/v1/stability/status": {
+      "get": {
+        "summary": "Consulter l'indice de stabilité thermique, l'état d'équilibrage et le statut de sûreté électrique actuel de la grille",
+        "operationId": "getStabilityStatus",
+        "tags": [
+          "Status"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/stability/frequency": {
+      "get": {
+        "summary": "Récupérer l'historique chronologique fin des relevés de fréquence (Hertz) et de régulation de tension du réseau",
+        "operationId": "getFrequencyHistory",
+        "tags": [
+          "Frequency"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/stability/forecast": {
+      "get": {
+        "summary": "Consulter les prévisions probabilistes de stabilité, les risques de congestion et les seuils de délestage calculés",
+        "operationId": "getStabilityForecast",
+        "tags": [
+          "Forecast"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

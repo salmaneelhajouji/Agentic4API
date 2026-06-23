@@ -1,0 +1,52 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Network Segmentation API",
+    "version": "1.0.0",
+    "x-api-id": "network-segmentation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Cybersécurité",
+    "x-domain": "Cybersecurity",
+    "description": "Segmentation réseau pour la cybersécurité. Permet de gérer les zones réseau (DMZ, LAN, OT), de créer des règles de filtrage inter-zones (micro-segmentation) et de gérer les règles de firewall. Utilisé par les équipes sécurité réseau pour cloisonner les environnements et implémenter le principe de Zero Trust.",
+    "x-synonymes": "segmentation réseau, VLAN, micro-segmentation, zone réseau, DMZ, LAN, WAN, OT réseau industriel, règle firewall, ACL access control list, pare-feu règle, cloisonnement réseau, isolation réseau, Zero Trust réseau, SDN software defined networking, politique réseau, zone sécurisée, inter-VLAN routage, NSG network security group, périmètre réseau",
+    "x-false-positive-warning": "Métriques QoS et SLA réseau → network-quality-api. Certificats SSL/TLS → certificate-management-api. Conformité sécurité ISO → compliance-check-api. Détection intrusion → ids-api.",
+    "x-cas-usage": "je veux créer une zone réseau isolée pour nos serveurs de production | je veux ajouter une règle de firewall pour bloquer le trafic entre la DMZ et le LAN interne | je veux lister toutes les règles de segmentation actives sur notre réseau | je veux supprimer une règle de filtrage réseau devenue obsolète | je veux implémenter la micro-segmentation entre nos environnements dev et prod"
+  },
+  "paths": {
+    "/v1/segmentation/zones": {
+      "get": {
+        "summary": "Lister les zones réseau — DMZ, LAN, OT et zones sécurisées",
+        "operationId": "listNetworkZones",
+        "tags": ["Zones"],
+        "responses": {"200": {"description": "Zones réseau"}}
+      },
+      "post": {
+        "summary": "Créer une zone réseau — DMZ, VLAN isolé ou segment micro-segmenté",
+        "operationId": "createZone",
+        "tags": ["Zones"],
+        "responses": {"200": {"description": "Zone créée"}}
+      }
+    },
+    "/v1/segmentation/rules": {
+      "get": {
+        "summary": "Lister les règles de segmentation — filtrage inter-zones et ACL firewall",
+        "operationId": "listSegmentationRules",
+        "tags": ["Rules"],
+        "responses": {"200": {"description": "Règles de segmentation"}}
+      },
+      "post": {
+        "summary": "Ajouter une règle de filtrage réseau — bloquer ou autoriser le trafic entre zones",
+        "operationId": "addRule",
+        "tags": ["Rules"],
+        "responses": {"200": {"description": "Règle ajoutée"}}
+      },
+      "delete": {
+        "summary": "Supprimer une règle de segmentation réseau",
+        "operationId": "removeRule",
+        "tags": ["Rules"],
+        "responses": {"200": {"description": "Règle supprimée"}}
+      }
+    }
+  }
+}

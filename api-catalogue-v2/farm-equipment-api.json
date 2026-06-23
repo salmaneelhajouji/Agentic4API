@@ -1,0 +1,140 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Farm Equipment API",
+    "version": "1.0.0",
+    "x-api-id": "farm-equipment-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Cette API régit le cycle de vie, le suivi opérationnel et la planification de la maintenance de l'ensemble du parc de matériel et des engins agricoles (tracteurs, moissonneuses, semoirs). Elle centralise les métriques d'utilisation mécanique (compteur horaire), organise le calendrier des révisions préventives ou curatives et consigne les fiches d'interventions techniques pour maximiser la disponibilité de la flotte lors des campagnes de culture.",
+    "x-synonymes": "matériel agricole, engin d'exploitation, flotte de tracteurs, moissonneuse-batteuse, maintenance préventive, compteur horaire machine, révision mécanique, panne d'équipement, carnet d'entretien agricole, outil de travail du sol, gestion d'actifs agricoles, disponibilité parc machine, intervention technique",
+    "x-false-positive-warning": "Attention : Cette API est exclusivement dédiée au suivi technique et à la maintenance du matériel et des engins agricoles physiques (Equipment). Ne pas la confondre avec la `field-api-v2` (gestion agronomique et cartographie des parcelles de terre) ni avec une solution générique de gestion de flotte logistique routière.",
+    "x-cas-usage": "Comment enregistrer un nouveau tracteur ou un outil d'épandage au sein de la flotte d'équipements ? | Où consulter le journal de maintenance préventive et les révisions mécaniques planifiées sur une moissonneuse ? | Comment remonter le niveau d'utilisation et le nombre d'heures moteur relevé en fin de campagne ? | Quelle méthode appeler pour planifier en urgence un entretien suite à une panne matérielle au champ ?"
+  },
+  "paths": {
+    "/v1/equipment": {
+      "get": {
+        "summary": "Lister, filtrer et auditer l'ensemble du parc d'engins et matériels agricoles selon leur type, statut ou affectation",
+        "operationId": "listEquipment",
+        "tags": [
+          "Equipment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Référencer et enregistrer un nouvel engin agricole ou accessoire technique dans l'inventaire de l'exploitation",
+        "operationId": "addEquipment",
+        "tags": [
+          "Equipment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/equipment/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche technique détaillée, le numéro de série et le statut opérationnel d'un matériel agricole",
+        "operationId": "getEquipment",
+        "tags": [
+          "Equipment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les caractéristiques, l'affectation géographique ou les métadonnées d'exploitation d'une machine",
+        "operationId": "updateEquipment",
+        "tags": [
+          "Equipment"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/equipment/{id}/maintenance": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'historique complet des interventions techniques et le calendrier des révisions de l'appareil",
+        "operationId": "getEquipmentMaintenance",
+        "tags": [
+          "Maintenance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Planifier une nouvelle intervention d'entretien mécanique préventif ou enregistrer une action curative",
+        "operationId": "scheduleService",
+        "tags": [
+          "Maintenance"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/equipment/{id}/usage": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer les statistiques d'utilisation opérationnelle, la volumétrie et le relevé du compteur d'heures de la machine",
+        "operationId": "getEquipmentUsage",
+        "tags": [
+          "Usage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

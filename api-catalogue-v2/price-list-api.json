@@ -1,0 +1,205 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Price List API",
+    "version": "1.0.0",
+    "x-api-id": "price-list-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "Cette API régit l'administration et l'affectation des catalogues tarifaires statiques et des listes de prix négociées pour les clients ou groupes de comptes au sein du segment B2B (Business-to-Business). Elle permet de stocker des grilles de tarifs contractuels fixes, d'associer ces listes à des segments de marché spécifiques ou à des comptes clés, et d'interroger instantanément le barème contractuel effectif applicable à un produit pour un acheteur donné.",
+    "x-synonymes": "liste de prix B2B, catalogue tarifaire contractuel, prix négocié, prix contractuel, grille tarifaire statique, segmentation de prix, tarification par compte B2B, prix de gros, barème de prix, lookup tarifaire contractuel, affectation de liste de prix, tarifs négociés",
+    "x-false-positive-warning": "Attention : Cette API administre exclusivement les catalogues de prix fixes, statiques et négociés à l'avance par contrat commercial B2B (Price List). Ne pas la confondre avec la `pricing-api` (qui calcule dynamiquement et en temps réel le prix final du panier d'achat en y intégrant les remises de fidélité, taxes de port et règles promotionnelles courantes).",
+    "x-cas-usage": "Comment créer un catalogue de prix fixes négociés spécifiquement pour un grand compte ? | Comment affecter une grille tarifaire grossiste à un segment de partenaires commerciaux ? | Où rechercher le tarif contractuel de base d'un article pour un client donné avant application de remises dynamiques ?"
+  },
+  "paths": {
+    "/v1/price-lists": {
+      "post": {
+        "summary": "Créer et enregistrer une nouvelle liste de prix fixes ou un catalogue tarifaire contractuel B2B",
+        "operationId": "createPriceList",
+        "tags": [
+          "PriceLists"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "currency"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "currency": {
+                    "type": "string",
+                    "example": "EUR"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string"
+                        },
+                        "price": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créée"
+          }
+        }
+      },
+      "get": {
+        "summary": "Lister et parcourir l'ensemble des catalogues tarifaires et listes de prix B2B enregistrés dans le système",
+        "operationId": "listPriceLists",
+        "tags": [
+          "PriceLists"
+        ],
+        "responses": {
+          "200": {
+            "description": "Listes"
+          }
+        }
+      }
+    },
+    "/v1/price-lists/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les détails contractuels, la devise et le tableau de tarifs d'une liste de prix spécifique",
+        "operationId": "getPriceList",
+        "tags": [
+          "PriceLists"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Catalogue ou liste de prix introuvable"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour ou écraser en bloc les prix fixes des articles au sein d'une liste tarifaire existante",
+        "operationId": "updatePriceList",
+        "tags": [
+          "PriceLists"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        }
+      }
+    },
+    "/v1/price-lists/{id}/assign": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Assigner et appliquer un catalogue de prix fixes à un compte client ou à un segment de marché cible",
+        "operationId": "assignPriceList",
+        "tags": [
+          "PriceLists"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account_id": {
+                    "type": "string"
+                  },
+                  "segment": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Assignée"
+          }
+        }
+      }
+    },
+    "/v1/price-lists/lookup": {
+      "post": {
+        "summary": "Rechercher et obtenir le prix contractuel de base effectif d'un produit pour un client B2B spécifique",
+        "operationId": "lookupPrice",
+        "tags": [
+          "PriceLists"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "product_id",
+                  "customer_id"
+                ],
+                "properties": {
+                  "product_id": {
+                    "type": "string"
+                  },
+                  "customer_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prix effectif"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mortgage API",
+    "version": "2.0.0",
+    "x-api-id": "mortgage-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Banque",
+    "x-domain": "Banking",
+    "description": "Cette API orchestre l'instruction, le suivi et l'administration des contrats de prêts immobiliers adossés à des garanties réelles (hypothèques) (v2). Elle permet de piloter l'intégralité du dossier d'emprunt, de calculer et d'éditer le tableau d'amortissement complet (capital, intérêts, assurance), et de formaliser les procédures légales de mainlevée d'hypothèque à la clôture du financement. Elle est le pivot des systèmes de core banking immobiliers et des portails de gestion de crédits.",
+    "x-synonymes": "prêt immobilier, crédit immobilier, hypothèque, tableau d'amortissement, mainlevée d'hypothèque, financement immobilier, emprunt immobilier, mensualité de crédit, capital restant dû, instruction de prêt v2, garantie immobilière, clôture de prêt, taux immobilier",
+    "x-false-positive-warning": "Attention : Cette API régit de manière stricte les crédits immobiliers assortis de sûretés ou garanties réelles (Mortgage). Ne pas la confondre avec la `loan-api-v3` qui est dédiée à l'instruction des prêts personnels, crédits à la consommation et financements non garantis.",
+    "x-cas-usage": "Comment soumettre une nouvelle demande de financement pour un bien immobilier avec prise d'hypothèque ? | Où récupérer le tableau d'amortissement complet détaillant les mensualités d'un crédit ? | Comment instruire et acter la mainlevée d'une hypothèque suite au remboursement anticipé total ? | Comment consulter le dossier d'emprunt consolidé d'un client ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "Tableau amortissement",
+    "Mainlevee"
+  ],
+  "paths": {
+    "/v2/mortgages": {
+      "get": {
+        "summary": "Lister, filtrer et auditer l'ensemble du portefeuille de contrats de prêts immobiliers actifs ou en cours d'instruction",
+        "operationId": "listMortgagesV2",
+        "tags": [
+          "Mortgages"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et soumettre un nouveau dossier de demande de crédit immobilier avec description du bien et de la garantie",
+        "operationId": "applyMortgageV2",
+        "tags": [
+          "Mortgages"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/mortgages/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le dossier complet d'un prêt immobilier, incluant les taux, conditions d'assurance et statuts administratifs",
+        "operationId": "getMortgageV2",
+        "tags": [
+          "Mortgages"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier la configuration, les comptes de prélèvement ou amender les caractéristiques d'un dossier de crédit",
+        "operationId": "updateMortgage",
+        "tags": [
+          "Mortgages"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/mortgages/{id}/amortization": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Générer et récupérer le tableau d'amortissement détaillé indiquant la part de capital et d'intérêts ligne par ligne",
+        "operationId": "getAmortizationTable",
+        "tags": [
+          "Amortization"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v2/mortgages/{id}/discharge": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Déclencher et formaliser la procédure juridique de mainlevée d'hypothèque suite à l'extinction de la dette",
+        "operationId": "dischargeMortgage",
+        "tags": [
+          "Discharge"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

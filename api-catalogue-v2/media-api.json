@@ -1,0 +1,75 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Media API",
+    "version": "1.0.0",
+    "x-api-id": "media-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "Gestion des médias images et vidéos — upload, redimensionnement, optimisation et distribution CDN. Permet d uploader une image ou vidéo, de la redimensionner et convertir en WebP, d obtenir son URL CDN optimisée et de la supprimer. Utilisé par les équipes front-end et e-commerce pour gérer les visuels produits, banners et contenus. DIFFÉRENCE vs file-storage-api : Media API = traitement multimédia avec resize, compression et CDN. file-storage-api = stockage générique de fichiers sans transformation.",
+    "x-synonymes": "upload image, upload vidéo, redimensionner image, resize image, compression image, WebP conversion, CDN image, URL CDN, optimisation image, thumbnail, vignette image, alt text image, suppression image, galerie médias, bibliothèque médias, image produit, visuel produit, banner image, format jpeg png webp, qualité image compression",
+    "x-false-positive-warning": "Stockage documents et fichiers génériques → file-storage-api. Transcodage vidéo et OCR complexe → media-processing-api. Bibliothèque médias avec dossiers → media-storage-api. Purge CDN → cdn-api.",
+    "x-cas-usage": "je veux uploader une photo produit et obtenir son URL CDN | je veux redimensionner une image en 800x600 en format WebP | je veux supprimer des images obsolètes de notre bibliothèque | je veux récupérer les métadonnées d une image uploadée | je veux optimiser toutes les images produit pour améliorer le score PageSpeed"
+  },
+  "paths": {
+    "/v1/media/upload": {
+      "post": {
+        "summary": "Uploader une image ou vidéo — retourne l ID et l URL CDN",
+        "operationId": "uploadMedia",
+        "tags": ["Media"],
+        "responses": {"201": {"description": "Média uploadé avec URL CDN"}}
+      }
+    },
+    "/v1/media/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Métadonnées d un média — dimensions, format, poids et URL CDN",
+        "operationId": "getMedia",
+        "tags": ["Media"],
+        "responses": {"200": {"description": "Métadonnées média"}}
+      },
+      "delete": {
+        "summary": "Supprimer un média — retire de la bibliothèque et du CDN",
+        "operationId": "deleteMedia",
+        "tags": ["Media"],
+        "responses": {"204": {"description": "Média supprimé"}}
+      }
+    },
+    "/v1/media/{id}/resize": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Redimensionner une image — largeur, hauteur, format et qualité de compression",
+        "operationId": "resizeMedia",
+        "tags": ["Media"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["width", "height"],
+                "properties": {
+                  "width": {"type": "integer"},
+                  "height": {"type": "integer"},
+                  "format": {"type": "string", "enum": ["jpeg", "png", "webp"]},
+                  "quality": {"type": "integer", "minimum": 1, "maximum": 100, "default": 80}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Image redimensionnée — URL retournée"}}
+      }
+    },
+    "/v1/media/{id}/cdn-url": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "URL CDN optimisée d un média — URL de distribution géographique",
+        "operationId": "getMediaCDNURL",
+        "tags": ["Media"],
+        "responses": {"200": {"description": "URL CDN"}}
+      }
+    }
+  }
+}

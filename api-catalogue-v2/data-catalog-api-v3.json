@@ -1,0 +1,193 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Catalog API",
+    "version": "3.0.0",
+    "x-api-id": "data-catalog-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "x-breaking-changes-from-previous": [
+      "Lineage auto",
+      "Score qualite",
+      "Glossaire"
+    ],
+    "description": "Cette API est le pilier central de la gouvernance des données à l'échelle de l'entreprise (v3). Elle fait office de dictionnaire de données unifié, permettant de cartographier le patrimoine informationnel, de tracer automatiquement le lignage technique (data lineage) de bout en bout, et de suivre les scores de qualité (complétude, fraîcheur, exactitude). Elle intègre également un glossaire métier pour aligner les définitions fonctionnelles avec la structure technique des tables. Ses utilisateurs cibles sont les Data Stewards, Data Officers, ingénieurs BI et Data Scientists qui cherchent à découvrir, documenter et certifier la fiabilité des sources de données.",
+    "x-synonymes": "catalogue de données, data catalog, dictionnaire de données, métadonnées, lignage de données, data lineage, traçabilité de la donnée, score de qualité data, glossaire métier, terme métier, gouvernance des données, référentiel de données, dataset, jeu de données, schéma de table, patrimoine informationnel, indexation des données, data discovery",
+    "x-false-positive-warning": "Attention : Cette API gère la recherche documentaire, l'indexation, le lignage et la gouvernance macro du patrimoine de données. Ne pas la confondre avec la `metadata-api` (qui extrait les métadonnées brutes de fichiers physiques stockés, comme la taille ou l'extension d'un blob), ni avec la `data-access-control-api` (qui configure les droits de lecture, d'écriture et d'anonymisation sur ces jeux de données).",
+    "x-cas-usage": "Comment extraire le graphe de lignage automatisé (lineage) de ce dataset pour identifier ses tables sources ? | Quel est le dernier score de qualité (fraîcheur et complétude) calculé pour le référentiel client ? | Comment lier un terme officiel du glossaire métier à une colonne spécifique de notre entrepôt de données ? | Où trouver la liste de tous les jeux de données certifiés conformes pour le domaine Finance ? | Comment déclarer la dépréciation d'une ancienne table pour avertir les utilisateurs de ne plus l'utiliser ?"
+  },
+  "paths": {
+    "/v3/datasets": {
+      "get": {
+        "summary": "Consulter l'inventaire centralisé, le dictionnaire et la cartographie globale de tous les jeux de données (datasets) actifs",
+        "operationId": "listDatasetsV3",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Référencer et enregistrer un nouveau jeu de données dans le catalogue central pour lancer son indexation et sa gouvernance",
+        "operationId": "registerDatasetV3",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/datasets/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche descriptive détaillée d'un dataset, incluant son propriétaire, sa description et ses schémas de table",
+        "operationId": "getDatasetV3",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour la documentation descriptive, les tags de gouvernance ou les métadonnées d'un dataset existant",
+        "operationId": "updateDatasetV3",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Déprécier officiellement un jeu de données dans le catalogue pour planifier son cycle de fin de vie et avertir les équipes utilisatrices",
+        "operationId": "deprecateDataset",
+        "tags": [
+          "Datasets"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/datasets/{id}/lineage": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer le graphe de lignage technique automatisé (data lineage) décrivant la provenance et l'historique des transformations de la donnée",
+        "operationId": "getDataLineageV3",
+        "tags": [
+          "Lineage"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/datasets/{id}/quality": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les indicateurs et le score global de qualité des données (fraîcheur, typage, complétude) calculés sur le dataset",
+        "operationId": "getDataQuality",
+        "tags": [
+          "Quality"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher immédiatement l'exécution d'un contrôle ou d'un pipeline d'analyse de la qualité des données sur le jeu ciblé",
+        "operationId": "runQualityCheck",
+        "tags": [
+          "Quality"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/datasets/{id}/glossary": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister l'ensemble des termes et définitions du glossaire métier associés aux attributs techniques de ce dataset",
+        "operationId": "getBusinessTerms",
+        "tags": [
+          "Glossary"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Associer un nouveau terme ou concept validé du glossaire métier à une colonne ou une table pour en expliciter le sens fonctionnel",
+        "operationId": "addTerm",
+        "tags": [
+          "Glossary"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

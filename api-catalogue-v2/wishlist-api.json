@@ -1,0 +1,202 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Wishlist API",
+    "version": "1.0.0",
+    "x-api-id": "wishlist-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "Listes de souhaits clients. Produits désirés sans intention d'achat immédiate, fonctions de partage social et notifications automatisées de retour en stock ou de baisse de prix. DIFFÉRENCE vs cart-api : Wishlist matérialise des envies ou des intentions futures sans réservation, alors que cart-api gère l'intention d'achat immédiate avec calcul des taxes et impact direct sur le stock physique.",
+    "x-synonymes": "wishlist, liste de souhaits, favoris, favori, envie, coup de coeur, e-commerce, panier futur, partage de liste, idée cadeau, liste d'envies, sélection produits, alerte prix, enregistrer pour plus tard, retail, commerce électronique",
+    "x-false-positive-warning": "Pour l'ajout d'articles dans le tunnel de commande actif en vue d'un paiement, utilisez cart-api.",
+    "x-cas-usage": "je veux récupérer la liste de souhaits d'un client e-commerce | je veux ajouter un produit à mes favoris avec un mémo | je veux retirer un article de ma liste d'envies | je veux partager ma wishlist avec des proches par email | je veux transférer un article de ma wishlist vers mon panier d'achat actif"
+  },
+  "paths": {
+    "/v1/wishlists/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'intégralité de la liste de souhaits et des articles favoris d'un utilisateur",
+        "operationId": "getWishlist",
+        "tags": [
+          "Wishlist"
+        ],
+        "responses": {
+          "200": {
+            "description": "Wishlist"
+          }
+        }
+      }
+    },
+    "/v1/wishlists/{userId}/items": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Ajouter une nouvelle référence produit à la liste d'envies de l'acheteur avec une note",
+        "operationId": "addWishlistItem",
+        "tags": [
+          "Wishlist"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "product_id"
+                ],
+                "properties": {
+                  "product_id": {
+                    "type": "string"
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ajouté"
+          }
+        }
+      }
+    },
+    "/v1/wishlists/{userId}/items/{itemId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "itemId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Supprimer définitivement un article de la liste de souhaits d'un utilisateur",
+        "operationId": "removeWishlistItem",
+        "tags": [
+          "Wishlist"
+        ],
+        "responses": {
+          "204": {
+            "description": "Supprimé"
+          }
+        }
+      }
+    },
+    "/v1/wishlists/{userId}/share": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Partager la liste d'envies et de cadeaux par e-mail avec un groupe de contacts externes",
+        "operationId": "shareWishlist",
+        "tags": [
+          "Wishlist"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "emails": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "email"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Partagée"
+          }
+        }
+      }
+    },
+    "/v1/wishlists/{userId}/move-to-cart": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Transférer et déplacer un ensemble d'articles de la wishlist directement vers le panier d'achat de la session",
+        "operationId": "moveToCart",
+        "tags": [
+          "Wishlist"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "item_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Déplacé vers panier"
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}

@@ -1,0 +1,114 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Discharge API",
+    "version": "1.0.0",
+    "x-api-id": "discharge-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Cette API orchestre l'ensemble du processus médical et administratif de fin d'hospitalisation et de sortie des patients (Discharge). Elle gère la génération automatisée des documents officiels (lettres de liaison, comptes-rendus de fin de séjour au format PDF), l'édition sécurisée des ordonnances de sortie (soins et pharmacie), ainsi que la transmission sécurisée des données cliniques au médecin traitant pour garantir la continuité des soins à domicile.",
+    "x-synonymes": "sortie d'hospitalisation, bon de sortie hospitalier, compte-rendu de sortie, lettre de liaison médicale, ordonnance de sortie, médecin traitant, continuité des soins, fin de séjour hospitalier, transfert de patient, post-hospitalisation, dossier de sortie, messagerie sécurisée de santé, synthèse médicale, recommandations post-opératoires",
+    "x-false-positive-warning": "Attention : Cette API régit uniquement les formalités de fin de séjour et la production des documents associés à la sortie du patient. Ne pas la confondre avec la `diagnosis-api` (dédiée au diagnostic et à la codification des pathologies en cours de séjour) ni avec l'API de gestion d'attribution des lits (bed-management-api).",
+    "x-cas-usage": "Comment initier et planifier le parcours de sortie d'hospitalisation d'un patient ? | Où consulter l'état d'avancement des validations cliniques et le statut de sortie d'un dossier ? | Comment générer et récupérer la lettre de liaison ou le compte-rendu de fin de séjour au format PDF ? | Quelles ordonnances de soins ou de médicaments ont été éditées pour le traitement post-sortie ?"
+  },
+  "paths": {
+    "/v1/discharge/{patientId}": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Initier et déclencher le parcours administratif et médical de sortie d'hospitalisation d'un patient",
+        "operationId": "initiateDischarge",
+        "tags": [
+          "Discharge"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "summary": "Consulter l'état d'avancement, les validations cliniques manquantes et le statut de la procédure de sortie",
+        "operationId": "getDischargeStatus",
+        "tags": [
+          "Discharge"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/discharge/{patientId}/document": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Télécharger le compte-rendu de sortie ou la lettre de liaison médicale finalisée au format PDF",
+        "operationId": "getDocument",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Générer et compiler le document officiel de fin d'hospitalisation à partir des données de synthèse clinique du séjour",
+        "operationId": "generateDocument",
+        "tags": [
+          "Documents"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/discharge/{patientId}/prescriptions": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la liste des ordonnances de soins, de dispositifs et de médicaments éditées pour le traitement post-sortie",
+        "operationId": "getDischargePrescriptions",
+        "tags": [
+          "Prescriptions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

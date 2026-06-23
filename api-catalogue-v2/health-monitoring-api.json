@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Health Monitoring API",
+    "version": "1.0.0",
+    "x-api-id": "health-monitoring-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Cette API pilote le suivi et la surveillance clinique en continu des patients hospitalisés ou placés sous observation médicale à distance. Elle assure l'ingestion de masse des données physiologiques transmises en temps réel par les capteurs IoT médicaux (fréquence cardiaque, saturation en oxygène, tension artérielle, température) et orchestre la levée automatique d'alertes d'urgence paramétrables à destination des équipes soignantes en cas de dérive des constantes vitales.",
+    "x-synonymes": "surveillance clinique, monitoring patient, constantes vitales, capteur médical connecté, IoT médical, fréquence cardiaque, saturation oxygène, télésurveillance médicale, alerte clinique temps réel, paramètres physiologiques, dossier de suivi clinique, rythme cardiaque, télémétrie médicale, acquittement d'alerte, box d'hospitalisation",
+    "x-false-positive-warning": "Attention : Cette API traite exclusivement de la surveillance clinique, de la télémétrie des fonctions physiologiques des personnes physiques et des alertes de soins (Healthcare). Ne pas la confondre avec la `health-api` ou la `health-check-api` qui s'occupent du monitoring informatique de serveurs ou de conteneurs logisiels.",
+    "x-cas-usage": "Comment extraire le flux des constantes vitales (pouls, SpO2) mesuré cette nuit pour un patient ? | Comment configurer ou modifier les seuils d'alerte critique sur les capteurs de télémétrie d'un lit ? | Où lister l'ensemble des alertes physiologiques actives nécessitant l'intervention immédiate d'une infirmière ? | Quelle méthode appeler pour acquitter et clore une alerte clinique après prise en charge médicale du patient ?"
+  },
+  "paths": {
+    "/v1/monitoring/{patientId}": {
+      "parameters": [
+        {
+          "name": "patientId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le flux des données de télémétrie et l'historique récent des constantes physiologiques du patient",
+        "operationId": "getMonitoring",
+        "tags": [
+          "Monitoring"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Configurer les variables d'environnement, les capteurs IoT médicaux rattachés et les plages de normales du patient",
+        "operationId": "configureMonitoring",
+        "tags": [
+          "Monitoring"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/monitoring/alerts": {
+      "get": {
+        "summary": "Consulter et filtrer la file des alertes de dérive clinique et de détresse physiologique actuellement actives",
+        "operationId": "getAllAlerts",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Acquitter et mettre à jour le statut d'une alerte clinique après intervention et remédiation auprès du patient",
+        "operationId": "acknowledgeAlert",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

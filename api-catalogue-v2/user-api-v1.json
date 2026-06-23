@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "User API",
+    "version": "1.0.0",
+    "x-api-id": "user-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Identity",
+    "x-domain": "Identity & Access",
+    "description": "DEPRECATED depuis 2022 — Version 1 de l'API utilisateurs. Pas de 2FA, rôles simples (admin/user uniquement), ID entier (non string), suppression définitive (non soft delete). Ne plus utiliser. Migrer vers user-api (v2) ou user-api-v3 (version recommandée avec SCIM et groupes).",
+    "x-successor": "user-api",
+    "x-synonymes": "utilisateur v1 deprecated, compte utilisateur legacy",
+    "x-false-positive-warning": "Cette version est obsolète. Utiliser user-api-v3 (recommandée) ou user-api (v2).",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers user-api-v3.",
+    "x-breaking-changes-in-next": [
+      "Ajout 2FA endpoints",
+      "user_type étendu: customer/employee/partner/admin",
+      "Nouveau statut: suspended",
+      "last_login_at ajouté"
+    ]
+  },
+  "paths": {
+    "/v1/users": {
+      "post": {
+        "summary": "[DEPRECATED] Créer un utilisateur sans 2FA — utiliser user-api-v3",
+        "operationId": "createUserV1",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": { "schema": { "$ref": "#/components/schemas/UserV1Create" } }
+          }
+        },
+        "responses": { "201": { "description": "Créé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "get": {
+        "summary": "[DEPRECATED] Lister les utilisateurs — utiliser user-api-v3",
+        "operationId": "listUsersV1",
+        "tags": ["Users"],
+        "responses": { "200": { "description": "Liste" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/users/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "integer" }, "description": "ID entier — BREAKING v2: string USR-XXX" }
+      ],
+      "get": {
+        "summary": "[DEPRECATED] Profil utilisateur par ID entier — utiliser user-api-v3",
+        "operationId": "getUserV1",
+        "tags": ["Users"],
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "[DEPRECATED] Mettre à jour un utilisateur — utiliser user-api-v3",
+        "operationId": "updateUserV1",
+        "tags": ["Users"],
+        "requestBody": { "content": { "application/json": { "schema": { "type": "object" } } } },
+        "responses": { "200": { "description": "OK" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "[DEPRECATED] Supprimer définitivement un utilisateur (BREAKING v2: soft delete) — utiliser user-api-v3",
+        "operationId": "deleteUserV1",
+        "tags": ["Users"],
+        "responses": { "204": { "description": "Supprimé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserV1Create": {
+        "type": "object",
+        "required": ["email", "password", "role"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "minLength": 6 },
+          "role": { "type": "string", "enum": ["admin", "user"], "description": "BREAKING v2: remplacé par user_type" },
+          "name": { "type": "string", "description": "BREAKING v2: renommé full_name" }
+        }
+      }
+    }
+  }
+}

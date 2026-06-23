@@ -1,0 +1,104 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Patient Admission API",
+    "version": "1.0.0",
+    "x-api-id": "patient-admission-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Cette API orchestre l'ensemble des formalités d'admission et de sortie administratives pour les séjours et hospitalisations planifiés au sein de l'établissement de santé. Elle gère le circuit complet du check-in d'entrée, la validation des pièces administratives, la liaison avec le système d'attribution des lits, et la facturation comptable des frais de séjour. Elle garantit le traitement rigoureux du parcours administratif du patient hors urgences.",
+    "x-synonymes": "admission hospitalière, check-in patient, sortie administrative, frais de séjour hospitalier, hospitalisation planifiée, dossier d'admission clinique, enregistrement de séjour, facturation hospitalière, admission programmée, clôture administrative de séjour, parcours d'hospitalisation",
+    "x-false-positive-warning": "Attention : Cette API encadre exclusivement le flux et l'enregistrement administratif des entrées programmées et séjours planifiés à l'avance (Admission). Ne pas la confondre avec la `emergency-api` qui pilote de manière autonome les admissions non planifiées d'urgence et le triage CCMU aigu du service des urgences.",
+    "x-cas-usage": "Comment enregistrer l'entrée administrative et effectuer le check-in d'un patient pour une hospitalisation programmée ? | Où consulter la liste en temps réel des dossiers d'admissions et de séjours en cours dans les différents services ? | Comment amender ou mettre à jour les garanties de prise en charge ou les contacts du dossier d'admission ? | Quelle méthode appeler pour valider la sortie administrative et éditer la pré-facturation des frais de séjour ?"
+  },
+  "paths": {
+    "/v1/admissions": {
+      "get": {
+        "summary": "Lister, trier et filtrer l'ensemble des dossiers d'admissions programmées et des séjours hospitaliers actuellement en cours",
+        "operationId": "listAdmissions",
+        "tags": [
+          "Admissions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Initialiser et enregistrer l'admission administrative d'un patient dans le cadre d'un séjour planifié",
+        "operationId": "createAdmission",
+        "tags": [
+          "Admissions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/admissions/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le dossier administratif complet d'une admission, incluant les garants et les mutuelles enregistrées",
+        "operationId": "getAdmission",
+        "tags": [
+          "Admissions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Modifier les informations de contact, les pièces justificatives ou les options de confort du dossier d'admission",
+        "operationId": "updateAdmission",
+        "tags": [
+          "Admissions"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/admissions/{id}/discharge": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Valider formellement la sortie administrative du patient et clôturer le dossier de facturation du séjour",
+        "operationId": "dischargePatient",
+        "tags": [
+          "Discharge"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

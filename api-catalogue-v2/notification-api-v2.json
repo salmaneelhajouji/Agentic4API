@@ -1,0 +1,79 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Notification API",
+    "version": "2.0.0",
+    "x-api-id": "notification-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Communication",
+    "description": "Version 2 — Templates multilingues versionnés, envoi multi-canal simultané, préférences opt-out par canal et retry automatique. Permet d envoyer via template ou message brut vers plusieurs canaux simultanément, d envoyer en lot jusqu à 50 000 destinataires, et de gérer les préférences de notification par utilisateur. DIFFÉRENCE vs notification-api-v3 : v2 = templates et multi-canal. v3 = WhatsApp, triggers événementiels et personnalisation IA.",
+    "x-breaking-changes-from-previous": ["template_id remplace message brut", "channel devient tableau multi-canal", "/preferences pour opt-out", "Retry automatique 3 tentatives"],
+    "x-synonymes": "notification multilingue, template notification, notification multi-canal simultané, batch notification, envoi en masse, opt-out notification, préférences notification, retry notification, notification asynchrone, batching 50000, template versionné, canal email SMS push simultané, notification planifiée template, désabonnement notification, préférences canal utilisateur",
+    "x-false-positive-warning": "Version basique sans templates → notification-api. Version avec WhatsApp et triggers → notification-api-v3. Messagerie bidirectionnelle → messaging-api.",
+    "x-cas-usage": "je veux envoyer une notification email et SMS simultanément depuis un template | je veux envoyer une campagne à 30 000 utilisateurs de façon asynchrone | je veux permettre à un utilisateur de se désabonner des notifications SMS | je veux créer un template multilingue pour la confirmation de commande | je veux voir les préférences de notification d un utilisateur"
+  },
+  "paths": {
+    "/v2/notifications/send": {
+      "post": {
+        "summary": "Envoyer via template ou message brut — multi-canal simultané email/SMS/push",
+        "operationId": "sendNotificationV2",
+        "tags": ["Notifications"],
+        "responses": {"201": {"description": "Notification envoyée"}}
+      }
+    },
+    "/v2/notifications/batch": {
+      "post": {
+        "summary": "Envoi groupé asynchrone — jusqu à 50 000 destinataires via template",
+        "operationId": "sendBatchNotificationsV2",
+        "tags": ["Notifications"],
+        "responses": {"202": {"description": "Job asynchrone créé"}}
+      }
+    },
+    "/v2/notifications/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut et logs de livraison — avec historique des tentatives retry",
+        "operationId": "getNotificationV2",
+        "tags": ["Notifications"],
+        "responses": {"200": {"description": "Statut et logs"}}
+      },
+      "delete": {
+        "summary": "Annuler une notification si statut pending",
+        "operationId": "cancelNotificationV2",
+        "tags": ["Notifications"],
+        "responses": {"204": {"description": "Annulée"}}
+      }
+    },
+    "/v2/notifications/preferences/{userId}": {
+      "parameters": [{"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Préférences de notification d un utilisateur — opt-in/out par canal",
+        "operationId": "getNotifPreferences",
+        "tags": ["Preferences"],
+        "responses": {"200": {"description": "Préférences"}}
+      },
+      "put": {
+        "summary": "Mettre à jour les préférences — opt-out email, SMS, push ou marketing",
+        "operationId": "updateNotifPreferences",
+        "tags": ["Preferences"],
+        "responses": {"200": {"description": "Préférences mises à jour"}}
+      }
+    },
+    "/v2/notifications/templates": {
+      "get": {
+        "summary": "Lister les templates de notification — versions et langues disponibles",
+        "operationId": "listNotifTemplates",
+        "tags": ["Templates"],
+        "responses": {"200": {"description": "Templates"}}
+      },
+      "post": {
+        "summary": "Créer un template multilingue — contenu fr, en, es et autres locales",
+        "operationId": "createNotifTemplate",
+        "tags": ["Templates"],
+        "responses": {"201": {"description": "Template créé"}}
+      }
+    }
+  }
+}

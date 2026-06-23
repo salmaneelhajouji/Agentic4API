@@ -1,0 +1,27 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Contract API",
+    "version": "1.0.0",
+    "x-api-id": "contract-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Legal",
+    "x-domain": "Legal",
+    "description": "DEPRECATED — NE PAS UTILISER. Version 1 basique sans signature électronique ni gestion des obligations. Migrer vers contract-api (v3) qui intègre signature eIDAS, obligations contractuelles et renouvellement.",
+    "x-successor": "contract-api",
+    "x-synonymes": "contrats v1 deprecated, gestion contrats legacy",
+    "x-false-positive-warning": "CETTE VERSION EST DEPRECATED — utiliser contract-api (v3).",
+    "x-cas-usage": "Ne pas utiliser. Migrer vers contract-api."
+  },
+  "paths": {
+    "/v1/contracts": {
+      "get": {
+        "summary": "DEPRECATED — Lister les contrats (sans signature ni obligations)",
+        "operationId": "listContractsV1",
+        "tags": ["Contracts"],
+        "responses": {"200": {"description": "Contrats"}}
+      }
+    }
+  }
+}

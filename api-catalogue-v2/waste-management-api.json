@@ -1,0 +1,127 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Waste-Management API",
+    "version": "1.0.0",
+    "x-api-id": "waste-management-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Industrie",
+    "x-domain": "Industry",
+    "description": "Gestion dechets industriels. Organisation du tri, de la traçabilité environnementale et édition des rapports réglementaires de conformité pour le traitement des rebuts. DIFFÉRENCE vs warehouse-api : Waste Management API traite de l'élimination ou de la revalorisation de matières dangereuses ou rebuts industriels, tandis que warehouse-api gère le stockage logistique des marchandises commerciales courantes.",
+    "x-synonymes": "déchet, tri, traçabilité, recyclage, industriel, environnement, rebut, valorisation, conformité réglementaire, rapport environnemental, élimination, pollution, écologie, traitement des déchets, flux de déchets, conformité",
+    "x-false-positive-warning": "Cette API est dédiée au suivi environnemental et à la traçabilité réglementaire des déchets d'usine. Ne pas utiliser pour la gestion logistique des produits sains en stock (utilisez warehouse-api).",
+    "x-cas-usage": "je veux lister les flux de déchets industriels répertoriés | je veux ajouter une nouvelle catégorie de rebut de production | je veux déclarer un volume de déchets généré par l'usine | je veux générer le rapport réglementaire officiel de suivi des déchets"
+  },
+  "paths": {
+    "/v1/waste/streams": {
+      "get": {
+        "summary": "Lister les différentes filières, catégories et flux de déchets industriels configurés",
+        "operationId": "listWasteStreams",
+        "tags": [
+          "Streams"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer et enregistrer un nouveau flux de déchets ou une nouvelle filière de traitement écologique",
+        "operationId": "addWasteStream",
+        "tags": [
+          "Streams"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/waste/records": {
+      "get": {
+        "summary": "Lister l'historique chronologique des déclarations de production de déchets de l'usine",
+        "operationId": "listWasteRecords",
+        "tags": [
+          "Records"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Déclarer, peser et consigner une nouvelle production de déchets ou de rebuts industriels",
+        "operationId": "recordWasteProduction",
+        "tags": [
+          "Records"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/waste/reports": {
+      "get": {
+        "summary": "Générer un rapport analytique consolidé de la gestion et du tri des déchets sur une période",
+        "operationId": "getWasteReport",
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Soumettre le rapport réglementaire officiel de suivi des déchets aux autorités de contrôle environnementales",
+        "operationId": "submitRegulatoryReport",
+        "tags": [
+          "Reports"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

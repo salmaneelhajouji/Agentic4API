@@ -1,0 +1,115 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Checkout API",
+    "version": "1.0.0",
+    "x-api-id": "checkout-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "API d'orchestration du tunnel d'achat e-commerce couvrant l'intégralité du processus de validation de commande en 4 étapes séquentielles : saisie des adresses de livraison et facturation, sélection du transporteur et de l'option de livraison, choix du moyen de paiement, puis confirmation finale déclenchant la création de la commande. Crée une session checkout à partir du panier client et retourne un order_id à la confirmation. Utilisée typiquement par les équipes front-end e-commerce, les applications mobiles de vente et les intégrations de marchands partenaires. DIFFÉRENCE vs cart-api : cart-api stocke les articles temporairement dans le panier, checkout-api orchestre les étapes de validation jusqu'au paiement. DIFFÉRENCE vs order-api : checkout-api gère le processus amont avant la commande, order-api représente la commande confirmée et son cycle de vie résultant. DIFFÉRENCE vs payment-api : payment-api traite uniquement le paiement de manière isolée, checkout-api intègre le paiement dans un tunnel complet multi-étapes.",
+    "x-synonymes": "tunnel achat, processus checkout, validation commande, étapes checkout, adresse livraison checkout, options livraison, transporteur checkout, paiement checkout, confirmation commande, session checkout, passer commande, finaliser achat, paiement en ligne, tunnel conversion, one page checkout, checkout express, checkout mobile, conversion panier, abandon checkout, UX checkout",
+    "x-false-positive-warning": "Articles dans le panier → cart-api (gestion temporaire des articles, pas de validation). Commande confirmée après checkout → order-api (cycle de vie post-confirmation). Paiement seul sans tunnel → payment-api-v3 (paiement isolé sans gestion des étapes checkout). Options de livraison sans checkout → shipping-api-v2 (tarifs et délais transporteurs hors contexte d'achat). Gestion des adresses clients → address-api (carnet d'adresses persistant, non lié à une session d'achat).",
+    "x-cas-usage": "Comment implémenter le tunnel d'achat complet de mon e-commerce en 4 étapes ? | Comment démarrer une session checkout depuis le panier d'un client et récupérer le sessionId ? | Quels sont les options de livraison disponibles avec leurs tarifs et délais pour une adresse donnée ? | Comment valider le paiement par carte ou PayPal et créer la commande finale avec son order_id ? | Comment gérer les erreurs de paiement refusé ou de stock insuffisant lors de la confirmation de commande ?"
+  },
+  "paths": {
+    "/v1/checkout/start": {
+      "post": {
+        "summary": "Initialiser une session checkout à partir d'un panier client existant et retourner un sessionId unique pour les étapes suivantes",
+        "operationId": "startCheckout",
+        "tags": ["Checkout"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"type": "object", "required": ["cart_id"], "properties": {"cart_id": {"type": "string"}}}
+            }
+          }
+        },
+        "responses": {"201": {"description": "Session checkout créée avec succès, sessionId retourné pour les étapes suivantes"}}
+      }
+    },
+    "/v1/checkout/{sessionId}/address": {
+      "parameters": [{"name": "sessionId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Étape 1 — Définir les adresses de livraison et de facturation pour la session checkout en cours",
+        "operationId": "setCheckoutAddress",
+        "tags": ["Checkout"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["shipping_address"],
+                "properties": {
+                  "shipping_address": {"type": "object"},
+                  "billing_address": {"type": "object"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Adresse de livraison et facturation enregistrées avec succès pour la session"}}
+      }
+    },
+    "/v1/checkout/{sessionId}/shipping": {
+      "parameters": [{"name": "sessionId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Étape 2 — Récupérer les options de livraison disponibles avec leurs tarifs, délais estimés et transporteurs pour l'adresse saisie",
+        "operationId": "getCheckoutShipping",
+        "tags": ["Checkout"],
+        "responses": {"200": {"description": "Liste des options de livraison disponibles avec tarifs et délais estimés par transporteur"}}
+      },
+      "put": {
+        "summary": "Sélectionner une option de livraison parmi les choix disponibles — livraison standard, express ou retrait en point relais",
+        "operationId": "selectCheckoutShipping",
+        "tags": ["Checkout"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {"type": "object", "required": ["shipping_option_id"], "properties": {"shipping_option_id": {"type": "string"}}}
+            }
+          }
+        },
+        "responses": {"200": {"description": "Option de livraison sélectionnée et enregistrée dans la session checkout"}}
+      }
+    },
+    "/v1/checkout/{sessionId}/payment": {
+      "parameters": [{"name": "sessionId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Étape 3 — Définir le moyen de paiement pour la commande — carte bancaire tokenisée, PayPal, prélèvement SEPA ou portefeuille numérique",
+        "operationId": "setCheckoutPayment",
+        "tags": ["Checkout"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["payment_method"],
+                "properties": {
+                  "payment_method": {"type": "string", "enum": ["card", "paypal", "sepa", "wallet"]},
+                  "card_token": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Moyen de paiement défini et associé à la session checkout"}}
+      }
+    },
+    "/v1/checkout/{sessionId}/confirm": {
+      "parameters": [{"name": "sessionId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Étape finale — Confirmer le checkout, déclencher le paiement et créer la commande validée avec retour de l'order_id",
+        "operationId": "confirmCheckout",
+        "tags": ["Checkout"],
+        "responses": {
+          "201": {"description": "Commande créée avec succès — order_id retourné pour suivi via order-api"},
+          "402": {"description": "Paiement refusé par l'émetteur — vérifier les données de paiement ou proposer un autre moyen"},
+          "409": {"description": "Stock insuffisant pour un ou plusieurs articles du panier au moment de la confirmation"}
+        }
+      }
+    }
+  }
+}

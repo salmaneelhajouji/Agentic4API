@@ -1,0 +1,449 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Customer Profile API",
+    "version": "1.0.0",
+    "x-api-id": "customer-profile-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe CRM",
+    "x-domain": "CRM & Marketing",
+    "x-depends-on": [
+      "user-api"
+    ],
+    "description": "Cette API centralise la gestion des profils commerciaux des clients particuliers (B2C) au sein du référentiel CRM. Elle permet d'unifier l'identité des acheteurs, de piloter leur segmentation marketing (VIP, Standard, Nouveau), de suivre leur solde de points de fidélité, et de restituer l'historique de leurs interactions d'achat. Elle embarque également les mécanismes natifs de conformité réglementaire pour le respect du RGPD (notamment l'exercice du droit à l'oubli par anonymisation programmée). Ses utilisateurs types sont les développeurs d'applications e-commerce, les plateformes de gestion de la relation client et les outils d'activation marketing.",
+    "x-synonymes": "fiche client, profil commercial, acheteur B2C, consommateur particuliers, base clients, segmentation commerciale, portefeuille client, points de fidélité, historique d'achat, préférences marketing, droit à l'oubli, anonymisation client, conformité RGPD, attributs de l'acheteur, compte client B2C, données de fidélisation",
+    "x-false-positive-warning": "Ne pas confondre cette API avec : 1) La user-api, qui traite exclusivement de l'authentification technique et des identifiants (credentials) de connexion. 2) La account-api, dédiée à la gestion des organisations et entités morales dans un modèle B2B. 3) La employee-api, réservée au personnel et collaborateurs internes de l'entreprise.",
+    "x-cas-usage": "Comment extraire la liste des clients rattachés au segment 'VIP' résidant dans une ville spécifique ? | Quelle est la procédure pour initialiser une demande d'anonymisation de données dans le cadre du droit à l'oubli RGPD ? | Comment récupérer le solde de points de fidélité actualisé et le montant total dépensé par un consommateur ? | Est-il possible de modifier manuellement la segmentation d'un acheteur suite à un arbitrage commercial ? | Comment créer une nouvelle fiche client B2C en y injectant ses centres d'intérêt initiaux ?"
+  },
+  "paths": {
+    "/v1/customers": {
+      "get": {
+        "summary": "Rechercher et lister les profils commerciaux des clients particuliers B2C selon leur segment, localisation et critères de fidélité",
+        "operationId": "listCustomers",
+        "tags": [
+          "Customers"
+        ],
+        "parameters": [
+          {
+            "name": "segment",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "VIP",
+                "Standard",
+                "Nouveau"
+              ]
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "interest",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "min_loyalty_points",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "customers": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CustomerProfile"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Créer une nouvelle fiche client B2C au sein du référentiel commercial avec ses préférences et attributs initiaux",
+        "operationId": "createCustomer",
+        "tags": [
+          "Customers"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerProfileCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerProfile"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflit — un profil client avec cet identifiant ou cet email existe déjà"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/customers/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^CUST-[0-9]{3}$"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le profil commercial unifié d'un client, incluant ses métadonnées d'achat et indicateurs de valeur",
+        "operationId": "getCustomer",
+        "tags": [
+          "Customers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerProfile"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Le profil client recherché est introuvable dans le système"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      },
+      "put": {
+        "summary": "Mettre à jour les informations démographiques, les centres d'intérêt ou la balance de fidélité d'un client",
+        "operationId": "updateCustomer",
+        "tags": [
+          "Customers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomerProfileUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Mis à jour"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/customers/{id}/segment": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "put": {
+        "summary": "Modifier manuellement la catégorisation ou le segment commercial d'un acheteur avec motif justificatif",
+        "operationId": "updateSegment",
+        "tags": [
+          "Customers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "segment"
+                ],
+                "properties": {
+                  "segment": {
+                    "type": "string",
+                    "enum": [
+                      "VIP",
+                      "Standard",
+                      "Nouveau"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Segment mis à jour"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/customers/{id}/gdpr/delete": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "delete": {
+        "summary": "Planifier la purge définitive et l'anonymisation irréversible des données à caractère personnel sous 72 heures (Droit à l'oubli RGPD)",
+        "operationId": "gdprDelete",
+        "tags": [
+          "RGPD"
+        ],
+        "responses": {
+          "202": {
+            "description": "Anonymisation planifiée"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/customers/{id}/purchase-history": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la synthèse financière, le volume de commandes et l'historique cumulé d'un acheteur",
+        "operationId": "getPurchaseHistory",
+        "tags": [
+          "Customers"
+        ],
+        "responses": {
+          "200": {
+            "description": "Historique"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CustomerProfileCreate": {
+        "type": "object",
+        "required": [
+          "customer_id",
+          "full_name",
+          "email",
+          "segment"
+        ],
+        "properties": {
+          "customer_id": {
+            "type": "string",
+            "pattern": "^CUST-[0-9]{3}$",
+            "example": "CUST-001"
+          },
+          "full_name": {
+            "type": "string",
+            "example": "Jean Dupont"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "segment": {
+            "type": "string",
+            "enum": [
+              "VIP",
+              "Standard",
+              "Nouveau"
+            ]
+          },
+          "loyalty_points": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0
+          },
+          "interests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "Gaming",
+              "Streaming"
+            ]
+          },
+          "city": {
+            "type": "string"
+          },
+          "preferred_language": {
+            "type": "string",
+            "example": "fr"
+          }
+        }
+      },
+      "CustomerProfileUpdate": {
+        "type": "object",
+        "properties": {
+          "segment": {
+            "type": "string",
+            "enum": [
+              "VIP",
+              "Standard",
+              "Nouveau"
+            ]
+          },
+          "interests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "city": {
+            "type": "string"
+          },
+          "loyalty_points": {
+            "type": "integer"
+          }
+        }
+      },
+      "CustomerProfile": {
+        "type": "object",
+        "properties": {
+          "customer_id": {
+            "type": "string",
+            "example": "CUST-001"
+          },
+          "full_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "segment": {
+            "type": "string",
+            "enum": [
+              "VIP",
+              "Standard",
+              "Nouveau"
+            ]
+          },
+          "loyalty_points": {
+            "type": "integer"
+          },
+          "interests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "city": {
+            "type": "string"
+          },
+          "total_orders": {
+            "type": "integer"
+          },
+          "total_spent": {
+            "type": "number"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "account_created": {
+                "type": "string",
+                "format": "date"
+              },
+              "preferred_language": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

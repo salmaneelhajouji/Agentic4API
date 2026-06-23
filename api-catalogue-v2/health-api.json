@@ -1,0 +1,77 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Health API",
+    "version": "1.0.0",
+    "x-api-id": "health-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Infrastructure",
+    "description": "Cette API supervise la santé technique, la disponibilité opérationnelle et la performance de l'infrastructure globale de la plateforme. Elle permet aux équipes d'exploitation (SRE, DevOps) et aux outils de monitoring de collecter l'état global du système, d'isoler les défaillances par microservice, de sonder la connectivité des dépendances critiques (bases de données, caches, APIs tierces) et d'extraire des métriques clés de latence en temps réel.",
+    "x-synonymes": "santé des services, disponibilité plateforme, monitoring infrastructure, statut des dépendances, métriques de performance, temps de réponse système, supervision technique, état du cache, connectivité base de données, diagnostic système, observabilité plateforme, statut global, uptime infrastructure, latence temps réel, santé applicative",
+    "x-false-positive-warning": "Attention : Cette API administre exclusivement la surveillance, l'observabilité et la santé technique des infrastructures serveurs et réseaux (Infrastructure). Ne pas la confondre avec la `health-check-api` (orchestration bas niveau des sondes liveness/readiness de conteneurs), ni avec les APIs fonctionnelles du domaine médical type `health-monitoring-api` ou `health-insurance-api`.",
+    "x-cas-usage": "Comment vérifier le statut opérationnel global et l'uptime de la plateforme ? | Où détecter si une base de données ou un cluster de cache externe est dégradé ? | Comment extraire les métriques de performance et de latence en temps réel pour l'outillage de monitoring ? | Quels microservices métiers rencontrent actuellement des anomalies de connectivité ?"
+  },
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "summary": "Vérifier le statut de disponibilité opérationnelle global et l'intégrité immédiate de la plateforme",
+        "operationId": "getHealth",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "Tout OK"
+          },
+          "503": {
+            "description": "Service(s) dégradé(s)"
+          }
+        }
+      }
+    },
+    "/v1/health/services": {
+      "get": {
+        "summary": "Lister l'état de santé technique individuel de chaque microservice applicatif déployé",
+        "operationId": "getServicesHealth",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "Statuts"
+          }
+        }
+      }
+    },
+    "/v1/health/dependencies": {
+      "get": {
+        "summary": "Sonder la connectivité et la latence des dépendances techniques critiques (bases de données, systèmes de cache, APIs externes)",
+        "operationId": "getDependenciesHealth",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "Dépendances"
+          }
+        }
+      }
+    },
+    "/v1/health/metrics": {
+      "get": {
+        "summary": "Extraire les métriques de performance, de charge d'infrastructure et de temps de réponse en temps réel",
+        "operationId": "getHealthMetrics",
+        "tags": [
+          "Health"
+        ],
+        "responses": {
+          "200": {
+            "description": "Métriques"
+          }
+        }
+      }
+    }
+  }
+}

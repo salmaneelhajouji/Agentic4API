@@ -1,0 +1,66 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Order API",
+    "version": "4.0.0",
+    "x-api-id": "order-api-v4",
+    "x-api-version": "v4",
+    "x-status": "active",
+    "x-team": "Equipe Commerce",
+    "x-domain": "E-Commerce",
+    "description": "Version actuelle et recommandée — Commandes e-commerce avec webhooks automatiques sur changement de statut, devise obligatoire, order_lines et amount_due. Permet de créer, modifier, annuler et expédier des commandes multi-articles avec remise, adresse structurée et notifications automatiques. DIFFÉRENCE vs order-management-api-v3 : Order API v4 = API e-commerce avec webhooks. order-management-api-v3 = gestion commandes retail avec workflows d approbation.",
+    "x-breaking-changes-from-previous": ["items→order_lines", "total_price→amount_due", "currency obligatoire", "Webhooks automatiques statut", "PATCH /status remplace /ship"],
+    "x-synonymes": "commande e-commerce, créer commande, passer commande, commande multi-articles, order_lines, amount_due, devise commande, webhook commande, notification expédition, statut commande, annulation commande, remboursement annulation, partiellement expédié, commande livrée, commande confirmée, historique commandes, commande ORD, commande client CUST, tracking commande, commande internationale",
+    "x-false-positive-warning": "Panier avant achat → cart-api. Tunnel achat étapes → checkout-api. Commandes retail avec workflows → order-management-api-v3. Suivi colis livraison → logistics-tracking-api. Facture commande → invoice-api-v3.",
+    "x-cas-usage": "je veux créer une commande après validation du checkout | je veux voir toutes les commandes d un client avec leur statut | je veux annuler une commande et déclencher le remboursement | je veux recevoir un webhook automatiquement quand une commande est livrée | je veux filtrer les commandes en statut partiellement expédiées"
+  },
+  "paths": {
+    "/v4/orders": {
+      "post": {
+        "summary": "Créer une commande — order_lines, adresse structurée, devise et remise",
+        "operationId": "createOrderV4",
+        "tags": ["Orders"],
+        "responses": {"201": {"description": "Commande créée"}}
+      },
+      "get": {
+        "summary": "Lister les commandes — filtre par statut, client, devise et période",
+        "operationId": "listOrdersV4",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Commandes"}}
+      }
+    },
+    "/v4/orders/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string", "pattern": "^ORD-[0-9]{4}$"}}],
+      "get": {
+        "summary": "Détail d une commande — order_lines, amount_due, statut et webhooks",
+        "operationId": "getOrderV4",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Commande complète"}}
+      },
+      "put": {
+        "summary": "Modifier une commande avant expédition — adresse ou notes",
+        "operationId": "updateOrderV4",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Commande modifiée"}}
+      }
+    },
+    "/v4/orders/{id}/cancel": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "put": {
+        "summary": "Annuler une commande avec remboursement automatique optionnel",
+        "operationId": "cancelOrderV4",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Commande annulée"}}
+      }
+    },
+    "/v4/orders/{id}/status": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "patch": {
+        "summary": "Mettre à jour le statut d une commande — déclenche webhook automatique",
+        "operationId": "updateOrderStatusV4",
+        "tags": ["Orders"],
+        "responses": {"200": {"description": "Statut mis à jour — webhook déclenché"}}
+      }
+    }
+  }
+}

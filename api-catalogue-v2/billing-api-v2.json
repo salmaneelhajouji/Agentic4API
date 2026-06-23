@@ -1,0 +1,81 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Billing API",
+    "version": "2.0.0",
+    "x-api-id": "billing-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "Version 2 de l'API facturation couvrant la facturation à l'usage (métered billing), les taxes automatiques et le portail self-service client. Elle permet aux éditeurs SaaS de reporter la consommation réelle de leurs clients (appels API, gigaoctets stockés, utilisateurs actifs) pour déclencher une facturation précise et variable. Les utilisateurs typiques sont les équipes produit et finance qui souhaitent implémenter un modèle pay-per-use ou hybride (forfait + usage). Elle génère également des liens sécurisés vers le portail client pour une gestion autonome des abonnements et des factures. DIFFÉRENCE vs billing-api (v1) : v1 = facturation récurrente fixe (flat) uniquement, sans support usage. DIFFÉRENCE vs billing-api-v3 : v2 = métered billing et portail client ; v3 = version actuelle avec billing hybride avancé, crédits/avoirs et intégration ERP native.",
+    "x-breaking-changes-from-previous": [
+      "Métered billing (usage-based)",
+      "Taxes automatiques via tax-api",
+      "Portail self-service client",
+      "Gestion des crédits/avoirs automatique"
+    ],
+    "x-synonymes": "métered billing, facturation à l'usage, pay per use, consommation API facturation, usage based billing, portail self-service facturation, taxes automatiques, TVA automatique, reporter consommation, appels API facturés, stockage facturé, utilisateurs actifs facturés, billing à la consommation, facturation variable, abonnement usage, hybrid billing, portail client abonnement, lien portail facturation, facturation SaaS, plan métered",
+    "x-false-positive-warning": "Facturation récurrente simple sans usage (flat billing uniquement) → billing-api (v1). Version avec ERP natif, crédits et avoirs avancés → billing-api-v3. Génération de facture PDF légale et document comptable → invoice-api. Transaction ponctuelle ou paiement one-shot → payment-api. Gestion des taxes et TVA seule → tax-api.",
+    "x-cas-usage": "Comment facturer mes clients en fonction du nombre d'appels API qu'ils consomment chaque mois ? | Comment reporter la consommation mensuelle (stockage, utilisateurs) pour déclencher la facturation à l'usage ? | Comment générer un lien vers le portail où le client gère son abonnement et consulte ses factures ? | Comment mettre en place un modèle pay-per-use ou hybride (forfait + variable) pour mon SaaS ? | Quels métriques de consommation puis-je enregistrer pour un abonnement métered billing ?"
+  },
+  "paths": {
+    "/v2/billing/subscriptions": {
+      "post": {
+        "summary": "Créer un abonnement client avec mode de facturation flat, métered (à l'usage) ou hybride, et période d'essai optionnelle",
+        "operationId": "createBillingSubV2",
+        "tags": ["Subscriptions"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["customer_id", "plan_id"],
+                "properties": {
+                  "customer_id": {"type": "string"},
+                  "plan_id": {"type": "string"},
+                  "billing_mode": {"type": "string", "enum": ["flat", "metered", "hybrid"], "default": "flat"},
+                  "trial_days": {"type": "integer", "default": 0}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Abonnement créé"}}
+      }
+    },
+    "/v2/billing/usage": {
+      "post": {
+        "summary": "Reporter la consommation réelle d'un client (appels API, stockage Go, utilisateurs actifs) pour déclencher la facturation métered en fin de période",
+        "operationId": "reportUsage",
+        "tags": ["Usage"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["subscription_id", "quantity", "metric"],
+                "properties": {
+                  "subscription_id": {"type": "string"},
+                  "quantity": {"type": "number"},
+                  "metric": {"type": "string", "example": "api_calls"},
+                  "timestamp": {"type": "string", "format": "date-time"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Consommation enregistrée"}}
+      }
+    },
+    "/v2/billing/portal/{customerId}": {
+      "parameters": [{"name": "customerId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "post": {
+        "summary": "Générer une URL sécurisée vers le portail self-service client permettant de gérer l'abonnement, consulter et télécharger les factures (lien valable 24h)",
+        "operationId": "getBillingPortal",
+        "tags": ["Portal"],
+        "responses": {"200": {"description": "URL portail client"}}
+      }
+    }
+  }
+}

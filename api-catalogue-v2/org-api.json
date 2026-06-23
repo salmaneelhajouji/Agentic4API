@@ -1,0 +1,124 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Organization API",
+    "version": "1.0.0",
+    "x-api-id": "org-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe RH",
+    "x-domain": "Human Resources",
+    "description": "Cette API gère l'architecture juridique, la cartographie des entités légales (siège, filiales, succursales) et le suivi macroscopique des effectifs rattachés à la structure organisationnelle du groupe. Elle permet de modéliser les relations de gouvernance et de contrôle entre la maison mère et ses implantations internationales, tout en consolidant les indicateurs d'effectifs (headcount) agrégés par entité.",
+    "x-synonymes": "structure organisationnelle, entité légale, filiale juridique, hiérarchie d'entreprise, headcount consolidé, succursale internationale, maison mère, gouvernance du groupe, organigramme juridique, indicateur d'effectifs, entité corporative",
+    "x-false-positive-warning": "Attention : Cette API structure exclusivement la cartographie légale et l'architecture corporate des entités juridiques du groupe (Organization). Ne pas la confondre avec la `hr-api` ou la `employee-api` (qui administrent individuellement les fiches personnelles nominatives des collaborateurs, les contrats de travail ou la paie).",
+    "x-cas-usage": "Comment lister l'ensemble des entités juridiques et des filiales composant la structure du groupe ? | Comment enregistrer et intégrer une nouvelle succursale ou une filiale dans l'arborescence corporate ? | Où extraire l'indicateur consolidé des effectifs (headcount) par département pour une entité spécifique ?"
+  },
+  "paths": {
+    "/v1/organizations": {
+      "get": {
+        "summary": "Lister et parcourir l'ensemble des entités légales, directions et filiales rattachées à la structure du groupe",
+        "operationId": "listOrgs",
+        "tags": [
+          "Organizations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Entités"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclarer et enregistrer une nouvelle entité légale ou succursale au sein de l'arborescence juridique corporative",
+        "operationId": "createOrg",
+        "tags": [
+          "Organizations"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "type"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "headquarters",
+                      "subsidiary",
+                      "branch"
+                    ]
+                  },
+                  "country": {
+                    "type": "string"
+                  },
+                  "parent_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Créée"
+          }
+        }
+      }
+    },
+    "/v1/organizations/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la fiche d'identité administrative, le pays d'immatriculation et les attributs d'une entité légale spécifique",
+        "operationId": "getOrg",
+        "tags": [
+          "Organizations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Entité"
+          }
+        }
+      }
+    },
+    "/v1/organizations/{id}/headcount": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter l'état de répartition analytique et le volume global des effectifs (headcount) par département pour l'entité",
+        "operationId": "getHeadcount",
+        "tags": [
+          "Organizations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Effectif par département"
+          }
+        }
+      }
+    }
+  }
+}

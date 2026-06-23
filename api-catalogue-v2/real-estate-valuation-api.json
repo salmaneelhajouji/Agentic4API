@@ -1,0 +1,43 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Real Estate Valuation API",
+    "version": "1.0.0",
+    "x-api-id": "real-estate-valuation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Valorisation immobilière par IA et données de marché. Permet d obtenir une estimation de la valeur vénale d un bien, de consulter les ventes comparables dans le secteur et les tendances de prix. Utilisé par les agents immobiliers, notaires et gestionnaires d actifs pour évaluer la valeur marché. DIFFÉRENCE vs property-api-v3 : Valuation = estimation de la valeur marché. property-api-v3 = fiche descriptive du bien.",
+    "x-synonymes": "estimation immobilière, valorisation bien, valeur vénale, prix marché immobilier, expertise immobilière, estimation IA immobilier, comparables ventes, transactions similaires, m² prix quartier, tendances prix immo, estimation appartement maison, AVM automated valuation model, prix net vendeur, fourchette estimation, rapport estimation, valeur locative, rendement locatif estimé, prix au m², benchmark prix immobilier, estimation gratuite",
+    "x-false-positive-warning": "Fiche descriptive du bien → property-api-v3. Recherche de biens à acheter → real-estate-search-api. Gestion des baux → lease-api-v2. Valorisation portefeuille financier → portfolio-api.",
+    "x-cas-usage": "je veux estimer la valeur d un appartement 75m² à Lyon avant de le mettre en vente | je veux voir les ventes comparables dans le quartier pour justifier notre estimation | je veux consulter la valorisation actuelle d un bien de notre portefeuille | je veux voir les tendances de prix au m² dans un secteur géographique | je veux obtenir une fourchette d estimation pour un bien avant négociation"
+  },
+  "paths": {
+    "/v1/valuation/estimate": {
+      "post": {
+        "summary": "Estimer la valeur marché d un bien — par IA à partir des caractéristiques",
+        "operationId": "estimateValue",
+        "tags": ["Valuation"],
+        "responses": {"200": {"description": "Estimation valeur marché"}}
+      }
+    },
+    "/v1/valuation/{propertyId}": {
+      "parameters": [{"name": "propertyId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Valorisation actuelle d un bien — valeur estimée et fourchette de marché",
+        "operationId": "getPropertyValuation",
+        "tags": ["Valuation"],
+        "responses": {"200": {"description": "Valorisation bien"}}
+      }
+    },
+    "/v1/valuation/comparables": {
+      "post": {
+        "summary": "Biens comparables vendus dans le secteur — transactions récentes et prix",
+        "operationId": "getComparables",
+        "tags": ["Comparables"],
+        "responses": {"200": {"description": "Ventes comparables"}}
+      }
+    }
+  }
+}

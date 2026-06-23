@@ -1,0 +1,71 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Utility Management API",
+    "version": "1.0.0",
+    "x-api-id": "utility-management-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Immobilier",
+    "x-domain": "RealEstate",
+    "description": "Gestion des fluides et services aux logements (eau, électricité, gaz, internet). Activation et suivi des abonnements de services pour un bien immobilier, saisie et consultation des relevés de compteurs, et accès aux factures des prestataires. DIFFÉRENCE vs smart-meter-api-v2 : Utility Management gère les contrats et abonnements de services (ouverture de ligne, facturation), Smart Meter gère la télémétrie des compteurs connectés (relevés temps réel, alertes). DIFFÉRENCE vs building-api : Utility Management est centré sur les fluides et factures d'un logement, Building gère l'ensemble du bâtiment (équipements, lots, locataires).",
+    "x-synonymes": "fluides logement, eau électricité gaz, services logement, abonnement eau, contrat électricité, relevé compteur, facture énergie, ouverture service logement, souscription service, gestion charges, utilités logement, activation service, état des lieux compteur, facturation fluides, entrée locataire",
+    "x-false-positive-warning": "Compteurs intelligents télémétrie → smart-meter-api-v2. Gestion complète du bâtiment → building-api. Facturation locataire → lease-api.",
+    "x-cas-usage": "je veux voir tous les services actifs (eau, gaz, internet) pour un logement | je veux activer un nouveau service pour un logement lors d'une entrée locataire | je veux soumettre un relevé de compteur pour un bien | je veux consulter les relevés de consommation d'un logement | je veux voir les factures de fluides d'un bien immobilier"
+  },
+  "paths": {
+    "/v1/utilities/{propertyId}": {
+      "parameters": [
+        { "name": "propertyId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Lister les services actifs (eau, électricité, gaz, internet) d'un logement avec fournisseurs et statuts",
+        "operationId": "getUtilities",
+        "tags": ["Utilities"],
+        "responses": { "200": { "description": "Services actifs" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Activer un nouveau service ou abonnement (eau, gaz, électricité, internet) pour un logement",
+        "operationId": "addUtility",
+        "tags": ["Utilities"],
+        "responses": { "200": { "description": "Service activé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/utilities/{propertyId}/readings": {
+      "parameters": [
+        { "name": "propertyId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter l'historique des relevés de compteurs d'un logement",
+        "operationId": "getReadings",
+        "tags": ["Readings"],
+        "responses": { "200": { "description": "Relevés" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "post": {
+        "summary": "Soumettre un nouveau relevé de compteur pour un logement (eau, gaz, électricité)",
+        "operationId": "submitReading",
+        "tags": ["Readings"],
+        "responses": { "200": { "description": "Relevé soumis" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/utilities/{propertyId}/invoices": {
+      "parameters": [
+        { "name": "propertyId", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "get": {
+        "summary": "Consulter les factures de fluides et services pour un bien immobilier",
+        "operationId": "getUtilityInvoices",
+        "tags": ["Invoices"],
+        "responses": { "200": { "description": "Factures" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

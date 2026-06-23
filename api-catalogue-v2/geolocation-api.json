@@ -1,0 +1,181 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Geolocation API",
+    "version": "1.0.0",
+    "x-api-id": "geolocation-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Localisation",
+    "description": "Cette API d'infrastructure centralise l'ensemble des services géospatiaux, cartographiques et de géolocalisation pour le système d'information. Elle fournit des fonctionnalités de géocodage direct (conversion d'adresses textuelles en coordonnées de latitude/longitude) et de géocodage inversé, calcule des distances et des matrices de durée de trajet selon différents modes de transport (routier, cycliste, piéton), et permet de valider mathématiquement l'éligibilité d'une adresse au sein d'un polygone de livraison (zone de livraison).",
+    "x-synonymes": "géolocalisation, cartographie numérique, géocodage, coordonnées géographiques, latitude longitude, calcul de distance, matrice de trajet, zone de livraison polygone, adresse géocodée, géocodage inversé, isochrone, itinéraire cartographique, coordonnées GPS, point géographique",
+    "x-false-positive-warning": "Attention : Cette API calcule exclusivement des données géographiques, des distances routières et des coordonnées de latitude/longitude (Geolocation). Ne pas la confondre avec la `localization-api` (dédiée au traitement sémantique des traductions de langues, formats culturels, devises et fuseaux horaires des applications).",
+    "x-cas-usage": "Comment convertir une adresse de livraison textuelle en coordonnées GPS exploitables par un algorithme ? | Comment retrouver l'adresse postale correspondant à un point de coordonnées géographiques (latitude/longitude) ? | Comment calculer la distance routière exacte et la durée estimée de trajet entre un entrepôt et un client ? | Quelle méthode appeler pour vérifier si l'adresse d'un acheteur est incluse dans le polygone de notre zone de livraison active ?"
+  },
+  "paths": {
+    "/v1/geo/geocode": {
+      "post": {
+        "summary": "Convertir une adresse postale textuelle en coordonnées géographiques précises (latitude/longitude)",
+        "operationId": "geocode",
+        "tags": [
+          "Geo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "address"
+                ],
+                "properties": {
+                  "address": {
+                    "type": "string",
+                    "example": "12 rue de la Paix, 75001 Paris"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Coordonnées lat/lng"
+          }
+        }
+      }
+    },
+    "/v1/geo/reverse-geocode": {
+      "post": {
+        "summary": "Effectuer un géocodage inversé pour transformer un point de coordonnées (lat/lng) en adresse postale structurée",
+        "operationId": "reverseGeocode",
+        "tags": [
+          "Geo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "lat",
+                  "lng"
+                ],
+                "properties": {
+                  "lat": {
+                    "type": "number",
+                    "example": 48.8698
+                  },
+                  "lng": {
+                    "type": "number",
+                    "example": 2.3309
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Adresse"
+          }
+        }
+      }
+    },
+    "/v1/geo/distance": {
+      "post": {
+        "summary": "Calculer la distance métrique et la durée estimée de déplacement entre un point d'origine et de destination",
+        "operationId": "calcDistance",
+        "tags": [
+          "Geo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "origin",
+                  "destination"
+                ],
+                "properties": {
+                  "origin": {
+                    "type": "object",
+                    "properties": {
+                      "lat": {
+                        "type": "number"
+                      },
+                      "lng": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "destination": {
+                    "type": "object",
+                    "properties": {
+                      "lat": {
+                        "type": "number"
+                      },
+                      "lng": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "driving",
+                      "walking",
+                      "cycling"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Distance et durée"
+          }
+        }
+      }
+    },
+    "/v1/geo/delivery-zone": {
+      "post": {
+        "summary": "Vérifier mathématiquement par géofencing si une adresse ou un point se situe à l'intérieur du polygone d'une zone de livraison",
+        "operationId": "checkDeliveryZone",
+        "tags": [
+          "Geo"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "address",
+                  "zone_id"
+                ],
+                "properties": {
+                  "address": {
+                    "type": "string"
+                  },
+                  "zone_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dans la zone ou non"
+          }
+        }
+      }
+    }
+  }
+}

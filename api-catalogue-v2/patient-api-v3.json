@@ -1,0 +1,169 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Patient API",
+    "version": "3.0.0",
+    "x-api-id": "patient-api-v3",
+    "x-api-version": "v3",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Cette API régit le référentiel d'identité, le modèle de données de santé et le suivi administratif des patients conforme au standard international HL7 FHIR (v3). Elle centralise les données démographiques, consolide le recueil et le respect strict des consentements juridiques RGPD, et intègre un système d'alerte critique en temps réel (allergies majeures, protocoles de vigilance). Elle alimente l'ensemble des applicatifs du système d'information de l'hôpital.",
+    "x-synonymes": "référentiel patient FHIR, dossier d'identité patient, standard HL7 FHIR, consentement RGPD santé, alerte médicale critique, vigilance allergies, identité médicale, fiche patient unifiée, check-in patient v3, clôture de dossier patient, données démographiques de santé, confidentialité dossier médical",
+    "x-false-positive-warning": "Attention : Cette API régit de façon exclusive l'identité, l'état civil médical, les consentements et les alertes de vigilance fondamentales du dossier (Patient). Ne pas la confondre avec la `medical-record-api` (dédiée au catalogue détaillé des actes cliniques, observations médicales et comptes-rendus opératoires) ni avec la `prescription-api-v2`.",
+    "x-cas-usage": "Comment rechercher et lister les patients en utilisant les critères de filtres et ressources standardisés FHIR ? | Comment enregistrer l'identité et valider l'admission d'un nouveau patient dans l'établissement ? | Où consulter l'état complet des consentements RGPD et droits d'accès signés par le patient ? | Comment déclarer une alerte médicale critique (ex: choc anaphylactique à la pénicilline) rattachée à la fiche ?"
+  },
+  "x-breaking-changes-from-previous": [
+    "HL7 FHIR",
+    "Consentements RGPD",
+    "Alertes temps réel"
+  ],
+  "paths": {
+    "/v3/patients": {
+      "get": {
+        "summary": "Rechercher et lister les dossiers patients en s'appuyant sur les filtres et les ressources du standard HL7 FHIR",
+        "operationId": "listPatientsV3",
+        "tags": [
+          "Patients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Admettre un patient en créant son dossier d'identité unifié au format d'échange de santé standardisé",
+        "operationId": "createPatientV3",
+        "tags": [
+          "Patients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/patients/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter la ressource d'identité et le dossier patient complet structuré selon la nomenclature HL7 FHIR",
+        "operationId": "getPatientV3",
+        "tags": [
+          "Patients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour les données démographiques, l'adresse ou l'état civil de la fiche du patient",
+        "operationId": "updatePatientV3",
+        "tags": [
+          "Patients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Enregistrer la sortie définitive ou le transfert du patient pour archiver son dossier courant",
+        "operationId": "dischargePatient",
+        "tags": [
+          "Patients"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/patients/{id}/alerts": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le registre des alertes médicales actives, contre-indications et vigilances critiques (allergies)",
+        "operationId": "getAlerts",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Consigner et publier une nouvelle alerte médicale ou un protocole de vigilance critique sur le dossier",
+        "operationId": "createAlert",
+        "tags": [
+          "Alerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v3/patients/{id}/consent": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Vérifier l'état des consentements réglementaires du patient concernant le partage de ses données de santé",
+        "operationId": "getConsent",
+        "tags": [
+          "Consent"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "summary": "Mettre à jour ou révoquer les directives de consentement et de confidentialité de la personne concernée",
+        "operationId": "updateConsent",
+        "tags": [
+          "Consent"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

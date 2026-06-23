@@ -1,0 +1,32 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Driver API",
+    "version": "1.0.0",
+    "x-api-id": "driver-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Transport",
+    "x-domain": "Transport",
+    "x-successor": "driver-api-v2",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS driver-api-v2] Cette API gérait le référentiel d'identité initial des conducteurs de la flotte de transport (v1). Elle permettait un suivi élémentaire de la liste des chauffeurs. Cette version est obsolète et gelée ; toutes les applications de gestion logistique doivent migrer vers la version 2 (driver-api-v2) pour intégrer le contrôle des permis de conduire, les scores de comportement et les connexions aux tachygraphes digitaux.",
+    "x-synonymes": "gestion des conducteurs, référentiel chauffeurs, flotte de transport, conducteur routier, identité chauffeur, chauffeur poids lourd, personnel roulant, fiches conducteurs, affectation de transport, suivi des transporteurs, équipe logistique, planning chauffeurs",
+    "x-false-positive-warning": "Attention : Cette API obsolète concernait exclusivement l'identité des conducteurs opérationnels de la flotte. Ne pas la confondre avec la `employee-api` (dédiée aux fiches RH de l'ensemble des collaborateurs de l'entreprise), ni avec la version cible `driver-api-v2`."
+  },
+  "paths": {
+    "/v1/drivers": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS driver-api-v2 - Consulter la liste historique et l'inventaire des conducteurs enregistrés sur l'ancienne base v1",
+        "operationId": "listDriversV1",
+        "tags": [
+          "Drivers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}

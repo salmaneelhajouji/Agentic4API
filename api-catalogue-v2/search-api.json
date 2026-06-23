@@ -1,0 +1,88 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Search API",
+    "version": "1.0.0",
+    "x-api-id": "search-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "E-Commerce",
+    "description": "Moteur de recherche full-text sur le catalogue produits, commandes et clients. Propose une recherche globale multi-entités, une recherche produits avec facettes dynamiques (catégorie, prix, stock), une recherche avancée avec filtres complexes, et l'autocomplétion pour le suggest-as-you-type. DIFFÉRENCE vs product-catalog-api : Search interroge et classe les données existantes (lecture seule), Product Catalog les crée et les gère (CRUD). DIFFÉRENCE vs search-api-v2/v3 : cette v1 est full-text lexical uniquement, sans recherche sémantique ni personnalisation.",
+    "x-synonymes": "recherche produits, moteur recherche, full-text search, facettes recherche, autocomplétion, suggest, recherche catalogue, filtres recherche, tri pertinence, recherche commande, recherche client, indexation, résultats recherche, recherche e-commerce, searchbar",
+    "x-false-positive-warning": "CRUD produits (création, modification) → product-catalog-api. Recherche sémantique vectorielle → search-api-v2. Recherche conversationnelle LLM → search-api-v3.",
+    "x-cas-usage": "je veux rechercher des produits par mot-clé avec filtres prix et catégorie | je veux implémenter l'autocomplétion dans la barre de recherche | je veux faire une recherche avancée avec plusieurs filtres combinés | je veux rechercher dans les commandes et les clients | je veux trier les résultats par pertinence ou par prix"
+  },
+  "paths": {
+    "/v1/search": {
+      "get": {
+        "summary": "Recherche globale full-text sur produits, commandes et clients avec pagination",
+        "operationId": "search",
+        "tags": ["Search"],
+        "parameters": [
+          { "name": "q", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "type", "in": "query", "schema": { "type": "string", "enum": ["products", "orders", "customers", "all"], "default": "all" } },
+          { "name": "page", "in": "query", "schema": { "type": "integer", "default": 1 } },
+          { "name": "per_page", "in": "query", "schema": { "type": "integer", "default": 20 } }
+        ],
+        "responses": { "200": { "description": "Résultats" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/search/products": {
+      "get": {
+        "summary": "Rechercher des produits du catalogue avec facettes (catégorie, fourchette de prix, disponibilité, tri)",
+        "operationId": "searchProducts",
+        "tags": ["Search"],
+        "parameters": [
+          { "name": "q", "in": "query", "schema": { "type": "string" } },
+          { "name": "category", "in": "query", "schema": { "type": "string" } },
+          { "name": "min_price", "in": "query", "schema": { "type": "number" } },
+          { "name": "max_price", "in": "query", "schema": { "type": "number" } },
+          { "name": "in_stock", "in": "query", "schema": { "type": "boolean" } },
+          { "name": "sort", "in": "query", "schema": { "type": "string", "enum": ["relevance", "price_asc", "price_desc", "newest", "rating"] } }
+        ],
+        "responses": { "200": { "description": "Produits avec facettes" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/search/advanced": {
+      "post": {
+        "summary": "Recherche avancée avec filtres combinés complexes et sélection des facettes à retourner",
+        "operationId": "advancedSearch",
+        "tags": ["Search"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": { "type": "string" },
+                  "filters": { "type": "object" },
+                  "facets": { "type": "array", "items": { "type": "string" } }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Résultats avancés" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v1/search/suggestions": {
+      "get": {
+        "summary": "Obtenir des suggestions d'autocomplétion pour le suggest-as-you-type (minimum 2 caractères)",
+        "operationId": "getSuggestions",
+        "tags": ["Search"],
+        "parameters": [
+          { "name": "q", "in": "query", "required": true, "schema": { "type": "string", "minLength": 2 } }
+        ],
+        "responses": { "200": { "description": "Suggestions" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Yield Prediction API",
+    "version": "1.0.0",
+    "x-api-id": "yield-prediction-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Agriculture",
+    "x-domain": "Agriculture",
+    "description": "Prévisions rendements par IA. Modèles prédictifs basés sur l'apprentissage automatique, combinant l'imagerie satellite et les données pédoclimatiques pour estimer le volume des récoltes. DIFFERENCE vs crop-api : Yield Prediction API réalise des projections et des simulations futures de volumes via machine learning, tandis que crop-api répertorie l'état actuel et l'historique réel des cultures sur le terrain.",
+    "x-synonymes": "rendement, prédiction, récolte, ia, machine learning, modèle prédictif, prévision de récolte, agriculture, biomasse, satellite, simulation, parcelle, culture, production estimée, agronomie, scénario agricole, projection",
+    "x-false-positive-warning": "Pour consulter l'état factuel d'une parcelle ou l'historique des volumes de récoltes passées constatées, utilisez crop-api. Pour des prévisions météo pures, utilisez weather-forecast-agri-api.",
+    "x-cas-usage": "je veux estimer le rendement de ma récolte de blé par intelligence artificielle | je veux lancer le calcul du modèle de prédiction pour un champ | je veux consulter les différents scénarios climatiques et prédictifs de production | je veux comparer les projections de volumes agricoles de mes parcelles"
+  },
+  "paths": {
+    "/v1/yield/{fieldId}": {
+      "parameters": [
+        {
+          "name": "fieldId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer la dernière prédiction et l'estimation de volume de récolte calculée pour une parcelle",
+        "operationId": "getYieldPrediction",
+        "tags": [
+          "Yield"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Exécuter l'algorithme d'apprentissage automatique pour actualiser la prédiction de rendement d'une parcelle",
+        "operationId": "runYieldModel",
+        "tags": [
+          "Yield"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/yield/{fieldId}/scenarios": {
+      "parameters": [
+        {
+          "name": "fieldId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter et extraire les différents scénarios de projection (optimiste, pessimiste, nominal) d'un champ",
+        "operationId": "getYieldScenarios",
+        "tags": [
+          "Scenarios"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {}
+}

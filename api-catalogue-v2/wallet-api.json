@@ -1,0 +1,191 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Wallet API",
+    "version": "1.0.0",
+    "x-api-id": "wallet-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Finance",
+    "x-domain": "Finance",
+    "description": "Portefeuille électronique interne. Gestion des crédits virtuels, rechargements et utilisation du solde de compte utilisateur sur la plateforme. DIFFÉRENCE vs payment-api : Wallet = solde monétaire interne propre à la plateforme (avoirs, cashback), Payment = transactions financières externes par carte bancaire ou virement. Cas d'usage : crédits de remboursement, fidélité, cashback, avoir en solde.",
+    "x-synonymes": "portefeuille, wallet, solde, crédit, rechargement, débit, transaction interne, cashback, avoir, remboursement, monnaie virtuelle, compte interne, paiement plateforme, finance, devise, historique bancaire",
+    "x-false-positive-warning": "Pour les transactions réelles par carte bancaire, virements ou intégration de passerelles de paiement externes, utilisez payment-api. Pour l'émission de factures légales, utilisez invoice-api.",
+    "x-cas-usage": "je veux consulter le solde du portefeuille électronique d'un utilisateur | je veux recharger le portefeuille d'un client suite à un cashback | je veux débiter le solde interne pour régler une commande | je veux voir l'historique des transactions du wallet d'un utilisateur"
+  },
+  "paths": {
+    "/v1/wallets/{userId}": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter le solde monétaire disponible et la devise du portefeuille électronique d'un utilisateur",
+        "operationId": "getWallet",
+        "tags": [
+          "Wallets"
+        ],
+        "responses": {
+          "200": {
+            "description": "Solde"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/wallets/{userId}/topup": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Recharger le solde du portefeuille virtuel via un cashback, un avoir commercial ou un rechargement manuel",
+        "operationId": "topupWallet",
+        "tags": [
+          "Wallets"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "currency"
+                ],
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "minimum": 1
+                  },
+                  "currency": {
+                    "type": "string",
+                    "example": "EUR"
+                  },
+                  "source": {
+                    "type": "string",
+                    "enum": [
+                      "card",
+                      "refund",
+                      "cashback",
+                      "admin"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rechargé"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/wallets/{userId}/debit": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "post": {
+        "summary": "Débiter un montant spécifique du portefeuille interne pour le règlement d'une commande plateforme",
+        "operationId": "debitWallet",
+        "tags": [
+          "Wallets"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "amount",
+                  "order_id"
+                ],
+                "properties": {
+                  "amount": {
+                    "type": "number"
+                  },
+                  "order_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Débité"
+          },
+          "400": {
+            "description": "Solde insuffisant"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/wallets/{userId}/transactions": {
+      "parameters": [
+        {
+          "name": "userId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Récupérer l'historique chronologique complet des débits, crédits et mouvements du portefeuille",
+        "operationId": "getWalletTransactions",
+        "tags": [
+          "Wallets"
+        ],
+        "responses": {
+          "200": {
+            "description": "Transactions"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {}
+}

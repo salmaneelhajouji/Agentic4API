@@ -1,0 +1,49 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Renewable Energy API",
+    "version": "1.0.0",
+    "x-api-id": "renewable-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe IoT",
+    "x-domain": "IoT",
+    "description": "Gestion des sources d énergie renouvelable et du mix énergétique. Permet de gérer les sources solaires, éoliennes et hydrauliques, de consulter leur statut de production en temps réel et d obtenir des prévisions du mix énergétique. Utilisé par les opérateurs énergétiques et gestionnaires de sites pour piloter leur production renouvelable.",
+    "x-synonymes": "énergie solaire, panneau photovoltaïque, éolienne, énergie éolienne, énergie hydraulique, mix énergétique, production renouvelable, GWh production, capacité installée, taux couverture renouvelable, prévision production éolaire, ensoleillement production, intermittence renouvelable, stockage énergie, réseau électrique renouvelable, autoconsommation solaire, certificat énergie renouvelable, GO garantie origine, bilan carbone énergie, transition énergétique",
+    "x-false-positive-warning": "DIFFÉRENCE vs energy-api-v2 : Renewable API = sources renouvelables solaire/éolien/hydraulique. energy-api-v2 = consommation énergétique et monitoring général. DIFFÉRENCE vs iot-device-api-v2 : Renewable API = métriques de production renouvelable. iot-device-api-v2 = gestion des capteurs IoT.",
+    "x-cas-usage": "je veux voir la production actuelle de nos panneaux solaires | je veux ajouter une nouvelle éolienne à notre parc | je veux obtenir les prévisions du mix énergétique renouvelable pour demain | je veux voir le statut et la puissance de toutes nos sources renouvelables | je veux calculer le taux de couverture renouvelable de notre site industriel"
+  },
+  "paths": {
+    "/v1/renewable/sources": {
+      "get": {
+        "summary": "Sources renouvelables — solaire, éolien, hydraulique avec production actuelle",
+        "operationId": "listRenewableSources",
+        "tags": ["Sources"],
+        "responses": {"200": {"description": "Sources renouvelables"}}
+      },
+      "post": {
+        "summary": "Ajouter une source renouvelable — panneau solaire, éolienne ou installation hydraulique",
+        "operationId": "addSource",
+        "tags": ["Sources"],
+        "responses": {"200": {"description": "Source ajoutée"}}
+      }
+    },
+    "/v1/renewable/sources/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Statut d une source renouvelable — production, puissance et rendement",
+        "operationId": "getSourceStatus",
+        "tags": ["Sources"],
+        "responses": {"200": {"description": "Statut source"}}
+      }
+    },
+    "/v1/renewable/mix": {
+      "get": {
+        "summary": "Prévision du mix énergétique renouvelable — part solaire, éolien et hydraulique",
+        "operationId": "getMixForecast",
+        "tags": ["Mix"],
+        "responses": {"200": {"description": "Prévision mix énergétique"}}
+      }
+    }
+  }
+}

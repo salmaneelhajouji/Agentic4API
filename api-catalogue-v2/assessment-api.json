@@ -1,0 +1,62 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Assessment API",
+    "version": "1.0.0",
+    "x-api-id": "assessment-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "description": "API dédiée à la création et à la gestion des évaluations pédagogiques en ligne, couvrant les QCM à correction automatique, les devoirs chronométrés, les quiz interactifs et les évaluations formatives ou sommatives. Elle prend en charge l'ensemble du cycle de vie : création de l'évaluation, paramétrage du barème et du timer, soumission des copies par les apprenants, puis correction automatique ou manuelle par l'enseignant. Utilisée par les enseignants, formateurs, coordinateurs pédagogiques et plateformes e-learning pour mesurer les connaissances et compétences des apprenants à différentes étapes d'un parcours. DIFFÉRENCE vs exam-api : Assessment API = évaluations courantes QCM et devoirs avec correction automatique ; exam-api = examens officiels avec convocations, surveillance et résultats institutionnels. DIFFÉRENCE vs grade-api-v2 : Assessment API = création des évaluations et correction des copies ; grade-api-v2 = gestion des notes et bulletins scolaires officiels. DIFFÉRENCE vs plagiarism-detection-api : Assessment API = correction et notation des rendus ; plagiarism-detection-api = détection des similitudes et copies entre devoirs.",
+    "x-synonymes": "QCM, quiz, devoir en ligne, évaluation en ligne, correction automatique, copie étudiant, rendu devoir, test de connaissances, contrôle continu, évaluation formative, évaluation sommative, note automatique, exercice corrigé, timer examen, questionnaire pédagogique, auto-évaluation, évaluation de compétences, grille de correction, barème de notation, soumission de copie",
+    "x-false-positive-warning": "DIFFÉRENCE vs exam-api : Assessment API = évaluations courantes QCM et devoirs avec correction automatique ; exam-api = examens officiels avec convocations, surveillance en salle et résultats institutionnels validés. DIFFÉRENCE vs grade-api-v2 : Assessment API = création des évaluations et correction des copies soumises ; grade-api-v2 = gestion des notes finales, bulletins scolaires et relevés officiels. DIFFÉRENCE vs plagiarism-detection-api : Assessment API = correction, notation et retour pédagogique sur les rendus ; plagiarism-detection-api = détection des similitudes et copies entre travaux d'apprenants. DIFFÉRENCE vs course-api : Assessment API = évaluations et soumissions liées à un cours ; course-api = gestion du contenu pédagogique, des modules et des inscriptions aux cours.",
+    "x-cas-usage": "Comment créer un QCM avec correction automatique, timer et barème personnalisé pour un cours ? | Comment récupérer la liste des copies rendues par les étudiants pour une évaluation donnée ? | Comment corriger et noter automatiquement les réponses d'un QCM soumis par un apprenant ? | Quels types d'évaluations puis-je créer avec cette API (formative, sommative, quiz interactif) ? | Comment modifier une évaluation existante pour ajouter des questions ou ajuster le barème de notation ?"
+  },
+  "paths": {
+    "/v1/assessments": {
+      "get": {
+        "summary": "Lister les évaluations disponibles — QCM, devoirs et quiz filtrables par cours, type et statut",
+        "operationId": "listAssessments",
+        "tags": ["Assessments"],
+        "responses": {"200": {"description": "Liste des évaluations"}}
+      },
+      "post": {
+        "summary": "Créer une nouvelle évaluation pédagogique — QCM avec correction automatique, devoir ou quiz avec timer et barème",
+        "operationId": "createAssessment",
+        "tags": ["Assessments"],
+        "responses": {"200": {"description": "Évaluation créée"}}
+      }
+    },
+    "/v1/assessments/{id}": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Obtenir le détail d'une évaluation — questions, options de réponse, barème et paramètres de correction",
+        "operationId": "getAssessment",
+        "tags": ["Assessments"],
+        "responses": {"200": {"description": "Détail de l'évaluation"}}
+      },
+      "put": {
+        "summary": "Modifier une évaluation existante — ajouter ou supprimer des questions, ajuster le barème ou la durée du timer",
+        "operationId": "updateAssessment",
+        "tags": ["Assessments"],
+        "responses": {"200": {"description": "Évaluation modifiée"}}
+      }
+    },
+    "/v1/assessments/{id}/submissions": {
+      "parameters": [{"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Consulter toutes les copies rendues par les étudiants pour une évaluation — avec statut de correction et notes",
+        "operationId": "getSubmissions",
+        "tags": ["Submissions"],
+        "responses": {"200": {"description": "Copies soumises par les étudiants"}}
+      },
+      "post": {
+        "summary": "Soumettre et corriger une copie d'apprenant — correction automatique pour les QCM ou notation manuelle par l'enseignant",
+        "operationId": "gradeSubmission",
+        "tags": ["Submissions"],
+        "responses": {"200": {"description": "Copie corrigée et notée"}}
+      }
+    }
+  }
+}

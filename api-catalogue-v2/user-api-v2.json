@@ -1,0 +1,148 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "User API",
+    "version": "2.0.0",
+    "x-api-id": "user-api-v2",
+    "x-api-version": "v2",
+    "x-status": "active",
+    "x-team": "Equipe Identity",
+    "x-domain": "Identity & Access",
+    "description": "Gestion des comptes utilisateurs et de leur identité technique. Création de comptes (clients, employés, partenaires, admins), mise à jour du profil, désactivation (soft delete), changement de mot de passe et gestion de l'authentification à deux facteurs (2FA TOTP). DIFFÉRENCE vs customer-profile-api : User gère l'identité technique (email, mot de passe, 2FA, statut), Customer Profile gère les données commerciales du client (segmentation, historique achats). DIFFÉRENCE vs employee-api : User ne contient pas les données RH (contrat, paie, congés). DIFFÉRENCE vs user-api-v3 : v3 est la version recommandée avec SCIM, groupes et fédération IdP.",
+    "x-synonymes": "compte utilisateur, gestion utilisateur, création compte, mot de passe, 2FA authentification double facteur, TOTP, désactivation compte, profil utilisateur, identité utilisateur, login email, sécurité compte, statut utilisateur, type utilisateur, dernière connexion, préférences compte",
+    "x-false-positive-warning": "Profil commercial client → customer-profile-api. Données RH employé → employee-api. Organisation B2B → account-api. Version recommandée avec SCIM/groupes → user-api-v3.",
+    "x-cas-usage": "je veux créer un compte utilisateur avec email et mot de passe | je veux activer la double authentification pour un utilisateur | je veux changer le mot de passe d'un utilisateur | je veux désactiver un compte utilisateur sans le supprimer | je veux mettre à jour les préférences de langue d'un utilisateur"
+  },
+  "paths": {
+    "/v2/users": {
+      "post": {
+        "summary": "Créer un compte utilisateur (customer, employee, partner, admin) avec email, mot de passe et type",
+        "operationId": "createUser",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UserCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": { "description": "Compte créé", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } }
+        },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/users/{id}": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string", "pattern": "^USR-[0-9]{3}$" } }
+      ],
+      "get": {
+        "summary": "Récupérer le profil d'un utilisateur par son identifiant (USR-XXX)",
+        "operationId": "getUser",
+        "tags": ["Users"],
+        "responses": { "200": { "description": "Profil utilisateur", "content": { "application/json": { "schema": { "$ref": "#/components/schemas/User" } } } } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "put": {
+        "summary": "Mettre à jour les informations d'un utilisateur (nom, langue, avatar)",
+        "operationId": "updateUser",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": { "application/json": { "schema": { "$ref": "#/components/schemas/UserUpdate" } } }
+        },
+        "responses": { "200": { "description": "Mis à jour" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Désactiver un compte utilisateur (soft delete — le compte passe en statut inactive)",
+        "operationId": "deleteUser",
+        "tags": ["Users"],
+        "responses": { "204": { "description": "Désactivé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/users/{id}/password": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "put": {
+        "summary": "Changer le mot de passe d'un utilisateur (requiert l'ancien mot de passe)",
+        "operationId": "changePassword",
+        "tags": ["Users"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["current_password", "new_password"],
+                "properties": {
+                  "current_password": { "type": "string", "format": "password" },
+                  "new_password": { "type": "string", "format": "password", "minLength": 8 }
+                }
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Mot de passe changé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    },
+    "/v2/users/{id}/2fa": {
+      "parameters": [
+        { "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }
+      ],
+      "post": {
+        "summary": "Activer le 2FA TOTP pour un utilisateur — retourne un QR code à scanner",
+        "operationId": "enable2FA",
+        "tags": ["Users"],
+        "responses": { "200": { "description": "QR Code généré" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      },
+      "delete": {
+        "summary": "Désactiver le 2FA pour un utilisateur",
+        "operationId": "disable2FA",
+        "tags": ["Users"],
+        "responses": { "200": { "description": "2FA désactivé" } },
+        "security": [{ "ApiKeyAuth": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserCreate": {
+        "type": "object",
+        "required": ["email", "password", "full_name", "user_type"],
+        "properties": {
+          "email": { "type": "string", "format": "email" },
+          "password": { "type": "string", "format": "password", "minLength": 8 },
+          "full_name": { "type": "string" },
+          "user_type": { "type": "string", "enum": ["customer", "employee", "partner", "admin"] },
+          "preferred_language": { "type": "string", "example": "fr" }
+        }
+      },
+      "UserUpdate": {
+        "type": "object",
+        "properties": {
+          "full_name": { "type": "string" },
+          "preferred_language": { "type": "string" },
+          "avatar_url": { "type": "string", "format": "uri" }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "pattern": "^USR-[0-9]{3}$", "example": "USR-042" },
+          "email": { "type": "string", "format": "email" },
+          "full_name": { "type": "string" },
+          "user_type": { "type": "string", "enum": ["customer", "employee", "partner", "admin"] },
+          "status": { "type": "string", "enum": ["active", "inactive", "suspended"] },
+          "two_fa_enabled": { "type": "boolean" },
+          "preferred_language": { "type": "string" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "last_login_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  }
+}

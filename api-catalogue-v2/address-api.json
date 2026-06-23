@@ -1,0 +1,119 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Address API",
+    "version": "1.0.0",
+    "x-api-id": "address-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Platform",
+    "x-domain": "Identity & Access",
+    "description": "API de gestion du carnet d'adresses des utilisateurs, couvrant la création, modification, suppression et récupération des adresses de livraison et de facturation rattachées à un profil client. Permet de gérer plusieurs adresses par utilisateur avec la notion d'adresse par défaut, utilisée pour pré-remplir automatiquement les formulaires lors du tunnel d'achat e-commerce. Les utilisateurs typiques sont les équipes frontend (checkout, espace personnel), les applications mobiles et les services de gestion de commandes. DIFFÉRENCE vs geolocation-api : Address stocke les adresses postales des utilisateurs dans leur profil (carnet d'adresses), Geolocation convertit des coordonnées GPS en adresses ou effectue du géocodage. DIFFÉRENCE vs store-locator-api : Address concerne les adresses personnelles des clients, Store Locator gère la localisation des points de vente et magasins. DIFFÉRENCE vs account-api : Address gère les adresses des utilisateurs finaux (B2C), Account-API couvre les adresses des entreprises clientes (B2B).",
+    "x-synonymes": "carnet d'adresses, adresse de livraison, adresse de facturation, adresse postale, adresse par défaut, ajouter une adresse, modifier adresse, supprimer adresse, adresse utilisateur, adresse domicile, adresse bureau, adresse sauvegardée, pré-remplissage adresse, tunnel achat adresse, adresse expédition, code postal, complément adresse, adresse client, gestion adresses profil",
+    "x-false-positive-warning": "Coordonnées GPS, géocodage ou conversion latitude/longitude → geolocation-api. Recherche et localisation des points de vente et magasins → store-locator-api. Adresse du siège social ou d'une entreprise cliente B2B → account-api. Validation ou normalisation de format d'adresse postale → address-validation-api.",
+    "x-cas-usage": "Comment sauvegarder l'adresse de livraison d'un client dans son profil utilisateur ? | Comment récupérer l'adresse par défaut d'un utilisateur pour pré-remplir le formulaire de checkout ? | Comment permettre à un utilisateur de gérer son carnet d'adresses depuis son espace personnel ? | Comment ajouter une adresse de facturation différente de l'adresse de livraison pour un utilisateur ? | Quels endpoints utiliser pour modifier ou supprimer une adresse sauvegardée dans le profil client ?"
+  },
+  "paths": {
+    "/v1/users/{userId}/addresses": {
+      "parameters": [{"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer le carnet d'adresses complet d'un utilisateur avec toutes ses adresses de livraison et facturation sauvegardées",
+        "operationId": "getUserAddresses",
+        "tags": ["Addresses"],
+        "responses": {"200": {"description": "Liste des adresses sauvegardées"}}
+      },
+      "post": {
+        "summary": "Ajouter une nouvelle adresse de livraison ou de facturation au carnet d'adresses du profil utilisateur avec libellé, rue, ville, code postal et pays",
+        "operationId": "addAddress",
+        "tags": ["Addresses"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["label", "street", "city", "zip", "country"],
+                "properties": {
+                  "label": {"type": "string", "example": "Domicile"},
+                  "street": {"type": "string"},
+                  "city": {"type": "string"},
+                  "zip": {"type": "string"},
+                  "country": {"type": "string", "example": "FR"},
+                  "additional": {"type": "string"},
+                  "is_billing": {"type": "boolean", "default": false},
+                  "is_shipping": {"type": "boolean", "default": true}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"201": {"description": "Adresse ajoutée au carnet"}}
+      }
+    },
+    "/v1/users/{userId}/addresses/{id}": {
+      "parameters": [
+        {"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}},
+        {"name": "id", "in": "path", "required": true, "schema": {"type": "string"}}
+      ],
+      "put": {
+        "summary": "Modifier une adresse sauvegardée du carnet — mettre à jour la rue, la ville, le code postal, le pays ou le type livraison/facturation",
+        "operationId": "updateAddress",
+        "tags": ["Addresses"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "label": {"type": "string"},
+                  "street": {"type": "string"},
+                  "city": {"type": "string"},
+                  "zip": {"type": "string"},
+                  "country": {"type": "string"},
+                  "additional": {"type": "string"},
+                  "is_billing": {"type": "boolean"},
+                  "is_shipping": {"type": "boolean"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Adresse modifiée"}}
+      },
+      "delete": {
+        "summary": "Supprimer définitivement une adresse identifiée du carnet d'adresses de l'utilisateur",
+        "operationId": "deleteAddress",
+        "tags": ["Addresses"],
+        "responses": {"204": {"description": "Adresse supprimée"}}
+      }
+    },
+    "/v1/users/{userId}/addresses/default": {
+      "parameters": [{"name": "userId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Récupérer l'adresse par défaut de l'utilisateur pour pré-remplissage automatique lors du checkout ou d'une nouvelle commande",
+        "operationId": "getDefaultAddress",
+        "tags": ["Addresses"],
+        "responses": {"200": {"description": "Adresse par défaut"}}
+      },
+      "put": {
+        "summary": "Définir une adresse existante du carnet comme adresse de livraison par défaut de l'utilisateur",
+        "operationId": "setDefaultAddress",
+        "tags": ["Addresses"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["address_id"],
+                "properties": {
+                  "address_id": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "responses": {"200": {"description": "Adresse par défaut définie"}}
+      }
+    }
+  }
+}

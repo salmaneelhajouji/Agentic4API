@@ -1,0 +1,38 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "[DEPRECATED] Course API",
+    "version": "1.0.0",
+    "x-api-id": "course-api-v1",
+    "x-api-version": "v1",
+    "x-status": "deprecated",
+    "x-team": "Equipe Education",
+    "x-domain": "Education",
+    "x-successor": "course-api-v3",
+    "description": "⚠️ [DEPRECATED - OBSOLÈTE : MIGRER VERS course-api-v3] Cette API gérait historiquement la consultation du catalogue de cours et de formations (v1). Elle permettait aux plateformes d'e-learning (LMS), aux applications mobiles étudiantes et aux systèmes d'information académiques d'accéder aux descriptions et contenus pédagogiques. Ses utilisateurs (développeurs métiers et intégrateurs tiers) doivent impérativement migrer leurs flux vers la version 3.",
+    "x-synonymes": "cours, formation, module d'enseignement, leçon, programme scolaire, syllabus, cursus, classe, matière, tutoriel, séminaire, enseignement, parcours pédagogique, e-learning, catalogue de formations, session de cours, certification, MOOC",
+    "x-false-positive-warning": "Attention : Cette API gère le référentiel de cours. Ne pas confondre avec l'API Inscriptions / Enrollment (qui gère le rattachement des élèves à un cours), l'API Emploi du Temps / Scheduling (qui gère les dates, horaires et salles) ou l'API Notes / Grading (qui gère l'évaluation des étudiants).",
+    "x-cas-usage": "Quels sont les cours dispensés pour le département d'informatique ce semestre ? | Comment consulter le programme détaillé (syllabus) de cette unité d'enseignement ? | Combien de crédits ECTS sont accordés à la fin de ce parcours pédagogique ? | Quels sont les prérequis obligatoires pour assister à ce module spécifique ? | Comment adapter mon intégration actuelle pour appeler la nouvelle API course-api-v3 ?"
+  },
+  "paths": {
+    "/v1/courses": {
+      "get": {
+        "summary": "⚠️ [DEPRECATED] MIGRER VERS course-api-v3 - Consulter et récupérer l'intégralité du catalogue des cours et modules de formation actifs.",
+        "operationId": "listCoursesV1",
+        "tags": [
+          "Courses"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  }
+}

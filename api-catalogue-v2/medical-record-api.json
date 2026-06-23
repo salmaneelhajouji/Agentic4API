@@ -1,0 +1,63 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Medical Record API",
+    "version": "1.0.0",
+    "x-api-id": "medical-record-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Santé",
+    "x-domain": "Healthcare",
+    "description": "Dossier médical patient — actes cliniques, diagnostics et historique des procédures. Permet d enregistrer et consulter les actes médicaux, de poser et consulter des diagnostics CIM-10, et de gérer l historique des procédures médicales. Utilisé par les médecins, cliniques et systèmes HIS pour constituer le dossier médical partagé. DIFFÉRENCE vs patient-api-v3 : Medical Record = actes médicaux cliniques. patient-api-v3 = identité administrative du patient.",
+    "x-synonymes": "dossier médical, acte médical, diagnostic médical, CIM-10 diagnostic, historique médical, consultation médicale, procédure médicale, DMP dossier médical partagé, compte rendu médical, antécédents médicaux, pathologie diagnostiquée, acte clinique, HIS hospital information system, HL7 FHIR, ordonnance contexte, bilan médical, résumé hospitalisation, antécédent chirurgical, diagnostic différentiel, comorbidité",
+    "x-false-positive-warning": "Identité administrative patient → patient-api-v3. Ordonnances médicamenteuses → prescription-api-v2. Résultats analyses biologiques → lab-result-api. Constantes physiologiques → vital-signs-api. Plan de soins → care-plan-api.",
+    "x-cas-usage": "je veux consulter l historique médical complet d un patient | je veux enregistrer un diagnostic CIM-10 suite à une consultation | je veux ajouter un acte de consultation au dossier médical | je veux consulter les procédures médicales et opérations d un patient | je veux construire le résumé médical d un patient pour une lettre de liaison"
+  },
+  "paths": {
+    "/v1/records/{patientId}": {
+      "parameters": [{"name": "patientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Historique complet des actes médicaux d un patient — consultations et hospitalisations",
+        "operationId": "getRecords",
+        "tags": ["Records"],
+        "responses": {"200": {"description": "Historique actes médicaux"}}
+      },
+      "post": {
+        "summary": "Ajouter un acte médical au dossier — consultation, hospitalisation ou bilan",
+        "operationId": "addRecord",
+        "tags": ["Records"],
+        "responses": {"200": {"description": "Acte ajouté"}}
+      }
+    },
+    "/v1/records/{patientId}/diagnoses": {
+      "parameters": [{"name": "patientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Diagnostics d un patient — codes CIM-10 et dates de pose",
+        "operationId": "getDiagnoses",
+        "tags": ["Diagnoses"],
+        "responses": {"200": {"description": "Diagnostics"}}
+      },
+      "post": {
+        "summary": "Poser un diagnostic — code CIM-10 et description clinique",
+        "operationId": "addDiagnosis",
+        "tags": ["Diagnoses"],
+        "responses": {"200": {"description": "Diagnostic posé"}}
+      }
+    },
+    "/v1/records/{patientId}/procedures": {
+      "parameters": [{"name": "patientId", "in": "path", "required": true, "schema": {"type": "string"}}],
+      "get": {
+        "summary": "Procédures médicales d un patient — opérations, actes techniques et interventions",
+        "operationId": "getProcedures",
+        "tags": ["Procedures"],
+        "responses": {"200": {"description": "Procédures médicales"}}
+      },
+      "post": {
+        "summary": "Enregistrer une procédure médicale — acte chirurgical ou technique",
+        "operationId": "addProcedure",
+        "tags": ["Procedures"],
+        "responses": {"200": {"description": "Procédure enregistrée"}}
+      }
+    }
+  }
+}

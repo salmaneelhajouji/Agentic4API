@@ -1,0 +1,98 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Data Versioning API",
+    "version": "1.0.0",
+    "x-api-id": "data-versioning-api",
+    "x-api-version": "v1",
+    "x-status": "active",
+    "x-team": "Equipe Data",
+    "x-domain": "Data",
+    "description": "Cette API administre le versionnement historique et la gestion des états successifs des jeux de données (datasets) de l'entreprise. Elle permet d'enregistrer des points de sauvegarde immuables (snapshots), de consulter l'historique des versions d'une table, d'analyser les différences et d'exécuter des restaurations rapides (rollback) vers un état antérieur en cas d'anomalie ou de corruption des données. Elle est principalement intégrée dans les pipelines ETL/ELT, les plateformes de DataOps et les outils d'ingénierie de données pour garantir la résilience et la traçabilité des données.",
+    "x-synonymes": "versionnement de données, dataset versioning, snapshot de données, point de sauvegarde, restauration de données, rollback data, historique des versions, état de dataset, sauvegarde immuable, data ops, reprise après sinistre data, version de table, archivage d'état, historisation data, reproductibilité des données, time travel data",
+    "x-false-positive-warning": "Attention : Cette API gère le versionnement logique et temporel des états de jeux de données (Data Versioning/Time Travel). Ne pas la confondre avec une API de gestion de versions de code source (type Git API), ni avec la `data-catalog-api` (qui répertorie la documentation et le lignage sans gérer les clichés physiques).",
+    "x-cas-usage": "Comment lister l'historique complet des versions et snapshots disponibles pour un jeu de données ? | Comment déclencher la création d'un instantané (snapshot) immuable juste après l'exécution d'un pipeline ETL ? | Où consulter les métadonnées détaillées d'une version spécifique d'une table ? | Quelle méthode appeler pour exécuter un rollback (restauration) d'un dataset vers sa version stable de la veille suite à une corruption ?"
+  },
+  "paths": {
+    "/v1/versioning/{datasetId}": {
+      "parameters": [
+        {
+          "name": "datasetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Lister l'ensemble des versions historiques et des snapshots enregistrés pour un jeu de données spécifique",
+        "operationId": "getDatasetVersions",
+        "tags": [
+          "Versioning"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Créer et figer un nouvel instantané (snapshot) immuable de l'état actuel du jeu de données",
+        "operationId": "createSnapshot",
+        "tags": [
+          "Versioning"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/v1/versioning/{datasetId}/{version}": {
+      "parameters": [
+        {
+          "name": "datasetId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "version",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Consulter les détails techniques, l'auteur et les métadonnées d'une version spécifique de dataset",
+        "operationId": "getVersionDetails",
+        "tags": [
+          "Version"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "summary": "Déclencher une procédure de restauration (rollback) pour repositionner le jeu de données dans l'état de cette version spécifique",
+        "operationId": "rollbackToVersion",
+        "tags": [
+          "Version"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
